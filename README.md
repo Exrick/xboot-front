@@ -2,6 +2,8 @@
 
 > 作者目前大四 且为后台开发 能力经验有限 如有错误欢迎指正 期待您的捐赠支持！
 
+### 后台加载路由菜单暂未实现 欢迎PR
+
 ### 项目简介
 - 项目基于 Vue-Cli 创建
 - 多语言切换
@@ -51,9 +53,16 @@
 3.动态权限权限菜单
 
 ### 作者其他项目推荐
+- [XMall：基于SOA架构的分布式电商购物商城](https://github.com/Exrick/xmall)
+
+    ![](http://oweupqzdv.bkt.clouddn.com/QQ%E6%88%AA%E5%9B%BE20171022183906.jpg)
+
 - 微信小程序APP 
     - 捐赠≥19.9可加群私聊群主提前下载前台源码 [预览视频](https://v.qq.com/x/page/f0627kf4x1e.html)
 
     ![](http://oweupqzdv.bkt.clouddn.com/%E5%B0%8F%E7%A8%8B%E5%BA%8F%E9%A2%84%E8%A7%881.png)
+### 技术疑问交流
+- 给作者项目Star或捐赠后可加入交流群 `475743731`，还可免费获取[慕课网学习资源](https://coding.imooc.com/class/203.html)和 [UI框架](https://github.com/Exrick/xmall/blob/master/study/FlatLab.md) [![](http://pub.idqqimg.com/wpa/images/group.png)](http://shang.qq.com/wpa/qunwpa?idkey=7b60cec12ba93ebed7568b0a63f22e6e034c0d1df33125ac43ed753342ec6ce7)
+- 作者博客：[http://blog.exrick.cn](http://blog.exrick.cn)
 ### 捐赠
 ![](http://oweupqzdv.bkt.clouddn.com/FgwHSk1Rnd-8FKqNJhFSSdcq2QVB.png)
