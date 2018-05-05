@@ -1,8 +1,9 @@
 import axios from 'axios';
 import { getStore, setStore } from './storage';
-import { router } from '../router/index'
+import { router } from '../router/index';
 import { Message } from 'iview';
 import Cookies from 'js-cookie';
+import Main from '@/views/Main.vue';
 // 统一请求路径前缀
 let base = '';
 // 超时设定
@@ -108,3 +109,50 @@ export const getRequest = (url, params) => {
         }
     });
 };
+
+// 加载菜单
+export const initMenu = () => {
+    getRequest("/menu/getAllList").then(res => {
+        if (res.success === true) {
+            // console.log(res)
+            let fmtRoutes = formatRoutes(res.result);
+            console.log(fmtRoutes)
+            Cookies.set('menus', JSON.stringify(fmtRoutes));
+        }
+    })
+}
+
+// 转换路由
+export const formatRoutes = (routes) => {
+    let fmRoutes = [];
+    routes.forEach(r => {
+        if (r.parent) {
+            let route = {
+                path: r.path,
+                name: r.name,
+                icon: r.icon,
+                title: r.title,
+                component: Main,
+                children: []
+            }
+            let children = [];
+            if (r.children && r.children instanceof Array) {
+                children = formatRoutes(r.children);
+            }
+            route.children = children
+            fmRoutes.push(route);
+        } else {
+            let route = {
+                path: r.path,
+                name: r.name,
+                icon: r.icon,
+                title: r.title,
+                component(resolve) {
+                    require(['@/views/sys/' + r.component + '.vue'], resolve)
+                }
+            }
+            fmRoutes.push(route);
+        }
+    })
+    return fmRoutes;
+}

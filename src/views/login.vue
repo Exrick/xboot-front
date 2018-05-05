@@ -90,6 +90,8 @@
 <script>
 import Cookies from "js-cookie";
 import { setStore } from "../utils/storage";
+import { initMenu } from "../utils/api";
+import { router } from "../router/index";
 export default {
   data() {
     const validateMobile = (rule, value, callback) => {
@@ -169,6 +171,8 @@ export default {
             }).then(res => {
               if (res.success === true) {
                 setStore("accessToken", res.result);
+                // 初始化菜单
+                // initMenu();
                 // 获取用户信息
                 this.getRequest("/user/info").then(res => {
                   if (res.success === true) {
@@ -183,7 +187,6 @@ export default {
                         }
                       });
                     }
-                    console.log(access);
                     Cookies.set("access", JSON.stringify(access));
                     this.$router.push({
                       name: "home_index"
@@ -203,6 +206,8 @@ export default {
             if (this.form.verifyCode === "") {
               this.errorCode = "验证码不能为空";
               return;
+            } else {
+              this.errorCode = "";
             }
             this.showErrorMsg("页面演示，暂不支持短信登录");
           }

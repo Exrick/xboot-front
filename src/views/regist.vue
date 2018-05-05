@@ -181,9 +181,11 @@ export default {
     submitRegist() {
       this.$refs.registForm.validate(valid => {
         if (valid) {
-          if(this.form.verifyCode===""){
-            this.errorCode = "验证码不能为空"
+          if (this.form.verifyCode === "") {
+            this.errorCode = "验证码不能为空";
             return;
+          } else {
+            this.errorCode = "";
           }
           let query = { username: this.form.username };
           this.$router.push({

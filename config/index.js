@@ -26,6 +26,9 @@ module.exports = {
       '/role/*': {
         target: 'http://127.0.0.1:8888'
       },
+      '/menu/*': {
+        target: 'http://127.0.0.1:8888'
+      },
       '/log/*': {
         target: 'http://127.0.0.1:8888'
       },

@@ -29,10 +29,10 @@
         <Modal :title="modalTitle" v-model="roleModalVisible" :mask-closable='false' :width="500">
             <Form ref="roleForm" :model="roleForm" :label-width="80" :rules="roleFormValidate">
                 <FormItem label="角色名称" prop="name">
-                    <Input v-model="roleForm.name" placeholder="按照Spring Security约定请以‘ROLE_’开头"/>
+                  <Input v-model="roleForm.name" placeholder="按照Spring Security约定请以‘ROLE_’开头"/>
                 </FormItem>
                 <FormItem label="对应权限值" prop="access">
-                    <Input number v-model="roleForm.access" placeholder="请输入整数"/>
+                  <InputNumber :max="1000" :min="-1000" v-model="roleForm.access"></InputNumber>
                 </FormItem>
             </Form>
             <div slot="footer">
@@ -54,13 +54,12 @@ export default {
       modalTitle: "",
       roleForm: {
         name: "",
-        access: ""
+        access: null
       },
       roleFormValidate: {
         name: [
           { required: true, message: "角色名称不能为空", trigger: "blur" }
-        ],
-        access: [{ type: "integer", message: "请输入整数", trigger: 'blur' }]
+        ]
       },
       submitLoading: false,
       selectList: [],
@@ -196,7 +195,7 @@ export default {
       this.modalTitle = "添加角色";
       this.roleForm = {
         name: "",
-        access: ""
+        access: null
       };
       this.roleModalVisible = true;
     },

@@ -1,4 +1,5 @@
 import Main from '@/views/Main.vue';
+import Cookies from 'js-cookie';
 
 // 不作为Main组件的子页面展示的页面单独写，如下
 export const loginRouter = {
@@ -112,6 +113,11 @@ export const appRouter = [
         ]
     }
 ];
+
+// let menus = JSON.parse(Cookies.get('menus'))
+// console.log(menus)
+// export const appRouter = menus;
+// console.log(appRouter)
 
 // 所有上面定义的路由都要写在下面的routers里
 export const routers = [

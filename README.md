@@ -1,9 +1,11 @@
 # x-boot-front
 
-> 作者目前大四 能力经验有限 如有错误欢迎指正 期待您的捐赠支持！
+> 作者目前大四 且为后台开发 能力经验有限 如有错误欢迎指正 期待您的捐赠支持！
 
 ### 项目简介
 - 项目基于 Vue-Cli 创建
+- 多语言切换
+- 动态权限菜单
 - iView使用图标库 [ionicons](http://ionicons.com/) 额外图标库 [vue-awesome](https://github.com/Justineo/vue-awesome)
 
 ![](http://oweupqzdv.bkt.clouddn.com/QQ%E6%88%AA%E5%9B%BE20180504215410.png)
@@ -33,14 +35,20 @@
 - 第三方插件
     - [hotjar](https://github.com/Exrick/xmall/blob/master/study/hotjar.md)：一体化分析和反馈
 
-## 本地开发构建运行
+### 本地开发构建运行
 
 - 启动后端 [x-boot](https://github.com/Exrick/x-boot) 项目后，在 `config/index.js` 中修改你的后端接口地址代理配置
 - 在项目根文件夹下先后执行命令 `npm install` 、 `npm run dev`
 - 前台端口默认9999 http://localhost:9999
 
-## 部署
+### 部署
 - 先后执行命令 `npm install` 、 `npm run build` 将打包生成的 `dist` 静态文件放置服务器中，并配置路由代理
+
+### 学习记录（更新中）
+
+1.[axios请求封装 统一异常处理](https://github.com/Exrick/x-boot-front/wiki/axios%E8%AF%B7%E6%B1%82%E5%B0%81%E8%A3%85-%E7%BB%9F%E4%B8%80%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86)
+2.路由菜单加载
+3.动态权限权限菜单
 
 ### 作者其他项目推荐
 - 微信小程序APP 
