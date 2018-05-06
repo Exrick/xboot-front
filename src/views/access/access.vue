@@ -44,6 +44,8 @@
 
 <script>
 import Cookies from "js-cookie";
+import util from "@/libs/util.js";
+import axios from "axios";
 export default {
   name: "access_index",
   data() {
@@ -61,6 +63,7 @@ export default {
     init() {
       let access = JSON.parse(Cookies.get("access"));
       if (access !== null && access !== "" && access.length === 1) {
+        // 单个数组
         this.accessCode = access[0];
       } else {
         this.accessCode = access;
@@ -74,7 +77,31 @@ export default {
         this.accessCode = 0;
         Cookies.set("access", 0);
       }
-      this.$store.commit("updateMenulist");
+      let constRoutes = [];
+      // 读取缓存
+      let routes = localStorage.accessMenus;
+      if (routes !== "" && routes !== null && routes !== undefined) {
+        routes = JSON.parse(routes);
+        util.initRouterNode(constRoutes, routes);
+        // 刷新界面菜单
+        this.$store.commit(
+          "updateMenulist",
+          constRoutes.filter(item => item.children.length > 0)
+        );
+      } else {
+        // 加载菜单
+        axios.get("/menu/getAllList").then(res => {
+          let menuData = res.result;
+          util.initRouterNode(constRoutes, menuData);
+          // 刷新界面菜单
+          this.$store.commit(
+            "updateMenulist",
+            constRoutes.filter(item => item.children.length > 0)
+          );
+          // 缓存
+          localStorage.accessMenus = JSON.stringify(res.result);
+        });
+      }
     }
   },
   mounted() {

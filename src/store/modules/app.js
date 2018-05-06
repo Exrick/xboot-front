@@ -1,4 +1,5 @@
-import { otherRouter, appRouter } from '@/router/router';
+import { otherRouter } from '@/router/router';
+import { router } from '@/router/index';
 import Util from '@/libs/util';
 import Cookies from 'js-cookie';
 import Vue from 'vue';
@@ -27,21 +28,27 @@ const app = {
         menuList: [],
         routers: [
             otherRouter,
-            ...appRouter
+            // ...appRouter
         ],
         tagsList: [...otherRouter.children],
         messageCount: 0,
         dontCache: ['text-editor', 'artical-publish'] // 在这里定义你不想要缓存的页面的name属性值(参见路由配置router.js)
     },
     mutations: {
+        // 动态添加主界面路由，需要缓存
+        updateAppRouter(state, routes) {
+            state.routers.push(...routes);
+            router.addRoutes(routes);
+        },
         setTagsList(state, list) {
             state.tagsList.push(...list);
         },
-        updateMenulist(state) {
+        updateMenulist(state, routes) {
             let accessCode = Cookies.get('access');
             let menuList = [];
-            appRouter.forEach((item, index) => {
-                if (item.access !== undefined) {
+            // 过滤权限 appRouter
+            routes.forEach((item, index) => {
+                if (item.access !== undefined && item.access !== null) {
                     if (Util.showThisRoute(item.access, accessCode)) {
                         if (item.children.length === 1) {
                             menuList.push(item);
@@ -49,7 +56,7 @@ const app = {
                             let len = menuList.push(item);
                             let childrenArr = [];
                             childrenArr = item.children.filter(child => {
-                                if (child.access !== undefined) {
+                                if (child.access !== undefined && child.access !== null) {
                                     if (child.access === accessCode) {
                                         return child;
                                     }
@@ -67,7 +74,7 @@ const app = {
                         let len = menuList.push(item);
                         let childrenArr = [];
                         childrenArr = item.children.filter(child => {
-                            if (child.access !== undefined) {
+                            if (child.access !== undefined && child.access !== null) {
                                 if (Util.showThisRoute(child.access, accessCode)) {
                                     return child;
                                 }

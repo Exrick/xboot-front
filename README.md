@@ -2,12 +2,10 @@
 
 > 作者目前大四 且为后台开发 能力经验有限 如有错误欢迎指正 期待您的捐赠支持！
 
-### 后台加载路由菜单暂未实现 欢迎PR
-
 ### 项目简介
 - 项目基于 Vue-Cli 创建
+- 后台加载动态权限菜单
 - 多语言切换
-- 动态权限菜单
 - iView使用图标库 [ionicons](http://ionicons.com/) 额外图标库 [vue-awesome](https://github.com/Justineo/vue-awesome)
 
 ![](http://oweupqzdv.bkt.clouddn.com/QQ%E6%88%AA%E5%9B%BE20180504215410.png)
@@ -52,7 +50,7 @@
 
 2.路由菜单加载
 
-3.动态权限权限菜单
+3.动态权限菜单
 
 ### 作者其他项目推荐
 - [XMall：基于SOA架构的分布式电商购物商城](https://github.com/Exrick/xmall)

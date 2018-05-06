@@ -147,9 +147,10 @@ export const formatRoutes = (routes) => {
                 name: r.name,
                 icon: r.icon,
                 title: r.title,
-                component(resolve) {
-                    require(['@/views/sys/' + r.component + '.vue'], resolve)
-                }
+                component: () => import(`@/views/sys/${r.component}.vue`)
+                // component(resolve) {
+                //     require(['@/views/sys/' + r.component + '.vue'], resolve)
+                // }
             }
             fmRoutes.push(route);
         }

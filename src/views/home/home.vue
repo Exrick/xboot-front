@@ -18,20 +18,20 @@
                                 <Col span="16" style="padding-left:6px;">
                                     <Row class-name="made-child-con-middle" type="flex" align="middle">
                                         <div>
-                                            <b class="card-user-infor-name">Admin</b>
-                                            <p>super admin</p>
+                                            <b class="card-user-infor-name">{{ username }}</b>
+                                            <p>X-Boot 欢迎您的使用</p>
                                         </div>
                                     </Row>
                                 </Col>
                             </Row>
                             <div class="line-gray"></div>
                             <Row class="margin-top-8">
-                                <Col span="8"><p class="notwrap">上次登录时间:</p></Col>
-                                <Col span="16" class="padding-left-8">2017.09.12-13:32:20</Col>
+                                <Col span="8"><p class="notwrap">本次登录地点:</p></Col>
+                                <Col span="16" class="padding-left-8">{{city}}</Col>
                             </Row>
                             <Row class="margin-top-8">
-                                <Col span="8"><p class="notwrap">上次登录地点:</p></Col>
-                                <Col span="16" class="padding-left-8">北京</Col>
+                                <Col span="8"><p class="notwrap">天气:</p></Col>
+                                <Col span="16" class="padding-left-8">{{weather}}</Col>
                             </Row>
                         </Card>
                     </Col>
@@ -161,7 +161,7 @@
                 </Card>
             </Col>
         </Row>
-        <Row class="margin-top-10">
+        <!-- <Row class="margin-top-10">
             <Card>
                 <p slot="title" class="card-title">
                     <Icon type="ios-shuffle-strong"></Icon>
@@ -171,7 +171,7 @@
                     <service-requests></service-requests>
                 </div>
             </Card>
-        </Row>
+        </Row> -->
     </div>
 </template>
 
@@ -186,6 +186,7 @@ import countUp from "./components/countUp.vue";
 import inforCard from "./components/inforCard.vue";
 import mapDataTable from "./components/mapDataTable.vue";
 import toDoListItem from "./components/toDoListItem.vue";
+import Cookies from "js-cookie";
 
 export default {
   name: "home",
@@ -227,7 +228,10 @@ export default {
       },
       cityData: cityData,
       showAddNewTodo: false,
-      newToDoItemValue: ""
+      newToDoItemValue: "",
+      city: "",
+      weather: "",
+      username: ""
     };
   },
   computed: {
@@ -256,6 +260,12 @@ export default {
       this.showAddNewTodo = false;
       this.newToDoItemValue = "";
     }
+  },
+  mounted(){
+      this.city = Cookies.get('city')
+      this.weather = Cookies.get('weather')
+      let userInfo = JSON.parse(Cookies.get("userInfo"));
+      this.username = userInfo.username;
   }
 };
 </script>

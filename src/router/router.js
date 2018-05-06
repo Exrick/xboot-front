@@ -1,5 +1,4 @@
 import Main from '@/views/Main.vue';
-import Cookies from 'js-cookie';
 
 // 不作为Main组件的子页面展示的页面单独写，如下
 export const loginRouter = {
@@ -77,47 +76,44 @@ export const otherRouter = {
 };
 
 // 作为Main组件的子页面展示并且在左侧菜单显示的路由写在appRouter里
-export const appRouter = [
-    {
-        path: '/form',
-        icon: 'ios-gear',
-        name: 'sys',
-        title: '系统管理',
-        component: Main,
-        children: [
-            { path: 'user-manage', title: '用户管理', name: 'user-manage', icon: 'android-person', component: () => import('@/views/sys/user-manage/userManage.vue') },
-            { path: 'role-manage', title: '角色管理', name: 'role-manage', icon: 'android-contacts', component: () => import('@/views/sys/role-manage/roleManage.vue') },
-            { path: 'menu-manage', title: '菜单管理', name: 'menu-manage', icon: 'navicon-round', component: () => import('@/views/sys/menu-manage/menuManage.vue') },
-            { path: 'log-manage', title: '日志管理', name: 'log-manage', icon: 'android-list', component: () => import('@/views/sys/log-manage/logManage.vue') }
-        ]
-    },
-    {
-        path: '/access',
-        icon: 'key',
-        name: 'access',
-        title: '权限管理',
-        component: Main,
-        children: [
-            { path: 'index', title: '权限管理', name: 'access_index', component: () => import('@/views/access/access.vue') }
-        ]
-    },
-    {
-        path: '/access-test',
-        icon: 'lock-combination',
-        title: '权限测试页',
-        name: 'accesstest',
-        access: 0,
-        component: Main,
-        children: [
-            { path: 'index', title: '权限测试页', name: 'accesstest_index', access: 0, component: () => import('@/views/access/access-test.vue') },
-        ]
-    }
-];
+// export const appRouter = [
+//     {
+//         path: '/form',
+//         icon: 'ios-gear',
+//         name: 'sys',
+//         title: '系统管理',
+//         component: Main,
+//         children: [
+//             { path: 'user-manage', title: '用户管理', name: 'user-manage', icon: 'android-person', component: () => import('@/views/sys/user-manage/userManage') },
+//             { path: 'role-manage', title: '角色管理', name: 'role-manage', icon: 'android-contacts', component: () => import('@/views/sys/role-manage/roleManage.vue') },
+//             { path: 'menu-manage', title: '菜单管理', name: 'menu-manage', icon: 'navicon-round', component: () => import('@/views/sys/menu-manage/menuManage.vue') },
+//             { path: 'log-manage', title: '日志管理', name: 'log-manage', icon: 'android-list', component: () => import('@/views/sys/log-manage/logManage.vue') }
+//         ]
+//     },
+//     {
+//         path: '/access',
+//         icon: 'key',
+//         name: 'access',
+//         title: '权限管理',
+//         component: Main,
+//         children: [
+//             { path: 'index', title: '权限管理', name: 'access_index', component: () => import('@/views/access/access.vue') }
+//         ]
+//     },
+//     {
+//         path: '/access-test',
+//         icon: 'lock-combination',
+//         title: '权限测试页',
+//         name: 'accesstest',
+//         access: 0,
+//         component: Main,
+//         children: [
+//             { path: 'index', title: '权限测试页', name: 'accesstest_index', access: 0, component: () => import('@/views/access/access-test.vue') },
+//         ]
+//     }
+// ];
 
-// let menus = JSON.parse(Cookies.get('menus'))
-// console.log(menus)
-// export const appRouter = menus;
-// console.log(appRouter)
+export const appRouter = [];
 
 // 所有上面定义的路由都要写在下面的routers里
 export const routers = [

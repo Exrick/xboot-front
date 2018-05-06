@@ -2,6 +2,7 @@ import axios from 'axios';
 import env from '../../build/env';
 import semver from 'semver';
 import packjson from '../../package.json';
+import lazyLoading from './lazyLoading.js';
 
 let util = {
 
@@ -41,7 +42,9 @@ util.oneOf = function (ele, targetArr) {
 };
 
 util.showThisRoute = function (itAccess, currentAccess) {
-    currentAccess = JSON.parse(currentAccess)
+    if (currentAccess !== "" && currentAccess !== null && currentAccess !== undefined) {
+        currentAccess = JSON.parse(currentAccess)
+    }
     if (typeof currentAccess === 'object' && Array.isArray(currentAccess)) {
         // 数组
         return util.oneOf(itAccess, currentAccess);
@@ -249,9 +252,70 @@ util.toDefaultPage = function (routers, name, route, next) {
 
 util.fullscreenEvent = function (vm) {
     vm.$store.commit('initCachepage');
-    // 权限菜单过滤相关
-    vm.$store.commit('updateMenulist');
-    // 全屏相关
+    // vm.$store.commit('updateMenulist');
+};
+
+util.initRouter = function (vm) {
+    const constRoutes = [];
+
+    // 读取缓存
+    let routes = localStorage.menus;
+    if (routes !== "" && routes !== null && routes !== undefined) {
+        routes = JSON.parse(routes);
+        util.initRouterNode(constRoutes, routes);
+        // 添加主界面路由
+        vm.$store.commit('updateAppRouter', constRoutes.filter(item => item.children.length > 0));
+        // 刷新界面菜单
+        vm.$store.commit('updateMenulist', constRoutes.filter(item => item.children.length > 0));
+
+        let tagsList = [];
+        vm.$store.state.app.routers.map((item) => {
+            if (item.children.length <= 1) {
+                tagsList.push(item.children[0]);
+            } else {
+                tagsList.push(...item.children);
+            }
+        });
+        vm.$store.commit('setTagsList', tagsList);
+    } else {
+        // 加载菜单
+        axios.get("/menu/getAllList").then(res => {
+            let menuData = res.result;
+            util.initRouterNode(constRoutes, menuData);
+            // 添加主界面路由
+            vm.$store.commit('updateAppRouter', constRoutes.filter(item => item.children.length > 0));
+            // 刷新界面菜单
+            vm.$store.commit('updateMenulist', constRoutes.filter(item => item.children.length > 0));
+            // 缓存
+            localStorage.menus = JSON.stringify(res.result);
+
+            let tagsList = [];
+            vm.$store.state.app.routers.map((item) => {
+                if (item.children.length <= 1) {
+                    tagsList.push(item.children[0]);
+                } else {
+                    tagsList.push(...item.children);
+                }
+            });
+            vm.$store.commit('setTagsList', tagsList);
+        });
+    }
+};
+
+// 生成路由节点
+util.initRouterNode = function (routers, data) {
+    for (var item of data) {
+        let menu = Object.assign({}, item);
+        // menu.component = import(`@/views/${menu.component}.vue`);
+        menu.component = lazyLoading(menu.component);
+
+        if (item.children && item.children.length > 0) {
+            menu.children = [];
+            util.initRouterNode(menu.children, item.children);
+        }
+
+        routers.push(menu);
+    }
 };
 
 export default util;

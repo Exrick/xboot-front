@@ -84,6 +84,7 @@ import messageTip from "./main-components/message-tip.vue";
 import Cookies from "js-cookie";
 import util from "@/libs/util.js";
 import scrollBar from "@/views/my-components/scroll-bar/vue-scroller-bars";
+import axios from 'axios';
 
 export default {
   components: {
@@ -132,7 +133,7 @@ export default {
   methods: {
     init() {
       let pathArr = util.setCurrentPath(this, this.$route.name);
-      this.$store.commit("updateMenulist");
+      // this.$store.commit("updateMenulist");
       if (pathArr.length >= 2) {
         this.$store.commit("addOpenSubmenu", pathArr[1].name);
       }

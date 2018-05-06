@@ -17,7 +17,7 @@
             <Col span="9">
               <Form ref="menuForm" :model="menuForm" :label-width="80" :rules="menuFormValidate">
                 <FormItem label="菜单ID" prop="id">
-                    <Input v-model="menuForm.id" disabled />
+                    <Input v-model="menuForm.id" readonly />
                 </FormItem>
                 <FormItem label="菜单名称" prop="name">
                     <Input v-model="menuForm.name"/>
@@ -34,14 +34,14 @@
                 <FormItem label="路径" prop="path">
                     <Input v-model="menuForm.path"/>
                 </FormItem>
+                <FormItem label="前端组件" prop="component">
+                    <Input v-model="menuForm.component"/>
+                </FormItem>
                 <FormItem label="一级菜单" prop="parent" >
                   <i-switch v-model="menuForm.parent" size="large" @on-change="changeParent">
                     <span slot="open">是</span>
                     <span slot="close">否</span>
                   </i-switch>
-                </FormItem>
-                <FormItem label="前端组件" v-if="isChild" prop="component" :error="errorComponent">
-                    <Input v-model="menuForm.component"/>
                 </FormItem>
                 <FormItem label="父级菜单ID" prop="parentId" v-if="isChild" :error="errorParent">
                     <Input v-model="menuForm.parentId"/>
@@ -76,14 +76,14 @@
                 <FormItem label="路径" prop="path">
                     <Input v-model="menuFormAdd.path"/>
                 </FormItem>
+                <FormItem label="前端组件" prop="component">
+                    <Input v-model="menuFormAdd.component"/>
+                </FormItem>
                 <FormItem label="一级菜单" prop="parent" >
                   <i-switch v-model="menuFormAdd.parent" size="large" @on-change="changeParentAdd">
                     <span slot="open">是</span>
                     <span slot="close">否</span>
                   </i-switch>
-                </FormItem>
-                <FormItem label="前端组件" v-if="isChildAdd" prop="component" :error="errorComponentAdd">
-                    <Input v-model="menuFormAdd.component"/>
                 </FormItem>
                 <FormItem label="父级菜单ID" prop="parentId" v-if="isChildAdd" :error="errorParentAdd">
                     <Input v-model="menuFormAdd.parentId"/>
@@ -128,16 +128,15 @@ export default {
       isChild: true,
       isChildAdd: true,
       errorParent: "",
-      errorComponent: "",
       errorParentAdd: "",
-      errorComponentAdd: "",
       menuFormValidate: {
         name: [
           { required: true, message: "菜单名称不能为空", trigger: "blur" }
         ],
         title: [{ required: true, message: "标题不能为空", trigger: "blur" }],
         icon: [{ required: true, message: "图标不能为空", trigger: "blur" }],
-        path: [{ required: true, message: "路径不能为空", trigger: "blur" }]
+        path: [{ required: true, message: "路径不能为空", trigger: "blur" }],
+        component: [{ required: true, message: "前端组件不能为空", trigger: "blur" }]
       },
       submitLoading: false,
       data: []
@@ -166,8 +165,11 @@ export default {
         }
         let str = JSON.stringify(v[0]);
         let menu = JSON.parse(str);
+        if (menu.access === "") {
+          menu.access = null;
+        }
         this.menuForm = menu;
-        this.changeParent()
+        this.changeParent();
       }
     },
     changeParent() {
@@ -193,16 +195,19 @@ export default {
     submitEdit() {
       this.$refs.menuForm.validate(valid => {
         if (valid) {
-          if (
-            this.isChild &&
-            (this.menuForm.parentId === "" || this.menuForm.component === "")
-          ) {
+          if (this.isChild && this.menuForm.parentId === "") {
             this.errorParent = "不能为空";
-            this.errorComponent = "不能为空";
             return;
           } else {
             this.errorParent = "";
-            this.errorComponent = "";
+          }
+          if (
+            this.menuForm.id === undefined ||
+            this.menuForm.id === "" ||
+            this.menuForm.id === null
+          ) {
+            this.$Message.warning("请先点击选择要修改的菜单节点");
+            return;
           }
           this.submitLoading = true;
           if (this.menuForm.access === null) {
@@ -222,17 +227,11 @@ export default {
     submitAdd() {
       this.$refs.menuFormAdd.validate(valid => {
         if (valid) {
-          if (
-            this.isChildAdd &&
-            (this.menuFormAdd.parentId === "" ||
-              this.menuFormAdd.component === "")
-          ) {
+          if (this.isChildAdd && this.menuFormAdd.parentId === "") {
             this.errorParentAdd = "不能为空";
-            this.errorComponentAdd = "不能为空";
             return;
           } else {
             this.errorParentAdd = "";
-            this.errorComponentAdd = "";
           }
           this.submitLoading = true;
           if (this.menuFormAdd.access === null) {
@@ -250,6 +249,13 @@ export default {
       });
     },
     addMenu() {
+       this.menuFormAdd = {
+        name: "",
+        parent: false,
+        access: null,
+        parentId: "",
+        component: ""
+      },
       this.menuModalVisible = true;
     },
     changeSelect(v) {

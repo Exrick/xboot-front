@@ -90,7 +90,6 @@
 <script>
 import Cookies from "js-cookie";
 import { setStore } from "../utils/storage";
-import { initMenu } from "../utils/api";
 import { router } from "../router/index";
 export default {
   data() {
@@ -167,12 +166,14 @@ export default {
             this.loading = true;
             this.postRequest("/login", {
               username: this.form.username,
-              password: this.form.password
+              password: this.form.password,
+              saveLogin: this.saveLogin
             }).then(res => {
               if (res.success === true) {
                 setStore("accessToken", res.result);
-                // 初始化菜单
-                // initMenu();
+                if (this.saveLogin) {
+                  localStorage.saveLogin = "true";
+                }
                 // 获取用户信息
                 this.getRequest("/user/info").then(res => {
                   if (res.success === true) {
@@ -213,7 +214,27 @@ export default {
           }
         });
       }
+    },
+    getIpInfo() {
+      this.getRequest("/common/ip/info").then(res => {
+        if (res.success === true) {
+          let ipInfo = JSON.parse(res.result);
+          if (ipInfo.retCode === "200") {
+            let info = ipInfo.result[0];
+            let weather = info.weather + ' ' +info.temperature + ' 污染指数: '+info.pollutionIndex;
+            console.log(weather)
+            Cookies.set("city", info.city);
+            Cookies.set("weather", weather);
+          } else {
+            Cookies.set("city", "未知");
+            Cookies.set("weather", "未知");
+          }
+        }
+      });
     }
+  },
+  mounted() {
+    this.getIpInfo();
   }
 };
 </script>
