@@ -43,6 +43,12 @@
                             <Button size="large" disabled v-if="sended" class="count-verify">{{countButton}}</Button>
                         </Row>
                     </FormItem>
+                    <FormItem prop="verify">
+                         <Row type="flex" justify="space-between" class="code-row-bg">
+                            <Input v-model="form.verify" size="large" clearable  placeholder="请输入验证码" :maxlength="maxLength" class="input-verify"/>
+                            <img :src="verifyCodeImg" style="width:100px;cursor:pointer" @click="getVerifyCode">
+                        </Row>
+                    </FormItem>
                 </Form>
             
                 <Row type="flex" justify="space-between" class="code-row-bg">
@@ -97,6 +103,8 @@ export default {
       }
     };
     return {
+      captchaId: "",
+      verifyCodeImg: "",
       error: false,
       errorMsg: "",
       loading: false,
@@ -114,7 +122,8 @@ export default {
         password: "",
         confirmPass: "",
         mobile: "",
-        verifyCode: ""
+        verifyCode: "",
+        verify: ""
       },
       rules: {
         username: [
@@ -131,7 +140,8 @@ export default {
         mobile: [
           { required: true, message: "手机号不能为空", trigger: "blur" },
           { validator: validateMobile, trigger: "blur" }
-        ]
+        ],
+        verify: [{ required: true, message: "验证码不能为空", trigger: "blur" }]
       }
     };
   },
@@ -187,14 +197,32 @@ export default {
           } else {
             this.errorCode = "";
           }
-          let query = { username: this.form.username };
-          this.$router.push({
-            name: "regist-result",
-            query: query
+          this.form.captchaId = this.captchaId;
+          this.postRequest("/user/regist", this.form).then(res => {
+            if (res.success === true) {
+              let query = { username: this.form.username };
+              this.$router.push({
+                name: "regist-result",
+                query: query
+              });
+            }else{
+              this.getVerifyCode();
+            }
           });
         }
       });
+    },
+    getVerifyCode() {
+      this.getRequest("/common/captcha/init").then(res => {
+        if (res.success === true) {
+          this.captchaId = res.result.captchaId;
+          this.verifyCodeImg = "/common/captcha/draw/" + this.captchaId;
+        }
+      });
     }
+  },
+  mounted() {
+    this.getVerifyCode();
   }
 };
 </script>

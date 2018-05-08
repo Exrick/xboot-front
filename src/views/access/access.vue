@@ -51,7 +51,7 @@ export default {
   data() {
     return {
       accessCode: "",
-      switchValue: parseInt(Cookies.get("access")) === 1
+      switchValue: false
     };
   },
   computed: {
@@ -67,6 +67,11 @@ export default {
         this.accessCode = access[0];
       } else {
         this.accessCode = access;
+      }
+      if (this.accessCode == "0") {
+        this.switchValue = false;
+      } else {
+        this.switchValue = true;
       }
     },
     changeAccess(res) {

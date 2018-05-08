@@ -305,7 +305,7 @@ export default {
       let params = this.userForm;
       delete params.nickName;
       delete params.description;
-      this.postRequest("/user/edit", params).then(res => {
+      this.postRequest("/user/editOwn", params).then(res => {
         this.saveLoading = false;
         if (res.success === true) {
           this.$Message.success("保存成功");

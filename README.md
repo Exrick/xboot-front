@@ -4,7 +4,8 @@
 
 ### [宣传视频](https://www.bilibili.com/video/av23121122/)
 - 作者亲自制作 可接单做视频... 视频已上传至[B站](https://www.bilibili.com/video/av23121122/)
-
+### 在线Demo 
+http://xboot.exrick.cn
 ### 项目简介
 - 项目基于 Vue-Cli 创建
 - 后台加载动态权限菜单

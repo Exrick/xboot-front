@@ -284,6 +284,10 @@ export default {
     }
   },
   mounted() {
+    this.$Notice.info({
+      title: "提示",
+      desc: "若出现报错说明未启动Elasticsearch或ES发送错误，请勿惊慌"
+    });
     this.init();
   }
 };

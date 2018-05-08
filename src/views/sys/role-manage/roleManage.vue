@@ -57,9 +57,7 @@ export default {
         access: null
       },
       roleFormValidate: {
-        name: [
-          { required: true, message: "角色名称不能为空", trigger: "blur" }
-        ]
+        name: [{ required: true, message: "角色名称不能为空", trigger: "blur" }]
       },
       submitLoading: false,
       selectList: [],
@@ -89,6 +87,56 @@ export default {
           title: "更新时间",
           key: "updateTime",
           sortable: true
+        },
+        {
+          title: "是否设置为注册用户默认角色",
+          key: "defaultRole",
+          align: "center",
+          render: (h, params) => {
+            if (params.row.defaultRole) {
+              return h("div", [
+                h(
+                  "Button",
+                  {
+                    props: {
+                      type: "success",
+                      size: "small"
+                    },
+                    style: {
+                      marginRight: "5px"
+                    },
+                    on: {
+                      click: () => {
+                        this.cancelDefault(params.row);
+                      }
+                    }
+                  },
+                  "取消默认"
+                )
+              ]);
+            } else {
+              return h("div", [
+                h(
+                  "Button",
+                  {
+                    props: {
+                      type: "info",
+                      size: "small"
+                    },
+                    style: {
+                      marginRight: "5px"
+                    },
+                    on: {
+                      click: () => {
+                        this.setDefault(params.row);
+                      }
+                    }
+                  },
+                  "设为默认"
+                )
+              ]);
+            }
+          }
         },
         {
           title: "操作",
@@ -173,7 +221,7 @@ export default {
     submitRole() {
       this.$refs.roleForm.validate(valid => {
         if (valid) {
-          let url = "/role/save";
+          let url = "/role/add";
           if (this.modalType === 1) {
             // 编辑用户
             url = "/role/edit";
@@ -221,6 +269,42 @@ export default {
           this.deleteRequest("/role/delAllByIds", { ids: v.id }).then(res => {
             if (res.success === true) {
               this.$Message.success("删除成功");
+              this.init();
+            }
+          });
+        }
+      });
+    },
+    setDefault(v) {
+      this.$Modal.confirm({
+        title: "确认设置",
+        content: "您确认要设置所选的 " + v.name + " 为注册用户默认角色?",
+        onOk: () => {
+          let params = {
+            id: v.id,
+            isDefault: true
+          };
+          this.postRequest("/role/setDefault", params).then(res => {
+            if (res.success === true) {
+              this.$Message.success("操作成功");
+              this.init();
+            }
+          });
+        }
+      });
+    },
+    cancelDefault(v) {
+      this.$Modal.confirm({
+        title: "确认取消",
+        content: "您确认要取消所选的 " + v.name + " 角色为默认?",
+        onOk: () => {
+          let params = {
+            id: v.id,
+            isDefault: false
+          };
+          this.postRequest("/role/setDefault", params).then(res => {
+            if (res.success === true) {
+              this.$Message.success("操作成功");
               this.init();
             }
           });

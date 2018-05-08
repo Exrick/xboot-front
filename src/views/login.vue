@@ -221,8 +221,12 @@ export default {
           let ipInfo = JSON.parse(res.result);
           if (ipInfo.retCode === "200") {
             let info = ipInfo.result[0];
-            let weather = info.weather + ' ' +info.temperature + ' 污染指数: '+info.pollutionIndex;
-            console.log(weather)
+            let weather =
+              info.weather +
+              " " +
+              info.temperature +
+              " 污染指数: " +
+              info.pollutionIndex;
             Cookies.set("city", info.city);
             Cookies.set("weather", weather);
           } else {
@@ -234,6 +238,10 @@ export default {
     }
   },
   mounted() {
+    this.$Notice.info({
+      title: "体验账号密码",
+      desc: "账号：test 密码：123456 已开放注册！"
+    });
     this.getIpInfo();
   }
 };

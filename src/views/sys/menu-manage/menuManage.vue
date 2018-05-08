@@ -136,7 +136,9 @@ export default {
         title: [{ required: true, message: "标题不能为空", trigger: "blur" }],
         icon: [{ required: true, message: "图标不能为空", trigger: "blur" }],
         path: [{ required: true, message: "路径不能为空", trigger: "blur" }],
-        component: [{ required: true, message: "前端组件不能为空", trigger: "blur" }]
+        component: [
+          { required: true, message: "前端组件不能为空", trigger: "blur" }
+        ]
       },
       submitLoading: false,
       data: []
@@ -151,6 +153,9 @@ export default {
       this.getRequest("/menu/getAllList").then(res => {
         this.loading = false;
         if (res.success === true) {
+          res.result.forEach(function(e) {
+            e.expand = true;
+          });
           this.data = res.result;
         }
       });
@@ -249,13 +254,14 @@ export default {
       });
     },
     addMenu() {
-       this.menuFormAdd = {
+      this.menuFormAdd = {
         name: "",
         parent: false,
         access: null,
         parentId: "",
         component: ""
-      },
+      };
+      this.changeParentAdd();
       this.menuModalVisible = true;
     },
     changeSelect(v) {
