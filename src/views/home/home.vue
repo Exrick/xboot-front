@@ -38,29 +38,24 @@
                     <Col :md="12" :lg="24" :style="{marginBottom: '10px'}">
                         <Card>
                             <p slot="title" class="card-title">
-                                <Icon type="android-checkbox-outline"></Icon>
-                                待办事项
+                                <Icon type="social-github" :size="18"></Icon>
+                                <a href="https://github.com/Exrick/x-boot" target="_blank"> Github地址</a>
                             </p>
-                            <a type="text" slot="extra" @click.prevent="addNewToDoItem">
-                                <Icon type="plus-round"></Icon>
-                            </a>
-                            <Modal
-                                v-model="showAddNewTodo"
-                                title="添加新的待办事项"
-                                @on-ok="addNew"
-                                @on-cancel="cancelAdd">
-                                <Row type="flex" justify="center">
-                                    <Input v-model="newToDoItemValue" icon="compose" placeholder="请输入..." style="width: 300px" />
-                                </Row>
-                                <Row slot="footer">
-                                    <Button type="text" @click="cancelAdd">取消</Button>
-                                    <Button type="primary" @click="addNew">确定</Button>
-                                </Row>
-                            </Modal>
                             <div class="to-do-list-con">
-                                <div v-for="(item, index) in toDoList" :key="'todo-item' + (toDoList.length - index)" class="to-do-item">
-                                    <to-do-list-item :content="item.title"></to-do-list-item>
-                                </div>
+                                <Timeline>
+                                    <TimelineItem color="green">
+                                        <a href="https://www.bilibili.com/video/av23121122/" target="_blank">作者亲自制作宣传视频</a>
+                                    </TimelineItem>
+                                    <TimelineItem color="green">
+                                        <a href="https://xmall.exrick.cn" target="_blank">XMall开源商城</a>
+                                    </TimelineItem>
+                                    <TimelineItem color="red">
+                                        <a href="https://xpay.exrick.cn" target="_blank">XPay个人收款支付系统</a>
+                                    </TimelineItem>
+                                    <TimelineItem color="blue">
+                                        Star或捐赠后可加入QQ交流群 475743731
+                                    </TimelineItem>
+                                </Timeline>
                             </div>
                         </Card>
                     </Col>
@@ -185,7 +180,6 @@ import userFlow from "./components/userFlow.vue";
 import countUp from "./components/countUp.vue";
 import inforCard from "./components/inforCard.vue";
 import mapDataTable from "./components/mapDataTable.vue";
-import toDoListItem from "./components/toDoListItem.vue";
 import Cookies from "js-cookie";
 
 export default {
@@ -198,28 +192,10 @@ export default {
     userFlow,
     countUp,
     inforCard,
-    mapDataTable,
-    toDoListItem
+    mapDataTable
   },
   data() {
     return {
-      toDoList: [
-        {
-          title: "去iView官网学习完整的iView组件"
-        },
-        {
-          title: "去iView官网学习完整的iView组件"
-        },
-        {
-          title: "去iView官网学习完整的iView组件"
-        },
-        {
-          title: "去iView官网学习完整的iView组件"
-        },
-        {
-          title: "去iView官网学习完整的iView组件"
-        }
-      ],
       count: {
         createUser: 496,
         visit: 3264,
@@ -227,7 +203,6 @@ export default {
         transfer: 39503498
       },
       cityData: cityData,
-      showAddNewTodo: false,
       newToDoItemValue: "",
       city: "",
       weather: "",
@@ -239,33 +214,12 @@ export default {
       return localStorage.avatorImgPath;
     }
   },
-  methods: {
-    addNewToDoItem() {
-      this.showAddNewTodo = true;
-    },
-    addNew() {
-      if (this.newToDoItemValue.length !== 0) {
-        this.toDoList.unshift({
-          title: this.newToDoItemValue
-        });
-        setTimeout(() => {
-          this.newToDoItemValue = "";
-        }, 200);
-        this.showAddNewTodo = false;
-      } else {
-        this.$Message.error("请输入待办事项内容");
-      }
-    },
-    cancelAdd() {
-      this.showAddNewTodo = false;
-      this.newToDoItemValue = "";
-    }
-  },
-  mounted(){
-      this.city = Cookies.get('city')
-      this.weather = Cookies.get('weather')
-      let userInfo = JSON.parse(Cookies.get("userInfo"));
-      this.username = userInfo.username;
+  methods: {},
+  mounted() {
+    this.city = Cookies.get("city");
+    this.weather = Cookies.get("weather");
+    let userInfo = JSON.parse(Cookies.get("userInfo"));
+    this.username = userInfo.username;
   }
 };
 </script>
