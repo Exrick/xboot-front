@@ -89,6 +89,7 @@
 
 <script>
 import Cookies from "js-cookie";
+import util from "@/libs/util.js";
 import { setStore } from "../utils/storage";
 import { router } from "../router/index";
 export default {
@@ -189,6 +190,8 @@ export default {
                       });
                     }
                     Cookies.set("access", JSON.stringify(access));
+                    // 更新菜单
+                    util.initRouter(this);
                     this.$router.push({
                       name: "home_index"
                     });

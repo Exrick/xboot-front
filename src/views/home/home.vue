@@ -47,10 +47,10 @@
                                         <a href="https://www.bilibili.com/video/av23121122/" target="_blank">作者亲自制作宣传视频</a>
                                     </TimelineItem>
                                     <TimelineItem color="green">
-                                        <a href="https://xmall.exrick.cn" target="_blank">XMall开源商城</a>
+                                        <a href="http://xmall.exrick.cn" target="_blank">XMall开源商城</a>
                                     </TimelineItem>
                                     <TimelineItem color="red">
-                                        <a href="https://xpay.exrick.cn" target="_blank">XPay个人收款支付系统</a>
+                                        <a href="http://xpay.exrick.cn" target="_blank">XPay个人收款支付系统</a>
                                     </TimelineItem>
                                     <TimelineItem color="blue">
                                         Star或捐赠后可加入QQ交流群 475743731
