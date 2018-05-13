@@ -302,6 +302,19 @@ util.initRouter = function (vm) {
     }
 };
 
+util.getMenuList = function (vm) {
+    const constRoutes = [];
+    // 加载菜单
+    axios.get("/menu/getAllList").then(res => {
+        let menuData = res.result;
+        util.initRouterNode(constRoutes, menuData);
+        // 添加主界面路由
+        vm.$store.commit('updateAppRouter', constRoutes.filter(item => item.children.length > 0));
+        // 刷新界面菜单
+        vm.$store.commit('updateMenulist', constRoutes.filter(item => item.children.length > 0));
+    });
+}
+
 // 生成路由节点
 util.initRouterNode = function (routers, data) {
     for (var item of data) {

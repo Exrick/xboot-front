@@ -181,6 +181,7 @@ import countUp from "./components/countUp.vue";
 import inforCard from "./components/inforCard.vue";
 import mapDataTable from "./components/mapDataTable.vue";
 import Cookies from "js-cookie";
+import Util from "@/libs/util";
 
 export default {
   name: "home",
@@ -215,6 +216,9 @@ export default {
     }
   },
   methods: {},
+  created() {
+    Util.getMenuList(this);
+  },
   mounted() {
     this.city = Cookies.get("city");
     this.weather = Cookies.get("weather");
