@@ -197,15 +197,17 @@ export default {
           } else {
             this.errorCode = "";
           }
+          this.loading = true;
           this.form.captchaId = this.captchaId;
           this.postRequest("/user/regist", this.form).then(res => {
+            this.loading = false;
             if (res.success === true) {
               let query = { username: this.form.username };
               this.$router.push({
                 name: "regist-result",
                 query: query
               });
-            }else{
+            } else {
               this.getVerifyCode();
             }
           });
