@@ -234,6 +234,8 @@ export default {
         this.userForm.avatar = res.result;
         this.defaultList[0].url = res.result;
         this.$refs.upload.fileList.splice(0, 1);
+      } else {
+        this.$Message.error(res.message);
       }
     },
     handleFormatError(file) {

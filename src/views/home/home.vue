@@ -181,7 +181,6 @@ import countUp from "./components/countUp.vue";
 import inforCard from "./components/inforCard.vue";
 import mapDataTable from "./components/mapDataTable.vue";
 import Cookies from "js-cookie";
-import Util from "@/libs/util";
 
 export default {
   name: "home",
@@ -215,15 +214,33 @@ export default {
       return localStorage.avatorImgPath;
     }
   },
-  methods: {},
-  created() {
-    Util.getMenuList(this);
+  methods: {
+    init() {
+      let userInfo = JSON.parse(Cookies.get("userInfo"));
+      this.username = userInfo.username;
+      this.getRequest("/common/ip/info").then(res => {
+        if (res.success === true) {
+          let ipInfo = JSON.parse(res.result);
+          if (ipInfo.retCode === "200") {
+            let info = ipInfo.result[0];
+            let weather =
+              info.weather +
+              " " +
+              info.temperature +
+              " 污染指数: " +
+              info.pollutionIndex;
+            this.city = info.city;
+            this.weather = weather;
+          } else {
+            this.city = "未知";
+            this.weather = "未知";
+          }
+        }
+      });
+    }
   },
   mounted() {
-    this.city = Cookies.get("city");
-    this.weather = Cookies.get("weather");
-    let userInfo = JSON.parse(Cookies.get("userInfo"));
-    this.username = userInfo.username;
+    this.init();
   }
 };
 </script>

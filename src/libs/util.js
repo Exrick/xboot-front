@@ -3,6 +3,7 @@ import env from '../../build/env';
 import semver from 'semver';
 import packjson from '../../package.json';
 import lazyLoading from './lazyLoading.js';
+import { router } from '@/router/index';
 
 let util = {
 
@@ -252,19 +253,32 @@ util.toDefaultPage = function (routers, name, route, next) {
 
 util.fullscreenEvent = function (vm) {
     vm.$store.commit('initCachepage');
-    // vm.$store.commit('updateMenulist');
 };
 
 util.initRouter = function (vm) {
     const constRoutes = [];
+    const otherRoutes = [];
 
-    // 读取缓存
-    let routes = localStorage.menus;
-    if (routes !== "" && routes !== null && routes !== undefined) {
-        routes = JSON.parse(routes);
-        util.initRouterNode(constRoutes, routes);
+    // 404路由需要和动态路由一起注入
+    const otherRouter = [{
+        path: '/*',
+        name: 'error-404',
+        meta: {
+            title: '404-页面不存在'
+        },
+        component: 'error-page/404'
+    }];
+
+    // 加载菜单
+    axios.get("/menu/getAllList").then(res => {
+        let menuData = res.result;
+        util.initRouterNode(constRoutes, menuData);
+        util.initRouterNode(otherRoutes, otherRouter);
         // 添加主界面路由
         vm.$store.commit('updateAppRouter', constRoutes.filter(item => item.children.length > 0));
+        // 添加全局路由
+        vm.$store.commit('updateDefaultRouter', otherRoutes);
+        // 刷新界面菜单
         // 刷新界面菜单
         vm.$store.commit('updateMenulist', constRoutes.filter(item => item.children.length > 0));
 
@@ -277,29 +291,7 @@ util.initRouter = function (vm) {
             }
         });
         vm.$store.commit('setTagsList', tagsList);
-    } else {
-        // 加载菜单
-        axios.get("/menu/getAllList").then(res => {
-            let menuData = res.result;
-            util.initRouterNode(constRoutes, menuData);
-            // 添加主界面路由
-            vm.$store.commit('updateAppRouter', constRoutes.filter(item => item.children.length > 0));
-            // 刷新界面菜单
-            vm.$store.commit('updateMenulist', constRoutes.filter(item => item.children.length > 0));
-            // 缓存
-            localStorage.menus = JSON.stringify(res.result);
-
-            let tagsList = [];
-            vm.$store.state.app.routers.map((item) => {
-                if (item.children.length <= 1) {
-                    tagsList.push(item.children[0]);
-                } else {
-                    tagsList.push(...item.children);
-                }
-            });
-            vm.$store.commit('setTagsList', tagsList);
-        });
-    }
+    });
 };
 
 util.getMenuList = function (vm) {

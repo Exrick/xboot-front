@@ -3,7 +3,7 @@
 > 作者目前大四 且为后台开发 能力经验有限 如有错误欢迎指正 期待您的捐赠支持！
 
 ### [宣传视频](https://www.bilibili.com/video/av23121122/)
-- 作者亲自制作 可接单做视频... 视频已上传至[B站](https://www.bilibili.com/video/av23121122/)
+- 作者亲自制作 [点我观看](https://www.bilibili.com/video/av23121122/)
 ### 在线Demo 
 http://xboot.exrick.cn
 ### 项目简介

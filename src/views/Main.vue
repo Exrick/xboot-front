@@ -179,12 +179,7 @@ export default {
       });
       if (!openpageHasTag) {
         //  解决关闭当前标签后再点击回退按钮会退到当前页时没有标签的问题
-        util.openNewPage(
-          this,
-          name,
-          this.$route.params || {},
-          this.$route.query || {}
-        );
+        util.openNewPage(this, name, this.$route.params || {}, this.$route.query || {});
       }
     },
     handleSubmenuChange(val) {
@@ -225,6 +220,7 @@ export default {
     }
   },
   mounted() {
+    util.getMenuList(this);
     this.init();
     window.addEventListener("resize", this.scrollBarResize);
   },

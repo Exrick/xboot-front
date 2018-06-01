@@ -11,7 +11,7 @@
                         <Input type="text" v-model="searchKey" placeholder="请输入搜索关键词" style="width: 300px"/>
                       </Form-item>
                       <Form-item style="margin-left:-35px;">
-                        <Button @click="getLogList" type="primary" icon="search">全文检索</Button>
+                        <Button @click="getLogList" type="primary" icon="search">搜索</Button>
                         <Button @click="handleReset" type="ghost" >重置</Button>
                       </Form-item>
                     </Form>
@@ -284,10 +284,6 @@ export default {
     }
   },
   mounted() {
-    this.$Notice.info({
-      title: "提示",
-      desc: "若出现报错说明未启动Elasticsearch或ES发送错误，请勿惊慌"
-    });
     this.init();
   }
 };

@@ -40,6 +40,10 @@ const app = {
             state.routers.push(...routes);
             router.addRoutes(routes);
         },
+        // 动态添加全局路由，不需要缓存
+        updateDefaultRouter (state, routes) {
+            router.addRoutes(routes);
+        },
         setTagsList(state, list) {
             state.tagsList.push(...list);
         },
@@ -93,12 +97,6 @@ const app = {
                 }
             });
             state.menuList = menuList;
-        },
-        changeMenuTheme(state, theme) {
-            state.menuTheme = theme;
-        },
-        changeMainTheme(state, mainTheme) {
-            state.themeColor = mainTheme;
         },
         addOpenSubmenu(state, name) {
             let hasThisName = false;

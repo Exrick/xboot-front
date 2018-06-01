@@ -1,5 +1,5 @@
 <template>
-    <Row type="flex" justify="center" align="middle" class="login" @keydown.enter="submitLogin">
+    <Row type="flex" justify="center" align="middle" class="login" @keydown.enter.native="submitLogin">
         <Col :xs="{span:22}" style="width: 368px;">
             <Row class="header">
                 <img src="../images/xboot.png" width="220px"/>
@@ -89,7 +89,6 @@
 
 <script>
 import Cookies from "js-cookie";
-import util from "@/libs/util.js";
 import { setStore } from "../utils/storage";
 import { router } from "../router/index";
 export default {
@@ -190,8 +189,6 @@ export default {
                       });
                     }
                     Cookies.set("access", JSON.stringify(access));
-                    // 更新菜单
-                    util.initRouter(this);
                     this.$router.push({
                       name: "home_index"
                     });
@@ -217,27 +214,6 @@ export default {
           }
         });
       }
-    },
-    getIpInfo() {
-      this.getRequest("/common/ip/info").then(res => {
-        if (res.success === true) {
-          let ipInfo = JSON.parse(res.result);
-          if (ipInfo.retCode === "200") {
-            let info = ipInfo.result[0];
-            let weather =
-              info.weather +
-              " " +
-              info.temperature +
-              " 污染指数: " +
-              info.pollutionIndex;
-            Cookies.set("city", info.city);
-            Cookies.set("weather", weather);
-          } else {
-            Cookies.set("city", "未知");
-            Cookies.set("weather", "未知");
-          }
-        }
-      });
     }
   },
   mounted() {
@@ -245,7 +221,6 @@ export default {
       title: "体验账号密码",
       desc: "账号：test 密码：123456 已开放注册！"
     });
-    this.getIpInfo();
   }
 };
 </script>
