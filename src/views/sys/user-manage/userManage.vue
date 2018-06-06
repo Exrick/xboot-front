@@ -9,32 +9,35 @@
                     <Row>
                         <Form ref="searchForm" :model="searchForm" inline :label-width="70" class="search-form">
                             <Form-item label="用户名称" prop="username">
-                                <Input type="text" v-model="searchForm.username" placeholder="请输入用户名" style="width: 200px"/>
+                              <Input type="text" v-model="searchForm.username" clearable placeholder="请输入用户名" style="width: 200px"/>
                             </Form-item>
                             <Form-item label="手机号" prop="mobile">
-                                <Input type="text" v-model="searchForm.mobile" placeholder="请输入手机号" style="width: 200px"/>
+                              <Input type="text" v-model="searchForm.mobile" clearable placeholder="请输入手机号" style="width: 200px"/>
                             </Form-item>
                             <span v-if="drop">
                               <Form-item label="邮箱" prop="email">
-                                  <Input type="text" v-model="searchForm.email" placeholder="请输入邮箱" style="width: 200px"/>
+                                <Input type="text" v-model="searchForm.email" clearable placeholder="请输入邮箱" style="width: 200px"/>
                               </Form-item>
                               <Form-item label="性别" prop="sex">
-                                  <Select v-model="searchForm.sex" placeholder="请选择" style="width: 200px">
-                                      <Option value="0">女</Option>
-                                      <Option value="1">男</Option>
-                                  </Select>
+                                <Select v-model="searchForm.sex" placeholder="请选择" clearable style="width: 200px">
+                                  <Option value="0">女</Option>
+                                  <Option value="1">男</Option>
+                                </Select>
                               </Form-item>
                               <Form-item label="用户类型" prop="type">
-                                  <Select v-model="searchForm.type" placeholder="请选择" style="width: 200px">
-                                      <Option value="0">普通用户</Option>
-                                      <Option value="1">管理员</Option>
-                                  </Select>
+                                <Select v-model="searchForm.type" placeholder="请选择" clearable style="width: 200px">
+                                  <Option value="0">普通用户</Option>
+                                  <Option value="1">管理员</Option>
+                                </Select>
                               </Form-item>
                               <Form-item label="用户状态" prop="status">
-                                  <Select v-model="searchForm.status" placeholder="请选择" style="width: 200px">
-                                      <Option value="0">正常</Option>
-                                      <Option value="-1">禁用</Option>
-                                  </Select>
+                                <Select v-model="searchForm.status" placeholder="请选择" clearable style="width: 200px">
+                                  <Option value="0">正常</Option>
+                                  <Option value="-1">禁用</Option>
+                                </Select>
+                              </Form-item>
+                              <Form-item label="创建时间" prop="status">
+                                <DatePicker type="daterange" format="yyyy-MM-dd" clearable @on-change="selectDateRange" placeholder="选择起始时间" style="width: 200px"></DatePicker>
                               </Form-item>
                             </span>
                             <Form-item style="margin-left:-35px;">
@@ -55,6 +58,7 @@
                               <Icon type="arrow-down-b"></Icon>
                           </Button>
                           <DropdownMenu slot="list">
+                              <DropdownItem name="refresh">刷新</DropdownItem>
                               <DropdownItem name="exportData">导出所选数据</DropdownItem>
                           </DropdownMenu>
                         </Dropdown>
@@ -66,7 +70,7 @@
                         </Alert>
                     </Row>
                     <Row class="margin-top-10 searchable-table-con1">
-                        <Table :loading="loading" border :columns="columns" :data="data" @on-selection-change="showSelect" ref="table"></Table>
+                        <Table :loading="loading" border :columns="columns" :data="data" sortable="custom" @on-sort-change="changeSort" @on-selection-change="showSelect" ref="table"></Table>
                         <Table :columns="columns" :data="exportData" ref="exportTable" style="display:none"></Table>
                     </Row>
                     <Row type="flex" justify="end" class="code-row-bg page">
@@ -89,19 +93,19 @@
                 <FormItem label="手机号" prop="mobile">
                     <Input v-model="userForm.mobile"/>
                 </FormItem>
-                <FormItem label="性别">
+                <FormItem label="性别" prop="sex">
                   <RadioGroup v-model="userForm.sex">
                     <Radio :label="1">男</Radio>
                     <Radio :label="0">女</Radio>
                   </RadioGroup>
                 </FormItem>
-                <FormItem label="用户类型">
+                <FormItem label="用户类型" prop="type">
                   <Select v-model="userForm.type" placeholder="请选择">
                     <Option :value="0">普通用户</Option>
                     <Option :value="1">管理员</Option>
                   </Select>
                 </FormItem>
-                <FormItem label="角色分配">
+                <FormItem label="角色分配" prop="roles">
                   <Select v-model="userForm.roles" multiple @on-change="selectRoles">
                       <Option v-for="item in roleList" :value="item.id" :key="item.id">{{ item.name }}</Option>
                   </Select>
@@ -150,7 +154,10 @@ export default {
         status: "",
         pageNumber: 1,
         pageSize: 10,
-        sort: "createTime"
+        sort: "createTime",
+        order: "desc",
+        startDate: "",
+        endDate: ""
       },
       modalType: 0,
       userModalVisible: false,
@@ -185,16 +192,19 @@ export default {
         {
           title: "用户名",
           key: "username",
+          width: 150,
           sortable: true
         },
         {
           title: "手机",
           key: "mobile",
+          width: 110,
           sortable: true
         },
         {
           title: "邮箱",
           key: "email",
+          width: 200,
           sortable: true
         },
         {
@@ -216,6 +226,7 @@ export default {
           title: "用户类型",
           key: "type",
           align: "center",
+          width: 100,
           render: (h, params) => {
             let re = "";
             if (params.row.type === 1) {
@@ -230,6 +241,7 @@ export default {
           title: "状态",
           key: "status",
           align: "center",
+          width: 180,
           render: (h, params) => {
             let re = "";
             if (params.row.status === 0) {
@@ -282,12 +294,14 @@ export default {
         {
           title: "创建时间",
           key: "createTime",
-          sortable: true
+          sortable: true,
+          sortType: "desc",
+          width: 150
         },
         {
           title: "操作",
           key: "action",
-          width: 220,
+          width: 260,
           align: "center",
           render: (h, params) => {
             if (params.row.status === 0) {
@@ -419,6 +433,12 @@ export default {
       this.searchForm.pageSize = v;
       this.getUserList();
     },
+    selectDateRange(v) {
+      if (v) {
+        this.searchForm.startDate = v[0];
+        this.searchForm.endDate = v[1];
+      }
+    },
     getUserList() {
       // 多条件搜索用户列表
       this.loading = true;
@@ -442,6 +462,14 @@ export default {
       // 重新加载数据
       this.init();
     },
+    changeSort(e) {
+      this.searchForm.sort = e.key;
+      this.searchForm.order = e.order;
+      if (e.order === "normal") {
+        this.searchForm.order = "";
+      }
+      this.init();
+    },
     getRoleList() {
       this.getRequest("/role/getAllList").then(res => {
         if (res.success === true) {
@@ -450,11 +478,11 @@ export default {
       });
     },
     handleDropdown(name) {
-      if (this.selectCount <= 0) {
-        this.$Message.warning("您还未选择要导出的数据");
-        return;
-      }
       if (name === "exportData") {
+        if (this.selectCount <= 0) {
+          this.$Message.warning("您还未选择要导出的数据");
+          return;
+        }
         this.$Modal.confirm({
           title: "确认导出",
           content: "您确认要导出所选 " + this.selectCount + " 条数据?",
@@ -464,6 +492,8 @@ export default {
             });
           }
         });
+      } else if (name === "refresh") {
+        this.getUserList();
       }
     },
     selectRoles(v) {},
@@ -476,7 +506,7 @@ export default {
           let url = "/user/admin/add";
           if (this.modalType === 1) {
             // 编辑用户
-            url = "/user/edit";
+            url = "/user/admin/edit";
           }
           if (this.modalType === 0) {
             if (this.userForm.password.length < 6) {
@@ -499,15 +529,13 @@ export default {
     addUser() {
       this.modalType = 0;
       this.modalTitle = "添加用户";
-      this.userForm = {
-        sex: 1,
-        roles: []
-      };
+      this.$refs.userForm.resetFields();
       this.userModalVisible = true;
     },
     edit(v) {
       this.modalType = 1;
       this.modalTitle = "编辑用户";
+      this.$refs.userForm.resetFields();
       // 转换null为""
       for (let attr in v) {
         if (v[attr] === null) {
@@ -522,7 +550,6 @@ export default {
         selectRolesId.push(e.id);
       });
       this.userForm.roles = selectRolesId;
-
       this.userModalVisible = true;
     },
     enable(v) {
@@ -530,7 +557,7 @@ export default {
         title: "确认启用",
         content: "您确认要启用用户 " + v.username + " ?",
         onOk: () => {
-          this.postRequest("/user/admin/enable", { userId: v.id }).then(res => {
+          this.postRequest("/user/admin/enable/" + v.id).then(res => {
             if (res.success === true) {
               this.$Message.success("操作成功");
               this.init();
@@ -544,14 +571,12 @@ export default {
         title: "确认禁用",
         content: "您确认要禁用用户 " + v.username + " ?",
         onOk: () => {
-          this.postRequest("/user/admin/disable", { userId: v.id }).then(
-            res => {
-              if (res.success === true) {
-                this.$Message.success("操作成功");
-                this.init();
-              }
+          this.postRequest("/user/admin/disable/" + v.id).then(res => {
+            if (res.success === true) {
+              this.$Message.success("操作成功");
+              this.init();
             }
-          );
+          });
         }
       });
     },

@@ -51,6 +51,12 @@
                     <FormItem label="用户姓名：">
                         <span>{{userForm.username}}</span>
                     </FormItem>
+                    <FormItem label="性别：">
+                        <RadioGroup v-model="userForm.sex">
+                          <Radio :label="1">男</Radio>
+                          <Radio :label="0">女</Radio>
+                        </RadioGroup>
+                    </FormItem>
                     <FormItem label="手机号：">
                         <span>{{userForm.mobile}}</span>
                         <div style="display:inline-block;margin-left:20px;font-size:13px;">
@@ -68,9 +74,6 @@
                     </FormItem>
                    <FormItem label="用户类型：">
                         <span>{{ userForm.typeTxt }}</span>
-                    </FormItem>
-                    <FormItem label="用户状态：">
-                        <span>{{ userForm.statusTxt }}</span>
                     </FormItem>
                     <FormItem label="创建时间：">
                         <span>{{ userForm.createTime }}</span>
@@ -136,10 +139,10 @@ export default {
         id: "",
         avatar: "",
         username: "",
+        sex: "",
         mobile: "",
         email: "",
         status: "",
-        statusTxt: "",
         type: "",
         typeTxt: "",
         address: "",
@@ -212,12 +215,6 @@ export default {
         this.userForm.typeTxt = "普通用户";
       } else if (this.userForm.type === 1) {
         this.userForm.typeTxt = "管理员";
-      }
-
-      if (this.userForm.status === 0) {
-        this.userForm.statusTxt = "正常状态";
-      } else if (this.userForm.status === -1) {
-        this.userForm.statusTxt = "禁用";
       }
     },
     handleView(imgUrl) {
@@ -307,7 +304,7 @@ export default {
       let params = this.userForm;
       delete params.nickName;
       delete params.description;
-      this.postRequest("/user/editOwn", params).then(res => {
+      this.postRequest("/user/edit", params).then(res => {
         this.saveLoading = false;
         if (res.success === true) {
           this.$Message.success("保存成功");

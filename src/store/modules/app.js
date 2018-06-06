@@ -24,15 +24,16 @@ const app = {
                 path: '',
                 name: 'home_index'
             }
-        ], // 面包屑数组
+        ], 
+        // 面包屑数组
         menuList: [],
         routers: [
-            otherRouter,
-            // ...appRouter
+            otherRouter
         ],
         tagsList: [...otherRouter.children],
         messageCount: 0,
-        dontCache: ['text-editor', 'artical-publish'] // 在这里定义你不想要缓存的页面的name属性值(参见路由配置router.js)
+        // 在这里定义你不想要缓存的页面的name属性值(参见路由配置router.js)
+        dontCache: ['test', 'test']
     },
     mutations: {
         // 动态添加主界面路由，需要缓存
@@ -41,62 +42,14 @@ const app = {
             router.addRoutes(routes);
         },
         // 动态添加全局路由，不需要缓存
-        updateDefaultRouter (state, routes) {
+        updateDefaultRouter(state, routes) {
             router.addRoutes(routes);
         },
         setTagsList(state, list) {
             state.tagsList.push(...list);
         },
         updateMenulist(state, routes) {
-            let accessCode = Cookies.get('access');
-            let menuList = [];
-            // 过滤权限 appRouter
-            routes.forEach((item, index) => {
-                if (item.access !== undefined && item.access !== null) {
-                    if (Util.showThisRoute(item.access, accessCode)) {
-                        if (item.children.length === 1) {
-                            menuList.push(item);
-                        } else {
-                            let len = menuList.push(item);
-                            let childrenArr = [];
-                            childrenArr = item.children.filter(child => {
-                                if (child.access !== undefined && child.access !== null) {
-                                    if (child.access === accessCode) {
-                                        return child;
-                                    }
-                                } else {
-                                    return child;
-                                }
-                            });
-                            menuList[len - 1].children = childrenArr;
-                        }
-                    }
-                } else {
-                    if (item.children.length === 1) {
-                        menuList.push(item);
-                    } else {
-                        let len = menuList.push(item);
-                        let childrenArr = [];
-                        childrenArr = item.children.filter(child => {
-                            if (child.access !== undefined && child.access !== null) {
-                                if (Util.showThisRoute(child.access, accessCode)) {
-                                    return child;
-                                }
-                            } else {
-                                return child;
-                            }
-                        });
-                        if (childrenArr === undefined || childrenArr.length === 0) {
-                            menuList.splice(len - 1, 1);
-                        } else {
-                            let handledItem = JSON.parse(JSON.stringify(menuList[len - 1]));
-                            handledItem.children = childrenArr;
-                            menuList.splice(len - 1, 1, handledItem);
-                        }
-                    }
-                }
-            });
-            state.menuList = menuList;
+            state.menuList = routes;
         },
         addOpenSubmenu(state, name) {
             let hasThisName = false;

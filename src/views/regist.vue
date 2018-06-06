@@ -38,7 +38,7 @@
                     </FormItem>
                     <FormItem prop="verifyCode" :error="errorCode">
                          <Row type="flex" justify="space-between" class="code-row-bg">
-                            <Input v-model="form.verifyCode" size="large" clearable  placeholder="请输入短信验证码" :maxlength="maxLength" class="input-verify"/>
+                            <Input v-model="form.verifyCode" size="large" clearable  placeholder="请输入短信验证码(随意输入即可)" :maxlength="maxLength" class="input-verify"/>
                             <Button size="large" @click="sendVerify" v-if="!sended" class="send-verify">获取验证码</Button>
                             <Button size="large" disabled v-if="sended" class="count-verify">{{countButton}}</Button>
                         </Row>
@@ -218,7 +218,7 @@ export default {
       this.getRequest("/common/captcha/init").then(res => {
         if (res.success === true) {
           this.captchaId = res.result.captchaId;
-          this.verifyCodeImg = "/common/captcha/draw/" + this.captchaId;
+          this.verifyCodeImg = "/xboot/common/captcha/draw/" + this.captchaId;
         }
       });
     }

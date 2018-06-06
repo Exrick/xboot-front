@@ -7,9 +7,9 @@
             <Col>
                 <Card>     
                     <Row class="operation">
-                        <Button @click="addUser" type="primary" icon="plus-round">添加角色</Button>
+                        <Button @click="addRole" type="primary" icon="plus-round">添加角色</Button>
                         <Button @click="delAll" type="ghost" icon="trash-a">批量删除</Button>
-                        <Button @click="getRoleList" type="ghost" icon="refresh">刷新</Button>
+                        <Button @click="init" type="ghost" icon="refresh">刷新</Button>
                     </Row>
                      <Row>
                         <Alert show-icon>
@@ -18,7 +18,7 @@
                         </Alert>
                     </Row>
                     <Row class="margin-top-10 searchable-table-con1">
-                        <Table :loading="loading" border :columns="columns" :data="data" ref="table" @on-selection-change="changeSelect"></Table>
+                        <Table :loading="loading" border :columns="columns" :data="data" ref="table" sortable="custom" @on-sort-change="changeSort" @on-selection-change="changeSelect"></Table>
                     </Row>
                     <Row type="flex" justify="end" class="code-row-bg page">
                         <Page :current="this.pageNumber" :total="total" :page-size="this.pageSize" @on-change="changePage" @on-page-size-change="changePageSize" :page-size-opts="[10,20,50,100]" size="small" show-total show-elevator show-sizer></Page>
@@ -27,18 +27,24 @@
             </Col>
         </Row>
         <Modal :title="modalTitle" v-model="roleModalVisible" :mask-closable='false' :width="500">
-            <Form ref="roleForm" :model="roleForm" :label-width="80" :rules="roleFormValidate">
-                <FormItem label="角色名称" prop="name">
-                  <Input v-model="roleForm.name" placeholder="按照Spring Security约定请以‘ROLE_’开头"/>
-                </FormItem>
-                <FormItem label="对应权限值" prop="access">
-                  <InputNumber :max="1000" :min="-1000" v-model="roleForm.access"></InputNumber>
-                </FormItem>
-            </Form>
-            <div slot="footer">
-                <Button type="text" @click="cancelRole">取消</Button>
-                <Button type="primary" :loading="submitLoading" @click="submitRole">提交</Button>
-            </div>
+          <Form ref="roleForm" :model="roleForm" :label-width="80" :rules="roleFormValidate">
+            <FormItem label="角色名称" prop="name">
+              <Input v-model="roleForm.name" placeholder="按照Spring Security约定建议以‘ROLE_’开头"/>
+            </FormItem>
+          </Form>
+          <div slot="footer">
+            <Button type="text" @click="cancelRole">取消</Button>
+            <Button type="primary" :loading="submitLoading" @click="submitRole">提交</Button>
+          </div>
+        </Modal>
+        <Modal title="分配权限(点击选择)" v-model="permModalVisible" :mask-closable='false' :width="500">
+          <Tree ref="tree" :data="permData" multiple></Tree>
+          <Spin size="large" v-if="treeLoading"></Spin>
+          <div slot="footer">
+            <Button type="text" @click="cancelPermEdit">取消</Button>
+            <Button type="ghost" @click="selectTreeAll">全选/反选</Button>
+            <Button type="primary" :loading="submitPermLoading" @click="submitPermEdit">提交</Button>
+          </div>
         </Modal>
     </div>
 </template>
@@ -49,12 +55,16 @@ export default {
   data() {
     return {
       loading: true,
+      treeLoading: true,
+      submitPermLoading: false,
+      sortColumn: "createTime",
+      sortType: "desc",
       modalType: 0,
       roleModalVisible: false,
+      permModalVisible: false,
       modalTitle: "",
       roleForm: {
-        name: "",
-        access: null
+        name: ""
       },
       roleFormValidate: {
         name: [{ required: true, message: "角色名称不能为空", trigger: "blur" }]
@@ -74,14 +84,10 @@ export default {
           sortable: true
         },
         {
-          title: "对应权限值",
-          key: "access",
-          sortable: true
-        },
-        {
           title: "创建时间",
           key: "createTime",
-          sortable: true
+          sortable: true,
+          sortType: "desc"
         },
         {
           title: "更新时间",
@@ -141,10 +147,28 @@ export default {
         {
           title: "操作",
           key: "action",
-          width: 200,
           align: "center",
+          width: 300,
           render: (h, params) => {
             return h("div", [
+              h(
+                "Button",
+                {
+                  props: {
+                    type: "warning",
+                    size: "small"
+                  },
+                  style: {
+                    marginRight: "5px"
+                  },
+                  on: {
+                    click: () => {
+                      this.editPerm(params.row);
+                    }
+                  }
+                },
+                "分配权限"
+              ),
               h(
                 "Button",
                 {
@@ -185,12 +209,18 @@ export default {
       data: [],
       pageNumber: 1,
       pageSize: 10,
-      total: 0
+      total: 0,
+      permData: [],
+      editRolePermId: "",
+      selectPermList: [],
+      selectAllFlag: false,
     };
   },
   methods: {
     init() {
       this.getRoleList();
+      // 获取所有菜单权限树
+      this.getPermList();
     },
     changePage(v) {
       this.pageNumber = v;
@@ -198,6 +228,14 @@ export default {
     },
     changePageSize(v) {
       this.pageSize = v;
+      this.getRoleList();
+    },
+    changeSort(e) {
+      this.sortColumn = e.key;
+      this.sortType = e.order;
+      if (e.order === "normal") {
+        this.sortType = "";
+      }
       this.getRoleList();
     },
     getRoleList() {
@@ -215,13 +253,36 @@ export default {
         }
       });
     },
+    getPermList() {
+      this.treeLoading = true;
+      this.getRequest("/permission/getAllList").then(res => {
+        this.treeLoading = false;
+        if (res.success === true) {
+          this.deleteDisableNode(res.result);
+          this.permData = res.result;
+        }
+      });
+    },
+    // 递归删除禁用节点
+    deleteDisableNode(permData) {
+      let that = this;
+      permData.forEach(function(e) {
+        if (e.status === 1) {
+          e.title += "(已禁用)"
+          e.disabled = true
+        }
+        if (e.children && e.children.length > 0) {
+          that.deleteDisableNode(e.children);
+        }
+      });
+    },
     cancelRole() {
       this.roleModalVisible = false;
     },
     submitRole() {
       this.$refs.roleForm.validate(valid => {
         if (valid) {
-          let url = "/role/add";
+          let url = "/role/save";
           if (this.modalType === 1) {
             // 编辑用户
             url = "/role/edit";
@@ -238,7 +299,7 @@ export default {
         }
       });
     },
-    addUser() {
+    addRole() {
       this.modalType = 0;
       this.modalTitle = "添加角色";
       this.roleForm = {
@@ -340,6 +401,80 @@ export default {
           });
         }
       });
+    },
+    editPerm(v) {
+      this.editRolePermId = v.id;
+      // 匹配勾选
+      let rolePerms = v.permissions;
+      // 递归判断子节点
+      this.checkPermTree(this.permData, rolePerms);
+      this.permModalVisible = true;
+    },
+    // 递归判断子节点
+    checkPermTree(permData, rolePerms) {
+      let that = this;
+      permData.forEach(function(p) {
+        if (that.hasPerm(p, rolePerms)) {
+          p.selected = true;
+        } else {
+          p.selected = false;
+        }
+        if (p.children && p.children.length > 0) {
+          that.checkPermTree(p.children, rolePerms);
+        }
+      });
+    },
+    // 判断角色拥有的权限节点勾选
+    hasPerm(p, rolePerms) {
+      let flag = false;
+      for (let i = 0; i < rolePerms.length; i++) {
+        if (p.id === rolePerms[i].id) {
+          flag = true;
+          break;
+        }
+      }
+      if (flag) {
+        return true;
+      }
+      return false;
+    },
+    // 全选反选
+    selectTreeAll() {
+      this.selectAllFlag = !this.selectAllFlag
+      let select = this.selectAllFlag
+      this.selectedTreeAll(this.permData, select)
+    },
+    // 递归全选节点
+    selectedTreeAll(permData, select) {
+      let that = this;
+      permData.forEach(function(e) {
+        e.selected = select
+        if (e.children && e.children.length > 0) {
+          that.selectedTreeAll(e.children, select);
+        }
+      });
+    },
+    submitPermEdit() {
+      this.submitPermLoading = true;
+      let permIds = "";
+      let selectedNodes = this.$refs.tree.getSelectedNodes();
+      selectedNodes.forEach(function(e) {
+        permIds += e.id + ",";
+      });
+      permIds = permIds.substring(0, permIds.length - 1);
+      this.postRequest("/role/editRolePerm/" + this.editRolePermId, {
+        permIds: permIds
+      }).then(res => {
+        this.submitPermLoading = false;
+        if (res.success === true) {
+          this.$Message.success("操作成功");
+          this.init();
+          this.permModalVisible = false;
+        }
+      });
+    },
+    cancelPermEdit() {
+      this.permModalVisible = false;
     }
   },
   mounted() {

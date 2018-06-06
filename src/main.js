@@ -5,7 +5,6 @@ import iView from 'iview';
 import iviewArea from 'iview-area';
 import App from './App'
 import { router } from './router/index'
-// import { appRouter } from './router/router';
 import store from './store';
 import '@/locale';
 import 'iview/dist/styles/iview.css';
@@ -14,16 +13,19 @@ import Icon from 'vue-awesome/components/Icon';
 import 'vue-awesome/icons/brands/qq';
 import 'vue-awesome/icons/brands/weixin';
 import 'vue-awesome/icons/brands/weibo';
-import { initMenu, getRequest, postRequest, deleteRequest, uploadFileRequest } from './utils/api';
-import util from '@/libs/util.js';
+import { getRequest, postRequest, putRequest, deleteRequest, uploadFileRequest } from '@/utils/api';
+import util from '@/libs/util';
+import hasButton from '@/libs/hasButton';
 
 Vue.config.productionTip = false
 Vue.use(VueI18n);
 Vue.use(iView);
 Vue.use(iviewArea);
 Vue.component('icon', Icon);
+Vue.use(hasButton);
 Vue.prototype.getRequest = getRequest;
 Vue.prototype.postRequest = postRequest;
+Vue.prototype.putRequest = putRequest;
 Vue.prototype.deleteRequest = deleteRequest;
 Vue.prototype.uploadFileRequest = uploadFileRequest;
 

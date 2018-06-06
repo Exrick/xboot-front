@@ -11,27 +11,9 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/login': {
+      '/xboot/*': {
         target: 'http://127.0.0.1:8888'  // 请求本地 需要xboot后台项目
-      },
-      '/common/*': {
-        target: 'http://127.0.0.1:8888'
-      },
-      '/upload/*': {
-        target: 'http://127.0.0.1:8888'
-      },
-      '/user/*': {
-        target: 'http://127.0.0.1:8888'
-      },
-      '/role/*': {
-        target: 'http://127.0.0.1:8888'
-      },
-      '/menu/*': {
-        target: 'http://127.0.0.1:8888'
-      },
-      '/log/*': {
-        target: 'http://127.0.0.1:8888'
-      },
+      }
     },
 
     // Various Dev Server settings

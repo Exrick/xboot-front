@@ -3,13 +3,14 @@ import env from '../../build/env';
 import semver from 'semver';
 import packjson from '../../package.json';
 import lazyLoading from './lazyLoading.js';
-import { router } from '@/router/index';
+import router from '@/router/index';
+import Cookies from "js-cookie";
 
 let util = {
 
 };
 util.title = function (title) {
-    title = title || 'X-Boot';
+    title = title || 'X-Boot 前后端分离框架';
     window.document.title = title;
 };
 
@@ -39,19 +40,6 @@ util.oneOf = function (ele, targetArr) {
         return true;
     } else {
         return false;
-    }
-};
-
-util.showThisRoute = function (itAccess, currentAccess) {
-    if (currentAccess !== "" && currentAccess !== null && currentAccess !== undefined) {
-        currentAccess = JSON.parse(currentAccess)
-    }
-    if (typeof currentAccess === 'object' && Array.isArray(currentAccess)) {
-        // 数组
-        return util.oneOf(itAccess, currentAccess);
-    } else {
-        // 用户权限为单个
-        return itAccess == currentAccess;
     }
 };
 
@@ -269,16 +257,26 @@ util.initRouter = function (vm) {
         component: 'error-page/404'
     }];
 
+    // 判断用户是否登录
+    let userInfo = Cookies.get('userInfo')
+    if (userInfo === null || userInfo === "" || userInfo === undefined) {
+        // 未登录
+        return;
+    }
+    let userId = JSON.parse(Cookies.get("userInfo")).id;
+
     // 加载菜单
-    axios.get("/menu/getAllList").then(res => {
+    axios.get("/xboot/permission/getMenuList/" + userId).then(res => {
         let menuData = res.result;
+        if (menuData === null || menuData === "" || menuData === undefined) {
+            return;
+        }
         util.initRouterNode(constRoutes, menuData);
         util.initRouterNode(otherRoutes, otherRouter);
         // 添加主界面路由
         vm.$store.commit('updateAppRouter', constRoutes.filter(item => item.children.length > 0));
         // 添加全局路由
         vm.$store.commit('updateDefaultRouter', otherRoutes);
-        // 刷新界面菜单
         // 刷新界面菜单
         vm.$store.commit('updateMenulist', constRoutes.filter(item => item.children.length > 0));
 
@@ -294,19 +292,6 @@ util.initRouter = function (vm) {
     });
 };
 
-util.getMenuList = function (vm) {
-    const constRoutes = [];
-    // 加载菜单
-    axios.get("/menu/getAllList").then(res => {
-        let menuData = res.result;
-        util.initRouterNode(constRoutes, menuData);
-        // 添加主界面路由
-        vm.$store.commit('updateAppRouter', constRoutes.filter(item => item.children.length > 0));
-        // 刷新界面菜单
-        vm.$store.commit('updateMenulist', constRoutes.filter(item => item.children.length > 0));
-    });
-}
-
 // 生成路由节点
 util.initRouterNode = function (routers, data) {
     for (var item of data) {
@@ -318,6 +303,12 @@ util.initRouterNode = function (routers, data) {
             menu.children = [];
             util.initRouterNode(menu.children, item.children);
         }
+
+        let meta = {};
+        // 给页面添加按钮权限和标题
+        meta.buttonTypes = menu.buttonTypes ? menu.buttonTypes : null;
+        meta.title = menu.title ? menu.title + " - X-Boot前后端分离框架" : null;
+        menu.meta = meta;
 
         routers.push(menu);
     }

@@ -8,7 +8,7 @@
 http://xboot.exrick.cn
 ### 项目简介
 - 项目基于 Vue-Cli 创建
-- 后台加载动态权限菜单
+- 后台加载动态权限菜单 权限控制至按钮
 - 多语言切换
 - iView使用图标库 [ionicons](http://ionicons.com/) 额外图标库 [vue-awesome](https://github.com/Justineo/vue-awesome)
 
@@ -48,13 +48,19 @@ http://xboot.exrick.cn
 ### 部署
 - 先后执行命令 `npm install` 、 `npm run build` 将打包生成的 `dist` 静态文件放置服务器中，并配置路由代理
 
+### 开发指南
+- 组件使用详见[iView官网文档](https://www.iviewui.com/docs/guide/install)
+- 权限按钮或其他内容显示控制自定义标签：`v-hasButton`，使用示例：
+    ```
+    ```
+
 ### 学习记录（更新中）
 
 1.[axios请求封装 统一异常处理](https://github.com/Exrick/x-boot-front/wiki/axios%E8%AF%B7%E6%B1%82%E5%B0%81%E8%A3%85-%E7%BB%9F%E4%B8%80%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86)
 
 2.路由菜单加载
 
-3.动态权限菜单
+3.控制权限至按钮显示
 
 ### 作者其他项目推荐
 - [XMall：基于SOA架构的分布式电商购物商城](https://github.com/Exrick/xmall)

@@ -8,10 +8,10 @@
                 <Card>     
                     <Form inline :label-width="70" class="search-form">
                       <Form-item label="搜索日志">
-                        <Input type="text" v-model="searchKey" placeholder="请输入搜索关键词" style="width: 300px"/>
+                        <Input type="text" v-model="searchKey" clearable placeholder="请输入搜索关键词" style="width: 300px"/>
                       </Form-item>
                       <Form-item style="margin-left:-35px;">
-                        <Button @click="getLogList" type="primary" icon="search">搜索</Button>
+                        <Button @click="getLogList"  type="primary" icon="search">搜索</Button>
                         <Button @click="handleReset" type="ghost" >重置</Button>
                       </Form-item>
                     </Form>
@@ -27,7 +27,7 @@
                         </Alert>
                     </Row>
                     <Row class="margin-top-10 searchable-table-con1">
-                        <Table :loading="loading" border :columns="columns" :data="data" ref="table" @on-selection-change="changeSelect"></Table>
+                        <Table :loading="loading" border :columns="columns" :data="data" ref="table" sortable="custom" @on-sort-change="changeSort" @on-selection-change="changeSelect"></Table>
                     </Row>
                     <Row type="flex" justify="end" class="code-row-bg page">
                         <Page :current="this.pageNumber" :total="total" :page-size="this.pageSize" @on-change="changePage" @on-page-size-change="changePageSize" :page-size-opts="[10,20,50,100]" size="small" show-total show-elevator show-sizer></Page>
@@ -47,6 +47,8 @@ export default {
       selectList: [],
       selectCount: 0,
       searchKey: "",
+      sortColumn: "createTime",
+      sortType: "desc",
       columns: [
         {
           type: "selection",
@@ -56,6 +58,7 @@ export default {
         {
           title: "操作名称",
           key: "name",
+          width: 110,
           sortable: true
         },
         {
@@ -74,6 +77,10 @@ export default {
               value: "POST"
             },
             {
+              label: "PUT",
+              value: "PUT"
+            },
+            {
               label: "DELETE",
               value: "DELETE"
             }
@@ -84,6 +91,8 @@ export default {
               return row.requestType === "GET";
             } else if (value === "POST") {
               return row.requestType === "POST";
+            } else if (value === "PUT") {
+              return row.requestType === "PUT";
             } else if (value === "DELETE") {
               return row.requestType === "DELETE";
             }
@@ -91,6 +100,7 @@ export default {
         },
         {
           title: "请求路径",
+          width: 150,
           key: "requestUrl"
         },
         {
@@ -101,22 +111,25 @@ export default {
         {
           title: "登录用户",
           key: "username",
+          width: 105,
           sortable: true
         },
         {
           title: "IP",
           key: "ip",
+          width: 100,
           sortable: true
         },
         {
           title: "IP信息",
           key: "ipInfo",
-          sortable: true,
+          width: 90,
+          sortable: true
         },
         {
           title: "耗时(毫秒)",
           key: "costTime",
-          width: 130,
+          width: 125,
           sortable: true,
           align: "center",
           filters: [
@@ -127,7 +140,7 @@ export default {
             {
               label: ">1000毫秒",
               value: 1
-            },
+            }
           ],
           filterMultiple: false,
           filterMethod(value, row) {
@@ -141,12 +154,14 @@ export default {
         {
           title: "创建时间",
           key: "createTime",
-          sortable: true
+          sortable: true,
+          width: 105,
+          sortType: "desc"
         },
         {
           title: "操作",
           key: "action",
-          width: 100,
+          width: 98,
           align: "center",
           render: (h, params) => {
             return h("div", [
@@ -195,14 +210,18 @@ export default {
         url = "/log/getAllByPage";
         params = {
           pageNumber: this.pageNumber,
-          pageSize: this.pageSize
+          pageSize: this.pageSize,
+          sort: this.sortColumn,
+          order: this.sortType
         };
       } else {
         url = "/log/search";
         params = {
           key: this.searchKey,
           pageNumber: this.pageNumber,
-          pageSize: this.pageSize
+          pageSize: this.pageSize,
+          sort: this.sortColumn,
+          order: this.sortType
         };
       }
       this.getRequest(url, params).then(res => {
@@ -237,6 +256,14 @@ export default {
     changeSelect(e) {
       this.selectList = e;
       this.selectCount = e.length;
+    },
+    changeSort(e) {
+      this.sortColumn = e.key;
+      this.sortType = e.order;
+      if (e.order === "normal") {
+        this.sortType = "";
+      }
+      this.getLogList();
     },
     delAll() {
       if (this.selectCount <= 0) {

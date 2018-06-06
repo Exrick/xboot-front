@@ -54,7 +54,7 @@
             
                 <Row type="flex" justify="space-between" class="code-row-bg">
                     <Checkbox v-model="saveLogin" size="large">自动登录</Checkbox>
-                    <a class="forget-pass">忘记密码</a>
+                    <a class="forget-pass" @click="showAccount">忘记密码</a>
                 </Row>
                 <Row>
                     <Button class="login-btn" type="primary" size="large" :loading="loading" @click="submitLogin" long>
@@ -89,8 +89,9 @@
 
 <script>
 import Cookies from "js-cookie";
-import { setStore } from "../utils/storage";
-import { router } from "../router/index";
+import { setStore } from "@/utils/storage";
+import router from "@/router/index";
+import util from "@/libs/util.js";
 export default {
   data() {
     const validateMobile = (rule, value, callback) => {
@@ -177,23 +178,19 @@ export default {
                 // 获取用户信息
                 this.getRequest("/user/info").then(res => {
                   if (res.success === true) {
-                    Cookies.set("userInfo", res.result);
+                    // 避免超过大小限制
+                    delete res.result.permissions;
+                    Cookies.set("userInfo", JSON.stringify(res.result));
+                    setStore("userInfo", res.result);
                     this.$store.commit("setAvatarPath", res.result.avatar);
-                    // 存储该用户角色权限值
-                    let access = [];
-                    if (res.result.roles !== null) {
-                      res.result.roles.forEach(function(e) {
-                        if (e.access !== null) {
-                          access.push(e.access);
-                        }
-                      });
-                    }
-                    Cookies.set("access", JSON.stringify(access));
+                    // 加载菜单
+                    util.initRouter(this);
                     this.$router.push({
                       name: "home_index"
                     });
+                  } else {
+                    this.loading = false;
                   }
-                  this.loading = false;
                 });
               } else {
                 this.loading = false;
@@ -214,13 +211,16 @@ export default {
           }
         });
       }
+    },
+    showAccount() {
+      this.$Notice.info({
+        title: "体验账号密码",
+        desc: "账号1：test 密码：123456 <br>账号2：test2 密码：123456 已开放注册！"
+      });
     }
   },
   mounted() {
-    this.$Notice.info({
-      title: "体验账号密码",
-      desc: "账号：test 密码：123456 已开放注册！"
-    });
+    this.showAccount();
   }
 };
 </script>

@@ -89,27 +89,6 @@ export const otherRouter = {
 //             { path: 'menu-manage', title: '菜单管理', name: 'menu-manage', icon: 'navicon-round', component: () => import('@/views/sys/menu-manage/menuManage.vue') },
 //             { path: 'log-manage', title: '日志管理', name: 'log-manage', icon: 'android-list', component: () => import('@/views/sys/log-manage/logManage.vue') }
 //         ]
-//     },
-//     {
-//         path: '/access',
-//         icon: 'key',
-//         name: 'access',
-//         title: '权限管理',
-//         component: Main,
-//         children: [
-//             { path: 'index', title: '权限管理', name: 'access_index', component: () => import('@/views/access/access.vue') }
-//         ]
-//     },
-//     {
-//         path: '/access-test',
-//         icon: 'lock-combination',
-//         title: '权限测试页',
-//         name: 'accesstest',
-//         access: 0,
-//         component: Main,
-//         children: [
-//             { path: 'index', title: '权限测试页', name: 'accesstest_index', access: 0, component: () => import('@/views/access/access-test.vue') },
-//         ]
 //     }
 // ];
 

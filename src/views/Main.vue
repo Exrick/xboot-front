@@ -84,7 +84,7 @@ import messageTip from "./main-components/message-tip.vue";
 import Cookies from "js-cookie";
 import util from "@/libs/util.js";
 import scrollBar from "@/views/my-components/scroll-bar/vue-scroller-bars";
-import axios from 'axios';
+import axios from "axios";
 
 export default {
   components: {
@@ -147,9 +147,9 @@ export default {
     toggleClick() {
       this.shrink = !this.shrink;
     },
-    handleLanDropdown(name){
-        localStorage.lang = name;
-        this.$store.commit('switchLang', name);
+    handleLanDropdown(name) {
+      localStorage.lang = name;
+      this.$store.commit("switchLang", name);
     },
     handleClickUserDropdown(name) {
       if (name === "ownSpace") {
@@ -166,9 +166,8 @@ export default {
         // 退出登录
         this.$store.commit("logout", this);
         this.$store.commit("clearOpenedSubmenu");
-        this.$router.push({
-          name: "login"
-        });
+        // 强制刷新页面 重新加载router
+        location.reload();
       }
     },
     checkTag(name) {
@@ -179,18 +178,19 @@ export default {
       });
       if (!openpageHasTag) {
         //  解决关闭当前标签后再点击回退按钮会退到当前页时没有标签的问题
-        util.openNewPage(this, name, this.$route.params || {}, this.$route.query || {});
+        util.openNewPage(
+          this,
+          name,
+          this.$route.params || {},
+          this.$route.query || {}
+        );
       }
     },
     handleSubmenuChange(val) {
       // console.log(val)
     },
     beforePush(name) {
-      // if (name === 'accesstest_index') {
-      //     return false;
-      // } else {
-      //     return true;
-      // }
+      // console.log(name)
       return true;
     },
     fullscreenChange(isFullScreen) {
@@ -220,7 +220,6 @@ export default {
     }
   },
   mounted() {
-    util.getMenuList(this);
     this.init();
     window.addEventListener("resize", this.scrollBarResize);
   },

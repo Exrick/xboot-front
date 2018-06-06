@@ -5,7 +5,7 @@ import { Message } from 'iview';
 import Cookies from 'js-cookie';
 import Main from '@/views/Main.vue';
 // 统一请求路径前缀
-let base = '';
+let base = '/xboot';
 // 超时设定
 axios.defaults.timeout = 10000;
 
@@ -49,10 +49,23 @@ axios.interceptors.response.use(response => {
     }
 
     return data;
-}, (err) => { // 这里是返回状态码不为200时候的错误处理
+}, (err) => { 
+    // 返回状态码不为200时候的错误处理
     Message.error(err.toString());
     return Promise.resolve(err);
 });
+
+export const getRequest = (url, params) => {
+    let accessToken = getStore('accessToken');
+    return axios({
+        method: 'get',
+        url: `${base}${url}`,
+        params: params,
+        headers: {
+            'accessToken': accessToken
+        }
+    });
+};
 
 export const postRequest = (url, params) => {
     let accessToken = getStore("accessToken");
@@ -74,13 +87,21 @@ export const postRequest = (url, params) => {
     });
 };
 
-export const uploadFileRequest = (url, params) => {
-    let accessToken = getStore('accessToken');
+export const putRequest = (url, params) => {
+    let accessToken = getStore("accessToken");
     return axios({
-        method: 'post',
+        method: 'put',
         url: `${base}${url}`,
-        params: params,
+        data: params,
+        transformRequest: [function (data) {
+            let ret = '';
+            for (let it in data) {
+                ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&';
+            }
+            return ret;
+        }],
         headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
             'accessToken': accessToken
         }
     });
@@ -98,10 +119,10 @@ export const deleteRequest = (url, params) => {
     });
 };
 
-export const getRequest = (url, params) => {
+export const uploadFileRequest = (url, params) => {
     let accessToken = getStore('accessToken');
     return axios({
-        method: 'get',
+        method: 'post',
         url: `${base}${url}`,
         params: params,
         headers: {
