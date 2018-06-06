@@ -52,6 +52,10 @@ http://xboot.exrick.cn
 - 组件使用详见[iView官网文档](https://www.iviewui.com/docs/guide/install)
 - 权限按钮或其他内容显示控制自定义标签：`v-hasButton`，使用示例：
     ```
+    <Button v-hasButton="'add'">添加按钮</Button>
+    <Button v-hasButton="'edit'">编辑按钮</Button>
+    <Button v-hasButton="'delete'">删除按钮</Button>
+    <div v-hasButton="'view'">需要view权限的界面内容</div>
     ```
 
 ### 学习记录（更新中）
