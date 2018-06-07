@@ -6,12 +6,13 @@
 - 作者亲自制作 [点我观看](https://www.bilibili.com/video/av23121122/)
 ### 在线Demo 
 http://xboot.exrick.cn
+### 后台项目地址：[X-Boot](https://github.com/Exrick/x-boot)
 ### 项目简介
 - 项目基于 Vue-Cli 创建
 - 后台加载动态权限菜单 权限控制至按钮
 - 多语言切换
 - iView使用图标库 [ionicons](http://ionicons.com/) 额外图标库 [vue-awesome](https://github.com/Justineo/vue-awesome)
-### 后台项目地址：[X-Boot](https://github.com/Exrick/x-boot)
+
 
 ![](http://oweupqzdv.bkt.clouddn.com/QQ%E6%88%AA%E5%9B%BE20180504215410.png)
 
