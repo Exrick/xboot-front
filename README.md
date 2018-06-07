@@ -11,6 +11,7 @@ http://xboot.exrick.cn
 - 后台加载动态权限菜单 权限控制至按钮
 - 多语言切换
 - iView使用图标库 [ionicons](http://ionicons.com/) 额外图标库 [vue-awesome](https://github.com/Justineo/vue-awesome)
+### 后台项目地址：[X-Boot](https://github.com/Exrick/x-boot)
 
 ![](http://oweupqzdv.bkt.clouddn.com/QQ%E6%88%AA%E5%9B%BE20180504215410.png)
 
