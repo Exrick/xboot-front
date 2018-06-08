@@ -17,7 +17,7 @@
                     label-position="right"
                 >
                     <FormItem label="用户头像：">
-                        <div class="upload-list" v-for="item in uploadList">
+                        <div class="upload-list" v-for="item in uploadList" :key="item.url">
                           <template v-if="item.status === 'finished'">
                               <img :src="item.url">
                               <div class="upload-list-cover">
@@ -40,7 +40,7 @@
                             :on-exceeded-size="handleMaxSize"
                             :before-upload="handleBeforeUpload"
                             type="drag"
-                            action="/upload/file"
+                            action="/xboot/upload/file"
                             :headers="accessToken"
                             style="display: inline-block;width:58px;">
                           <div style="width: 58px;height:58px;line-height: 58px;">
