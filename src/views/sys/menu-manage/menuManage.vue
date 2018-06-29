@@ -54,9 +54,11 @@
                     <Option value="enable">启用操作</Option>
                     <Option value="disable">禁用操作</Option>
                     <Option value="search">搜索操作</Option>
+                    <Option value="upload">上传文件</Option>
                     <Option value="output">导出操作</Option>
                     <Option value="editPerm">分配权限</Option>
                     <Option value="setDefault">设为默认</Option>
+                    <Option value="other">其他操作</Option>
                   </Select>
                 </FormItem>
                 <div v-if="menuForm.type===0">
@@ -92,7 +94,7 @@
           </Row>
         </Card>
 
-        <Modal :title="modalTitle" v-model="menuModalVisible" :mask-closable='false' :width="500">
+        <Modal :title="modalTitle" v-model="menuModalVisible" :mask-closable='false' :width="500" :styles="{top: '30px'}">
           <Form ref="menuFormAdd" :model="menuFormAdd" :label-width="85" :rules="menuFormValidate">
             <div v-if="showParent">
               <FormItem label="上级节点：">
@@ -126,9 +128,11 @@
                 <Option value="enable">启用操作</Option>
                 <Option value="disable">禁用操作</Option>
                 <Option value="search">搜索操作</Option>
+                <Option value="upload">上传文件</Option>
                 <Option value="output">导出操作</Option>
                 <Option value="editPerm">分配权限</Option>
                 <Option value="setDefault">设为默认</Option>
+                <Option value="other">其他操作</Option>
               </Select>
             </FormItem>
             <div v-if="menuFormAdd.type===0">
@@ -272,12 +276,14 @@ export default {
     },
     handleReset() {
       this.$refs.menuForm.resetFields();
+      this.editStatus = true;
+      this.menuForm.status = 0;
     },
     changeEditSwitch(v) {
       if (v) {
         this.menuForm.status = 0;
       } else {
-        this.menuForm.status = 1;
+        this.menuForm.status = -1;
       }
     },
     submitEdit() {
@@ -314,7 +320,7 @@ export default {
       if (v) {
         this.menuFormAdd.status = 0;
       } else {
-        this.menuFormAdd.status = 1;
+        this.menuFormAdd.status = -1;
       }
     },
     submitAdd() {

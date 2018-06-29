@@ -8,7 +8,10 @@
                 <Card>     
                     <Form inline :label-width="70" class="search-form">
                       <Form-item label="搜索日志">
-                        <Input type="text" v-model="searchKey" clearable placeholder="请输入搜索关键词" style="width: 300px"/>
+                        <Input type="text" v-model="searchKey" clearable placeholder="请输入搜索关键词" style="width: 200px"/>
+                      </Form-item>
+                      <Form-item label="创建时间">
+                        <DatePicker type="daterange" format="yyyy-MM-dd" clearable @on-change="selectDateRange" placeholder="选择起始时间" style="width: 200px"></DatePicker>
                       </Form-item>
                       <Form-item style="margin-left:-35px;">
                         <Button @click="getLogList"  type="primary" icon="search">搜索</Button>
@@ -187,7 +190,9 @@ export default {
       data: [],
       pageNumber: 1,
       pageSize: 10,
-      total: 0
+      total: 0,
+      startDate: "",
+      endDate: ""
     };
   },
   methods: {
@@ -197,16 +202,23 @@ export default {
     changePage(v) {
       this.pageNumber = v;
       this.getLogList();
+      this.clearSelectAll();
     },
     changePageSize(v) {
       this.pageSize = v;
       this.getLogList();
     },
+    selectDateRange(v) {
+      if (v) {
+        this.startDate = v[0];
+        this.endDate = v[1];
+      }
+    },
     getLogList() {
       this.loading = true;
       let params = "";
       let url = "";
-      if (this.searchKey === "") {
+      if (this.searchKey === "" && this.startDate === "") {
         url = "/log/getAllByPage";
         params = {
           pageNumber: this.pageNumber,
@@ -221,7 +233,9 @@ export default {
           pageNumber: this.pageNumber,
           pageSize: this.pageSize,
           sort: this.sortColumn,
-          order: this.sortType
+          order: this.sortType,
+          startDate: this.startDate,
+          endDate: this.endDate
         };
       }
       this.getRequest(url, params).then(res => {
@@ -282,6 +296,7 @@ export default {
           this.deleteRequest("/log/delByIds", { ids: ids }).then(res => {
             if (res.success === true) {
               this.$Message.success("删除成功");
+              this.clearSelectAll();
               this.init();
             }
           });
@@ -291,7 +306,7 @@ export default {
     clearAll() {
       this.$Modal.confirm({
         title: "确认删除",
-        content: "您确认要彻底清空删除所有条数据?",
+        content: "您确认要彻底清空删除所有数据?",
         onOk: () => {
           this.loading = true;
           let ids = "";
@@ -303,6 +318,7 @@ export default {
             this.loading = false;
             if (res.success === true) {
               this.$Message.success("删除成功");
+              this.clearSelectAll();
               this.init();
             }
           });

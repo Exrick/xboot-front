@@ -36,7 +36,7 @@
                                   <Option value="-1">禁用</Option>
                                 </Select>
                               </Form-item>
-                              <Form-item label="创建时间" prop="status">
+                              <Form-item label="创建时间">
                                 <DatePicker type="daterange" format="yyyy-MM-dd" clearable @on-change="selectDateRange" placeholder="选择起始时间" style="width: 200px"></DatePicker>
                               </Form-item>
                             </span>
@@ -79,7 +79,7 @@
                 </Card>
             </Col>
         </Row>
-        <Modal :title="modalTitle" v-model="userModalVisible" :mask-closable='false' :width="500">
+        <Modal :title="modalTitle" v-model="userModalVisible" :mask-closable='false' :width="500" :styles="{top: '30px'}">
             <Form ref="userForm" :model="userForm" :label-width="70" :rules="userFormValidate">
                 <FormItem label="用户名" prop="username">
                     <Input v-model="userForm.username"/>
@@ -99,6 +99,22 @@
                     <Radio :label="0">女</Radio>
                   </RadioGroup>
                 </FormItem>
+                <Form-item label="头像" prop="avatar">
+                  <Input v-model="userForm.avatar" placeholder="可直接填入网络图片链接" clearable style="width: 280px"/>
+                  <Button @click="viewPic(userForm.avatar)" type="ghost" icon="eye" class="view-pic">预览图片</Button>
+                  <Upload v-has="'upload'"
+                          action="/xboot/upload/file"
+                          :headers="accessToken" 
+                          :on-success="handleSuccess"
+                          :format="['jpg','jpeg','png','gif']"
+                          :max-size="5120"
+                          :on-format-error="handleFormatError"
+                          :on-exceeded-size="handleMaxSize"
+                          ref="up1"
+                          class="upload">
+                    <Button type="ghost" icon="ios-cloud-upload-outline">上传图片</Button>
+                  </Upload>
+                </Form-item>
                 <FormItem label="用户类型" prop="type">
                   <Select v-model="userForm.type" placeholder="请选择">
                     <Option :value="0">普通用户</Option>
@@ -116,10 +132,14 @@
                 <Button type="primary" :loading="submitLoading" @click="submitUser">提交</Button>
             </div>
         </Modal>
+        <Modal title="图片预览" v-model="viewImage">
+          <img :src="imgUrl" alt="无效的图片链接" style="width: 80%;margin: 0 auto;display: block;">
+        </Modal>
     </div>
 </template>
 
 <script>
+import { getStore } from "@/utils/storage";
 export default {
   name: "user-manage",
   data() {
@@ -139,12 +159,15 @@ export default {
       }
     };
     return {
+      accessToken: {},
       loading: true,
       drop: false,
       dropDownContent: "展开",
       dropDownIcon: "chevron-down",
       selectCount: 0,
       selectList: [],
+      imgUrl: "",
+      viewImage: false,
       searchForm: {
         username: "",
         mobile: "",
@@ -164,6 +187,8 @@ export default {
       modalTitle: "",
       userForm: {
         sex: 1,
+        type: 0,
+        avatar: "https://s1.ax1x.com/2018/05/19/CcdVQP.png",
         roles: []
       },
       userRoles: [],
@@ -192,19 +217,32 @@ export default {
         {
           title: "用户名",
           key: "username",
-          width: 150,
+          width: 145,
           sortable: true
+        },
+        {
+          title: "头像",
+          key: "avatar",
+          width: 80,
+          align: "center",
+          render: (h, params) => {
+            return h("Avatar", {
+              props: {
+                src: params.row.avatar
+              }
+            });
+          }
         },
         {
           title: "手机",
           key: "mobile",
-          width: 110,
+          width: 115,
           sortable: true
         },
         {
           title: "邮箱",
           key: "email",
-          width: 200,
+          width: 180,
           sortable: true
         },
         {
@@ -241,7 +279,7 @@ export default {
           title: "状态",
           key: "status",
           align: "center",
-          width: 180,
+          width: 140,
           render: (h, params) => {
             let re = "";
             if (params.row.status === 0) {
@@ -301,7 +339,7 @@ export default {
         {
           title: "操作",
           key: "action",
-          width: 260,
+          width: 240,
           align: "center",
           render: (h, params) => {
             if (params.row.status === 0) {
@@ -423,11 +461,15 @@ export default {
   },
   methods: {
     init() {
+      this.accessToken = {
+        accessToken: getStore("accessToken")
+      };
       this.getUserList();
     },
     changePage(v) {
       this.searchForm.pageNumber = v;
       this.getUserList();
+      this.clearSelectAll();
     },
     changePageSize(v) {
       this.searchForm.pageSize = v;
@@ -509,8 +551,15 @@ export default {
             url = "/user/admin/edit";
           }
           if (this.modalType === 0) {
+            if (
+              this.userForm.password == "" ||
+              this.userForm.password == undefined
+            ) {
+              this.errorPass = "密码不能为空";
+              return;
+            }
             if (this.userForm.password.length < 6) {
-              this.errorPass = "密码不能为空且长度不得少于6位";
+              this.errorPass = "密码长度不得少于6位";
               return;
             }
           }
@@ -525,6 +574,33 @@ export default {
           });
         }
       });
+    },
+    viewPic(v) {
+      this.imgUrl = v;
+      this.viewImage = true;
+    },
+    handleFormatError(file) {
+      this.$Notice.warning({
+        title: "不支持的文件格式",
+        desc:
+          "所选文件‘ " +
+          file.name +
+          " ’格式不正确, 请选择 .jpg .jpeg .png .gif格式文件"
+      });
+    },
+    handleMaxSize(file) {
+      this.$Notice.warning({
+        title: "文件大小过大",
+        desc: "所选文件‘ " + file.name + " ’大小过大, 不得超过 5M."
+      });
+    },
+    handleSuccess(res, file) {
+      if (res.success === true) {
+        file.url = res.result;
+        this.userForm.avatar = res.result;
+      } else {
+        this.$Message.error(res.message);
+      }
     },
     addUser() {
       this.modalType = 0;
@@ -629,6 +705,7 @@ export default {
           this.deleteRequest("/user/delByIds", { ids: ids }).then(res => {
             if (res.success === true) {
               this.$Message.success("删除成功");
+              this.clearSelectAll();
               this.init();
             }
           });

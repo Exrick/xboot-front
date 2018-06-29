@@ -305,8 +305,8 @@ util.initRouterNode = function (routers, data) {
         }
 
         let meta = {};
-        // 给页面添加按钮权限和标题
-        meta.buttonTypes = menu.buttonTypes ? menu.buttonTypes : null;
+        // 给页面添加权限和标题
+        meta.permTypes = menu.permTypes ? menu.permTypes : null;
         meta.title = menu.title ? menu.title + " - X-Boot前后端分离框架" : null;
         menu.meta = meta;
 

@@ -15,14 +15,14 @@ import 'vue-awesome/icons/brands/weixin';
 import 'vue-awesome/icons/brands/weibo';
 import { getRequest, postRequest, putRequest, deleteRequest, uploadFileRequest } from '@/utils/api';
 import util from '@/libs/util';
-import hasButton from '@/libs/hasButton';
+import hasPermission from '@/libs/hasPermission';
 
 Vue.config.productionTip = false
 Vue.use(VueI18n);
 Vue.use(iView);
 Vue.use(iviewArea);
 Vue.component('icon', Icon);
-Vue.use(hasButton);
+Vue.use(hasPermission);
 Vue.prototype.getRequest = getRequest;
 Vue.prototype.postRequest = postRequest;
 Vue.prototype.putRequest = putRequest;

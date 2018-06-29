@@ -37,7 +37,7 @@
             <Button type="primary" :loading="submitLoading" @click="submitRole">提交</Button>
           </div>
         </Modal>
-        <Modal title="分配权限(点击选择)" v-model="permModalVisible" :mask-closable='false' :width="500">
+        <Modal title="分配权限(点击选择)" v-model="permModalVisible" :mask-closable='false' :width="500" :styles="{top: '30px'}">
           <Tree ref="tree" :data="permData" multiple></Tree>
           <Spin size="large" v-if="treeLoading"></Spin>
           <div slot="footer">
@@ -225,6 +225,7 @@ export default {
     changePage(v) {
       this.pageNumber = v;
       this.getRoleList();
+      this.clearSelectAll();
     },
     changePageSize(v) {
       this.pageSize = v;
@@ -292,7 +293,7 @@ export default {
             this.submitLoading = false;
             if (res.success === true) {
               this.$Message.success("操作成功");
-              this.init();
+              this.getRoleList();
               this.roleModalVisible = false;
             }
           });
@@ -330,7 +331,7 @@ export default {
           this.deleteRequest("/role/delAllByIds", { ids: v.id }).then(res => {
             if (res.success === true) {
               this.$Message.success("删除成功");
-              this.init();
+              this.getRoleList();
             }
           });
         }
@@ -348,7 +349,7 @@ export default {
           this.postRequest("/role/setDefault", params).then(res => {
             if (res.success === true) {
               this.$Message.success("操作成功");
-              this.init();
+              this.getRoleList();
             }
           });
         }
@@ -366,7 +367,7 @@ export default {
           this.postRequest("/role/setDefault", params).then(res => {
             if (res.success === true) {
               this.$Message.success("操作成功");
-              this.init();
+              this.getRoleList();
             }
           });
         }
@@ -396,7 +397,8 @@ export default {
           this.deleteRequest("/role/delAllByIds", { ids: ids }).then(res => {
             if (res.success === true) {
               this.$Message.success("删除成功");
-              this.init();
+              this.clearSelectAll();
+              this.getRoleList();
             }
           });
         }
@@ -468,7 +470,7 @@ export default {
         this.submitPermLoading = false;
         if (res.success === true) {
           this.$Message.success("操作成功");
-          this.init();
+          this.getRoleList();
           this.permModalVisible = false;
         }
       });

@@ -34,7 +34,7 @@
                             :show-upload-list="false"
                             :default-file-list="defaultList"
                             :on-success="handleSuccess"
-                            :format="['jpg','jpeg','png']"
+                            :format="['jpg','jpeg','png','gif']"
                             :max-size="5120"
                             :on-format-error="handleFormatError"
                             :on-exceeded-size="handleMaxSize"
@@ -48,7 +48,7 @@
                           </div>
                       </Upload>
                     </FormItem>
-                    <FormItem label="用户姓名：">
+                    <FormItem label="用户账号：">
                         <span>{{userForm.username}}</span>
                     </FormItem>
                     <FormItem label="性别：">
@@ -114,7 +114,7 @@
             </div>
         </Modal>
         <Modal title="图片预览" v-model="viewImage">
-            <img :src="imgUrl" v-if="viewImage" style="width: 80%;margin: 0 auto;display: block;">
+            <img :src="imgUrl" style="width: 80%;margin: 0 auto;display: block;">
         </Modal>
     </div>
 </template>
@@ -239,7 +239,7 @@ export default {
       this.$Notice.warning({
         title: "不支持的文件格式",
         desc:
-          "所选文件‘ " + file.name + " ’格式不正确, 请选择 .jpg 或 .png格式文件"
+          "所选文件‘ " + file.name + " ’格式不正确, 请选择 .jpg .jpeg .png .gif格式文件"
       });
     },
     handleMaxSize(file) {
