@@ -102,14 +102,14 @@
                 <Form-item label="头像" prop="avatar">
                   <Input v-model="userForm.avatar" placeholder="可直接填入网络图片链接" clearable style="width: 280px"/>
                   <Button @click="viewPic(userForm.avatar)" type="ghost" icon="eye" class="view-pic">预览图片</Button>
-                  <Upload v-has="'upload'"
-                          action="/xboot/upload/file"
+                  <Upload action="/xboot/upload/file"
                           :headers="accessToken" 
                           :on-success="handleSuccess"
                           :format="['jpg','jpeg','png','gif']"
                           :max-size="5120"
                           :on-format-error="handleFormatError"
                           :on-exceeded-size="handleMaxSize"
+                          :before-upload="beforeUpload"
                           ref="up1"
                           class="upload">
                     <Button type="ghost" icon="ios-cloud-upload-outline">上传图片</Button>
@@ -593,6 +593,13 @@ export default {
         title: "文件大小过大",
         desc: "所选文件‘ " + file.name + " ’大小过大, 不得超过 5M."
       });
+    },
+    beforeUpload() {
+      if(!this.$route.meta.permTypes.includes("upload")){
+        this.$Message.error("此处您没有上传权限(页面演示，未配置权限按钮)")
+        return false;
+      }
+      return true;
     },
     handleSuccess(res, file) {
       if (res.success === true) {
