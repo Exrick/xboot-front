@@ -414,6 +414,8 @@ export default {
           this.deleteRequest("/permission/delByIds", { ids: ids }).then(res => {
             if (res.success === true) {
               this.$Message.success("删除成功");
+              this.selectList = [];
+              this.selectCount = 0;
               this.init();
             }
           });

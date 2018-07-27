@@ -8,10 +8,11 @@ Vue.use(Vuex);
 
 const store = new Vuex.Store({
     state: {
-        //
+        // 状态
+        
     },
     mutations: {
-        //
+        // 改变方法
     },
     actions: {
 

@@ -37,8 +37,8 @@
                             <Row type="flex" justify="center" align="middle" class="access-change-access-con-row">
                                 <p>
                                     您可以通过更换测试用户账号：test或test2 密码：123456，然后观察该页面按钮和表格中的变化<br><br>
-                                    自定义权限标签：<span class="example">v-has</span>，示例：<span class="example">{{example}}</span><br><br>
-                                    其他页面为演示功能，前台除用户上传图片按钮，其他未配置隐藏权限按钮
+                                    自定义权限标签：<code>v-has</code>，示例：<code>{{example}}</code><br><br>
+                                    其他页面为演示功能，未配置隐藏权限按钮
                                 </p>
                             </Row>
                         </Col>

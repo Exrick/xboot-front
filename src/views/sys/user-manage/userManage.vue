@@ -596,7 +596,7 @@ export default {
     },
     beforeUpload() {
       if(!this.$route.meta.permTypes.includes("upload")){
-        this.$Message.error("此处您没有上传权限(页面演示，未配置权限按钮)")
+        this.$Message.error("此处您没有上传权限")
         return false;
       }
       return true;

@@ -172,15 +172,19 @@ export default {
             }).then(res => {
               if (res.success === true) {
                 setStore("accessToken", res.result);
-                if (this.saveLogin) {
-                  localStorage.saveLogin = "true";
-                }
                 // 获取用户信息
                 this.getRequest("/user/info").then(res => {
                   if (res.success === true) {
                     // 避免超过大小限制
                     delete res.result.permissions;
-                    Cookies.set("userInfo", JSON.stringify(res.result));
+                    if (this.saveLogin) {
+                      // 保存7天
+                      Cookies.set("userInfo", JSON.stringify(res.result), {
+                        expires: 7
+                      });
+                    } else {
+                      Cookies.set("userInfo", JSON.stringify(res.result));
+                    }
                     setStore("userInfo", res.result);
                     this.$store.commit("setAvatarPath", res.result.avatar);
                     // 加载菜单
@@ -215,7 +219,8 @@ export default {
     showAccount() {
       this.$Notice.info({
         title: "体验账号密码",
-        desc: "账号1：test 密码：123456 <br>账号2：test2 密码：123456 已开放注册！"
+        desc:
+          "账号1：test 密码：123456 <br>账号2：test2 密码：123456 已开放注册！"
       });
     }
   },

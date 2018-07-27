@@ -43,7 +43,7 @@ export const page403 = {
         title: '403-权限不足'
     },
     name: 'error-403',
-    component: () => import('@//views/error-page/403.vue')
+    component: () => import('@/views/error-page/403.vue')
 };
 
 export const page500 = {
