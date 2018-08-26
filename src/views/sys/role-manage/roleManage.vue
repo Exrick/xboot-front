@@ -7,9 +7,9 @@
             <Col>
                 <Card>     
                     <Row class="operation">
-                        <Button @click="addRole" type="primary" icon="plus-round">添加角色</Button>
-                        <Button @click="delAll" type="ghost" icon="trash-a">批量删除</Button>
-                        <Button @click="init" type="ghost" icon="refresh">刷新</Button>
+                        <Button @click="addRole" type="primary" icon="md-add">添加角色</Button>
+                        <Button @click="delAll" icon="md-trash">批量删除</Button>
+                        <Button @click="init" icon="md-refresh">刷新</Button>
                     </Row>
                      <Row>
                         <Alert show-icon>
@@ -17,11 +17,11 @@
                             <a class="select-clear" @click="clearSelectAll">清空</a>
                         </Alert>
                     </Row>
-                    <Row class="margin-top-10 searchable-table-con1">
+                    <Row>
                         <Table :loading="loading" border :columns="columns" :data="data" ref="table" sortable="custom" @on-sort-change="changeSort" @on-selection-change="changeSelect"></Table>
                     </Row>
-                    <Row type="flex" justify="end" class="code-row-bg page">
-                        <Page :current="this.pageNumber" :total="total" :page-size="this.pageSize" @on-change="changePage" @on-page-size-change="changePageSize" :page-size-opts="[10,20,50,100]" size="small" show-total show-elevator show-sizer></Page>
+                    <Row type="flex" justify="end" class="page">
+                        <Page :current="pageNumber" :total="total" :page-size="pageSize" @on-change="changePage" @on-page-size-change="changePageSize" :page-size-opts="[10,20,50]" size="small" show-total show-elevator show-sizer></Page>
                     </Row>
                 </Card>
             </Col>
@@ -30,6 +30,9 @@
           <Form ref="roleForm" :model="roleForm" :label-width="80" :rules="roleFormValidate">
             <FormItem label="角色名称" prop="name">
               <Input v-model="roleForm.name" placeholder="按照Spring Security约定建议以‘ROLE_’开头"/>
+            </FormItem>
+            <FormItem label="备注" prop="description">
+              <Input v-model="roleForm.description"/>
             </FormItem>
           </Form>
           <div slot="footer">
@@ -42,7 +45,7 @@
           <Spin size="large" v-if="treeLoading"></Spin>
           <div slot="footer">
             <Button type="text" @click="cancelPermEdit">取消</Button>
-            <Button type="ghost" @click="selectTreeAll">全选/反选</Button>
+            <Button @click="selectTreeAll">全选/反选</Button>
             <Button type="primary" :loading="submitPermLoading" @click="submitPermEdit">提交</Button>
           </div>
         </Modal>
@@ -50,6 +53,15 @@
 </template>
 
 <script>
+import {
+  getRoleList,
+  getAllPermissionList,
+  addRole,
+  editRole,
+  deleteRole,
+  setDefaultRole,
+  editRolePerm
+} from "@/api/index";
 export default {
   name: "role-manage",
   data() {
@@ -64,7 +76,7 @@ export default {
       permModalVisible: false,
       modalTitle: "",
       roleForm: {
-        name: ""
+        description: ""
       },
       roleFormValidate: {
         name: [{ required: true, message: "角色名称不能为空", trigger: "blur" }]
@@ -79,8 +91,18 @@ export default {
           align: "center"
         },
         {
+          type: "index",
+          width: 60,
+          align: "center"
+        },
+        {
           title: "角色名称",
           key: "name",
+          sortable: true
+        },
+        {
+          title: "备注",
+          key: "description",
           sortable: true
         },
         {
@@ -213,7 +235,7 @@ export default {
       permData: [],
       editRolePermId: "",
       selectPermList: [],
-      selectAllFlag: false,
+      selectAllFlag: false
     };
   },
   methods: {
@@ -244,9 +266,10 @@ export default {
       let params = {
         pageNumber: this.pageNumber,
         pageSize: this.pageSize,
-        sort: "createTime"
+        sort: this.sortColumn,
+        order: this.sort
       };
-      this.getRequest("/role/getAllByPage", params).then(res => {
+      getRoleList(params).then(res => {
         this.loading = false;
         if (res.success === true) {
           this.data = res.result.content;
@@ -256,7 +279,7 @@ export default {
     },
     getPermList() {
       this.treeLoading = true;
-      this.getRequest("/permission/getAllList").then(res => {
+      getAllPermissionList().then(res => {
         this.treeLoading = false;
         if (res.success === true) {
           this.deleteDisableNode(res.result);
@@ -264,13 +287,13 @@ export default {
         }
       });
     },
-    // 递归删除禁用节点
+    // 递归标记禁用节点
     deleteDisableNode(permData) {
       let that = this;
       permData.forEach(function(e) {
-        if (e.status === 1) {
-          e.title += "(已禁用)"
-          e.disabled = true
+        if (e.status === -1) {
+          e.title = "[已禁用] " + e.title;
+          e.disabled = true;
         }
         if (e.children && e.children.length > 0) {
           that.deleteDisableNode(e.children);
@@ -283,30 +306,36 @@ export default {
     submitRole() {
       this.$refs.roleForm.validate(valid => {
         if (valid) {
-          let url = "/role/save";
-          if (this.modalType === 1) {
-            // 编辑用户
-            url = "/role/edit";
+          if (this.modalType === 0) {
+            // 添加
+            this.submitLoading = true;
+            addRole(this.roleForm).then(res => {
+              this.submitLoading = false;
+              if (res.success === true) {
+                this.$Message.success("操作成功");
+                this.getRoleList();
+                this.roleModalVisible = false;
+              }
+            });
+          } else {
+            this.submitLoading = true;
+            editRole(this.roleForm).then(res => {
+              this.submitLoading = false;
+              if (res.success === true) {
+                this.$Message.success("操作成功");
+                this.getRoleList();
+                this.roleModalVisible = false;
+              }
+            });
           }
-          this.submitLoading = true;
-          this.postRequest(url, this.roleForm).then(res => {
-            this.submitLoading = false;
-            if (res.success === true) {
-              this.$Message.success("操作成功");
-              this.getRoleList();
-              this.roleModalVisible = false;
-            }
-          });
         }
       });
     },
     addRole() {
       this.modalType = 0;
       this.modalTitle = "添加角色";
-      this.roleForm = {
-        name: "",
-        access: null
-      };
+      this.$refs.roleForm.resetFields();
+      delete this.roleForm.id;
       this.roleModalVisible = true;
     },
     edit(v) {
@@ -328,7 +357,7 @@ export default {
         title: "确认删除",
         content: "您确认要删除角色 " + v.name + " ?",
         onOk: () => {
-          this.deleteRequest("/role/delAllByIds", { ids: v.id }).then(res => {
+          deleteRole(v.id).then(res => {
             if (res.success === true) {
               this.$Message.success("删除成功");
               this.getRoleList();
@@ -346,7 +375,7 @@ export default {
             id: v.id,
             isDefault: true
           };
-          this.postRequest("/role/setDefault", params).then(res => {
+          setDefaultRole(params).then(res => {
             if (res.success === true) {
               this.$Message.success("操作成功");
               this.getRoleList();
@@ -364,7 +393,7 @@ export default {
             id: v.id,
             isDefault: false
           };
-          this.postRequest("/role/setDefault", params).then(res => {
+          setDefaultRole(params).then(res => {
             if (res.success === true) {
               this.$Message.success("操作成功");
               this.getRoleList();
@@ -394,7 +423,7 @@ export default {
             ids += e.id + ",";
           });
           ids = ids.substring(0, ids.length - 1);
-          this.deleteRequest("/role/delAllByIds", { ids: ids }).then(res => {
+          deleteRole(ids).then(res => {
             if (res.success === true) {
               this.$Message.success("删除成功");
               this.clearSelectAll();
@@ -442,15 +471,15 @@ export default {
     },
     // 全选反选
     selectTreeAll() {
-      this.selectAllFlag = !this.selectAllFlag
-      let select = this.selectAllFlag
-      this.selectedTreeAll(this.permData, select)
+      this.selectAllFlag = !this.selectAllFlag;
+      let select = this.selectAllFlag;
+      this.selectedTreeAll(this.permData, select);
     },
     // 递归全选节点
     selectedTreeAll(permData, select) {
       let that = this;
       permData.forEach(function(e) {
-        e.selected = select
+        e.selected = select;
         if (e.children && e.children.length > 0) {
           that.selectedTreeAll(e.children, select);
         }
@@ -464,7 +493,7 @@ export default {
         permIds += e.id + ",";
       });
       permIds = permIds.substring(0, permIds.length - 1);
-      this.postRequest("/role/editRolePerm/" + this.editRolePermId, {
+      editRolePerm(this.editRolePermId, {
         permIds: permIds
       }).then(res => {
         this.submitPermLoading = false;

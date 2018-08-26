@@ -1,9 +1,8 @@
 <style lang="less">
-    @import '../styles/menu.less';
+@import "../styles/menu.less";
 </style>
-
 <template>
-    <Menu ref="sideMenu" :active-name="$route.name" :open-names="openNames" :theme="menuTheme" width="auto" @on-select="changeMenu">
+    <Menu ref="sideMenu" accordion :active-name="$route.name" :open-names="singleOpenName" :theme="menuTheme" width="auto" @on-select="changeMenu">
         <template v-for="item in menuList">
             <MenuItem v-if="item.children.length<=1" :name="item.children[0].name" :key="'menuitem' + item.name">
                 <Icon :type="item.children[0].icon || item.icon" :size="iconSize" :key="'menuicon' + item.name"></Icon>
@@ -28,37 +27,58 @@
 
 <script>
 export default {
-    name: 'sidebarMenu',
-    props: {
-        menuList: Array,
-        iconSize: Number,
-        menuTheme: {
-            type: String,
-            default: 'dark'
-        },
-        openNames: {
-            type: Array
-        }
+  name: "sidebarMenu",
+  data() {
+    return {
+      singleOpenName: []
+    };
+  },
+  props: {
+    menuList: Array,
+    iconSize: Number,
+    menuTheme: {
+      type: String,
+      default: "dark"
     },
-    methods: {
-        changeMenu (active) {
-            this.$emit('on-change', active);
-        },
-        itemTitle (item) {
-            if (typeof item.title === 'object') {
-                return this.$t(item.title.i18n);
-            } else {
-                return item.title;
-            }
-        }
-    },
-    updated () {
-        this.$nextTick(() => {
-            if (this.$refs.sideMenu) {
-                this.$refs.sideMenu.updateOpened();
-            }
-        });
+    openNames: {
+      type: Array
     }
-
+  },
+  methods: {
+    changeMenu(active) {
+      this.$emit("on-change", active);
+    },
+    handleSelect(name) {
+      this.$emit("on-select", name);
+    },
+    itemTitle(item) {
+      if (typeof item.title === "object") {
+        return this.$t(item.title.i18n);
+      } else {
+        return item.title;
+      }
+    },
+    getOpenedNamesByActiveName(name) {
+      return this.$route.matched
+        .map(item => item.name)
+        .filter(item => item !== name);
+    }
+  },
+  updated() {
+    this.$nextTick(() => {
+      if (this.$refs.sideMenu) {
+        this.$refs.sideMenu.updateOpened();
+      }
+    });
+  },
+  watch: {
+    // 监听路由变化
+    $route(to, from) {
+      this.singleOpenName = [this.$route.matched[0].name];
+    }
+  },
+  mounted() {
+    this.singleOpenName = [this.$route.matched[0].name];
+  }
 };
 </script>

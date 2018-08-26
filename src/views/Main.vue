@@ -1,79 +1,74 @@
 <style lang="less">
 @import "./main.less";
 </style>
+
 <template>
-    <div class="main" :class="{'main-hide-text': shrink}">
-        <div class="sidebar-menu-con" :style="{width: shrink?'60px':'200px', overflow: shrink ? 'visible' : 'auto'}">
-            <scroll-bar ref="scrollBar">
-                <shrinkable-menu 
-                    :shrink="shrink"
-                    @on-change="handleSubmenuChange"
-                    :theme="menuTheme" 
-                    :before-push="beforePush"
-                    :open-names="openedSubmenuArr"
-                    :menu-list="menuList">
-                    <div slot="top" class="logo-con">
-                        <img v-show="!shrink"  src="../images/logo.png" key="max-logo" />
-                        <img v-show="shrink" src="../images/logo-min.png" key="min-logo" />
-                    </div>
-                </shrinkable-menu>
-            </scroll-bar>
-        </div>
-        <div class="main-header-con" :style="{paddingLeft: shrink?'60px':'200px'}">
-            <div class="main-header">
-                <div class="navicon-con">
-                    <Button :style="{transform: 'rotateZ(' + (this.shrink ? '-90' : '0') + 'deg)'}" type="text" @click="toggleClick">
-                        <Icon type="navicon" size="32"></Icon>
-                    </Button>
-                </div>
-                <div class="header-middle-con">
-                    <div class="main-breadcrumb">
-                        <breadcrumb-nav :currentPath="currentPath"></breadcrumb-nav>
-                    </div>
-                </div>
-                <div class="header-avator-con">
-                    <full-screen v-model="isFullScreen" @on-change="fullscreenChange"></full-screen>
-                    <Dropdown @on-click="handleLanDropdown" class="options">
-                      <Icon type="earth" :size="21" class="language"></Icon>
-                      <DropdownMenu  slot="list">
-                        <DropdownItem name="zh-CN">中文</DropdownItem>
-                        <DropdownItem name="en-US">English</DropdownItem>
-                      </DropdownMenu>
-                    </Dropdown>
-                    <lock-screen></lock-screen>
-                    <message-tip v-model="mesCount"></message-tip>
-                    
-                    <div class="user-dropdown-menu-con">
-                        <Row type="flex" justify="end" align="middle" class="user-dropdown-innercon">
-                            <Dropdown transfer trigger="click" @on-click="handleClickUserDropdown">
-                                <a href="javascript:void(0)">
-                                    <span class="main-user-name">{{ username }}</span>
-                                    <Icon type="arrow-down-b"></Icon>
-                                </a>
-                                <DropdownMenu slot="list">
-                                    <DropdownItem name="ownSpace">{{ $t('userCenter') }}</DropdownItem>
-                                    <DropdownItem name="changePass">{{ $t('changePass') }}</DropdownItem>
-                                    <DropdownItem name="loginout" divided>{{ $t('logout') }}</DropdownItem>
-                                </DropdownMenu>
-                            </Dropdown>
-                            <Avatar :src="avatarPath" style="background: #619fe7;margin-left: 10px;"></Avatar>
-                        </Row>
-                    </div>
-                </div>
-            </div>
-            <div class="tags-con">
-                <tags-page-opened :pageTagsList="pageTagsList"></tags-page-opened>
-            </div>
-        </div>
-        <div class="single-page-con" :style="{left: shrink?'60px':'200px'}">
-            <div class="single-page">
-                <keep-alive :include="cachePage">
-                    <router-view></router-view>
-                </keep-alive>
-            </div>
-        </div>
+  <div class="main" :class="{'main-hide-text': shrink}">
+    <div class="sidebar-menu-con" :style="{width: shrink?'60px':'200px', overflow: shrink ? 'visible' : 'auto'}">
+      <scroll-bar ref="scrollBar">
+        <shrinkable-menu :shrink="shrink" @on-change="handleSubmenuChange" :theme="menuTheme" :before-push="beforePush" :open-names="openedSubmenuArr" :menu-list="menuList">
+          <div slot="top" class="logo-con">
+            <img v-show="!shrink" src="../assets/logo.png" key="max-logo" />
+            <img v-show="shrink" src="../assets/logo-min.png" key="min-logo" />
+          </div>
+        </shrinkable-menu>
+      </scroll-bar>
     </div>
+    <div class="main-header-con" :style="{paddingLeft: shrink?'60px':'200px'}">
+      <div class="main-header">
+        <div class="navicon-con">
+          <Button :style="{transform: 'rotateZ(' + (this.shrink ? '-90' : '0') + 'deg)'}" type="text" @click="toggleClick">
+                          <Icon type="md-menu" size="32"></Icon>
+                      </Button>
+        </div>
+        <div class="header-middle-con">
+          <div class="main-breadcrumb">
+            <breadcrumb-nav :currentPath="currentPath"></breadcrumb-nav>
+          </div>
+        </div>
+        <div class="header-avator-con">
+          <full-screen v-model="isFullScreen" @on-change="fullscreenChange"></full-screen>
+          <Dropdown @on-click="handleLanDropdown" class="options">
+            <Icon type="md-globe" :size="24" class="language"></Icon>
+            <DropdownMenu slot="list">
+              <DropdownItem name="zh-CN">中文</DropdownItem>
+              <DropdownItem name="en-US">English</DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
+          <lock-screen></lock-screen>
+          <message-tip v-model="mesCount"></message-tip>
+          <div class="user-dropdown-menu-con">
+            <Row type="flex" justify="end" align="middle" class="user-dropdown-innercon">
+              <Dropdown transfer trigger="hover" @on-click="handleClickUserDropdown">
+                <a href="javascript:void(0)">
+                  <span class="main-user-name">{{ username }}</span>
+                  <Icon type="md-arrow-dropdown" />
+                  <Avatar :src="avatarPath" style="background: #619fe7;margin-left: 10px;"></Avatar>
+                </a>
+                <DropdownMenu slot="list">
+                  <DropdownItem name="ownSpace">{{ $t('userCenter') }}</DropdownItem>
+                  <DropdownItem name="changePass">{{ $t('changePass') }}</DropdownItem>
+                  <DropdownItem name="loginout" divided>{{ $t('logout') }}</DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+            </Row>
+          </div>
+        </div>
+      </div>
+      <div class="tags-con">
+        <tags-page-opened :pageTagsList="pageTagsList"></tags-page-opened>
+      </div>
+    </div>
+    <div class="single-page-con" :style="{left: shrink?'60px':'200px'}">
+      <div class="single-page">
+        <keep-alive :include="cachePage">
+          <router-view></router-view>
+        </keep-alive>
+      </div>
+    </div>
+  </div>
 </template>
+
 <script>
 import shrinkableMenu from "./main-components/shrinkable-menu/shrinkable-menu.vue";
 import tagsPageOpened from "./main-components/tags-page-opened.vue";
@@ -84,7 +79,6 @@ import messageTip from "./main-components/message-tip.vue";
 import Cookies from "js-cookie";
 import util from "@/libs/util.js";
 import scrollBar from "@/views/my-components/scroll-bar/vue-scroller-bars";
-import axios from "axios";
 
 export default {
   components: {
@@ -100,6 +94,7 @@ export default {
     return {
       shrink: false,
       username: "",
+      userId: "",
       isFullScreen: false,
       openedSubmenuArr: this.$store.state.app.openedSubmenuArr
     };
@@ -130,6 +125,11 @@ export default {
       return this.$store.state.app.messageCount;
     }
   },
+  stompClient: {
+    monitorIntervalTime: 100,
+    stompReconnect: true,
+    timeout(orgCmd) {}
+  },
   methods: {
     init() {
       let pathArr = util.setCurrentPath(this, this.$route.name);
@@ -139,10 +139,8 @@ export default {
       }
       let userInfo = JSON.parse(Cookies.get("userInfo"));
       this.username = userInfo.username;
-      let messageCount = 3;
-      this.messageCount = messageCount.toString();
+      this.userId = userInfo.id;
       this.checkTag(this.$route.name);
-      this.$store.commit("setMessageCount", 3);
     },
     toggleClick() {
       this.shrink = !this.shrink;
@@ -216,7 +214,7 @@ export default {
     openedSubmenuArr() {
       setTimeout(() => {
         this.scrollBarResize();
-      }, 300);
+      }, 500);
     }
   },
   mounted() {

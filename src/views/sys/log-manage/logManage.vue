@@ -11,17 +11,17 @@
                         <Input type="text" v-model="searchKey" clearable placeholder="请输入搜索关键词" style="width: 200px"/>
                       </Form-item>
                       <Form-item label="创建时间">
-                        <DatePicker type="daterange" format="yyyy-MM-dd" clearable @on-change="selectDateRange" placeholder="选择起始时间" style="width: 200px"></DatePicker>
+                        <DatePicker type="daterange" v-model="selectDate" format="yyyy-MM-dd" clearable @on-change="selectDateRange" placeholder="选择起始时间" style="width: 200px"></DatePicker>
                       </Form-item>
-                      <Form-item style="margin-left:-35px;">
-                        <Button @click="getLogList"  type="primary" icon="search">搜索</Button>
-                        <Button @click="handleReset" type="ghost" >重置</Button>
+                      <Form-item style="margin-left:-35px;" class="br">
+                        <Button @click="getLogList"  type="primary" icon="ios-search">搜索</Button>
+                        <Button @click="handleReset" >重置</Button>
                       </Form-item>
                     </Form>
                     <Row class="operation">
-                      <Button @click="clearAll" type="error" icon="trash-a">清空全部</Button>
-                      <Button @click="delAll" type="ghost" icon="trash-a">批量删除</Button>
-                      <Button @click="getLogList" type="ghost" icon="refresh">刷新</Button>
+                      <Button @click="clearAll" type="error" icon="md-trash">清空全部</Button>
+                      <Button @click="delAll" icon="md-trash">批量删除</Button>
+                      <Button @click="getLogList" icon="md-refresh">刷新</Button>
                     </Row>
                      <Row>
                         <Alert show-icon>
@@ -29,11 +29,11 @@
                             <a class="select-clear" @click="clearSelectAll">清空</a>
                         </Alert>
                     </Row>
-                    <Row class="margin-top-10 searchable-table-con1">
+                    <Row>
                         <Table :loading="loading" border :columns="columns" :data="data" ref="table" sortable="custom" @on-sort-change="changeSort" @on-selection-change="changeSelect"></Table>
                     </Row>
-                    <Row type="flex" justify="end" class="code-row-bg page">
-                        <Page :current="this.pageNumber" :total="total" :page-size="this.pageSize" @on-change="changePage" @on-page-size-change="changePageSize" :page-size-opts="[10,20,50,100]" size="small" show-total show-elevator show-sizer></Page>
+                    <Row type="flex" justify="end" class="page">
+                        <Page :current="pageNumber" :total="total" :page-size="pageSize" @on-change="changePage" @on-page-size-change="changePageSize" :page-size-opts="[10,20,50]" size="small" show-total show-elevator show-sizer></Page>
                     </Row>
                 </Card>
             </Col>
@@ -42,6 +42,12 @@
 </template>
 
 <script>
+import {
+  getLogListData,
+  getSearchLogData,
+  deleteLog,
+  deleteAllLog
+} from "@/api/index";
 export default {
   name: "role-manage",
   data() {
@@ -49,6 +55,7 @@ export default {
       loading: true,
       selectList: [],
       selectCount: 0,
+      selectDate: null,
       searchKey: "",
       sortColumn: "createTime",
       sortType: "desc",
@@ -56,13 +63,21 @@ export default {
         {
           type: "selection",
           width: 60,
-          align: "center"
+          align: "center",
+          fixed: "left"
+        },
+        {
+          type: "index",
+          width: 60,
+          align: "center",
+          fixed: "left"
         },
         {
           title: "操作名称",
           key: "name",
           width: 110,
-          sortable: true
+          sortable: true,
+          fixed: "left"
         },
         {
           title: "请求类型",
@@ -109,7 +124,8 @@ export default {
         {
           title: "请求参数",
           width: 200,
-          key: "requestParam"
+          key: "requestParam",
+          tooltip: true
         },
         {
           title: "登录用户",
@@ -120,19 +136,19 @@ export default {
         {
           title: "IP",
           key: "ip",
-          width: 100,
+          width: 120,
           sortable: true
         },
         {
           title: "IP信息",
           key: "ipInfo",
-          width: 90,
+          width: 100,
           sortable: true
         },
         {
           title: "耗时(毫秒)",
           key: "costTime",
-          width: 125,
+          width: 130,
           sortable: true,
           align: "center",
           filters: [
@@ -158,7 +174,7 @@ export default {
           title: "创建时间",
           key: "createTime",
           sortable: true,
-          width: 105,
+          width: 150,
           sortType: "desc"
         },
         {
@@ -166,6 +182,7 @@ export default {
           key: "action",
           width: 98,
           align: "center",
+          fixed: "right",
           render: (h, params) => {
             return h("div", [
               h(
@@ -217,17 +234,22 @@ export default {
     getLogList() {
       this.loading = true;
       let params = "";
-      let url = "";
+      // 后端可配置使用数据库或Elasticsearch搜索 这里分开了2个请求
       if (this.searchKey === "" && this.startDate === "") {
-        url = "/log/getAllByPage";
         params = {
           pageNumber: this.pageNumber,
           pageSize: this.pageSize,
           sort: this.sortColumn,
           order: this.sortType
         };
+        getLogListData(params).then(res => {
+          this.loading = false;
+          if (res.success === true) {
+            this.data = res.result.content;
+            this.total = res.result.totalElements;
+          }
+        });
       } else {
-        url = "/log/search";
         params = {
           key: this.searchKey,
           pageNumber: this.pageNumber,
@@ -237,17 +259,20 @@ export default {
           startDate: this.startDate,
           endDate: this.endDate
         };
+        getSearchLogData(params).then(res => {
+          this.loading = false;
+          if (res.success === true) {
+            this.data = res.result.content;
+            this.total = res.result.totalElements;
+          }
+        });
       }
-      this.getRequest(url, params).then(res => {
-        this.loading = false;
-        if (res.success === true) {
-          this.data = res.result.content;
-          this.total = res.result.totalElements;
-        }
-      });
     },
     handleReset() {
       this.searchKey = "";
+      this.selectDate = null;
+      this.startDate = "";
+      this.endDate = "";
       this.getLogList();
     },
     remove(v) {
@@ -255,7 +280,7 @@ export default {
         title: "确认删除",
         content: "您确认要删除该条数据?",
         onOk: () => {
-          this.deleteRequest("/log/delByIds", { ids: v.id }).then(res => {
+          deleteLog(v.id).then(res => {
             if (res.success === true) {
               this.$Message.success("删除成功");
               this.init();
@@ -293,7 +318,7 @@ export default {
             ids += e.id + ",";
           });
           ids = ids.substring(0, ids.length - 1);
-          this.deleteRequest("/log/delByIds", { ids: ids }).then(res => {
+          deleteLog(ids).then(res => {
             if (res.success === true) {
               this.$Message.success("删除成功");
               this.clearSelectAll();
@@ -305,7 +330,7 @@ export default {
     },
     clearAll() {
       this.$Modal.confirm({
-        title: "确认删除",
+        title: "请谨慎进行此操作！",
         content: "您确认要彻底清空删除所有数据?",
         onOk: () => {
           this.loading = true;
@@ -314,10 +339,10 @@ export default {
             ids += e.id + ",";
           });
           ids = ids.substring(0, ids.length - 1);
-          this.deleteRequest("/log/delAll").then(res => {
+          deleteAllLog().then(res => {
             this.loading = false;
             if (res.success === true) {
-              this.$Message.success("删除成功");
+              this.$Message.success("清空日志成功");
               this.clearSelectAll();
               this.init();
             }

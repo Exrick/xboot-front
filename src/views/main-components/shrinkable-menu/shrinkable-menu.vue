@@ -57,10 +57,10 @@ export default {
     },
     computed: {
         bgColor () {
-            return this.theme === 'dark' ? '#495060' : '#fff';
+            return this.theme === 'dark' ? '#515a6e' : '#fff';
         },
         shrinkIconColor () {
-            return this.theme === 'dark' ? '#fff' : '#495060';
+            return this.theme === 'dark' ? '#fff' : '#515a6e';
         }
     },
     methods: {

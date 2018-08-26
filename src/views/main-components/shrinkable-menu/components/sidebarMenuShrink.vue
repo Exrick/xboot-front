@@ -38,7 +38,7 @@ export default {
         },
         menuTheme: {
             type: String,
-            default: 'darck'
+            default: 'dark'
         }
     },
     methods: {

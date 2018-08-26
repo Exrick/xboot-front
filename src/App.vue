@@ -1,5 +1,5 @@
 <template>
-  <div id="main" class="app-main">
+    <div id="main" class="app-main">
         <router-view></router-view>
     </div>
 </template>
@@ -16,14 +16,28 @@ export default {
 </script>
 
 <style>
-html,body{
-    width: 100%;
-    height: 100%;
-    background: #f0f0f0;
-    overflow: hidden;
+html,
+body {
+  width: 100%;
+  height: 100%;
+  background: #f0f0f0;
+  /* overflow: hidden; */
 }
-.app-main{
-    width: 100%;
-    height: 100%;
+
+.app-main {
+  width: 100%;
+  height: 100%;
+}
+
+.br button {
+  margin-right: 5px;
+}
+
+.operation button {
+  margin-right: 5px;
+}
+
+.ivu-btn-text:focus {
+  box-shadow: none !important;
 }
 </style>

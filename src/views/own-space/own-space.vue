@@ -5,93 +5,104 @@
 <template>
     <div class="own-space">
         <Card>
-            <p slot="title">
-                <Icon type="person"></Icon>
-                个人信息
-            </p>
-            <div>
-                <Form 
-                    ref="userForm"
-                    :model="userForm" 
-                    :label-width="100" 
-                    label-position="right"
-                >
-                    <FormItem label="用户头像：">
-                        <div class="upload-list" v-for="item in uploadList" :key="item.url">
-                          <template v-if="item.status === 'finished'">
-                              <img :src="item.url">
-                              <div class="upload-list-cover">
-                                  <Icon type="ios-eye-outline" @click.native="handleView(item.url)"></Icon>
-                                  <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
-                              </div>
-                          </template>
-                          <template v-else>
-                              <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
-                          </template>
-                        </div>
-                        <Upload
-                            ref="upload"
-                            :show-upload-list="false"
-                            :default-file-list="defaultList"
-                            :on-success="handleSuccess"
-                            :format="['jpg','jpeg','png','gif']"
-                            :max-size="5120"
-                            :on-format-error="handleFormatError"
-                            :on-exceeded-size="handleMaxSize"
-                            :before-upload="handleBeforeUpload"
-                            type="drag"
-                            action="/xboot/upload/file"
-                            :headers="accessToken"
-                            style="display: inline-block;width:58px;">
-                          <div style="width: 58px;height:58px;line-height: 58px;">
-                              <Icon type="camera" size="20"></Icon>
+            <Tabs>
+                <TabPane label="基本信息" name="info">
+                  <Form 
+                      ref="userForm"
+                      :model="userForm" 
+                      :label-width="100" 
+                      label-position="right"
+                  >
+                      <FormItem label="用户头像：">
+                          <div class="upload-list" v-for="item in uploadList" :key="item.url">
+                            <template v-if="item.status === 'finished'">
+                                <img :src="item.url">
+                                <div class="upload-list-cover">
+                                    <Icon type="ios-eye-outline" @click.native="handleView(item.url)"></Icon>
+                                    <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
+                                </div>
+                            </template>
+                            <template v-else>
+                                <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+                            </template>
                           </div>
-                      </Upload>
-                    </FormItem>
-                    <FormItem label="用户账号：">
-                        <span>{{userForm.username}}</span>
-                    </FormItem>
-                    <FormItem label="性别：">
-                        <RadioGroup v-model="userForm.sex">
-                          <Radio :label="1">男</Radio>
-                          <Radio :label="0">女</Radio>
-                        </RadioGroup>
-                    </FormItem>
-                    <FormItem label="手机号：">
-                        <span>{{userForm.mobile}}</span>
-                        <div style="display:inline-block;margin-left:20px;font-size:13px;">
-                            <a @click="showChangeMobile">修改手机号</a>
-                        </div>
-                    </FormItem>
-                    <FormItem label="邮箱：">
-                        <span>{{userForm.email}}</span>
-                        <div style="display:inline-block;margin-left:20px;font-size:13px;">
-                            <a @click="showChangeEmail">修改邮箱</a>
-                        </div>
-                    </FormItem>
-                    <FormItem label="地址：" >
-                        <al-cascader v-model="userForm.addressArray" @on-change="changeAddress" data-type="code" level="2" style="width:250px"/>
-                    </FormItem>
-                   <FormItem label="用户类型：">
-                        <span>{{ userForm.typeTxt }}</span>
-                    </FormItem>
-                    <FormItem label="创建时间：">
-                        <span>{{ userForm.createTime }}</span>
-                    </FormItem>
-                    <FormItem>
-                        <Button type="primary" style="width: 100px;" :loading="saveLoading" @click="saveEdit">保存</Button>
-                        <Button type="ghost" @click="cancelEditUserInfo">取消</Button>
-                    </FormItem>
-                </Form>
-            </div>
+                          <Upload
+                              ref="upload"
+                              :show-upload-list="false"
+                              :default-file-list="defaultList"
+                              :on-success="handleSuccess"
+                              :on-error="handleError"
+                              :format="['jpg','jpeg','png','gif']"
+                              :max-size="5120"
+                              :on-format-error="handleFormatError"
+                              :on-exceeded-size="handleMaxSize"
+                              :before-upload="handleBeforeUpload"
+                              type="drag"
+                              action="/xboot/upload/file"
+                              :headers="accessToken"
+                              style="display: inline-block;width:58px;">
+                            <div style="width: 58px;height:58px;line-height: 58px;">
+                                <Icon type="md-camera" size="20"></Icon>
+                            </div>
+                        </Upload>
+                      </FormItem>
+                      <FormItem label="用户账号：">
+                          <span>{{userForm.username}}</span>
+                      </FormItem>
+                      <FormItem label="性别：">
+                          <RadioGroup v-model="userForm.sex">
+                            <Radio :label="1">男</Radio>
+                            <Radio :label="0">女</Radio>
+                          </RadioGroup>
+                      </FormItem>
+                      <FormItem label="手机号：">
+                          <span>{{userForm.mobile}}</span>
+                          <div style="display:inline-block;margin-left:20px;font-size:13px;">
+                              <a @click="showChangeMobile">修改手机号</a>
+                          </div>
+                      </FormItem>
+                      <FormItem label="邮箱：">
+                          <span>{{userForm.email}}</span>
+                          <div style="display:inline-block;margin-left:20px;font-size:13px;">
+                              <a @click="showChangeEmail">修改邮箱</a>
+                          </div>
+                      </FormItem>
+                      <FormItem label="地址：" >
+                          <al-cascader v-model="userForm.addressArray" @on-change="changeAddress" data-type="code" level="2" style="width:250px"/>
+                      </FormItem>
+                      <FormItem label="所属部门：">
+                          <span>{{ userForm.departmentTitle }}</span>
+                      </FormItem>
+                    <FormItem label="用户类型：">
+                          <span>{{ userForm.typeTxt }}</span>
+                      </FormItem>
+                      <FormItem label="创建时间：">
+                          <span>{{ userForm.createTime }}</span>
+                      </FormItem>
+                      <FormItem>
+                          <Button type="primary" style="width: 100px;margin-right:5px" :loading="saveLoading" @click="saveEdit">保存</Button>
+                          <Button @click="cancelEditUserInfo">取消</Button>
+                      </FormItem>
+                  </Form>
+                </TabPane>
+                <TabPane label="绑定第三方账号" name="social">
+                  <div class="sorry">
+                    <img src="@/assets/sorry.png">
+                    <span class="text">抱歉，请获取完整版</span>
+                    <Button to="http://xpay.exrick.cn/pay?xboot" target="_blank" type="error" icon="md-paper-plane">立即获取</Button>
+                  </div>
+                </TabPane>
+            </Tabs>
+            
         </Card>
+
         <Modal title="修改手机号" v-model="editMobileVisible" :closable='false' :mask-closable=false :width="500">
             <Form ref="mobileEditForm" :model="mobileEditForm" :label-width="60" :rules="mobileEditValidate">
                 <FormItem label="手机号" prop="mobile">
-                    <Input v-model="mobileEditForm.mobile" @on-change="hasChangePhone" placeholder="请输入新手机号"></Input>
+                    <Input v-model="mobileEditForm.mobile" @on-change="hasChangePhone" placeholder="请输入新手机号"/>
                 </FormItem>
                 <FormItem label="验证码" prop="code" :error="codeError">
-                    <Input v-model="mobileEditForm.code" placeholder="请输入您收到的短信验证码" style="width:200px;"></Input>
+                    <Input v-model="mobileEditForm.code" placeholder="请输入您收到的短信验证码" style="width:200px;margin-right:5px;"/>
                     <div style="display:inline-block;position:relative;">
                         <Button @click="getIdentifyCode" :disabled="canGetIdentifyCode">{{ gettingIdentifyCodeBtnContent }}</Button>
                     </div>
@@ -120,8 +131,15 @@
 </template>
 
 <script>
+import {
+  userInfoEdit,
+  relatedInfo,
+  unRelate,
+  githubLogin,
+  qqLogin,
+  weiboLogin
+} from "@/api/index";
 import Cookies from "js-cookie";
-import { getStore } from "../../utils/storage";
 export default {
   name: "ownspace_index",
   data() {
@@ -191,15 +209,39 @@ export default {
       gettingIdentifyCodeBtnContent: "获取验证码", // “获取验证码”按钮的文字
       editEmailVisible: false,
       sendVerifyEmailLoading: false,
-      canSendEditEmail: true
+      canSendEditEmail: true,
+      github: {
+        related: false,
+        id: "",
+        username: ""
+      },
+      qq: {
+        related: false,
+        id: "",
+        username: ""
+      },
+      weibo: {
+        related: false,
+        id: "",
+        username: ""
+      },
+      jumping: false
     };
   },
   methods: {
     init() {
       this.accessToken = {
-        accessToken: getStore("accessToken")
+        accessToken: this.getStore("accessToken")
       };
-      let userInfo = JSON.parse(Cookies.get("userInfo"));
+      let v = JSON.parse(Cookies.get("userInfo"));
+      // 转换null为""
+      for (let attr in v) {
+        if (v[attr] === null) {
+          v[attr] = "";
+        }
+      }
+      let str = JSON.stringify(v);
+      let userInfo = JSON.parse(str);
       userInfo.addressArray = [];
       this.userForm = userInfo;
       this.initPhone = userInfo.mobile;
@@ -235,11 +277,16 @@ export default {
         this.$Message.error(res.message);
       }
     },
+    handleError(error, file, fileList) {
+      this.$Message.error(error.toString());
+    },
     handleFormatError(file) {
       this.$Notice.warning({
         title: "不支持的文件格式",
         desc:
-          "所选文件‘ " + file.name + " ’格式不正确, 请选择 .jpg .jpeg .png .gif格式文件"
+          "所选文件‘ " +
+          file.name +
+          " ’格式不正确, 请选择 .jpg .jpeg .png .gif格式文件"
       });
     },
     handleMaxSize(file) {
@@ -304,7 +351,7 @@ export default {
       let params = this.userForm;
       delete params.nickName;
       delete params.description;
-      this.postRequest("/user/edit", params).then(res => {
+      userInfoEdit(params).then(res => {
         this.saveLoading = false;
         if (res.success === true) {
           this.$Message.success("保存成功");

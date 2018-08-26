@@ -28,8 +28,8 @@
                         <Input type="password" v-model="editPasswordForm.rePass" placeholder="请再次输入新密码" ></Input>
                     </FormItem>
                     <FormItem>
-                        <Button type="primary" style="width: 100px;" :loading="savePassLoading" @click="saveEditPass">保存</Button>
-                        <Button type="ghost" @click="cancelEditPass">取消</Button>
+                        <Button type="primary" style="width: 100px;margin-right:5px" :loading="savePassLoading" @click="saveEditPass">保存</Button>
+                        <Button @click="cancelEditPass">取消</Button>
                     </FormItem>
                 </Form>
             </div>
@@ -38,6 +38,7 @@
 </template>
 
 <script>
+import { changePass } from "@/api/index";
 import Cookies from "js-cookie";
 export default {
   name: "change_pass",
@@ -85,7 +86,7 @@ export default {
       this.$refs["editPasswordForm"].validate(valid => {
         if (valid) {
           this.savePassLoading = true;
-          this.postRequest("/user/modifyPass", params).then(res => {
+          changePass(params).then(res => {
             this.savePassLoading = false;
             if (res.success === true) {
               this.$Modal.success({

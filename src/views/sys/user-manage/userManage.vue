@@ -11,10 +11,13 @@
                             <Form-item label="用户名称" prop="username">
                               <Input type="text" v-model="searchForm.username" clearable placeholder="请输入用户名" style="width: 200px"/>
                             </Form-item>
+                            <Form-item label="部门" prop="department">
+                              <Cascader v-model="selectDep" :data="department" :load-data="loadData" @on-change="handleChangeDep" change-on-select filterable placeholder="请选择或输入搜索部门" style="width: 200px"></Cascader>
+                            </Form-item>
+                            <span v-if="drop">
                             <Form-item label="手机号" prop="mobile">
                               <Input type="text" v-model="searchForm.mobile" clearable placeholder="请输入手机号" style="width: 200px"/>
                             </Form-item>
-                            <span v-if="drop">
                               <Form-item label="邮箱" prop="email">
                                 <Input type="text" v-model="searchForm.email" clearable placeholder="请输入邮箱" style="width: 200px"/>
                               </Form-item>
@@ -37,12 +40,12 @@
                                 </Select>
                               </Form-item>
                               <Form-item label="创建时间">
-                                <DatePicker type="daterange" format="yyyy-MM-dd" clearable @on-change="selectDateRange" placeholder="选择起始时间" style="width: 200px"></DatePicker>
+                                <DatePicker v-model="selectDate" type="daterange" format="yyyy-MM-dd" clearable @on-change="selectDateRange" placeholder="选择起始时间" style="width: 200px"></DatePicker>
                               </Form-item>
                             </span>
-                            <Form-item style="margin-left:-35px;">
-                              <Button @click="handleSearch" type="primary" icon="search">搜索</Button>
-                              <Button @click="handleReset" type="ghost" >重置</Button>
+                            <Form-item style="margin-left:-35px;" class="br">
+                              <Button @click="handleSearch" type="primary" icon="ios-search">搜索</Button>
+                              <Button @click="handleReset" >重置</Button>
                               <a class="drop-down" @click="dropDown">{{dropDownContent}}
                                 <Icon :type="dropDownIcon"></Icon>
                               </a>
@@ -50,12 +53,12 @@
                         </Form>
                     </Row>
                     <Row class="operation">
-                        <Button @click="addUser" type="primary" icon="plus-round">添加用户</Button>
-                        <Button @click="delAll" type="ghost" icon="trash-a">批量删除</Button>
+                        <Button @click="add" type="primary" icon="md-add">添加用户</Button>
+                        <Button @click="delAll" icon="md-trash">批量删除</Button>
                         <Dropdown @on-click="handleDropdown">
-                          <Button type="ghost">
+                          <Button>
                               更多操作
-                              <Icon type="arrow-down-b"></Icon>
+                              <Icon type="md-arrow-dropdown" />
                           </Button>
                           <DropdownMenu slot="list">
                               <DropdownItem name="refresh">刷新</DropdownItem>
@@ -69,12 +72,12 @@
                             <a class="select-clear" @click="clearSelectAll">清空</a>
                         </Alert>
                     </Row>
-                    <Row class="margin-top-10 searchable-table-con1">
+                    <Row>
                         <Table :loading="loading" border :columns="columns" :data="data" sortable="custom" @on-sort-change="changeSort" @on-selection-change="showSelect" ref="table"></Table>
                         <Table :columns="columns" :data="exportData" ref="exportTable" style="display:none"></Table>
                     </Row>
-                    <Row type="flex" justify="end" class="code-row-bg page">
-                        <Page :current="this.searchForm.pageNumber" :total="total" :page-size="this.searchForm.pageSize" @on-change="changePage" @on-page-size-change="changePageSize" :page-size-opts="[10,20,50,100]" size="small" show-total show-elevator show-sizer></Page>
+                    <Row type="flex" justify="end" class="page">
+                        <Page :current="searchForm.pageNumber" :total="total" :page-size="searchForm.pageSize" @on-change="changePage" @on-page-size-change="changePageSize" :page-size-opts="[10,20,50]" size="small" show-total show-elevator show-sizer></Page>
                     </Row>
                 </Card>
             </Col>
@@ -82,10 +85,10 @@
         <Modal :title="modalTitle" v-model="userModalVisible" :mask-closable='false' :width="500" :styles="{top: '30px'}">
             <Form ref="userForm" :model="userForm" :label-width="70" :rules="userFormValidate">
                 <FormItem label="用户名" prop="username">
-                    <Input v-model="userForm.username"/>
+                    <Input v-model="userForm.username" autocomplete="off"/>
                 </FormItem>
                 <FormItem label="密码" prop="password" v-if="modalType===0" :error="errorPass">
-                    <Input type="password" v-model="userForm.password"/>
+                    <Input type="password" v-model="userForm.password" autocomplete="off"/>
                 </FormItem>
                 <FormItem label="邮箱" prop="email">
                     <Input v-model="userForm.email"/>
@@ -100,20 +103,38 @@
                   </RadioGroup>
                 </FormItem>
                 <Form-item label="头像" prop="avatar">
-                  <Input v-model="userForm.avatar" placeholder="可直接填入网络图片链接" clearable style="width: 280px"/>
-                  <Button @click="viewPic(userForm.avatar)" type="ghost" icon="eye" class="view-pic">预览图片</Button>
+                  <Poptip trigger="hover" title="图片预览" placement="right" width="350">
+                      <Input v-model="userForm.avatar" placeholder="可直接填入网络图片链接" clearable/>
+                      <div slot="content">
+                        <img :src="userForm.avatar" alt="无效的图片链接" style="width: 100%;margin: 0 auto;display: block;">
+                        <a @click="viewPic()" style="margin-top:5px;text-align:right;display:block">查看原图</a>
+                      </div>
+                  </Poptip>
                   <Upload action="/xboot/upload/file"
                           :headers="accessToken" 
                           :on-success="handleSuccess"
+                          :on-error="handleError"
                           :format="['jpg','jpeg','png','gif']"
                           :max-size="5120"
                           :on-format-error="handleFormatError"
                           :on-exceeded-size="handleMaxSize"
                           :before-upload="beforeUpload"
-                          ref="up1"
+                          ref="up"
                           class="upload">
-                    <Button type="ghost" icon="ios-cloud-upload-outline">上传图片</Button>
+                    <Button icon="ios-cloud-upload-outline">上传图片</Button>
                   </Upload>
+                </Form-item>
+                <Form-item label="所属部门" prop="departmentTitle">
+                  <Poptip trigger="click" placement="right" title="选择部门" width="250">
+                    <div style="display:flex;">
+                      <Input v-model="userForm.departmentTitle" readonly style="margin-right:10px;"/>
+                      <Button icon="md-trash" @click="clearSelectDep">清空已选</Button>
+                    </div>
+                    <div slot="content">
+                      <Tree :data="dataDep" :load-data="loadDataTree" @on-select-change="selectTree"></Tree>
+                      <Spin size="large" fix v-if="loading"></Spin>
+                    </div>
+                  </Poptip>
                 </Form-item>
                 <FormItem label="用户类型" prop="type">
                   <Select v-model="userForm.type" placeholder="请选择">
@@ -122,8 +143,13 @@
                   </Select>
                 </FormItem>
                 <FormItem label="角色分配" prop="roles">
-                  <Select v-model="userForm.roles" multiple @on-change="selectRoles">
-                      <Option v-for="item in roleList" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                  <Select v-model="userForm.roles" multiple>
+                      <Option v-for="item in roleList" :value="item.id" :key="item.id" :label="item.name">
+                        <!-- <div style="display:flex;flex-direction:column"> -->
+                        <span style="margin-right:10px;">{{ item.name }}</span>
+                        <span style="color:#ccc;">{{ item.description }}</span>
+                        <!-- </div> -->
+                      </Option>
                   </Select>
                 </FormItem>
             </Form>
@@ -132,14 +158,24 @@
                 <Button type="primary" :loading="submitLoading" @click="submitUser">提交</Button>
             </div>
         </Modal>
-        <Modal title="图片预览" v-model="viewImage">
-          <img :src="imgUrl" alt="无效的图片链接" style="width: 80%;margin: 0 auto;display: block;">
+        <Modal title="图片预览" v-model="viewImage" :styles="{top: '30px'}">
+          <img :src="userForm.avatar" alt="无效的图片链接" style="width: 100%;margin: 0 auto;display: block;">
         </Modal>
     </div>
 </template>
 
 <script>
-import { getStore } from "@/utils/storage";
+import {
+  initDepartment,
+  loadDepartment,
+  getUserListData,
+  getAllRoleList,
+  addUser,
+  editUser,
+  enableUser,
+  disableUser,
+  deleteUser
+} from "@/api/index";
 export default {
   name: "user-manage",
   data() {
@@ -163,13 +199,16 @@ export default {
       loading: true,
       drop: false,
       dropDownContent: "展开",
-      dropDownIcon: "chevron-down",
+      dropDownIcon: "ios-arrow-down",
       selectCount: 0,
       selectList: [],
-      imgUrl: "",
       viewImage: false,
+      department: [],
+      selectDep: [],
+      dataDep: [],
       searchForm: {
         username: "",
+        departmentId: "",
         mobile: "",
         email: "",
         sex: "",
@@ -182,6 +221,7 @@ export default {
         startDate: "",
         endDate: ""
       },
+      selectDate: null,
       modalType: 0,
       userModalVisible: false,
       modalTitle: "",
@@ -189,7 +229,9 @@ export default {
         sex: 1,
         type: 0,
         avatar: "https://s1.ax1x.com/2018/05/19/CcdVQP.png",
-        roles: []
+        roles: [],
+        departmentId: "",
+        departmentTitle: ""
       },
       userRoles: [],
       roleList: [],
@@ -212,13 +254,21 @@ export default {
         {
           type: "selection",
           width: 60,
-          align: "center"
+          align: "center",
+          fixed: "left"
+        },
+        {
+          type: "index",
+          width: 60,
+          align: "center",
+          fixed: "left"
         },
         {
           title: "用户名",
           key: "username",
           width: 145,
-          sortable: true
+          sortable: true,
+          fixed: "left"
         },
         {
           title: "头像",
@@ -232,6 +282,11 @@ export default {
               }
             });
           }
+        },
+        {
+          title: "所属部门",
+          key: "departmentTitle",
+          width: 120
         },
         {
           title: "手机",
@@ -289,7 +344,7 @@ export default {
                   {
                     props: {
                       type: "dot",
-                      color: "green"
+                      color: "success"
                     }
                   },
                   "正常启用"
@@ -302,7 +357,7 @@ export default {
                   {
                     props: {
                       type: "dot",
-                      color: "red"
+                      color: "error"
                     }
                   },
                   "禁用"
@@ -339,8 +394,9 @@ export default {
         {
           title: "操作",
           key: "action",
-          width: 240,
+          width: 200,
           align: "center",
+          fixed: "right",
           render: (h, params) => {
             if (params.row.status === 0) {
               return h("div", [
@@ -366,7 +422,6 @@ export default {
                   "Button",
                   {
                     props: {
-                      type: "ghost",
                       size: "small"
                     },
                     style: {
@@ -462,9 +517,114 @@ export default {
   methods: {
     init() {
       this.accessToken = {
-        accessToken: getStore("accessToken")
+        accessToken: this.getStore("accessToken")
       };
+      this.initDepartmentData();
       this.getUserList();
+      this.getParentList();
+    },
+    initDepartmentData() {
+      initDepartment().then(res => {
+        if (res.success === true) {
+          res.result.forEach(function(e) {
+            if (e.isParent) {
+              e.value = e.id;
+              e.label = e.title;
+              e.loading = false;
+              e.children = [];
+            } else {
+              e.value = e.id;
+              e.label = e.title;
+            }
+          });
+          this.department = res.result;
+        }
+      });
+    },
+    getParentList() {
+      initDepartment().then(res => {
+        if (res.success === true) {
+          res.result.forEach(function(e) {
+            if (e.isParent) {
+              e.loading = false;
+              e.children = [];
+            }
+          });
+          this.dataDep = res.result;
+        }
+      });
+    },
+    loadData(item, callback) {
+      item.loading = true;
+      loadDepartment(item.value).then(res => {
+        item.loading = false;
+        if (res.success === true) {
+          res.result.forEach(function(e) {
+            if (e.isParent) {
+              e.value = e.id;
+              e.label = e.title;
+              e.loading = false;
+              e.children = [];
+            } else {
+              e.value = e.id;
+              e.label = e.title;
+            }
+            if (e.status === -1) {
+              e.label = "[已禁用] " + e.label;
+              e.disabled = true;
+            }
+          });
+          item.children = res.result;
+          callback();
+        }
+      });
+    },
+    loadDataTree(item, callback) {
+      loadDepartment(item.id).then(res => {
+        if (res.success === true) {
+          res.result.forEach(function(e) {
+            if (e.isParent) {
+              e.loading = false;
+              e.children = [];
+            }
+          });
+          callback(res.result);
+        }
+      });
+    },
+    selectTree(v) {
+      if (v.length > 0) {
+        // 转换null为""
+        for (let attr in v[0]) {
+          if (v[0][attr] === null) {
+            v[0][attr] = "";
+          }
+        }
+        let str = JSON.stringify(v[0]);
+        let data = JSON.parse(str);
+        this.userForm.departmentId = data.id;
+        this.userForm.departmentTitle = data.title;
+      }
+    },
+    clearSelectDep() {
+      this.userForm.departmentId = "";
+      this.userForm.departmentTitle = "";
+    },
+    handleChangeDep(value, selectedData) {
+      // 获取最后一个值
+      if (value && value.length > 0) {
+        this.searchForm.departmentId = value[value.length - 1];
+      } else {
+        this.searchForm.departmentId = "";
+      }
+    },
+    handleChangeUserFormDep(value, selectedData) {
+      // 获取最后一个值
+      if (value && value.length > 0) {
+        this.userForm.departmentId = value[value.length - 1];
+      } else {
+        this.userForm.departmentId = "";
+      }
     },
     changePage(v) {
       this.searchForm.pageNumber = v;
@@ -484,7 +644,7 @@ export default {
     getUserList() {
       // 多条件搜索用户列表
       this.loading = true;
-      this.getRequest("/user/getByCondition", this.searchForm).then(res => {
+      getUserListData(this.searchForm).then(res => {
         this.loading = false;
         if (res.success === true) {
           this.data = res.result.content;
@@ -495,14 +655,19 @@ export default {
     handleSearch() {
       this.searchForm.pageNumber = 1;
       this.searchForm.pageSize = 10;
-      this.init();
+      this.getUserList();
     },
     handleReset() {
       this.$refs.searchForm.resetFields();
       this.searchForm.pageNumber = 1;
       this.searchForm.pageSize = 10;
+      this.selectDate = null;
+      this.searchForm.startDate = "";
+      this.searchForm.endDate = "";
+      this.selectDep = [];
+      this.searchForm.departmentId = "";
       // 重新加载数据
-      this.init();
+      this.getUserList();
     },
     changeSort(e) {
       this.searchForm.sort = e.key;
@@ -510,10 +675,10 @@ export default {
       if (e.order === "normal") {
         this.searchForm.order = "";
       }
-      this.init();
+      this.getUserList();
     },
     getRoleList() {
-      this.getRequest("/role/getAllList").then(res => {
+      getAllRoleList().then(res => {
         if (res.success === true) {
           this.roleList = res.result;
         }
@@ -538,19 +703,16 @@ export default {
         this.getUserList();
       }
     },
-    selectRoles(v) {},
     cancelUser() {
       this.userModalVisible = false;
     },
     submitUser() {
       this.$refs.userForm.validate(valid => {
         if (valid) {
-          let url = "/user/admin/add";
-          if (this.modalType === 1) {
-            // 编辑用户
-            url = "/user/admin/edit";
-          }
           if (this.modalType === 0) {
+            // 添加用户 避免编辑后传入id
+            delete this.userForm.id;
+            delete this.userForm.status;
             if (
               this.userForm.password == "" ||
               this.userForm.password == undefined
@@ -562,21 +724,30 @@ export default {
               this.errorPass = "密码长度不得少于6位";
               return;
             }
+            this.submitLoading = true;
+            addUser(this.userForm).then(res => {
+              this.submitLoading = false;
+              if (res.success === true) {
+                this.$Message.success("操作成功");
+                this.getUserList();
+                this.userModalVisible = false;
+              }
+            });
+          } else {
+            // 编辑
+            editUser(this.userForm).then(res => {
+              this.submitLoading = false;
+              if (res.success === true) {
+                this.$Message.success("操作成功");
+                this.getUserList();
+                this.userModalVisible = false;
+              }
+            });
           }
-          this.submitLoading = true;
-          this.postRequest(url, this.userForm).then(res => {
-            this.submitLoading = false;
-            if (res.success === true) {
-              this.$Message.success("操作成功");
-              this.init();
-              this.userModalVisible = false;
-            }
-          });
         }
       });
     },
-    viewPic(v) {
-      this.imgUrl = v;
+    viewPic() {
       this.viewImage = true;
     },
     handleFormatError(file) {
@@ -595,8 +766,8 @@ export default {
       });
     },
     beforeUpload() {
-      if(!this.$route.meta.permTypes.includes("upload")){
-        this.$Message.error("此处您没有上传权限")
+      if (!this.$route.meta.permTypes.includes("upload")) {
+        this.$Message.error("此处您没有上传权限(为演示功能，该按钮未配置隐藏)");
         return false;
       }
       return true;
@@ -609,7 +780,10 @@ export default {
         this.$Message.error(res.message);
       }
     },
-    addUser() {
+    handleError(error, file, fileList) {
+      this.$Message.error(error.toString());
+    },
+    add() {
       this.modalType = 0;
       this.modalTitle = "添加用户";
       this.$refs.userForm.resetFields();
@@ -640,10 +814,10 @@ export default {
         title: "确认启用",
         content: "您确认要启用用户 " + v.username + " ?",
         onOk: () => {
-          this.postRequest("/user/admin/enable/" + v.id).then(res => {
+          enableUser(v.id).then(res => {
             if (res.success === true) {
               this.$Message.success("操作成功");
-              this.init();
+              this.getUserList();
             }
           });
         }
@@ -654,10 +828,10 @@ export default {
         title: "确认禁用",
         content: "您确认要禁用用户 " + v.username + " ?",
         onOk: () => {
-          this.postRequest("/user/admin/disable/" + v.id).then(res => {
+          disableUser(v.id).then(res => {
             if (res.success === true) {
               this.$Message.success("操作成功");
-              this.init();
+              this.getUserList();
             }
           });
         }
@@ -668,10 +842,10 @@ export default {
         title: "确认删除",
         content: "您确认要删除用户 " + v.username + " ?",
         onOk: () => {
-          this.deleteRequest("/user/delByIds", { ids: v.id }).then(res => {
+          deleteUser(v.id).then(res => {
             if (res.success === true) {
               this.$Message.success("删除成功");
-              this.init();
+              this.getUserList();
             }
           });
         }
@@ -680,10 +854,10 @@ export default {
     dropDown() {
       if (this.drop) {
         this.dropDownContent = "展开";
-        this.dropDownIcon = "chevron-down";
+        this.dropDownIcon = "ios-arrow-down";
       } else {
         this.dropDownContent = "收起";
-        this.dropDownIcon = "chevron-up";
+        this.dropDownIcon = "ios-arrow-up";
       }
       this.drop = !this.drop;
     },
@@ -709,11 +883,11 @@ export default {
             ids += e.id + ",";
           });
           ids = ids.substring(0, ids.length - 1);
-          this.deleteRequest("/user/delByIds", { ids: ids }).then(res => {
+          deleteUser(ids).then(res => {
             if (res.success === true) {
               this.$Message.success("删除成功");
               this.clearSelectAll();
-              this.init();
+              this.getUserList();
             }
           });
         }

@@ -23,6 +23,8 @@
         b {
             margin: 0 10px;
             color: #2d8cf0;
+            display: block;
+            overflow: hidden;
         }
     }
     .example {
@@ -37,7 +39,7 @@
 }
 
 code {
-    font-family: Consolas,Menlo,Courier,monospace;
+    font-family: Consolas, Menlo, Courier, monospace;
     font-size: 1em;
     display: inline-block;
     background: #f7f7f7;
@@ -47,3 +49,42 @@ code {
     color: #666;
     border: 1px solid #eee;
 }
+
+.access-user-roles {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden;
+    p {
+        display: block;
+        padding: 10px 0 0;
+    }
+    b {
+        margin: 0 10px;
+        color: #2d8cf0;
+    }
+}
+
+.btns {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 23px 0;
+}
+
+.role-demo{
+    padding: 15px 0;
+}
+
+.sorry{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    .text{
+      font-size: 20px;
+      margin: 20px 0;
+    }
+  }

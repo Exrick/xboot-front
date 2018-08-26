@@ -1,17 +1,17 @@
-.login{
+.login {
     height: 100vh;
-    background: url('../images/background.svg');
-    .header{
+    background: url('../assets/background.svg');
+    .header {
         margin-top: 9vh;
         margin-bottom: 6vh;
         text-align: center;
-        .description{
+        .description {
             font-size: 14px;
-            color: rgba(0,0,0,.45);
+            color: rgba(0, 0, 0, .45);
             margin-top: 1vh;
         }
     }
-    .login-form{
+    .login-form {
         margin-bottom: 16vh;
     }
     .ivu-tabs-nav-container {
@@ -28,43 +28,54 @@
         .input-verify {
             width: 70%;
         }
-        .count-verify, .send-verify {
+        .count-verify,
+        .send-verify {
             width: 100px;
         }
     }
-    .forget-pass, .other-way {
+    .forget-pass,
+    .other-way {
         font-size: 14px;
     }
-    .login-btn, .other-login  {
+    .login-btn,
+    .other-login {
         margin-top: 3vh;
+    }
+    .icons {
+        display: flex;
+        align-items: center;
     }
     .other-icon {
         cursor: pointer;
         margin-left: 10px;
-        margin-bottom: -4px;
-        color: rgba(0,0,0,.2);
+        display: flex;
+        align-items: center;
+        color: rgba(0, 0, 0, .2);
         :hover {
             color: #2d8cf0;
         }
     }
-    .lower {
-        margin-bottom: -6px;
-    }
-    .foot{
+    .foot {
         margin-bottom: 2vh;
-        color: rgba(0,0,0,.45);
+        color: rgba(0, 0, 0, .45);
         font-size: 14px;
         .help {
             margin: 0 auto;
             margin-bottom: 1vh;
             width: 60%;
-            .item{
-                color: rgba(0,0,0,.45);
+            .item {
+                color: rgba(0, 0, 0, .45);
             }
-            :hover{
-                color:rgba(0,0,0,.65);
+            :hover {
+                color: rgba(0, 0, 0, .65);
             }
         }
     }
-    
+}
+
+.ivu-tabs-nav .ivu-tabs-tab .ivu-icon {
+    width: 14px;
+    height: 14px;
+    margin-right: 8px;
+    margin-bottom: 5px;
 }

@@ -1,55 +1,78 @@
-# x-boot-front
+# xboot-front
 
-> 作者目前大四 且为后台开发 能力经验有限 如有错误欢迎指正 期待您的捐赠支持！
+> 作者大四作品 且为后台开发 能力经验有限 如有错误欢迎指正 期待您的捐赠支持！
 
-### [宣传视频](https://www.bilibili.com/video/av23121122/)
-- 作者亲自制作 [点我观看](https://www.bilibili.com/video/av23121122/)
-### 在线Demo 
+### 宣传视频
+- [作者亲自制作XBoot文字快闪宣传视频](http://www.bilibili.com/av30284667)
+- [作者亲自制作其他项目宣传视频](https://www.bilibili.com/video/av23121122/)
+
+### [在线Demo](http://xboot.exrick.cn)
 http://xboot.exrick.cn
 ### 后台项目地址：[X-Boot](https://github.com/Exrick/x-boot)
+> 涉及技术：Spring Boot 2.x/Spring Security/JWT/Spring Data JPA+Mybatis-Plus/Redis/Elasticsearch 分布式限流/同步锁/验证码/SnowFlake雪花算法ID生成 动态权限管理 代码生成 日志记录 定时任务 第三方账号、短信登录
 ### 项目简介
-- 项目基于 Vue-Cli 创建
-- 后台加载动态权限菜单 权限控制至按钮
-- 多语言切换
+- 项目基于 Vue-Cli 3.0正式版创建
+- 主要Main组件框架基于iView-admin 1.0版本 修复其BUG
+- 组件库升级iView3.0
+- 后台加载动态权限菜单 多方式轻松权限控制至按钮显示
+- 提供Vue空白模版，只需修改后台请求和对应实体字段即可完成页面开发
+- 多语言切换、消息管理、第三方社交账号或短信登录
 - iView使用图标库 [ionicons](http://ionicons.com/) 额外图标库 [vue-awesome](https://github.com/Justineo/vue-awesome)
 
-![](https://i.loli.net/2018/07/24/5b56dfead395b.png)
+### 截图预览
 
-![](https://i.loli.net/2018/07/24/5b56e00daab72.png)
+![QQ截图20180826163917.png](https://i.loli.net/2018/08/26/5b826868e2359.png)
 
-![](https://i.loli.net/2018/07/24/5b56e06a81777.png)
+![QQ截图20180826163956.png](https://i.loli.net/2018/08/26/5b8268c57d1e3.png)
 
-![](https://i.loli.net/2018/07/24/5b56e08a4fb76.png)
+![QQ截图20180826164058.png](https://i.loli.net/2018/08/26/5b8268d63d156.png)
 
-![](https://i.loli.net/2018/07/24/5b56e0ac944a8.png)
+![QQ截图20180826164129.png](https://i.loli.net/2018/08/26/5b8268dec28ee.png)
 
-![](https://i.loli.net/2018/07/24/5b56e0ce6eb53.png)
+![QQ截图20180826164144.png](https://i.loli.net/2018/08/26/5b8268e6a091f.png)
+
+![QQ截图20180826164226.png](https://i.loli.net/2018/08/26/5b8268efab94a.png)
+
+### [完整版截图细节展示](https://github.com/Exrick/x-boot/wiki/%E5%AE%8C%E6%95%B4%E7%89%88%E6%88%AA%E5%9B%BE%E7%BB%86%E8%8A%82%E5%B1%95%E7%A4%BA)
+
 
 ### 主要所用技术
 - [Vue 2.5.x](https://cn.vuejs.org/)
+- [Vue Cli 3.x](https://github.com/vuejs/vue-cli)：[官方中文文档](https://github.com/vuejs/vue-cli/tree/dev/docs/zh/config)
+- Vue Router
+- [vue-i18n](https://github.com/kazupon/vue-i18n)：国际化多语言插件 使用5.0.x版本
 - [iView](https://www.iviewui.com/)
 - [iview-admin](https://github.com/iview/iview-admin)
 - [iview-area](https://github.com/iview/iview-area)：城市级联组件
 - [Vuex](https://vuex.vuejs.org/zh-cn/)
-- Vue Router
+- [wangeditor](https://github.com/wangfupeng1988/wangEditor)：轻量富文本编辑器
+- [gitment](https://github.com/imsun/gitment)：基于github issue评论插件
+- [vue-stomp](https://github.com/FlySkyBear/vue-stomp)
+- [vue-json-pretty](https://github.com/leezng/vue-json-pretty)
 - ES6
 - webpack
 - axios
 - echarts
 - cookie
-- 第三方插件
+- 第三方插件或服务
     - [hotjar](https://github.com/Exrick/xmall/blob/master/study/hotjar.md)：一体化分析和反馈
+    - 完整版
+        - [Vaptcha人机验证码](https://www.vaptcha.com/)
 
 ### 本地开发构建运行
 
-- 启动后端 [x-boot](https://github.com/Exrick/x-boot) 项目后，在 `config/index.js` 中修改你的后端接口地址代理配置
+- 启动后端 [x-boot](https://github.com/Exrick/x-boot) 项目后，在 `vue.config.js` 中修改你的后端接口地址代理配置
 - 在项目根文件夹下先后执行命令 `npm install` 、 `npm run dev`
 - 前台端口默认9999 http://localhost:9999
 
 ### 部署
-- 先后执行命令 `npm install` 、 `npm run build` 将打包生成的 `dist` 静态文件放置服务器中，并配置路由代理
+- 先后执行命令 `npm install` 、 `npm run build` 将打包生成的 `dist` 静态文件放置Nginx服务器中，并配置路由代理。当然还可放置Spring Web项目resources静态资源文件夹下可避免跨域(不推荐)。
 
 ### 开发指南
+> 由于权限菜单按钮设计 仅支持2级菜单 一级菜单下没子菜单将不会显示
+- [如何使用XBoot前端Vue模板快速开发增删改页面](https://github.com/Exrick/xboot-front/wiki/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8XBoot%E5%89%8D%E7%AB%AFVue%E6%A8%A1%E6%9D%BF%E5%BF%AB%E9%80%9F%E5%BC%80%E5%8F%91%E5%A2%9E%E5%88%A0%E6%94%B9%E9%A1%B5%E9%9D%A2)
+- api接口建议统一放在`src/api`文件夹下统一引用方便管理，也可全局使用封装好的请求方法，如`this.getRequest`等
+- Vue Cli 3.0 配置文件在 `vue.config.js`中，[官方中文配置文档](https://github.com/vuejs/vue-cli/tree/dev/docs/zh/config)
 - 组件使用详见[iView官网文档](https://www.iviewui.com/docs/guide/install)
 - 权限按钮或其他内容显示控制自定义标签：`v-has`，使用示例：
     ```
@@ -58,7 +81,7 @@ http://xboot.exrick.cn
     <Button v-has="'delete'">删除按钮</Button>
     <div v-has="'view'">需要view权限的界面内容</div>
     ```
-    - 表格中[Render渲染函数](https://cn.vuejs.org/v2/guide/render-function.html)权限判断示例
+    - 表格中[Render渲染函数](https://cn.vuejs.org/v2/guide/render-function.html)或js中权限判断示例
     ```
     render: (h, params) => {
         if(this.$route.meta.permTypes.includes("edit")){
@@ -68,6 +91,19 @@ http://xboot.exrick.cn
         }
     }
     ```
+- 完整版
+    - 根据角色全局控制权限显示自定义标签：`v-hasRole`，使用示例：
+    ```
+    <Button v-has="'ROLE_ADMIN'">添加按钮</Button>
+    ```
+    - 表格中或js中判断使用
+    ```
+    if(this.getStore('roles').includes("ROLE_ADMIN")){
+        ... ...
+    }
+    ```
+    - [Vaptcha人机验证码配置使用](https://github.com/Exrick/x-boot/wiki/vaptcha%E4%BA%BA%E6%9C%BA%E9%AA%8C%E8%AF%81%E7%A0%81%E9%85%8D%E7%BD%AE%E4%BD%BF%E7%94%A8)
+    - 其余配置全在后台配置即可
 
 ### 学习记录（更新中）
 
@@ -76,6 +112,18 @@ http://xboot.exrick.cn
 2.路由菜单加载
 
 3.控制权限至按钮显示
+
+4.[基于Websocket实现发送消息后右上角消息图标红点实时显示](https://github.com/Exrick/x-boot/wiki/%E5%9F%BA%E4%BA%8EWebsocket%E5%AE%9E%E7%8E%B0%E5%8F%91%E9%80%81%E6%B6%88%E6%81%AF%E5%90%8E%E5%8F%B3%E4%B8%8A%E8%A7%92%E6%B6%88%E6%81%AF%E5%9B%BE%E6%A0%87%E7%BA%A2%E7%82%B9%E5%AE%9E%E6%97%B6%E6%98%BE%E7%A4%BA)
+
+### Docker下前端端集群部署(更新中)
+
+> 后端端集群部署请跳转至[x-boot](https://github.com/Exrick/x-boot)项目查看
+
+1.Docker安装与常用命令
+
+2.Nginx集群搭建
+
+3.XBoot前端集群部署及负载均衡配置
 
 ### 作者其他项目推荐
 - [XPay个人免签收款支付系统v1.2](https://github.com/Exrick/xpay)
@@ -97,7 +145,4 @@ http://xboot.exrick.cn
 - 免费交流群 `562962309` [![](http://pub.idqqimg.com/wpa/images/group.png)](http://shang.qq.com/wpa/qunwpa?idkey=52f6003e230b26addeed0ba6cf343fcf3ba5d97829d17f5b8fa5b151dba7e842)
 
 - 作者博客：[http://blog.exrick.cn](http://blog.exrick.cn)
-### 捐赠
-![](http://p77xsahe9.bkt.clouddn.com/18-7-20/54731550.jpg)
-
-![](http://p77xsahe9.bkt.clouddn.com/18-6-28/32845239.jpg)
+### [捐赠](http://xpay.exrick.cn/pay)

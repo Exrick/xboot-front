@@ -1,7 +1,4 @@
 import axios from 'axios';
-import env from '../../build/env';
-import semver from 'semver';
-import packjson from '../../package.json';
 import lazyLoading from './lazyLoading.js';
 import router from '@/router/index';
 import Cookies from "js-cookie";
@@ -9,21 +6,11 @@ import Cookies from "js-cookie";
 let util = {
 
 };
+
 util.title = function (title) {
-    title = title || 'X-Boot 前后端分离框架';
+    title = title || 'X-Boot 前后端分离开发平台';
     window.document.title = title;
 };
-
-const ajaxUrl = env === 'development'
-    ? 'http://127.0.0.1:8888'
-    : env === 'production'
-        ? 'https://www.url.com'
-        : 'https://debug.url.com';
-
-util.ajax = axios.create({
-    baseURL: ajaxUrl,
-    timeout: 30000
-});
 
 util.inOf = function (arr, targetArr) {
     let res = true;
@@ -305,9 +292,10 @@ util.initRouterNode = function (routers, data) {
         }
 
         let meta = {};
-        // 给页面添加权限和标题
+        // 给页面添加权限、标题、第三方网页链接
         meta.permTypes = menu.permTypes ? menu.permTypes : null;
-        meta.title = menu.title ? menu.title + " - X-Boot前后端分离框架" : null;
+        meta.title = menu.title ? menu.title + " - X-Boot前后端分离开发平台 By: Exrick" : null;
+        meta.url = menu.url ? menu.url : null;
         menu.meta = meta;
 
         routers.push(menu);

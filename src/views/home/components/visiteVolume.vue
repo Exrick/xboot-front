@@ -1,5 +1,14 @@
 <template>
-    <div style="width:100%;height:100%;" id="visite_volume_con"></div>
+    <div class="visit">
+        <div class="date">
+            <Select v-model="date" style="width:120px">
+                <Option value="1" >本周</Option>
+                <Option value="2" >上周</Option>
+            </Select>
+            <DatePicker type="daterange" placeholder="选择日期范围" style="width: 180px"></DatePicker>
+        </div>
+        <div style="width:100%;height:200px;" id="visite_volume_con"></div>
+    </div>
 </template>
 
 <script>
@@ -8,7 +17,7 @@ export default {
     name: 'visiteVolume',
     data () {
         return {
-            //
+            date: "1"
         };
     },
     mounted () {
@@ -74,3 +83,10 @@ export default {
     }
 };
 </script>
+<style lang="less">
+    .date{
+        display:flex;
+        justify-content: space-between;
+        margin-bottom:30px;
+    }
+</style>

@@ -7,8 +7,8 @@
         <div class="unlock-body-con" v-if="showUnlock" @keydown.enter="handleUnlock">
             <div @click="handleClickAvator" class="unlock-avator-con" :style="{marginLeft: avatorLeft}">
                 <img class="unlock-avator-img" :src="avatarPath">
-                <div  class="unlock-avator-cover">
-                    <span><Icon type="unlocked" :size="30"></Icon></span>
+                <div class="unlock-avator-cover">
+                    <span><Icon type="md-unlock" :size="30"></Icon></span>
                     <p>解锁</p>
                 </div>
             </div>
@@ -17,7 +17,7 @@
                 <div class="unlock-input-overflow-con">
                     <div class="unlock-overflow-body" :style="{right: inputLeft}">
                         <input ref="inputEle" v-model="password" class="unlock-input" type="password" placeholder="密码同登录密码" />
-                        <button ref="unlockBtn" @mousedown="unlockMousedown" @mouseup="unlockMouseup" @click="handleUnlock" class="unlock-btn"><Icon color="white" type="key"></Icon></button>
+                        <button ref="unlockBtn" @mousedown="unlockMousedown" @mouseup="unlockMouseup" @click="handleUnlock" class="unlock-btn"><Icon color="white" type="ios-key"></Icon></button>
                     </div>
                 </div>
             </div>
@@ -27,6 +27,7 @@
 </template>
 
 <script>
+import { unlock } from "@/api/index";
 import Cookies from "js-cookie";
 export default {
   name: "Unlock",
@@ -69,7 +70,7 @@ export default {
       }
       // 将用户输入的密码this.password与数据库用户密码对比
       let flag = false;
-      this.postRequest("/user/unlock", { password: this.password }).then(
+      unlock({ password: this.password }).then(
         res => {
           if (res.success === true) {
             this.unlock();
