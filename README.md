@@ -119,7 +119,7 @@ http://xboot.exrick.cn
 
 > 后端端集群部署请跳转至[x-boot](https://github.com/Exrick/x-boot)项目查看
 
-1.Docker安装与常用命令
+1.[Docker安装与常用命令](https://github.com/Exrick/x-boot/wiki/Docker%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4)
 
 2.Nginx集群搭建
 
