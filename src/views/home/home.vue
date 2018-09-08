@@ -125,8 +125,8 @@
                                 </div>
                                 <div class="flex">
                                     商用授权价格：
-                                    <span class="rmb">￥</span> <span class="price">268</span> 
-                                    <span class="origin">￥</span><s class="origin">298</s> 
+                                    <span class="rmb">￥</span> <span class="price">368</span> 
+                                    <span class="origin">￥</span><s class="origin">398</s> 
                                     <Button to="http://wpa.qq.com/msgrd?v=3&uin=1012139570&site=qq&menu=yes" target="_blank" type="warning" icon="logo-vimeo" style="margin-left:10px;">获取商用授权</Button><br>
                                 </div>
                                 <Alert style="padding: 8px 16px 8px 16px;">
@@ -218,7 +218,7 @@ export default {
   },
   data() {
     return {
-      showVideo: true,
+      showVideo: false,
       count: {
         createUser: 496,
         visit: 3264,
@@ -274,8 +274,12 @@ export default {
       }
     });
     gitment.render("comments");
-    // 宣传视频弹框
-    // <iframe src="//player.bilibili.com/player.html?aid=23121122&cid=38468845&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
+    // 宣传视频
+    let xbootVideo = Boolean(Cookies.get('xbootVideo'));
+    if(!xbootVideo){
+        this.showVideo = true;
+        Cookies.set('xbootVideo', true);
+    }
   }
 };
 </script>
