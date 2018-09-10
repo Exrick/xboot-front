@@ -40,7 +40,7 @@
             <Button type="primary" :loading="submitLoading" @click="submitRole">提交</Button>
           </div>
         </Modal>
-        <Modal title="分配权限(点击选择)" v-model="permModalVisible" :mask-closable='false' :width="500" :styles="{top: '30px'}">
+        <Modal title="分配权限(点击选择)" v-model="permModalVisible" :mask-closable='false' :width="500" :styles="{top: '30px'}" class="permModal">
           <Tree ref="tree" :data="permData" multiple></Tree>
           <Spin size="large" v-if="treeLoading"></Spin>
           <div slot="footer">
