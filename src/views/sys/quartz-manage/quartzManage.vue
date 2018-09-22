@@ -102,7 +102,8 @@ export default {
         {
           title: "任务类名",
           key: "jobClassName",
-          sortable: true
+          sortable: true,
+          width: 200
         },
         {
           title: "cron表达式",
@@ -117,7 +118,8 @@ export default {
         {
           title: "备注",
           key: "description",
-          sortable: true
+          sortable: true,
+          width: 180
         },
         {
           title: "状态",

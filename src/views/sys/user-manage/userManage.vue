@@ -63,6 +63,8 @@
                           <DropdownMenu slot="list">
                               <DropdownItem name="refresh">刷新</DropdownItem>
                               <DropdownItem name="exportData">导出所选数据</DropdownItem>
+                              <DropdownItem name="exportAll">导出全部数据</DropdownItem>
+                              <DropdownItem name="importData">导入数据(付费)</DropdownItem>
                           </DropdownMenu>
                         </Dropdown>
                     </Row>
@@ -74,7 +76,7 @@
                     </Row>
                     <Row>
                         <Table :loading="loading" border :columns="columns" :data="data" sortable="custom" @on-sort-change="changeSort" @on-selection-change="showSelect" ref="table"></Table>
-                        <Table :columns="columns" :data="exportData" ref="exportTable" style="display:none"></Table>
+                        <Table :columns="exportColumns" :data="exportData" ref="exportTable" style="display:none"></Table>
                     </Row>
                     <Row type="flex" justify="end" class="page">
                         <Page :current="searchForm.pageNumber" :total="total" :page-size="searchForm.pageSize" @on-change="changePage" @on-page-size-change="changePageSize" :page-size-opts="[10,20,50]" size="small" show-total show-elevator show-sizer></Page>
@@ -161,6 +163,13 @@
         <Modal title="图片预览" v-model="viewImage" :styles="{top: '30px'}">
           <img :src="userForm.avatar" alt="无效的图片链接" style="width: 100%;margin: 0 auto;display: block;">
         </Modal>
+        <Modal
+            v-model="modalExportAll"
+            title="确认导出"
+            :loading="loadingExport"
+            @on-ok="exportAll">
+            <p>您确认要导出全部 {{total}} 条数据？</p>
+        </Modal>
     </div>
 </template>
 
@@ -174,7 +183,8 @@ import {
   editUser,
   enableUser,
   disableUser,
-  deleteUser
+  deleteUser,
+  getAllUserData
 } from "@/api/index";
 export default {
   name: "user-manage",
@@ -197,6 +207,8 @@ export default {
     return {
       accessToken: {},
       loading: true,
+      loadingExport: true,
+      modalExportAll: false,
       drop: false,
       dropDownContent: "展开",
       dropDownIcon: "ios-arrow-down",
@@ -509,6 +521,52 @@ export default {
           }
         }
       ],
+      exportColumns: [
+        {
+          title: "用户名",
+          key: "username"
+        },
+        {
+          title: "头像",
+          key: "avatar"
+        },
+        {
+          title: "所属部门ID",
+          key: "departmentId"
+        },
+        {
+          title: "所属部门",
+          key: "departmentTitle"
+        },
+        {
+          title: "手机",
+          key: "mobile"
+        },
+        {
+          title: "邮箱",
+          key: "email"
+        },
+        {
+          title: "性别",
+          key: "sex"
+        },
+        {
+          title: "用户类型",
+          key: "type"
+        },
+        {
+          title: "状态",
+          key: "status"
+        },
+        {
+          title: "创建时间",
+          key: "createTime"
+        },
+        {
+          title: "更新时间",
+          key: "updateTime"
+        }
+      ],
       data: [],
       exportData: [],
       total: 0
@@ -521,7 +579,7 @@ export default {
       };
       this.initDepartmentData();
       this.getUserList();
-      this.getParentList();
+      this.initDepartmentTreeData();
     },
     initDepartmentData() {
       initDepartment().then(res => {
@@ -536,18 +594,26 @@ export default {
               e.value = e.id;
               e.label = e.title;
             }
+            if (e.status === -1) {
+              e.label = "[已禁用] " + e.label;
+              e.disabled = true;
+            }
           });
           this.department = res.result;
         }
       });
     },
-    getParentList() {
+    initDepartmentTreeData() {
       initDepartment().then(res => {
         if (res.success === true) {
           res.result.forEach(function(e) {
             if (e.isParent) {
               e.loading = false;
               e.children = [];
+            }
+            if (e.status === -1) {
+              e.title = "[已禁用] " + e.title;
+              e.disabled = true;
             }
           });
           this.dataDep = res.result;
@@ -586,6 +652,10 @@ export default {
             if (e.isParent) {
               e.loading = false;
               e.children = [];
+            }
+            if (e.status === -1) {
+              e.title = "[已禁用] " + e.title;
+              e.disabled = true;
             }
           });
           callback(res.result);
@@ -685,7 +755,9 @@ export default {
       });
     },
     handleDropdown(name) {
-      if (name === "exportData") {
+      if (name === "refresh") {
+        this.getUserList();
+      } else if (name === "exportData") {
         if (this.selectCount <= 0) {
           this.$Message.warning("您还未选择要导出的数据");
           return;
@@ -699,9 +771,27 @@ export default {
             });
           }
         });
-      } else if (name === "refresh") {
-        this.getUserList();
+      } else if (name === "exportAll") {
+        this.modalExportAll = true;
+      } else if (name === "importData") {
+        this.$Modal.info({
+          title: "请获取完整版",
+          content: "支付链接: http://xpay.exrick.cn/pay?xboot"
+        });
       }
+    },
+    exportAll() {
+      getAllUserData().then(res => {
+        this.modalExportAll = false;
+        if (res.success) {
+          this.exportData = res.result;
+          setTimeout(() => {
+            this.$refs.exportTable.exportCsv({
+              filename: "用户全部数据"
+            });
+          }, 1000);
+        }
+      });
     },
     cancelUser() {
       this.userModalVisible = false;

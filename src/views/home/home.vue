@@ -109,7 +109,7 @@
                                     <Badge dot>立即获取 X-Boot 完整版</Badge>
                                 </a>
                             </p>
-                            <div>
+                            <div style="height:368px;overflow:auto">
                                 <div class="qr">
                                     <img src="@/assets/qr.png" width="150">
                                     <div>支持手机扫码支付，限时优惠！<br>赠送
@@ -141,7 +141,7 @@
                         <Card>
                             <p slot="title" class="card-title">
                                 <Icon type="md-bookmark"></Icon>
-                                ISSUE
+                                ISSUE/评论/更新日志
                             </p>
                             <div id="comments" style="height:365px;overflow:auto;" class="inner-container"></div>
                         </Card>
@@ -203,8 +203,8 @@ import countUp from "./components/countUp.vue";
 import inforCard from "./components/inforCard.vue";
 import mapDataTable from "./components/mapDataTable.vue";
 import Cookies from "js-cookie";
-import "gitment/style/default.css";
-import Gitment from "gitment";
+import "gitalk/dist/gitalk.css";
+import Gitalk from "gitalk";
 
 export default {
   name: "home",
@@ -264,21 +264,22 @@ export default {
   },
   mounted() {
     this.init();
-    const gitment = new Gitment({
-      id: "xboot", // optional
-      owner: "Exrick",
+    var gitalk = new Gitalk({
+      clientID: "a128de2dd7383614273a",
+      clientSecret: "a77691ecb662a8303a6c686ae651ae035868da6e",
       repo: "xboot-comments",
-      oauth: {
-        client_id: "a128de2dd7383614273a",
-        client_secret: "a77691ecb662a8303a6c686ae651ae035868da6e"
-      }
+      owner: "Exrick",
+      admin: [
+        "Exrick"
+      ],
+      distractionFreeMode: false // 遮罩效果
     });
-    gitment.render("comments");
+    gitalk.render("comments");
     // 宣传视频
-    let xbootVideo = Boolean(Cookies.get('xbootVideo'));
-    if(!xbootVideo){
-        this.showVideo = true;
-        Cookies.set('xbootVideo', true);
+    let xbootVideo = Boolean(Cookies.get("xbootVideo"));
+    if (!xbootVideo) {
+      this.showVideo = true;
+      Cookies.set("xbootVideo", true);
     }
   }
 };

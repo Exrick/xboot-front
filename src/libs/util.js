@@ -251,9 +251,9 @@ util.initRouter = function (vm) {
         return;
     }
     let userId = JSON.parse(Cookies.get("userInfo")).id;
-
+    let accessToken = window.localStorage.getItem('accessToken')
     // 加载菜单
-    axios.get("/xboot/permission/getMenuList/" + userId).then(res => {
+    axios.get("/xboot/permission/getMenuList/" + userId, {headers: {'accessToken': accessToken}}).then(res => {
         let menuData = res.result;
         if (menuData === null || menuData === "" || menuData === undefined) {
             return;

@@ -120,6 +120,7 @@ export default {
           title: "是否设置为注册用户默认角色",
           key: "defaultRole",
           align: "center",
+          width: 180,
           render: (h, params) => {
             if (params.row.defaultRole) {
               return h("div", [

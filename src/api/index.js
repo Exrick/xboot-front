@@ -43,6 +43,7 @@ export const unlock = (params) => {
 }
 
 
+
 // github登录
 export const githubLogin = (params) => {
     return getRequest('/social/github/login', params)
@@ -80,9 +81,14 @@ export const getRelatedListData = (params) => {
 }
 
 
+
 // 获取用户数据 多条件
 export const getUserListData = (params) => {
     return getRequest('/user/getByCondition', params)
+}
+// 获取全部用户数据
+export const getAllUserData = (params) => {
+    return getRequest('/user/getAll', params)
 }
 // 添加用户
 export const addUser = (params) => {
@@ -127,6 +133,7 @@ export const editDepartment = (params) => {
 export const deleteDepartment = (ids, params) => {
     return deleteRequest(`/department/delByIds/${ids}`, params)
 }
+
 
 
 // 获取全部角色数据
