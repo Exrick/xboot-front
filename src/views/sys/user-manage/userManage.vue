@@ -67,6 +67,7 @@
                               <DropdownItem name="importData">导入数据(付费)</DropdownItem>
                           </DropdownMenu>
                         </Dropdown>
+                        <circleLoading v-if="operationLoading"/>
                     </Row>
                     <Row>
                         <Alert show-icon>
@@ -186,8 +187,12 @@ import {
   deleteUser,
   getAllUserData
 } from "@/api/index";
+import circleLoading from "../../my-components/circle-loading.vue";
 export default {
   name: "user-manage",
+  components: {
+    circleLoading
+  },
   data() {
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
@@ -207,6 +212,7 @@ export default {
     return {
       accessToken: {},
       loading: true,
+      operationLoading: false,
       loadingExport: true,
       modalExportAll: false,
       drop: false,
@@ -304,7 +310,14 @@ export default {
           title: "手机",
           key: "mobile",
           width: 115,
-          sortable: true
+          sortable: true,
+          render: (h, params) => {
+            if (this.getStore("roles").includes("ROLE_ADMIN")) {
+              return h("span", params.row.mobile);
+            } else{
+              return h("span", "您无权查看该数据");
+            }
+          }
         },
         {
           title: "邮箱",
@@ -557,6 +570,10 @@ export default {
         {
           title: "状态",
           key: "status"
+        },
+        {
+          title: "删除标志",
+          key: "delFlag"
         },
         {
           title: "创建时间",
@@ -904,7 +921,9 @@ export default {
         title: "确认启用",
         content: "您确认要启用用户 " + v.username + " ?",
         onOk: () => {
+          this.operationLoading = true;
           enableUser(v.id).then(res => {
+            this.operationLoading = false;
             if (res.success === true) {
               this.$Message.success("操作成功");
               this.getUserList();
@@ -918,7 +937,9 @@ export default {
         title: "确认禁用",
         content: "您确认要禁用用户 " + v.username + " ?",
         onOk: () => {
+          this.operationLoading = true;
           disableUser(v.id).then(res => {
+            this.operationLoading = false;
             if (res.success === true) {
               this.$Message.success("操作成功");
               this.getUserList();
@@ -932,7 +953,9 @@ export default {
         title: "确认删除",
         content: "您确认要删除用户 " + v.username + " ?",
         onOk: () => {
+          this.operationLoading = true;
           deleteUser(v.id).then(res => {
+            this.operationLoading = false;
             if (res.success === true) {
               this.$Message.success("删除成功");
               this.getUserList();
@@ -973,7 +996,9 @@ export default {
             ids += e.id + ",";
           });
           ids = ids.substring(0, ids.length - 1);
+          this.operationLoading = true;
           deleteUser(ids).then(res => {
+            this.operationLoading = false;
             if (res.success === true) {
               this.$Message.success("删除成功");
               this.clearSelectAll();

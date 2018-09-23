@@ -22,6 +22,7 @@
                       <Button @click="clearAll" type="error" icon="md-trash">清空全部</Button>
                       <Button @click="delAll" icon="md-trash">批量删除</Button>
                       <Button @click="getLogList" icon="md-refresh">刷新</Button>
+                      <circleLoading v-if="operationLoading"/>
                     </Row>
                      <Row>
                         <Alert show-icon>
@@ -48,11 +49,16 @@ import {
   deleteLog,
   deleteAllLog
 } from "@/api/index";
+import circleLoading from "../../my-components/circle-loading.vue";
 export default {
   name: "role-manage",
+  components: {
+    circleLoading
+  },
   data() {
     return {
       loading: true,
+      operationLoading: false,
       selectList: [],
       selectCount: 0,
       selectDate: null,
@@ -280,7 +286,9 @@ export default {
         title: "确认删除",
         content: "您确认要删除该条数据?",
         onOk: () => {
+          this.operationLoading = true;
           deleteLog(v.id).then(res => {
+            this.operationLoading = false;
             if (res.success === true) {
               this.$Message.success("删除成功");
               this.init();
@@ -318,7 +326,9 @@ export default {
             ids += e.id + ",";
           });
           ids = ids.substring(0, ids.length - 1);
+          this.operationLoading = true;
           deleteLog(ids).then(res => {
+            this.operationLoading = false;
             if (res.success === true) {
               this.$Message.success("删除成功");
               this.clearSelectAll();

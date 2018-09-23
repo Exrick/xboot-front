@@ -101,7 +101,7 @@
                     </Col>
                 </Row>
                 <Row>
-                    <Col :md="24" :lg="12" style="padding: 0 2px 10px 0;">
+                    <Col :md="24" :lg="12" style="padding: 0 5px 10px 0;">
                         <Card>
                             <p slot="title" class="card-title" style="overflow:visible">
                                 <a href="http://xpay.exrick.cn/pay?xboot" target="_blank">
@@ -137,7 +137,7 @@
                             </div>
                         </Card>
                     </Col>
-                    <Col :md="24" :lg="12" style="padding: 0 0 10px 2px;" >
+                    <Col :md="24" :lg="12" style="padding: 0 0 10px 5px;" >
                         <Card>
                             <p slot="title" class="card-title">
                                 <Icon type="md-bookmark"></Icon>
@@ -149,7 +149,7 @@
                 </Row>
             </Col>
         </Row>
-        <Row :gutter="10" class="margin-top-10">
+        <Row :gutter="10">
             <Col :md="24" :lg="8" :style="{marginBottom: '10px'}">
             <Card>
                 <p slot="title" class="card-title">

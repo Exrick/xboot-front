@@ -10,6 +10,7 @@
                         <Button @click="addRole" type="primary" icon="md-add">安排新任务</Button>
                         <Button @click="delAll" icon="md-trash">批量删除</Button>
                         <Button @click="init" icon="md-refresh">刷新</Button>
+                        <circleLoading v-if="operationLoading"/>
                     </Row>
                      <Row>
                         <Alert show-icon>
@@ -62,11 +63,16 @@ import {
   resumeQuartz,
   deleteQuartz
 } from "@/api/index";
+import circleLoading from "../../my-components/circle-loading.vue";
 export default {
   name: "quartz-manage",
+  components: {
+    circleLoading
+  },
   data() {
     return {
       loading: true,
+      operationLoading: false,
       sortColumn: "createTime",
       sortType: "desc",
       modalType: 0,
@@ -398,7 +404,9 @@ export default {
         title: "确认停止",
         content: "您确认要停止任务 " + v.jobClassName + " ?",
         onOk: () => {
+          this.operationLoading = true;
           pauseQuartz(v).then(res => {
+            this.operationLoading = false;
             if (res.success === true) {
               this.$Message.success("操作成功");
               this.getQuartzList();
@@ -412,7 +420,9 @@ export default {
         title: "确认恢复",
         content: "您确认要恢复任务 " + v.jobClassName + " ?",
         onOk: () => {
+          this.operationLoading = true;
           resumeQuartz(v).then(res => {
+            this.operationLoading = false;
             if (res.success === true) {
               this.$Message.success("操作成功");
               this.getQuartzList();
@@ -426,7 +436,9 @@ export default {
         title: "确认删除",
         content: "您确认要删除任务 " + v.jobClassName + " ?",
         onOk: () => {
+          this.operationLoading = true;
           deleteQuartz(v.id).then(res => {
+            this.operationLoading = false;
             if (res.success === true) {
               this.$Message.success("操作成功");
               this.getQuartzList();
@@ -456,7 +468,9 @@ export default {
             ids += e.id + ",";
           });
           ids = ids.substring(0, ids.length - 1);
+          this.operationLoading = true;
           deleteQuartz(ids).then(res => {
+            this.operationLoading = false;
             if (res.success === true) {
               this.$Message.success("删除成功");
               this.clearSelectAll();
