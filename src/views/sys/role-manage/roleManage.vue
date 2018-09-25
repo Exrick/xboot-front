@@ -109,17 +109,20 @@ export default {
         {
           title: "备注",
           key: "description",
+          width: 190,
           sortable: true
         },
         {
           title: "创建时间",
           key: "createTime",
+          width: 160,
           sortable: true,
           sortType: "desc"
         },
         {
           title: "更新时间",
           key: "updateTime",
+          width: 160,
           sortable: true
         },
         {

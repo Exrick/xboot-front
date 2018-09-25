@@ -70,7 +70,7 @@
                     <Input v-model="menuForm.name"/>
                   </FormItem>
                   <FormItem label="图标" prop="icon" style="margin-bottom: 5px;">
-                    <Input v-model="menuForm.icon"/>
+                    <Input :icon="menuForm.icon" v-model="menuForm.icon"/>
                     <span>
                       图标请参考 <a target="_blank" href="https://www.iviewui.com/components/icon"><Icon type="ionic"></Icon> ionicons</a>
                     </span>
@@ -148,7 +148,7 @@
                 <Input v-model="menuFormAdd.name"/>
               </FormItem>
               <FormItem label="图标" prop="icon"  style="margin-bottom: 5px;">
-                <Input v-model="menuFormAdd.icon"/>
+                <Input :icon="menuFormAdd.icon" v-model="menuFormAdd.icon"/>
                 <span>
                   图标请参考 <a target="_blank" href="https://www.iviewui.com/components/icon"><Icon type="ionic"></Icon> ionicons</a>
                 </span>
