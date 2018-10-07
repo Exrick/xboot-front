@@ -11,7 +11,7 @@
             <p class="success-words">恭喜您，您的账户：{{username}} 注册成功</p>
             <Row class="buttons">
                 <router-link to="/login">
-                    <Button type="primary" size="large" style="margin-right:5px;">立即登录</Button>
+                    <Button type="primary" size="large" style="margin-right:10px;">立即登录</Button>
                 </router-link>
                 <router-link to="/regist">
                     <Button size="large">返回注册</Button>

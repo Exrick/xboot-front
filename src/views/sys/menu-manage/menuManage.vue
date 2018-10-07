@@ -61,7 +61,7 @@
                   </Poptip>
                 </FormItem>
                 <FormItem label="按钮权限类型" prop="buttonType" v-if="menuForm.type===1">
-                  <Select v-model="menuForm.buttonType" placeholder="请选择" clearable>
+                  <Select v-model="menuForm.buttonType" placeholder="请选择或输入搜索" filterable clearable>
                     <Option v-for="(item, i) in optionData" :key="i" :value="item.value">{{item.title}}</Option>
                   </Select>
                 </FormItem>
@@ -95,7 +95,7 @@
                   </i-switch>
                 </FormItem>
                 <Form-item>
-                  <Button @click="submitEdit" :loading="submitLoading" type="primary" icon="ios-create-outline">修改并保存</Button>
+                  <Button style="margin-right:5px" @click="submitEdit" :loading="submitLoading" type="primary" icon="ios-create-outline">修改并保存</Button>
                   <Button @click="handleReset" >重置</Button>
                 </Form-item>
               </Form>
@@ -139,7 +139,7 @@
               </Poptip>
             </FormItem>
             <FormItem label="按钮权限类型" prop="buttonType" v-if="menuFormAdd.type===1">
-              <Select v-model="menuFormAdd.buttonType" placeholder="请选择" clearable>
+              <Select v-model="menuFormAdd.buttonType" placeholder="请选择或输入搜索" filterable clearable>
                 <Option v-for="(item, i) in optionData" :key="i" :value="item.value">{{item.title}}</Option>
               </Select>
             </FormItem>

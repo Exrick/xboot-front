@@ -46,7 +46,7 @@ http://xboot.exrick.cn
 - [iview-area](https://github.com/iview/iview-area)：城市级联组件
 - [Vuex](https://vuex.vuejs.org/zh-cn/)
 - [wangeditor](https://github.com/wangfupeng1988/wangEditor)：轻量富文本编辑器
-- [gitment](https://github.com/imsun/gitment)：基于github issue评论插件
+- [gitalk](https://github.com/gitalk/gitalk)：基于github issue评论插件
 - [vue-stomp](https://github.com/FlySkyBear/vue-stomp)
 - [vue-json-pretty](https://github.com/leezng/vue-json-pretty)
 - ES6

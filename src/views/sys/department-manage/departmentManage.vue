@@ -44,7 +44,7 @@
                   </i-switch>
                 </FormItem>
                 <Form-item>
-                  <Button @click="submitEdit" :loading="submitLoading" type="primary" icon="ios-create-outline">修改并保存</Button>
+                  <Button style="margin-right:5px" @click="submitEdit" :loading="submitLoading" type="primary" icon="ios-create-outline">修改并保存</Button>
                   <Button @click="handleReset" >重置</Button>
                 </Form-item>
               </Form>

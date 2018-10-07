@@ -99,7 +99,10 @@
               return h("div", [
                 h("Icon", {
                   props: {
-                    type: "person"
+                    type: "ios-person"
+                  },
+                  style: {
+                    margin: "0 5px 3px 0"
                   }
                 }),
                 h("strong", params.row.name)

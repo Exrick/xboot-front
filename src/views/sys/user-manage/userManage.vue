@@ -161,8 +161,11 @@
                 <Button type="primary" :loading="submitLoading" @click="submitUser">提交</Button>
             </div>
         </Modal>
-        <Modal title="图片预览" v-model="viewImage" :styles="{top: '30px'}">
+        <Modal title="图片预览" v-model="viewImage" :styles="{top: '30px'}" draggable>
           <img :src="userForm.avatar" alt="无效的图片链接" style="width: 100%;margin: 0 auto;display: block;">
+          <div slot="footer">
+            <Button @click="viewImage=false">关闭</Button>
+          </div>
         </Modal>
         <Modal
             v-model="modalExportAll"
@@ -842,6 +845,7 @@ export default {
             });
           } else {
             // 编辑
+            this.submitLoading = true;
             editUser(this.userForm).then(res => {
               this.submitLoading = false;
               if (res.success === true) {
