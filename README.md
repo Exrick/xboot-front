@@ -67,7 +67,16 @@ http://xboot.exrick.cn
 
 ### 部署
 - 执行过命令 `npm install` 后，执行 `npm run build` 将打包生成的 `dist` 静态文件放置Nginx服务器中，并配置路由代理。当然还可放置Spring Web等其他项目resources静态资源文件夹下可避免跨域(不推荐)。
-
+- nginx配置提醒 由于路由默认已使用history模式 需加入以下配置
+```
+location / {
+	if (!-e $request_filename) {
+        rewrite ^(.*)$ /index.html?s=$1 last;
+        break;
+    }
+    ...
+}
+```
 ### 开发指南
 > 由于权限菜单按钮设计 仅支持2级菜单 一级菜单下没子菜单将不会显示
 - [如何使用XBoot前端Vue模板快速开发增删改页面](https://github.com/Exrick/xboot-front/wiki/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8XBoot%E5%89%8D%E7%AB%AFVue%E6%A8%A1%E6%9D%BF%E5%BF%AB%E9%80%9F%E5%BC%80%E5%8F%91%E5%A2%9E%E5%88%A0%E6%94%B9%E9%A1%B5%E9%9D%A2)
