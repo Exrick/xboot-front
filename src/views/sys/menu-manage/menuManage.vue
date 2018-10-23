@@ -15,7 +15,7 @@
               </Button>
               <DropdownMenu slot="list">
                 <DropdownItem name="refresh">刷新</DropdownItem>
-                <DropdownItem name="expandOne">仅展开一级</DropdownItem>
+                <DropdownItem name="expandOne">仅显示一级</DropdownItem>
                 <DropdownItem name="expandTwo">仅展开两级</DropdownItem>
                 <DropdownItem name="expandAll">展开所有</DropdownItem>
               </DropdownMenu>
@@ -27,7 +27,10 @@
                 当前选择编辑： <span class="select-count">{{editTitle}}</span>
                 <a class="select-clear" v-if="menuForm.id" @click="canelEdit">取消选择</a>
               </Alert>
-              <Tree :data="data" show-checkbox @on-check-change="changeSelect" @on-select-change="selectTree"></Tree>
+              <Input v-model="searchKey" suffix="ios-search" @on-change="search" placeholder="输入菜单名搜索"/>
+              <div class="tree-bar">
+                <Tree ref="tree" :data="data" show-checkbox @on-check-change="changeSelect" @on-select-change="selectTree"></Tree>
+              </div>
               <Spin size="large" fix v-if="loading"></Spin>
             </Col>
             <Col span="9">
@@ -35,11 +38,11 @@
                 <FormItem label="类型" prop="type">
                   <RadioGroup v-model="menuForm.type">
                     <Radio :label="0" :disabled="isButton">
-                      <Icon type="ios-list-outline"></Icon>
+                      <Icon type="ios-list-box-outline" size="16" style="margin-bottom:3px;"></Icon>
                       <span>页面菜单</span>
                     </Radio>
                     <Radio :label="1" :disabled="isMenu">
-                      <Icon type="log-in"></Icon>
+                      <Icon type="md-log-in" size="16" style="margin-bottom:3px;"></Icon>
                       <span>操作按钮</span>
                     </Radio>
                   </RadioGroup>
@@ -89,7 +92,7 @@
                   <span style="margin-left:5px">值越小越靠前，支持小数</span>
                 </FormItem>
                 <FormItem label="是否启用" prop="status">
-                  <i-switch size="large" v-model="editStatus" @on-change="changeEditSwitch">
+                  <i-switch size="large" v-model="menuForm.status" :true-value="0" :false-value="-1">
                     <span slot="open">启用</span>
                     <span slot="close">禁用</span>
                   </i-switch>
@@ -113,11 +116,11 @@
             <FormItem label="类型" prop="type">
               <RadioGroup v-model="menuFormAdd.type">
                 <Radio :label="0" :disabled="isButtonAdd">
-                  <Icon type="ios-list-outline"></Icon>
+                  <Icon type="ios-list-box-outline" size="16" style="margin-bottom:3px;"></Icon>
                   <span>页面菜单</span>
                 </Radio>
                 <Radio :label="1" :disabled="isMenuAdd">
-                  <Icon type="log-in"></Icon>
+                  <Icon type="md-log-in" size="16" style="margin-bottom:3px;"></Icon>
                   <span>操作按钮</span>
                 </Radio>
               </RadioGroup>
@@ -167,7 +170,7 @@
               <span style="margin-left:5px">值越小越靠前，支持小数</span>
             </FormItem>
             <FormItem label="是否启用" prop="status">
-              <i-switch size="large" v-model="addStatus" @on-change="changeAddSwitch">
+              <i-switch size="large" v-model="menuFormAdd.status" :true-value="0" :false-value="-1">
                 <span slot="open">启用</span>
                 <span slot="close">禁用</span>
               </i-switch>
@@ -186,8 +189,10 @@ import {
   getAllPermissionList,
   addPermission,
   editPermission,
-  deletePermission
+  deletePermission,
+  searchPermission
 } from "@/api/index";
+import util from "@/libs/util.js";
 export default {
   name: "menu-manage",
   data() {
@@ -198,13 +203,12 @@ export default {
       selectList: [],
       selectCount: 0,
       showParent: false,
+      searchKey: "",
       parentTitle: "",
       isButtonAdd: false,
       isMenuAdd: false,
       isMenu: false,
       isButton: false,
-      editStatus: true,
-      addStatus: true,
       editTitle: "",
       modalTitle: "",
       menuForm: {
@@ -232,20 +236,20 @@ export default {
       submitLoading: false,
       data: [],
       optionData: [
-        { title: "查看操作", value: "view" },
-        { title: "添加操作", value: "add" },
-        { title: "编辑操作", value: "edit" },
-        { title: "删除操作", value: "delete" },
-        { title: "清空操作", value: "clear" },
-        { title: "启用操作", value: "enable" },
-        { title: "禁用操作", value: "disable" },
-        { title: "搜索操作", value: "search" },
-        { title: "上传文件", value: "upload" },
-        { title: "导出操作", value: "output" },
-        { title: "导入操作", value: "input" },
-        { title: "分配权限", value: "editPerm" },
-        { title: "设为默认", value: "setDefault" },
-        { title: "其他操作", value: "other" }
+        { title: "查看操作(view)", value: "view" },
+        { title: "添加操作(add)", value: "add" },
+        { title: "编辑操作(edit)", value: "edit" },
+        { title: "删除操作(delete)", value: "delete" },
+        { title: "清空操作(clear)", value: "clear" },
+        { title: "启用操作(enable)", value: "enable" },
+        { title: "禁用操作(disable)", value: "disable" },
+        { title: "搜索操作(search)", value: "search" },
+        { title: "上传文件(upload)", value: "upload" },
+        { title: "导出操作(output)", value: "output" },
+        { title: "导入操作(input)", value: "input" },
+        { title: "分配权限(editPerm)", value: "editPerm" },
+        { title: "设为默认(setDefault)", value: "setDefault" },
+        { title: "其他操作(other)", value: "other" }
       ]
     };
   },
@@ -302,6 +306,19 @@ export default {
         }
       });
     },
+    search() {
+      if (this.searchKey) {
+        this.loading = true;
+        searchPermission({ title: this.searchKey }).then(res => {
+          this.loading = false;
+          if (res.success) {
+            this.data = res.result;
+          }
+        });
+      } else {
+        this.getAllList();
+      }
+    },
     selectTree(v) {
       if (v.length > 0) {
         if (Number(v[0].level) === 1 || Number(v[0].level) === 2) {
@@ -326,9 +343,15 @@ export default {
         let menu = JSON.parse(str);
         this.menuForm = menu;
         this.editTitle = menu.title;
+      } else {
+        this.canelEdit();
       }
     },
     canelEdit() {
+      let data = this.$refs.tree.getSelectedNodes()[0];
+      if(data){
+        data.selected = false;
+      }
       this.isMenu = false;
       this.isButton = false;
       this.$refs.menuForm.resetFields();
@@ -342,13 +365,6 @@ export default {
       this.$refs.menuForm.resetFields();
       this.editStatus = true;
       this.menuForm.status = 0;
-    },
-    changeEditSwitch(v) {
-      if (v) {
-        this.menuForm.status = 0;
-      } else {
-        this.menuForm.status = -1;
-      }
     },
     submitEdit() {
       this.$refs.menuForm.validate(valid => {
@@ -373,19 +389,13 @@ export default {
             this.submitLoading = false;
             if (res.success === true) {
               this.$Message.success("编辑成功");
+              util.initRouter(this);
               this.init();
               this.menuModalVisible = false;
             }
           });
         }
       });
-    },
-    changeAddSwitch(v) {
-      if (v) {
-        this.menuFormAdd.status = 0;
-      } else {
-        this.menuFormAdd.status = -1;
-      }
     },
     submitAdd() {
       this.$refs.menuFormAdd.validate(valid => {
@@ -406,6 +416,7 @@ export default {
             this.submitLoading = false;
             if (res.success === true) {
               this.$Message.success("添加成功");
+              util.initRouter(this);
               this.init();
               this.menuModalVisible = false;
             }
@@ -485,6 +496,7 @@ export default {
           deletePermission(ids).then(res => {
             if (res.success === true) {
               this.$Message.success("删除成功");
+              util.initRouter(this);
               this.selectList = [];
               this.selectCount = 0;
               this.canelEdit();

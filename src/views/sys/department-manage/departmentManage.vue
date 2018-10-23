@@ -16,7 +16,10 @@
                 当前选择编辑： <span class="select-count">{{editTitle}}</span>
                 <a class="select-clear" v-if="form.id" @click="canelEdit">取消选择</a>
               </Alert>
-              <Tree :data="data" :load-data="loadData" show-checkbox @on-check-change="changeSelect" @on-select-change="selectTree"></Tree>
+              <Input v-model="searchKey" suffix="ios-search" @on-change="search" placeholder="输入部门名搜索"/>
+              <div class="tree-bar">
+                <Tree ref="tree" :data="data" :load-data="loadData" show-checkbox @on-check-change="changeSelect" @on-select-change="selectTree"></Tree>
+              </div>
               <Spin size="large" fix v-if="loading"></Spin>
             </Col>
             <Col span="9">
@@ -38,7 +41,7 @@
                   <span style="margin-left:5px">值越小越靠前，支持小数</span>
                 </FormItem>
                 <FormItem label="是否启用" prop="status">
-                  <i-switch size="large" v-model="editStatus" @on-change="changeEditSwitch">
+                  <i-switch size="large" v-model="form.status" :true-value="0" :false-value="-1">
                     <span slot="open">启用</span>
                     <span slot="close">禁用</span>
                   </i-switch>
@@ -67,7 +70,7 @@
               <span style="margin-left:5px">值越小越靠前，支持小数</span>
             </FormItem>
             <FormItem label="是否启用" prop="status">
-              <i-switch size="large" v-model="addStatus" @on-change="changeAddSwitch">
+              <i-switch size="large" v-model="formAdd.status" :true-value="0" :false-value="-1">
                 <span slot="open">启用</span>
                 <span slot="close">禁用</span>
               </i-switch>
@@ -87,7 +90,8 @@ import {
   loadDepartment,
   addDepartment,
   editDepartment,
-  deleteDepartment
+  deleteDepartment,
+  searchDepartment
 } from "@/api/index";
 export default {
   name: "department-manage",
@@ -99,10 +103,9 @@ export default {
       selectList: [],
       selectCount: 0,
       showParent: false,
-      editStatus: true,
-      addStatus: true,
       modalTitle: "",
       editTitle: "",
+      searchKey: "",
       form: {
         id: "",
         parentId: "",
@@ -174,6 +177,19 @@ export default {
         }
       });
     },
+    search() {
+      if (this.searchKey) {
+        this.loading = true;
+        searchDepartment({ title: this.searchKey }).then(res => {
+          this.loading = false;
+          if (res.success) {
+            this.data = res.result;
+          }
+        });
+      } else {
+        this.getParentList();
+      }
+    },
     selectTree(v) {
       if (v.length > 0) {
         if (Number(v[0].status) === 0) {
@@ -191,9 +207,12 @@ export default {
         let data = JSON.parse(str);
         this.form = data;
         this.editTitle = data.title;
+      } else {
+        this.canelEdit();
       }
     },
     canelEdit() {
+      this.$refs.tree.getSelectedNodes()[0].selected = false;
       this.isMenu = false;
       this.isButton = false;
       this.$refs.form.resetFields();
@@ -222,13 +241,6 @@ export default {
       this.editStatus = true;
       this.form.status = 0;
     },
-    changeEditSwitch(v) {
-      if (v) {
-        this.form.status = 0;
-      } else {
-        this.form.status = -1;
-      }
-    },
     submitEdit() {
       this.$refs.form.validate(valid => {
         if (valid) {
@@ -253,13 +265,6 @@ export default {
           });
         }
       });
-    },
-    changeAddSwitch(v) {
-      if (v) {
-        this.formAdd.status = 0;
-      } else {
-        this.formAdd.status = -1;
-      }
     },
     submitAdd() {
       this.$refs.formAdd.validate(valid => {

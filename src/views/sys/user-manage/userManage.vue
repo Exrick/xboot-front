@@ -113,7 +113,7 @@
                         <a @click="viewPic()" style="margin-top:5px;text-align:right;display:block">查看原图</a>
                       </div>
                   </Poptip>
-                  <Upload action="/xboot/upload/file"
+                  <Upload :action="uploadFileUrl"
                           :headers="accessToken" 
                           :on-success="handleSuccess"
                           :on-error="handleError"
@@ -133,9 +133,10 @@
                       <Input v-model="userForm.departmentTitle" readonly style="margin-right:10px;"/>
                       <Button icon="md-trash" @click="clearSelectDep">清空已选</Button>
                     </div>
-                    <div slot="content">
+                    <div slot="content" class="tree-bar">
+                      <Input v-model="searchKey" suffix="ios-search" @on-change="searchDp" placeholder="输入部门名搜索"/>
                       <Tree :data="dataDep" :load-data="loadDataTree" @on-select-change="selectTree"></Tree>
-                      <Spin size="large" fix v-if="loading"></Spin>
+                      <Spin size="large" fix v-if="dpLoading"></Spin>
                     </div>
                   </Poptip>
                 </Form-item>
@@ -188,13 +189,17 @@ import {
   enableUser,
   disableUser,
   deleteUser,
-  getAllUserData
+  getAllUserData,
+  searchDepartment,
+  uploadFile
 } from "@/api/index";
+import expandRow from "./expand.vue";
 import circleLoading from "../../my-components/circle-loading.vue";
 export default {
   name: "user-manage",
   components: {
-    circleLoading
+    circleLoading,
+    expandRow
   },
   data() {
     const validatePassword = (rule, value, callback) => {
@@ -214,6 +219,8 @@ export default {
     };
     return {
       accessToken: {},
+      uploadFileUrl: uploadFile,
+      dpLoading: false, // 部门树加载
       loading: true,
       operationLoading: false,
       loadingExport: true,
@@ -227,6 +234,7 @@ export default {
       department: [],
       selectDep: [],
       dataDep: [],
+      searchKey: "",
       searchForm: {
         username: "",
         departmentId: "",
@@ -277,6 +285,18 @@ export default {
           width: 60,
           align: "center",
           fixed: "left"
+        },
+        {
+          type: "expand",
+          width: 50,
+          fixed: "left",
+          render: (h, params) => {
+            return h(expandRow, {
+              props: {
+                row: params.row
+              }
+            });
+          }
         },
         {
           type: "index",
@@ -681,6 +701,26 @@ export default {
           callback(res.result);
         }
       });
+    },
+    searchDp() {
+      // 搜索部门
+      if (this.searchKey) {
+        this.dpLoading = true;
+        searchDepartment({ title: this.searchKey }).then(res => {
+          this.dpLoading = false;
+          if (res.success) {
+            res.result.forEach(function(e) {
+              if (e.status === -1) {
+                e.title = "[已禁用] " + e.title;
+                e.disabled = true;
+              }
+            });
+            this.dataDep = res.result;
+          }
+        });
+      } else {
+        this.initDepartmentTreeData();
+      }
     },
     selectTree(v) {
       if (v.length > 0) {

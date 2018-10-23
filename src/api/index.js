@@ -1,6 +1,17 @@
 // 统一请求路径前缀在libs/axios.js中修改
 import { getRequest, postRequest, putRequest, deleteRequest, uploadFileRequest } from '@/libs/axios';
 
+
+
+// 文件上传接口
+export const uploadFile = "/xboot/upload/file"
+// 验证码渲染图片接口
+export const drawCodeImage = "/xboot/common/captcha/draw/"
+// 获取菜单
+export const getMenuList = "/xboot/permission/getMenuList/"
+
+
+
 // 登陆
 export const login = (params) => {
     return postRequest('/login', params)
@@ -133,6 +144,10 @@ export const editDepartment = (params) => {
 export const deleteDepartment = (ids, params) => {
     return deleteRequest(`/department/delByIds/${ids}`, params)
 }
+// 搜索部门
+export const searchDepartment = (params) => {
+    return getRequest('/department/search', params)
+}
 
 
 
@@ -183,7 +198,10 @@ export const editPermission = (params) => {
 export const deletePermission = (ids, params) => {
     return deleteRequest(`/permission/delByIds/${ids}`, params)
 }
-
+// 搜索权限
+export const searchPermission = (params) => {
+    return getRequest('/permission/search', params)
+}
 
 
 // 分页获取日志数据

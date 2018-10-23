@@ -4,17 +4,15 @@
 
 <template>
   <div class="main" :class="{'main-hide-text': shrink}">
-    <div class="sidebar-menu-con" :style="{width: shrink?'60px':'200px', overflow: shrink ? 'visible' : 'auto'}">
-      <scroll-bar ref="scrollBar">
-        <shrinkable-menu :shrink="shrink" @on-change="handleSubmenuChange" :theme="menuTheme" :before-push="beforePush" :open-names="openedSubmenuArr" :menu-list="menuList">
-          <div slot="top" class="logo-con">
-            <img v-show="!shrink" src="../assets/logo.png" key="max-logo" />
-            <img v-show="shrink" src="../assets/logo-min.png" key="min-logo" />
-          </div>
-        </shrinkable-menu>
-      </scroll-bar>
+    <div class="sidebar-menu-con menu-bar" :style="{width: shrink?'60px':'220px', overflow: shrink ? 'visible' : 'auto'}">
+      <shrinkable-menu :shrink="shrink" @on-change="handleSubmenuChange" :theme="menuTheme" :before-push="beforePush" :open-names="openedSubmenuArr" :menu-list="menuList">
+        <div slot="top" class="logo-con">
+          <img v-show="!shrink" src="../assets/logo.png" key="max-logo" />
+          <img v-show="shrink" src="../assets/logo-min.png" key="min-logo" />
+        </div>
+      </shrinkable-menu>
     </div>
-    <div class="main-header-con" :style="{paddingLeft: shrink?'60px':'200px'}">
+    <div class="main-header-con" :style="{paddingLeft: shrink?'60px':'220px'}">
       <div class="main-header">
         <div class="navicon-con">
           <Button :style="{transform: 'rotateZ(' + (this.shrink ? '-90' : '0') + 'deg)'}" type="text" @click="toggleClick">
@@ -60,7 +58,7 @@
         <tags-page-opened :pageTagsList="pageTagsList"></tags-page-opened>
       </div>
     </div>
-    <div class="single-page-con" :style="{left: shrink?'60px':'200px'}">
+    <div class="single-page-con" :style="{left: shrink?'60px':'220px'}">
       <div class="single-page">
         <keep-alive :include="cachePage">
           <router-view></router-view>
@@ -79,7 +77,6 @@ import lockScreen from "./main-components/lockscreen/lockscreen.vue";
 import messageTip from "./main-components/message-tip.vue";
 import Cookies from "js-cookie";
 import util from "@/libs/util.js";
-import scrollBar from "@/views/my-components/scroll-bar/vue-scroller-bars";
 
 export default {
   components: {
@@ -88,8 +85,7 @@ export default {
     breadcrumbNav,
     fullScreen,
     lockScreen,
-    messageTip,
-    scrollBar
+    messageTip
   },
   data() {
     return {
@@ -199,9 +195,6 @@ export default {
     },
     fullscreenChange(isFullScreen) {
       // console.log(isFullScreen);
-    },
-    scrollBarResize() {
-      this.$refs.scrollBar.resize();
     }
   },
   watch: {
@@ -216,23 +209,14 @@ export default {
     },
     lang() {
       util.setCurrentPath(this, this.$route.name); // 在切换语言时用于刷新面包屑
-    },
-    openedSubmenuArr() {
-      setTimeout(() => {
-        this.scrollBarResize();
-      }, 500);
     }
   },
   mounted() {
     this.init();
-    window.addEventListener("resize", this.scrollBarResize);
   },
   created() {
     // 显示打开的页面的列表
     this.$store.commit("setOpenedList");
-  },
-  dispatch() {
-    window.removeEventListener("resize", this.scrollBarResize);
   }
 };
 </script>

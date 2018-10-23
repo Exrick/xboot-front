@@ -19,14 +19,12 @@ import { getRequest, postRequest, putRequest, deleteRequest, uploadFileRequest }
 import { setStore, getStore, removeStore } from '@/libs/storage'
 import util from '@/libs/util';
 import hasPermission from '@/libs/hasPermission';
-import VueVirtualScroller from 'vue-virtual-scroller'
 
 Vue.config.productionTip = false
 Vue.use(VueI18n);
 Vue.use(iView);
 Vue.use(iviewArea);
 Vue.component('icon', Icon);
-Vue.use(VueVirtualScroller)
 Vue.use(hasPermission);
 // 挂载全局使用的方法
 Vue.prototype.getRequest = getRequest;

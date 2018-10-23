@@ -14,7 +14,7 @@
                         <DatePicker type="daterange" v-model="selectDate" format="yyyy-MM-dd" clearable @on-change="selectDateRange" placeholder="选择起始时间" style="width: 200px"></DatePicker>
                       </Form-item>
                       <Form-item style="margin-left:-35px;" class="br">
-                        <Button @click="getLogList"  type="primary" icon="ios-search">搜索</Button>
+                        <Button @click="handleSearch"  type="primary" icon="ios-search">搜索</Button>
                         <Button @click="handleReset" >重置</Button>
                       </Form-item>
                     </Form>
@@ -237,10 +237,15 @@ export default {
         this.endDate = v[1];
       }
     },
+    handleSearch() {
+      this.pageNumber = 1;
+      this.pageSize = 10;
+      this.getLogList();
+    },
     getLogList() {
       this.loading = true;
       let params = "";
-      // 后端可配置使用数据库或Elasticsearch搜索 这里分开了2个请求
+      // 由于后端可配置使用数据库或Elasticsearch搜索 这里读取数据和搜索分为了2个请求
       if (this.searchKey === "" && this.startDate === "") {
         params = {
           pageNumber: this.pageNumber,

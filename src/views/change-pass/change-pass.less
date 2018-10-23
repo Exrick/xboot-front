@@ -1,37 +1,79 @@
-.own-space{
-    &-btn-box{
+.change-pass {
+    .ivu-poptip {
+        display: inline-block;
+        width: 100%;
+    }
+    .ivu-poptip-rel {
+        width: 100%;
+        display: inline-block;
+        position: relative;
+    }
+    .ivu-slider-button {
+        display: none;
+    }
+    .ivu-slider-button-wrap .ivu-tooltip {
+        display: none;
+    }
+    .password-tip-none {
+        padding: 1vh 0;
+        font-size: 14px;
+        .ivu-slider-bar {
+            height: 4px;
+            border-radius: 3px;
+            position: absolute;
+        }
+    }
+    .password-tip-weak {
+        padding: 1vh 0;
+        font-size: 14px;
+        .words {
+            color: #ed3f14;
+        }
+        .ivu-slider-bar {
+            height: 4px;
+            background: #ed3f14;
+            border-radius: 3px;
+            position: absolute;
+        }
+    }
+    .password-tip-middle {
+        padding: 1vh 0;
+        font-size: 14px;
+        .words {
+            color: #faad14;
+        }
+        .ivu-slider-bar {
+            height: 4px;
+            background: #faad14;
+            border-radius: 3px;
+            position: absolute;
+        }
+    }
+    .password-tip-strong {
+        padding: 1vh 0;
+        font-size: 14px;
+        .words {
+            color: #52c41a;
+        }
+        .ivu-slider-bar {
+            height: 4px;
+            background: #52c41a;
+            border-radius: 3px;
+            position: absolute;
+        }
+    }
+    &-btn-box {
         margin-bottom: 10px;
-        button{
+        button {
             padding-left: 0;
-            span{
+            span {
                 color: #2D8CF0;
                 transition: all .2s;
             }
-            span:hover{
+            span:hover {
                 color: #0C25F1;
                 transition: all .2s;
             }
         }
-    }
-    &-tra{
-        width:10px;
-        height:10px;
-        transform:rotate(45deg);
-        position:absolute;
-        top:50%;
-        margin-top:-6px;
-        left:-3px;
-        box-shadow:0 0 2px 3px rgba(0,0,0,.1);
-        background-color:white;z-index:100;
-    }
-    &-input-identifycode-con{
-        position:absolute;
-        width:200px;
-        height:100px;
-        right:-220px;
-        top:50%;
-        margin-top:-50px;
-        border-radius:4px;
-        box-shadow:0 0 2px 3px rgba(0,0,0,.1);
     }
 }

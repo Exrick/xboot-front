@@ -63,6 +63,7 @@ import {
   setDefaultRole,
   editRolePerm
 } from "@/api/index";
+import util from "@/libs/util.js";
 import circleLoading from "../../my-components/circle-loading.vue";
 export default {
   name: "role-manage",
@@ -517,6 +518,7 @@ export default {
         this.submitPermLoading = false;
         if (res.success === true) {
           this.$Message.success("操作成功");
+          util.initRouter(this);
           this.getRoleList();
           this.permModalVisible = false;
         }

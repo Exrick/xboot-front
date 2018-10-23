@@ -38,7 +38,7 @@
                               :on-exceeded-size="handleMaxSize"
                               :before-upload="handleBeforeUpload"
                               type="drag"
-                              action="/xboot/upload/file"
+                              :action="uploadFileUrl"
                               :headers="accessToken"
                               style="display: inline-block;width:58px;">
                             <div style="width: 58px;height:58px;line-height: 58px;">
@@ -140,7 +140,8 @@ import {
   unRelate,
   githubLogin,
   qqLogin,
-  weiboLogin
+  weiboLogin,
+  uploadFile
 } from "@/api/index";
 import Cookies from "js-cookie";
 export default {
@@ -156,6 +157,7 @@ export default {
     };
     return {
       accessToken: {},
+      uploadFileUrl: uploadFile,
       userForm: {
         id: "",
         avatar: "",
