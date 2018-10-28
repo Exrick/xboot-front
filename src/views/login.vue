@@ -41,7 +41,16 @@
   
       <Row type="flex" justify="space-between" class="code-row-bg">
         <Checkbox v-model="saveLogin" size="large">自动登录</Checkbox>
-        <a class="forget-pass" @click="showAccount">忘记密码</a>
+        <Dropdown trigger="click" @on-click="handleDropDown">
+          <a class="forget-pass">
+            忘记密码
+          </a>
+          <DropdownMenu slot="list">
+            <DropdownItem name="showAccount">体验测试账号</DropdownItem>
+            <DropdownItem name="resetByMobile">使用手机号重置密码(付费)</DropdownItem>
+            <DropdownItem name="resetByEmail">使用邮箱重置密码(付费)</DropdownItem>
+          </DropdownMenu>
+        </Dropdown>
       </Row>
       <Row>
         <Button class="login-btn" type="primary" size="large" :loading="loading" @click="submitLogin" long>
@@ -250,6 +259,15 @@ export default {
     },
     relatedLogin() {
       
+    },
+    handleDropDown(v) {
+      if (v == "showAccount") {
+        this.showAccount();
+      } else if (v == "resetByMobile") {
+        this.showErrorMsg("请捐赠获取完整版")
+      } else if (v == "resetByEmail") {
+        this.showErrorMsg("请捐赠获取完整版")
+      }
     },
     showAccount() {
       this.$Notice.info({

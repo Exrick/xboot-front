@@ -362,9 +362,10 @@ export default {
       this.menuModalVisible = false;
     },
     handleReset() {
+      let type = this.menuForm.type;
       this.$refs.menuForm.resetFields();
       this.editStatus = true;
-      this.menuForm.status = 0;
+      this.menuForm.type = type;
     },
     submitEdit() {
       this.$refs.menuForm.validate(valid => {
