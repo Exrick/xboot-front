@@ -8,7 +8,7 @@ export const uploadFile = "/xboot/upload/file"
 // 验证码渲染图片接口
 export const drawCodeImage = "/xboot/common/captcha/draw/"
 // 获取菜单
-export const getMenuList = "/xboot/permission/getMenuList/"
+export const getMenuList = "/xboot/permission/getMenuList"
 
 
 
@@ -172,8 +172,12 @@ export const setDefaultRole = (params) => {
     return postRequest('/role/setDefault', params)
 }
 // 分配角色权限
-export const editRolePerm = (id, params) => {
-    return postRequest(`/role/editRolePerm/${id}`, params)
+export const editRolePerm = (params) => {
+    return postRequest('/role/editRolePerm', params)
+}
+// 分配角色数据权限
+export const editRoleDep = (params) => {
+    return postRequest('/role/editRoleDep', params)
 }
 // 删除角色
 export const deleteRole = (ids, params) => {

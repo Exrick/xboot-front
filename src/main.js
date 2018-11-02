@@ -19,6 +19,7 @@ import { getRequest, postRequest, putRequest, deleteRequest, uploadFileRequest }
 import { setStore, getStore, removeStore } from '@/libs/storage'
 import util from '@/libs/util';
 import hasPermission from '@/libs/hasPermission';
+import '@babel/polyfill'
 
 Vue.config.productionTip = false
 Vue.use(VueI18n);

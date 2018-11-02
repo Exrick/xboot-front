@@ -20,13 +20,13 @@
         </Row>
     
         <Row class="foot">
-            <Row type="flex" justify="space-around" class="code-row-bg help">
-                <a class="item">帮助</a>
-                <a class="item">隐私</a>
-                <a class="item">条款</a>
+            <Row type="flex" justify="space-around" class="help">
+                <a class="item" href="https://github.com/Exrick/x-boot" target="_blank">帮助</a>
+                <a class="item" href="https://github.com/Exrick/x-boot" target="_blank">隐私</a>
+                <a class="item" href="https://github.com/Exrick/x-boot" target="_blank">条款</a>
             </Row>
-            <Row type="flex" justify="center" class="code-row-bg copyright">
-                Copyright © 2018 <a href="http://exrick.cn" target="_blank" style="margin:0 5px;">Exrick</a> Presents
+            <Row type="flex" justify="center" class="copyright">
+                Copyright © 2018 - Present <a href="http://exrick.cn" target="_blank" style="margin:0 5px;">Exrick</a> 版权所有
             </Row>
         </Row>
         </Col>

@@ -27,6 +27,7 @@
                 </Card>
             </Col>
         </Row>
+        <!-- 编辑 -->
         <Modal :title="modalTitle" v-model="roleModalVisible" :mask-closable='false' :width="500">
           <Form ref="roleForm" :model="roleForm" :label-width="80" :rules="roleFormValidate">
             <FormItem label="角色名称" prop="name">
@@ -41,13 +42,36 @@
             <Button type="primary" :loading="submitLoading" @click="submitRole">提交</Button>
           </div>
         </Modal>
-        <Modal title="分配权限(点击选择)" v-model="permModalVisible" :mask-closable='false' :width="500" :styles="{top: '30px'}" class="permModal">
+        <!-- 菜单权限 -->
+        <Modal :title="modalTitle" v-model="permModalVisible" :mask-closable='false' :width="500" :styles="{top: '30px'}" class="permModal">
           <Tree ref="tree" :data="permData" multiple></Tree>
           <Spin size="large" v-if="treeLoading"></Spin>
           <div slot="footer">
             <Button type="text" @click="cancelPermEdit">取消</Button>
             <Button @click="selectTreeAll">全选/反选</Button>
             <Button type="primary" :loading="submitPermLoading" @click="submitPermEdit">提交</Button>
+          </div>
+        </Modal>
+        <!-- 数据权限 -->
+        <Modal :title="modalTitle" v-model="depModalVisible" :mask-closable='false' :width="500" :styles="{top: '30px'}" class="depModal">
+          <Form :label-width="65" >
+            <FormItem label="数据范围">
+              <Select v-model="dataType">
+                <Option :value="0">全部数据权限</Option>
+                <Option :value="1">自定义数据权限</Option>
+              </Select>
+            </FormItem>
+          </Form>
+          <Alert show-icon>
+            默认可查看全部数据，自定义数据范围请点击选择下方数据
+          </Alert>
+          <div v-if="dataType!=0" style="margin-top:15px">
+            <Tree ref="depTree" :data="depData" :load-data="loadData" @on-toggle-expand="expandCheckDep" multiple style="margin-top:15px"></Tree>
+            <Spin size="large" v-if="depTreeLoading"></Spin>
+          </div>
+          <div slot="footer">
+            <Button type="text" @click="depModalVisible=false">取消</Button>
+            <Button type="primary" :loading="submitDepLoading" @click="submitDepEdit">提交</Button>
           </div>
         </Modal>
     </div>
@@ -61,7 +85,10 @@ import {
   editRole,
   deleteRole,
   setDefaultRole,
-  editRolePerm
+  editRolePerm,
+  initDepartment,
+  loadDepartment,
+  editRoleDep
 } from "@/api/index";
 import util from "@/libs/util.js";
 import circleLoading from "../../my-components/circle-loading.vue";
@@ -74,13 +101,17 @@ export default {
     return {
       loading: true,
       treeLoading: true,
+      depTreeLoading: true,
       operationLoading: false,
       submitPermLoading: false,
+      submitDepLoading: false,
+      searchKey: "",
       sortColumn: "createTime",
       sortType: "desc",
       modalType: 0,
       roleModalVisible: false,
       permModalVisible: false,
+      depModalVisible: false,
       modalTitle: "",
       roleForm: {
         description: ""
@@ -105,6 +136,7 @@ export default {
         {
           title: "角色名称",
           key: "name",
+          width: 150,
           sortable: true
         },
         {
@@ -200,13 +232,30 @@ export default {
                     }
                   }
                 },
-                "分配权限"
+                "菜单权限"
               ),
               h(
                 "Button",
                 {
                   props: {
                     type: "primary",
+                    size: "small"
+                  },
+                  style: {
+                    marginRight: "5px"
+                  },
+                  on: {
+                    click: () => {
+                      this.editDep(params.row);
+                    }
+                  }
+                },
+                "数据权限"
+              ),
+              h(
+                "Button",
+                {
+                  props: {
                     size: "small"
                   },
                   style: {
@@ -245,8 +294,10 @@ export default {
       total: 0,
       permData: [],
       editRolePermId: "",
-      selectPermList: [],
-      selectAllFlag: false
+      selectAllFlag: false,
+      depData: [],
+      dataType: 0,
+      editDepartments: []
     };
   },
   methods: {
@@ -254,6 +305,8 @@ export default {
       this.getRoleList();
       // 获取所有菜单权限树
       this.getPermList();
+      // 获取一级部门数据
+      this.getParentList();
     },
     changePage(v) {
       this.pageNumber = v;
@@ -454,6 +507,7 @@ export default {
     },
     editPerm(v) {
       this.editRolePermId = v.id;
+      this.modalTitle = "分配 " + v.name + " 的菜单权限(点击选择)";
       // 匹配勾选
       let rolePerms = v.permissions;
       // 递归判断子节点
@@ -478,7 +532,7 @@ export default {
     hasPerm(p, rolePerms) {
       let flag = false;
       for (let i = 0; i < rolePerms.length; i++) {
-        if (p.id === rolePerms[i].id) {
+        if (p.id === rolePerms[i].permissionId) {
           flag = true;
           break;
         }
@@ -512,7 +566,8 @@ export default {
         permIds += e.id + ",";
       });
       permIds = permIds.substring(0, permIds.length - 1);
-      editRolePerm(this.editRolePermId, {
+      editRolePerm({
+        roleId: this.editRolePermId,
         permIds: permIds
       }).then(res => {
         this.submitPermLoading = false;
@@ -526,6 +581,114 @@ export default {
     },
     cancelPermEdit() {
       this.permModalVisible = false;
+    },
+    getParentList() {
+      this.depTreeLoading = true;
+      initDepartment({ openDataFilter: false }).then(res => {
+        this.depTreeLoading = false;
+        if (res.success === true) {
+          res.result.forEach(function(e) {
+            e.selected = false;
+            if (e.isParent) {
+              e.loading = false;
+              e.children = [];
+            }
+            if (e.status === -1) {
+              e.title = "[已禁用] " + e.title;
+              e.disabled = true;
+            }
+          });
+          this.depData = res.result;
+        }
+      });
+    },
+    loadData(item, callback) {
+      loadDepartment(item.id, { openDataFilter: false }).then(res => {
+        if (res.success === true) {
+          res.result.forEach(function(e) {
+            e.selected = false;
+            if (e.isParent) {
+              e.loading = false;
+              e.children = [];
+            }
+            if (e.status === -1) {
+              e.title = "[已禁用] " + e.title;
+              e.disabled = true;
+            }
+          });
+          callback(res.result);
+        }
+      });
+    },
+    editDep(v) {
+      this.dataType = 0;
+      this.editRolePermId = v.id;
+      this.modalTitle = "分配 " + v.name + " 的数据权限";
+      if (v.dataType) {
+        this.dataType = v.dataType;
+      }
+      // 匹配勾选
+      let roleDepIds = v.departments;
+      this.editDepartments = roleDepIds;
+      // 判断子节点
+      this.checkDepTree(this.depData, roleDepIds);
+      this.depModalVisible = true;
+    },
+    expandCheckDep(v) {
+      // 判断展开子节点
+      this.checkDepTree(v.children, this.editDepartments);
+    },
+    // 判断子节点
+    checkDepTree(depData, roleDepIds) {
+      let that = this;
+      depData.forEach(function(p) {
+        if (that.hasDepPerm(p, roleDepIds)) {
+          p.selected = true;
+        } else {
+          p.selected = false;
+        }
+      });
+    },
+    // 判断角色拥有的权限节点勾选
+    hasDepPerm(p, roleDepIds) {
+      let flag = false;
+      for (let i = 0; i < roleDepIds.length; i++) {
+        if (p.id === roleDepIds[i].departmentId) {
+          flag = true;
+          break;
+        }
+      }
+      if (flag) {
+        return true;
+      }
+      return false;
+    },
+    submitDepEdit() {
+      let depIds = "";
+      if (this.dataType != 0) {
+        let selectedNodes = this.$refs.depTree.getSelectedNodes();
+        if (selectedNodes.length < 1) {
+          this.$Message.error("请至少选择一条数据");
+          return;
+        }
+        selectedNodes.forEach(function(e) {
+          depIds += e.id + ",";
+        });
+        depIds = depIds.substring(0, depIds.length - 1);
+      }
+      this.submitDepLoading = true;
+      editRoleDep({
+        roleId: this.editRolePermId,
+        dataType: this.dataType,
+        depIds: depIds
+      }).then(res => {
+        this.submitDepLoading = false;
+        if (res.success === true) {
+          this.$Message.success("操作成功");
+          this.getRoleList();
+          this.depModalVisible = false;
+        }
+      });
     }
   },
   mounted() {

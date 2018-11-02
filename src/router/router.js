@@ -28,15 +28,6 @@ export const registResult = {
     component: () => import('@/views/regist-result.vue')
 };
 
-export const relateRouter = {
-    path: '/relate',
-    name: 'relate',
-    meta: {
-        title: '绑定账号 - X-Boot前后端分离开发平台 '
-    },
-    component: () => import('@/views/relate.vue')
-};
-
 // export const page404 = {
 //     path: '/*',
 //     name: 'error-404',
@@ -112,7 +103,6 @@ export const routers = [
     loginRouter,
     registRouter,
     registResult,
-    relateRouter,
     otherRouter,
     locking,
     ...appRouter,
