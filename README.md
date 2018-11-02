@@ -9,7 +9,7 @@
 ### [在线Demo](http://xboot.exrick.cn)
 http://xboot.exrick.cn
 ### 后台项目地址：[X-Boot](https://github.com/Exrick/x-boot)
-> 涉及技术：Spring Boot 2.x/Spring Security/JWT/Spring Data JPA+Mybatis-Plus/Redis/Elasticsearch 分布式限流/同步锁/验证码/SnowFlake雪花算法ID生成 动态权限管理 代码生成 日志记录 定时任务 第三方账号、短信登录
+> 涉及技术：Spring Boot 2.x/Spring Security/JWT/Spring Data JPA+Mybatis-Plus/Redis/Elasticsearch 分布式限流/同步锁/验证码/SnowFlake雪花算法ID生成 动态权限管理 数据权限 代码生成 日志记录 定时任务 第三方账号、短信登录
 ### 项目简介
 - 项目基于 Vue-Cli 3.0正式版创建
 - 主要Main组件框架基于iView-admin 1.0版本 修复其BUG
@@ -40,11 +40,11 @@ http://xboot.exrick.cn
 - [Vue 2.5.x](https://cn.vuejs.org/)
 - [Vue Cli 3.x](https://github.com/vuejs/vue-cli)：[官方中文文档](https://github.com/vuejs/vue-cli/tree/dev/docs/zh/config)
 - Vue Router
+- [Vuex](https://vuex.vuejs.org/zh-cn/)
 - [vue-i18n](https://github.com/kazupon/vue-i18n)：国际化多语言插件 使用5.0.x版本
 - [iView](https://www.iviewui.com/)
 - [iview-admin](https://github.com/iview/iview-admin)
 - [iview-area](https://github.com/iview/iview-area)：城市级联组件
-- [Vuex](https://vuex.vuejs.org/zh-cn/)
 - [wangeditor](https://github.com/wangfupeng1988/wangEditor)：轻量富文本编辑器
 - [gitalk](https://github.com/gitalk/gitalk)：基于github issue评论插件
 - [vue-stomp](https://github.com/FlySkyBear/vue-stomp)
@@ -66,8 +66,8 @@ http://xboot.exrick.cn
 - 前台端口默认9999 http://localhost:9999
 
 ### 部署
-- 执行过命令 `npm install` 后，执行 `npm run build` 将打包生成的 `dist` 静态文件放置Nginx服务器中，并配置路由代理。当然还可放置Spring Web等其他项目resources静态资源文件夹下可避免跨域(不推荐)。
-- nginx配置提醒 由于路由默认已使用history模式 需加入以下配置
+- 执行过命令 `npm install` 后，执行 `npm run build` 将打包生成的 `dist` 静态文件放置Nginx服务器中，并配置反向代理。当然还可放置Spring Web等其他项目resources静态资源文件夹下可避免跨域(不推荐)。
+- Nginx配置提醒 由于路由默认已使用history模式 需加入以下配置
 ```
 location / {
 	if (!-e $request_filename) {

@@ -36,7 +36,7 @@
             <Col span="17" class="padding-left-10">
             <Row type="flex" justify="center" align="middle" class="access-change-access-con-row">
               <p>
-                您可以通过更换测试用户账号：<code>test</code>或<code>test2</code> 密码：<code>123456</code>，然后观察该页面按钮的变化<br><br> 自定义权限标签：
+                您可以通过更换测试用户账号：<code>test</code>或<code>test2</code> 密码：<code>123456</code>，然后观察该页面按钮以及部门相关数据权限的变化<br><br> 自定义权限标签：
                 <code>v-has</code>，示例：<code>{{example}}</code><br><br> 说明：该Demo大部分页面为演示功能，前端未配置根据权限隐藏按钮
               </p>
             </Row>
