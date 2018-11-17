@@ -70,8 +70,8 @@ export default {
         pageSize: 10,
         startDate: "",
         endDate: "",
-        sortColumn: "createTime",
-        sortType: "desc"
+        sort: "createTime",
+        order: "desc"
       },
       columns: [
         {
@@ -329,10 +329,10 @@ export default {
       this.selectCount = e.length;
     },
     changeSort(e) {
-      this.searchForm.sortColumn = e.key;
-      this.searchForm.sortType = e.order;
+      this.searchForm.sort = e.key;
+      this.searchForm.order = e.order;
       if (e.order === "normal") {
-        this.searchForm.sortType = "";
+        this.searchForm.order = "";
       }
       this.getLogList();
     },
