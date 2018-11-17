@@ -99,8 +99,7 @@ export default {
     };
   },
   methods: {
-    init() {
-    },
+    init() {},
     checkStrengthValue(v) {
       // 评级制判断密码强度 最高5
       let grade = 0;
@@ -177,8 +176,9 @@ export default {
         this.$store.state.app.pageOpenedList
       );
       let lastPageName = "";
-      if (this.$store.state.app.pageOpenedList.length > 1) {
-        lastPageName = this.$store.state.app.pageOpenedList[1].name;
+      let length = this.$store.state.app.pageOpenedList.length;
+      if (length > 1) {
+        lastPageName = this.$store.state.app.pageOpenedList[length - 1].name;
       } else {
         lastPageName = this.$store.state.app.pageOpenedList[0].name;
       }
@@ -187,7 +187,6 @@ export default {
       });
     }
   },
-  mounted() {
-  }
+  mounted() {}
 };
 </script>

@@ -125,8 +125,8 @@
                                 </div>
                                 <div class="flex">
                                     商用授权价格：
-                                    <span class="rmb">￥</span> <span class="price">798</span> 
-                                    <span class="origin">￥</span><s class="origin">898</s> 
+                                    <span class="rmb">￥</span> <span class="price">898</span> 
+                                    <span class="origin">￥</span><s class="origin">998</s> 
                                     <Button to="http://wpa.qq.com/msgrd?v=3&uin=1012139570&site=qq&menu=yes" target="_blank" type="warning" icon="logo-vimeo" style="margin-left:10px;">获取商用授权</Button><br>
                                 </div>
                                 <Alert style="padding: 8px 16px 8px 16px;">

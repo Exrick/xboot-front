@@ -2,53 +2,54 @@
 @import "./logManage.less";
 </style>
 <template>
-    <div class="search">
-        <Row>
-            <Col>
-                <Card>     
-                    <Form inline :label-width="70" class="search-form">
-                      <Form-item label="搜索日志">
-                        <Input type="text" v-model="searchKey" clearable placeholder="请输入搜索关键词" style="width: 200px"/>
-                      </Form-item>
-                      <Form-item label="创建时间">
-                        <DatePicker type="daterange" v-model="selectDate" format="yyyy-MM-dd" clearable @on-change="selectDateRange" placeholder="选择起始时间" style="width: 200px"></DatePicker>
-                      </Form-item>
-                      <Form-item style="margin-left:-35px;" class="br">
-                        <Button @click="handleSearch"  type="primary" icon="ios-search">搜索</Button>
-                        <Button @click="handleReset" >重置</Button>
-                      </Form-item>
-                    </Form>
-                    <Row class="operation">
-                      <Button @click="clearAll" type="error" icon="md-trash">清空全部</Button>
-                      <Button @click="delAll" icon="md-trash">批量删除</Button>
-                      <Button @click="getLogList" icon="md-refresh">刷新</Button>
-                      <circleLoading v-if="operationLoading"/>
-                    </Row>
-                     <Row>
-                        <Alert show-icon>
-                            已选择 <span class="select-count">{{selectCount}}</span> 项
-                            <a class="select-clear" @click="clearSelectAll">清空</a>
-                        </Alert>
-                    </Row>
-                    <Row>
-                        <Table :loading="loading" border :columns="columns" :data="data" ref="table" sortable="custom" @on-sort-change="changeSort" @on-selection-change="changeSelect"></Table>
-                    </Row>
-                    <Row type="flex" justify="end" class="page">
-                        <Page :current="pageNumber" :total="total" :page-size="pageSize" @on-change="changePage" @on-page-size-change="changePageSize" :page-size-opts="[10,20,50]" size="small" show-total show-elevator show-sizer></Page>
-                    </Row>
-                </Card>
-            </Col>
-        </Row>
-    </div>
+  <div class="search">
+    <Row>
+      <Col>
+        <Card>
+          <Tabs :animated="false" @on-click="changeTab">
+            <TabPane label="登陆日志" name="login">
+            </TabPane>
+            <TabPane label="操作日志" name="operation">
+            </TabPane>
+          </Tabs>
+          <Form ref="searchForm" :model="searchForm" inline :label-width="70" class="search-form">
+            <Form-item label="搜索日志">
+              <Input type="text" v-model="searchKey" clearable placeholder="请输入搜索关键词" style="width: 200px"/>
+            </Form-item>
+            <Form-item label="创建时间">
+              <DatePicker type="daterange" v-model="selectDate" format="yyyy-MM-dd" clearable @on-change="selectDateRange" placeholder="选择起始时间" style="width: 200px"></DatePicker>
+            </Form-item>
+            <Form-item style="margin-left:-35px;" class="br">
+              <Button @click="handleSearch"  type="primary" icon="ios-search">搜索</Button>
+              <Button @click="handleReset" >重置</Button>
+            </Form-item>
+          </Form>
+          <Row class="operation">
+            <Button @click="clearAll" type="error" icon="md-trash">清空全部</Button>
+            <Button @click="delAll" icon="md-trash">批量删除</Button>
+            <Button @click="getLogList" icon="md-refresh">刷新</Button>
+            <circleLoading v-if="operationLoading"/>
+          </Row>
+          <Row>
+            <Alert show-icon>
+              已选择 <span class="select-count">{{selectCount}}</span> 项
+              <a class="select-clear" @click="clearSelectAll">清空</a>
+            </Alert>
+          </Row>
+          <Row>
+            <Table :loading="loading" border :columns="columns" :data="data" ref="table" sortable="custom" @on-sort-change="changeSort" @on-selection-change="changeSelect"></Table>
+          </Row>
+          <Row type="flex" justify="end" class="page">
+            <Page :current="searchForm.pageNumber" :total="total" :page-size="searchForm.pageSize" @on-change="changePage" @on-page-size-change="changePageSize" :page-size-opts="[10,20,50]" size="small" show-total show-elevator show-sizer></Page>
+          </Row>
+        </Card>
+      </Col>
+    </Row>
+  </div>
 </template>
 
 <script>
-import {
-  getLogListData,
-  getSearchLogData,
-  deleteLog,
-  deleteAllLog
-} from "@/api/index";
+import { getLogListData, deleteLog, deleteAllLog } from "@/api/index";
 import circleLoading from "../../my-components/circle-loading.vue";
 export default {
   name: "role-manage",
@@ -63,8 +64,15 @@ export default {
       selectCount: 0,
       selectDate: null,
       searchKey: "",
-      sortColumn: "createTime",
-      sortType: "desc",
+      searchForm: {
+        type: 1,
+        pageNumber: 1,
+        pageSize: 10,
+        startDate: "",
+        endDate: "",
+        sortColumn: "createTime",
+        sortType: "desc"
+      },
       columns: [
         {
           type: "selection",
@@ -177,6 +185,39 @@ export default {
           }
         },
         {
+          title: "日志类型",
+          key: "logType",
+          align: "center",
+          width: 110,
+          render: (h, params) => {
+            if (params.row.logType == 0) {
+              return h("div", [
+                h(
+                  "Tag",
+                  {
+                    props: {
+                      color: "blue"
+                    }
+                  },
+                  "操作日志"
+                )
+              ]);
+            } else if (params.row.logType == 1) {
+              return h("div", [
+                h(
+                  "Tag",
+                  {
+                    props: {
+                      color: "green"
+                    }
+                  },
+                  "登陆日志"
+                )
+              ]);
+            }
+          }
+        },
+        {
           title: "创建时间",
           key: "createTime",
           sortable: true,
@@ -211,79 +252,57 @@ export default {
         }
       ],
       data: [],
-      pageNumber: 1,
-      pageSize: 10,
-      total: 0,
-      startDate: "",
-      endDate: ""
+      total: 0
     };
   },
   methods: {
     init() {
       this.getLogList();
     },
+    changeTab(v) {
+      if (v == "login") {
+        this.searchForm.type = 1;
+      } else if (v == "operation") {
+        this.searchForm.type = 0;
+      }
+      this.getLogList();
+    },
     changePage(v) {
-      this.pageNumber = v;
+      this.searchForm.pageNumber = v;
       this.getLogList();
       this.clearSelectAll();
     },
     changePageSize(v) {
-      this.pageSize = v;
+      this.searchForm.pageSize = v;
       this.getLogList();
     },
     selectDateRange(v) {
       if (v) {
-        this.startDate = v[0];
-        this.endDate = v[1];
+        this.searchForm.startDate = v[0];
+        this.searchForm.endDate = v[1];
       }
     },
     handleSearch() {
-      this.pageNumber = 1;
-      this.pageSize = 10;
+      this.searchForm.pageNumber = 1;
+      this.searchForm.pageSize = 10;
       this.getLogList();
     },
     getLogList() {
       this.loading = true;
-      let params = "";
-      // 由于后端可配置使用数据库或Elasticsearch搜索 这里读取数据和搜索分为了2个请求
-      if (this.searchKey === "" && this.startDate === "") {
-        params = {
-          pageNumber: this.pageNumber,
-          pageSize: this.pageSize,
-          sort: this.sortColumn,
-          order: this.sortType
-        };
-        getLogListData(params).then(res => {
-          this.loading = false;
-          if (res.success === true) {
-            this.data = res.result.content;
-            this.total = res.result.totalElements;
-          }
-        });
-      } else {
-        params = {
-          key: this.searchKey,
-          pageNumber: this.pageNumber,
-          pageSize: this.pageSize,
-          sort: this.sortColumn,
-          order: this.sortType,
-          startDate: this.startDate,
-          endDate: this.endDate
-        };
-        getSearchLogData(params).then(res => {
-          this.loading = false;
-          if (res.success === true) {
-            this.data = res.result.content;
-            this.total = res.result.totalElements;
-          }
-        });
-      }
+      this.searchForm.key = this.searchKey;
+      getLogListData(this.searchForm).then(res => {
+        this.loading = false;
+        if (res.success === true) {
+          this.data = res.result.content;
+          this.total = res.result.totalElements;
+        }
+      });
     },
     handleReset() {
       this.searchKey = "";
       this.selectDate = null;
-      this.startDate = "";
-      this.endDate = "";
+      this.searchForm.startDate = "";
+      this.searchForm.endDate = "";
       this.getLogList();
     },
     remove(v) {
@@ -310,10 +329,10 @@ export default {
       this.selectCount = e.length;
     },
     changeSort(e) {
-      this.sortColumn = e.key;
-      this.sortType = e.order;
+      this.searchForm.sortColumn = e.key;
+      this.searchForm.sortType = e.order;
       if (e.order === "normal") {
-        this.sortType = "";
+        this.searchForm.sortType = "";
       }
       this.getLogList();
     },

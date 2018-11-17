@@ -13,10 +13,10 @@
           <Row type="flex" justify="start" class="code-row-bg">
             <Col span="6">
               <Alert show-icon>
-                当前选择编辑： <span class="select-count">{{editTitle}}</span>
+                当前选择编辑： <span class="select-title">{{editTitle}}</span>
                 <a class="select-clear" v-if="form.id" @click="canelEdit">取消选择</a>
               </Alert>
-              <Input v-model="searchKey" suffix="ios-search" @on-change="search" placeholder="输入部门名搜索"/>
+              <Input v-model="searchKey" suffix="ios-search" @on-change="search" placeholder="输入部门名搜索" clearable/>
               <div class="tree-bar">
                 <Tree ref="tree" :data="data" :load-data="loadData" show-checkbox @on-check-change="changeSelect" @on-select-change="selectTree"></Tree>
               </div>

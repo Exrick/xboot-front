@@ -24,10 +24,10 @@
           <Row type="flex" justify="start" class="code-row-bg">
             <Col span="6">
               <Alert show-icon>
-                当前选择编辑： <span class="select-count">{{editTitle}}</span>
+                当前选择编辑： <span class="select-title">{{editTitle}}</span>
                 <a class="select-clear" v-if="menuForm.id" @click="canelEdit">取消选择</a>
               </Alert>
-              <Input v-model="searchKey" suffix="ios-search" @on-change="search" placeholder="输入菜单名搜索"/>
+              <Input v-model="searchKey" suffix="ios-search" @on-change="search" placeholder="输入菜单名搜索" clearable/>
               <div class="tree-bar">
                 <Tree ref="tree" :data="data" show-checkbox @on-check-change="changeSelect" @on-select-change="selectTree"></Tree>
               </div>
@@ -65,7 +65,7 @@
                 </FormItem>
                 <FormItem label="按钮权限类型" prop="buttonType" v-if="menuForm.type===1">
                   <Select v-model="menuForm.buttonType" placeholder="请选择或输入搜索" filterable clearable>
-                    <Option v-for="(item, i) in optionData" :key="i" :value="item.value">{{item.title}}</Option>
+                    <Option v-for="(item, i) in dcitPermissions" :key="i" :value="item.value">{{item.title}}</Option>
                   </Select>
                 </FormItem>
                 <div v-if="menuForm.type===0">
@@ -143,7 +143,7 @@
             </FormItem>
             <FormItem label="按钮权限类型" prop="buttonType" v-if="menuFormAdd.type===1">
               <Select v-model="menuFormAdd.buttonType" placeholder="请选择或输入搜索" filterable clearable>
-                <Option v-for="(item, i) in optionData" :key="i" :value="item.value">{{item.title}}</Option>
+                <Option v-for="(item, i) in dcitPermissions" :key="i" :value="item.value">{{item.title}}</Option>
               </Select>
             </FormItem>
             <div v-if="menuFormAdd.type===0">
@@ -190,7 +190,8 @@ import {
   addPermission,
   editPermission,
   deletePermission,
-  searchPermission
+  searchPermission,
+  getDictDataByType
 } from "@/api/index";
 import util from "@/libs/util.js";
 export default {
@@ -235,27 +236,20 @@ export default {
       },
       submitLoading: false,
       data: [],
-      optionData: [
-        { title: "查看操作(view)", value: "view" },
-        { title: "添加操作(add)", value: "add" },
-        { title: "编辑操作(edit)", value: "edit" },
-        { title: "删除操作(delete)", value: "delete" },
-        { title: "清空操作(clear)", value: "clear" },
-        { title: "启用操作(enable)", value: "enable" },
-        { title: "禁用操作(disable)", value: "disable" },
-        { title: "搜索操作(search)", value: "search" },
-        { title: "上传文件(upload)", value: "upload" },
-        { title: "导出操作(output)", value: "output" },
-        { title: "导入操作(input)", value: "input" },
-        { title: "分配权限(editPerm)", value: "editPerm" },
-        { title: "设为默认(setDefault)", value: "setDefault" },
-        { title: "其他操作(other)", value: "other" }
-      ]
+      dcitPermissions: []
     };
   },
   methods: {
     init() {
       this.getAllList();
+      this.getDictPermissions();
+    },
+    getDictPermissions() {
+      getDictDataByType("permission_type").then(res => {
+        if (res.success) {
+          this.dcitPermissions = res.result;
+        }
+      });
     },
     handleDropdown(name) {
       if (name === "expandOne") {

@@ -8,7 +8,7 @@
   
     <Alert type="error" show-icon v-if="error">{{errorMsg}}</Alert>
   
-    <Row class="login-form" v-if="!socialLogining">
+    <Row class="login-form">
       <Tabs v-model="tabName">
         <TabPane label="账户密码登录" name="username" icon="md-person">
           <Form ref="usernameLoginForm" :model="form" :rules="rules" class="form">
@@ -116,7 +116,6 @@ export default {
       }
     };
     return {
-      socialLogining: false,
       error: false,
       errorMsg: "",
       tabName: "username",
@@ -280,7 +279,7 @@ export default {
     showMessage() {
       this.$Notice.success({
         title: "已升级至iView3.0",
-        desc: "完善多项功能，包括部门管理、定时任务、前端模版等 修复已知BUG",
+        desc: "完善多项功能，包括数据权限、部门管理、定时任务、数据字典、前端模版等 修复已知BUG",
         duration: 5
       });
     }

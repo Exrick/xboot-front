@@ -51,8 +51,7 @@
                       </FormItem>
                       <FormItem label="性别：">
                           <RadioGroup v-model="userForm.sex">
-                            <Radio :label="1">男</Radio>
-                            <Radio :label="0">女</Radio>
+                            <Radio v-for="(item, i) in dictSex" :key="i" :label="Number(item.value)">{{item.title}}</Radio>
                           </RadioGroup>
                       </FormItem>
                       <FormItem label="手机号：">
@@ -141,7 +140,8 @@ import {
   githubLogin,
   qqLogin,
   weiboLogin,
-  uploadFile
+  uploadFile,
+  getDictDataByType
 } from "@/api/index";
 import Cookies from "js-cookie";
 export default {
@@ -230,11 +230,13 @@ export default {
         id: "",
         username: ""
       },
-      jumping: false
+      jumping: false,
+      dictSex: []
     };
   },
   methods: {
     init() {
+      this.getDictSexData();
       this.accessToken = {
         accessToken: this.getStore("accessToken")
       };
@@ -263,6 +265,14 @@ export default {
       } else if (this.userForm.type === 1) {
         this.userForm.typeTxt = "管理员";
       }
+    },
+    getDictSexData(){
+      // 获取性别字典数据
+      getDictDataByType("sex").then(res => {
+        if(res.success){
+          this.dictSex = res.result
+        }
+      })
     },
     handleView(imgUrl) {
       this.imgUrl = imgUrl;
@@ -337,13 +347,14 @@ export default {
       });
     },
     cancelEditUserInfo() {
-      this.$store.commit("removeTag", "ownspace_index");
+      this.$store.commit("removeTag", "ownspace_old");
       localStorage.pageOpenedList = JSON.stringify(
         this.$store.state.app.pageOpenedList
       );
       let lastPageName = "";
-      if (this.$store.state.app.pageOpenedList.length > 1) {
-        lastPageName = this.$store.state.app.pageOpenedList[1].name;
+      let length = this.$store.state.app.pageOpenedList.length;
+      if (length > 1) {
+        lastPageName = this.$store.state.app.pageOpenedList[length - 1].name;
       } else {
         lastPageName = this.$store.state.app.pageOpenedList[0].name;
       }

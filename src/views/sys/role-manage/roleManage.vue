@@ -2,79 +2,79 @@
 @import "./roleManage.less";
 </style>
 <template>
-    <div class="search">
-        <Row>
-            <Col>
-                <Card>     
-                    <Row class="operation">
-                        <Button @click="addRole" type="primary" icon="md-add">添加角色</Button>
-                        <Button @click="delAll" icon="md-trash">批量删除</Button>
-                        <Button @click="init" icon="md-refresh">刷新</Button>
-                        <circleLoading v-if="operationLoading"/>
-                    </Row>
-                     <Row>
-                        <Alert show-icon>
-                            已选择 <span class="select-count">{{selectCount}}</span> 项
-                            <a class="select-clear" @click="clearSelectAll">清空</a>
-                        </Alert>
-                    </Row>
-                    <Row>
-                        <Table :loading="loading" border :columns="columns" :data="data" ref="table" sortable="custom" @on-sort-change="changeSort" @on-selection-change="changeSelect"></Table>
-                    </Row>
-                    <Row type="flex" justify="end" class="page">
-                        <Page :current="pageNumber" :total="total" :page-size="pageSize" @on-change="changePage" @on-page-size-change="changePageSize" :page-size-opts="[10,20,50]" size="small" show-total show-elevator show-sizer></Page>
-                    </Row>
-                </Card>
-            </Col>
-        </Row>
-        <!-- 编辑 -->
-        <Modal :title="modalTitle" v-model="roleModalVisible" :mask-closable='false' :width="500">
-          <Form ref="roleForm" :model="roleForm" :label-width="80" :rules="roleFormValidate">
-            <FormItem label="角色名称" prop="name">
-              <Input v-model="roleForm.name" placeholder="按照Spring Security约定建议以‘ROLE_’开头"/>
-            </FormItem>
-            <FormItem label="备注" prop="description">
-              <Input v-model="roleForm.description"/>
-            </FormItem>
-          </Form>
-          <div slot="footer">
-            <Button type="text" @click="cancelRole">取消</Button>
-            <Button type="primary" :loading="submitLoading" @click="submitRole">提交</Button>
-          </div>
-        </Modal>
-        <!-- 菜单权限 -->
-        <Modal :title="modalTitle" v-model="permModalVisible" :mask-closable='false' :width="500" :styles="{top: '30px'}" class="permModal">
-          <Tree ref="tree" :data="permData" multiple></Tree>
-          <Spin size="large" v-if="treeLoading"></Spin>
-          <div slot="footer">
-            <Button type="text" @click="cancelPermEdit">取消</Button>
-            <Button @click="selectTreeAll">全选/反选</Button>
-            <Button type="primary" :loading="submitPermLoading" @click="submitPermEdit">提交</Button>
-          </div>
-        </Modal>
-        <!-- 数据权限 -->
-        <Modal :title="modalTitle" v-model="depModalVisible" :mask-closable='false' :width="500" :styles="{top: '30px'}" class="depModal">
-          <Form :label-width="65" >
-            <FormItem label="数据范围">
-              <Select v-model="dataType">
-                <Option :value="0">全部数据权限</Option>
-                <Option :value="1">自定义数据权限</Option>
-              </Select>
-            </FormItem>
-          </Form>
-          <Alert show-icon>
-            默认可查看全部数据，自定义数据范围请点击选择下方数据
-          </Alert>
-          <div v-if="dataType!=0" style="margin-top:15px">
-            <Tree ref="depTree" :data="depData" :load-data="loadData" @on-toggle-expand="expandCheckDep" multiple style="margin-top:15px"></Tree>
-            <Spin size="large" v-if="depTreeLoading"></Spin>
-          </div>
-          <div slot="footer">
-            <Button type="text" @click="depModalVisible=false">取消</Button>
-            <Button type="primary" :loading="submitDepLoading" @click="submitDepEdit">提交</Button>
-          </div>
-        </Modal>
-    </div>
+  <div class="search">
+    <Row>
+      <Col>
+        <Card>     
+          <Row class="operation">
+            <Button @click="addRole" type="primary" icon="md-add">添加角色</Button>
+            <Button @click="delAll" icon="md-trash">批量删除</Button>
+            <Button @click="init" icon="md-refresh">刷新</Button>
+            <circleLoading v-if="operationLoading"/>
+          </Row>
+          <Row>
+            <Alert show-icon>
+              已选择 <span class="select-count">{{selectCount}}</span> 项
+              <a class="select-clear" @click="clearSelectAll">清空</a>
+            </Alert>
+          </Row>
+          <Row>
+            <Table :loading="loading" border :columns="columns" :data="data" ref="table" sortable="custom" @on-sort-change="changeSort" @on-selection-change="changeSelect"></Table>
+          </Row>
+          <Row type="flex" justify="end" class="page">
+            <Page :current="pageNumber" :total="total" :page-size="pageSize" @on-change="changePage" @on-page-size-change="changePageSize" :page-size-opts="[10,20,50]" size="small" show-total show-elevator show-sizer></Page>
+          </Row>
+        </Card>
+      </Col>
+    </Row>
+    <!-- 编辑 -->
+    <Modal :title="modalTitle" v-model="roleModalVisible" :mask-closable='false' :width="500">
+      <Form ref="roleForm" :model="roleForm" :label-width="80" :rules="roleFormValidate">
+        <FormItem label="角色名称" prop="name">
+          <Input v-model="roleForm.name" placeholder="按照Spring Security约定建议以‘ROLE_’开头"/>
+        </FormItem>
+        <FormItem label="备注" prop="description">
+          <Input v-model="roleForm.description"/>
+        </FormItem>
+      </Form>
+      <div slot="footer">
+        <Button type="text" @click="cancelRole">取消</Button>
+        <Button type="primary" :loading="submitLoading" @click="submitRole">提交</Button>
+      </div>
+    </Modal>
+    <!-- 菜单权限 -->
+    <Modal :title="modalTitle" v-model="permModalVisible" :mask-closable='false' :width="500" :styles="{top: '30px'}" class="permModal">
+      <Tree ref="tree" :data="permData" multiple></Tree>
+      <Spin size="large" v-if="treeLoading"></Spin>
+      <div slot="footer">
+        <Button type="text" @click="cancelPermEdit">取消</Button>
+        <Button @click="selectTreeAll">全选/反选</Button>
+        <Button type="primary" :loading="submitPermLoading" @click="submitPermEdit">提交</Button>
+      </div>
+    </Modal>
+    <!-- 数据权限 -->
+    <Modal :title="modalTitle" v-model="depModalVisible" :mask-closable='false' :width="500" :styles="{top: '30px'}" class="depModal">
+      <Form :label-width="65" >
+        <FormItem label="数据范围">
+          <Select v-model="dataType">
+            <Option :value="0">全部数据权限</Option>
+            <Option :value="1">自定义数据权限</Option>
+          </Select>
+        </FormItem>
+      </Form>
+      <Alert show-icon>
+        默认可查看全部数据，自定义数据范围请点击选择下方数据
+      </Alert>
+      <div v-if="dataType!=0" style="margin-top:15px">
+        <Tree ref="depTree" :data="depData" :load-data="loadData" @on-toggle-expand="expandCheckDep" multiple style="margin-top:15px"></Tree>
+        <Spin size="large" v-if="depTreeLoading"></Spin>
+      </div>
+      <div slot="footer">
+        <Button type="text" @click="depModalVisible=false">取消</Button>
+        <Button type="primary" :loading="submitDepLoading" @click="submitDepEdit">提交</Button>
+      </div>
+    </Modal>
+  </div>
 </template>
 
 <script>
@@ -305,8 +305,6 @@ export default {
       this.getRoleList();
       // 获取所有菜单权限树
       this.getPermList();
-      // 获取一级部门数据
-      this.getParentList();
     },
     changePage(v) {
       this.pageNumber = v;
@@ -582,26 +580,6 @@ export default {
     cancelPermEdit() {
       this.permModalVisible = false;
     },
-    getParentList() {
-      this.depTreeLoading = true;
-      initDepartment({ openDataFilter: false }).then(res => {
-        this.depTreeLoading = false;
-        if (res.success === true) {
-          res.result.forEach(function(e) {
-            e.selected = false;
-            if (e.isParent) {
-              e.loading = false;
-              e.children = [];
-            }
-            if (e.status === -1) {
-              e.title = "[已禁用] " + e.title;
-              e.disabled = true;
-            }
-          });
-          this.depData = res.result;
-        }
-      });
-    },
     loadData(item, callback) {
       loadDepartment(item.id, { openDataFilter: false }).then(res => {
         if (res.success === true) {
@@ -630,9 +608,27 @@ export default {
       // 匹配勾选
       let roleDepIds = v.departments;
       this.editDepartments = roleDepIds;
-      // 判断子节点
-      this.checkDepTree(this.depData, roleDepIds);
-      this.depModalVisible = true;
+      this.depTreeLoading = true;
+      initDepartment({ openDataFilter: false }).then(res => {
+        this.depTreeLoading = false;
+        if (res.success === true) {
+          res.result.forEach(function(e) {
+            e.selected = false;
+            if (e.isParent) {
+              e.loading = false;
+              e.children = [];
+            }
+            if (e.status === -1) {
+              e.title = "[已禁用] " + e.title;
+              e.disabled = true;
+            }
+          });
+          this.depData = res.result;
+          // 判断子节点
+          this.checkDepTree(this.depData, roleDepIds);
+          this.depModalVisible = true;
+        }
+      });
     },
     expandCheckDep(v) {
       // 判断展开子节点

@@ -23,8 +23,7 @@
                               </Form-item>
                               <Form-item label="性别" prop="sex">
                                 <Select v-model="searchForm.sex" placeholder="请选择" clearable style="width: 200px">
-                                  <Option value="0">女</Option>
-                                  <Option value="1">男</Option>
+                                  <Option v-for="(item, i) in dictSex" :key="i" :value="item.value">{{item.title}}</Option>
                                 </Select>
                               </Form-item>
                               <Form-item label="用户类型" prop="type">
@@ -101,8 +100,7 @@
                 </FormItem>
                 <FormItem label="性别" prop="sex">
                   <RadioGroup v-model="userForm.sex">
-                    <Radio :label="1">男</Radio>
-                    <Radio :label="0">女</Radio>
+                    <Radio v-for="(item, i) in dictSex" :key="i" :label="Number(item.value)">{{item.title}}</Radio>
                   </RadioGroup>
                 </FormItem>
                 <Form-item label="头像" prop="avatar">
@@ -134,7 +132,7 @@
                       <Button icon="md-trash" @click="clearSelectDep">清空已选</Button>
                     </div>
                     <div slot="content" class="tree-bar">
-                      <Input v-model="searchKey" suffix="ios-search" @on-change="searchDp" placeholder="输入部门名搜索"/>
+                      <Input v-model="searchKey" suffix="ios-search" @on-change="searchDp" placeholder="输入部门名搜索" clearable/>
                       <Tree :data="dataDep" :load-data="loadDataTree" @on-select-change="selectTree"></Tree>
                       <Spin size="large" fix v-if="dpLoading"></Spin>
                     </div>
@@ -191,7 +189,8 @@ import {
   deleteUser,
   getAllUserData,
   searchDepartment,
-  uploadFile
+  uploadFile,
+  getDictDataByType
 } from "@/api/index";
 import expandRow from "./expand.vue";
 import circleLoading from "../../my-components/circle-loading.vue";
@@ -337,7 +336,7 @@ export default {
           render: (h, params) => {
             if (this.getStore("roles").includes("ROLE_ADMIN")) {
               return h("span", params.row.mobile);
-            } else{
+            } else {
               return h("span", "您无权查看该数据");
             }
           }
@@ -355,11 +354,11 @@ export default {
           align: "center",
           render: (h, params) => {
             let re = "";
-            if (params.row.sex === 1) {
-              re = "男";
-            } else if (params.row.sex === 0) {
-              re = "女";
-            }
+            this.dictSex.forEach(e => {
+              if (e.value == params.row.sex) {
+                re = e.title;
+              }
+            });
             return h("div", re);
           }
         },
@@ -609,7 +608,8 @@ export default {
       ],
       data: [],
       exportData: [],
-      total: 0
+      total: 0,
+      dictSex: []
     };
   },
   methods: {
@@ -620,6 +620,15 @@ export default {
       this.initDepartmentData();
       this.getUserList();
       this.initDepartmentTreeData();
+      this.getDictSexData();
+    },
+    getDictSexData() {
+      // 获取性别字典数据
+      getDictDataByType("sex").then(res => {
+        if (res.success) {
+          this.dictSex = res.result;
+        }
+      });
     },
     initDepartmentData() {
       initDepartment().then(res => {
