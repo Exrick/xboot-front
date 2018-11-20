@@ -445,114 +445,81 @@ export default {
           align: "center",
           fixed: "right",
           render: (h, params) => {
-            if (params.row.status === 0) {
-              return h("div", [
-                h(
-                  "Button",
-                  {
-                    props: {
-                      type: "primary",
-                      size: "small"
-                    },
-                    style: {
-                      marginRight: "5px"
-                    },
-                    on: {
-                      click: () => {
-                        this.edit(params.row);
-                      }
-                    }
+            let enableOrDisable = "";
+            if (params.row.status == 0) {
+              enableOrDisable = h(
+                "Button",
+                {
+                  props: {
+                    size: "small"
                   },
-                  "编辑"
-                ),
-                h(
-                  "Button",
-                  {
-                    props: {
-                      size: "small"
-                    },
-                    style: {
-                      marginRight: "5px"
-                    },
-                    on: {
-                      click: () => {
-                        this.disable(params.row);
-                      }
-                    }
+                  style: {
+                    marginRight: "5px"
                   },
-                  "禁用"
-                ),
-                h(
-                  "Button",
-                  {
-                    props: {
-                      type: "error",
-                      size: "small"
-                    },
-                    on: {
-                      click: () => {
-                        this.remove(params.row);
-                      }
+                  on: {
+                    click: () => {
+                      this.disable(params.row);
                     }
-                  },
-                  "删除"
-                )
-              ]);
+                  }
+                },
+                "禁用"
+              );
             } else {
-              return h("div", [
-                h(
-                  "Button",
-                  {
-                    props: {
-                      type: "primary",
-                      size: "small"
-                    },
-                    style: {
-                      marginRight: "5px"
-                    },
-                    on: {
-                      click: () => {
-                        this.edit(params.row);
-                      }
-                    }
+              enableOrDisable = h(
+                "Button",
+                {
+                  props: {
+                    type: "success",
+                    size: "small"
                   },
-                  "编辑"
-                ),
-                h(
-                  "Button",
-                  {
-                    props: {
-                      type: "success",
-                      size: "small"
-                    },
-                    style: {
-                      marginRight: "5px"
-                    },
-                    on: {
-                      click: () => {
-                        this.enable(params.row);
-                      }
-                    }
+                  style: {
+                    marginRight: "5px"
                   },
-                  "启用"
-                ),
-                h(
-                  "Button",
-                  {
-                    props: {
-                      type: "error",
-                      size: "small"
-                    },
-                    on: {
-                      click: () => {
-                        this.remove(params.row);
-                      }
+                  on: {
+                    click: () => {
+                      this.enable(params.row);
                     }
-                  },
-                  "删除"
-                )
-              ]);
+                  }
+                },
+                "启用"
+              );
             }
+            return h("div", [
+              h(
+                "Button",
+                {
+                  props: {
+                    type: "primary",
+                    size: "small"
+                  },
+                  style: {
+                    marginRight: "5px"
+                  },
+                  on: {
+                    click: () => {
+                      this.edit(params.row);
+                    }
+                  }
+                },
+                "编辑"
+              ),
+              enableOrDisable,
+              h(
+                "Button",
+                {
+                  props: {
+                    type: "error",
+                    size: "small"
+                  },
+                  on: {
+                    click: () => {
+                      this.remove(params.row);
+                    }
+                  }
+                },
+                "删除"
+              )
+            ]);
           }
         }
       ],

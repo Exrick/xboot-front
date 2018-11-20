@@ -187,117 +187,84 @@ export default {
           align: "center",
           width: 280,
           render: (h, params) => {
-            if (params.row.status === 0) {
-              return h("div", [
-                h(
-                  "Button",
-                  {
-                    props: {
-                      type: "warning",
-                      size: "small",
-                      icon: "md-pause"
-                    },
-                    style: {
-                      marginRight: "5px"
-                    },
-                    on: {
-                      click: () => {
-                        this.pause(params.row);
-                      }
-                    }
+            let runOrResume = "";
+            if (params.row.status == 0) {
+              runOrResume = h(
+                "Button",
+                {
+                  props: {
+                    type: "warning",
+                    size: "small",
+                    icon: "md-pause"
                   },
-                  "暂停"
-                ),
-                h(
-                  "Button",
-                  {
-                    props: {
-                      type: "primary",
-                      size: "small"
-                    },
-                    style: {
-                      marginRight: "5px"
-                    },
-                    on: {
-                      click: () => {
-                        this.edit(params.row);
-                      }
-                    }
+                  style: {
+                    marginRight: "5px"
                   },
-                  "编辑"
-                ),
-                h(
-                  "Button",
-                  {
-                    props: {
-                      type: "error",
-                      size: "small"
-                    },
-                    on: {
-                      click: () => {
-                        this.remove(params.row);
-                      }
+                  on: {
+                    click: () => {
+                      this.pause(params.row);
                     }
-                  },
-                  "删除"
-                )
-              ]);
+                  }
+                },
+                "暂停"
+              );
             } else {
-              return h("div", [
-                h(
-                  "Button",
-                  {
-                    props: {
-                      type: "info",
-                      size: "small",
-                      icon: "md-play"
-                    },
-                    style: {
-                      marginRight: "5px"
-                    },
-                    on: {
-                      click: () => {
-                        this.resume(params.row);
-                      }
-                    }
+              runOrResume = h(
+                "Button",
+                {
+                  props: {
+                    type: "info",
+                    size: "small",
+                    icon: "md-play"
                   },
-                  "恢复执行"
-                ),
-                h(
-                  "Button",
-                  {
-                    props: {
-                      type: "primary",
-                      size: "small"
-                    },
-                    style: {
-                      marginRight: "5px"
-                    },
-                    on: {
-                      click: () => {
-                        this.edit(params.row);
-                      }
-                    }
+                  style: {
+                    marginRight: "5px"
                   },
-                  "编辑"
-                ),
-                h(
-                  "Button",
-                  {
-                    props: {
-                      type: "error",
-                      size: "small"
-                    },
-                    on: {
-                      click: () => {
-                        this.remove(params.row);
-                      }
+                  on: {
+                    click: () => {
+                      this.resume(params.row);
                     }
-                  },
-                  "删除"
-                )
-              ]);
+                  }
+                },
+                "恢复执行"
+              );
             }
+            return h("div", [
+              runOrResume,
+              h(
+                "Button",
+                {
+                  props: {
+                    type: "primary",
+                    size: "small"
+                  },
+                  style: {
+                    marginRight: "5px"
+                  },
+                  on: {
+                    click: () => {
+                      this.edit(params.row);
+                    }
+                  }
+                },
+                "编辑"
+              ),
+              h(
+                "Button",
+                {
+                  props: {
+                    type: "error",
+                    size: "small"
+                  },
+                  on: {
+                    click: () => {
+                      this.remove(params.row);
+                    }
+                  }
+                },
+                "删除"
+              )
+            ]);
           }
         }
       ],
