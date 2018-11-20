@@ -118,15 +118,15 @@
                                     </div>
                                 </div>
                                 <div class="flex">
-                                    完整版需捐赠(仅供学习)：
+                                    完整版获取(仅供学习)：
                                     <span class="rmb">￥</span> <span class="price">98</span> 
                                     <span class="origin">￥</span><s class="origin">138</s> 
                                     <Button to="http://xpay.exrick.cn/pay?xboot" target="_blank" type="error" icon="md-paper-plane" style="margin-left:10px;">立即获取</Button>
                                 </div>
                                 <div class="flex">
                                     商用授权价格：
-                                    <span class="rmb">￥</span> <span class="price">898</span> 
-                                    <span class="origin">￥</span><s class="origin">998</s> 
+                                    <span class="rmb">￥</span> <span class="price">998</span> 
+                                    <span class="origin">￥</span><s class="origin">1298</s> 
                                     <Button to="http://wpa.qq.com/msgrd?v=3&uin=1012139570&site=qq&menu=yes" target="_blank" type="warning" icon="logo-vimeo" style="margin-left:10px;">获取商用授权</Button><br>
                                 </div>
                                 <Alert style="padding: 8px 16px 8px 16px;">
