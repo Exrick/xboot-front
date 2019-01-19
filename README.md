@@ -67,7 +67,7 @@ http://xboot.exrick.cn
 
 ### 部署
 - 执行过命令 `npm install` 后，执行 `npm run build` 将打包生成的 `dist` 静态文件放置Nginx服务器中，并配置反向代理。当然还可放置Spring Web等其他项目resources静态资源文件夹下可避免跨域(不推荐)。
-- Nginx配置提醒 由于路由默认已使用history模式 需加入以下配置
+- Nginx配置提醒 由于路由默认已使用history模式 需加入以下配置 完整配置参考见下方开发指南
 ```
 location / {
 	if (!-e $request_filename) {
@@ -77,42 +77,10 @@ location / {
     ...
 }
 ```
-### 开发指南
-> 由于权限菜单按钮设计 仅支持2级菜单 一级菜单下没子菜单将不会显示
+### 开发指南及相应技术站说明
+- [XBoot前端配置说明【必读】](https://github.com/Exrick/xboot-front/wiki/XBoot%E5%89%8D%E7%AB%AF%E9%85%8D%E7%BD%AE%E8%AF%B4%E6%98%8E%E3%80%90%E5%BF%85%E8%AF%BB%E3%80%91)
 - [如何使用XBoot前端Vue模板快速开发增删改页面](https://github.com/Exrick/xboot-front/wiki/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8XBoot%E5%89%8D%E7%AB%AFVue%E6%A8%A1%E6%9D%BF%E5%BF%AB%E9%80%9F%E5%BC%80%E5%8F%91%E5%A2%9E%E5%88%A0%E6%94%B9%E9%A1%B5%E9%9D%A2)
-- api接口建议统一放在`src/api`文件夹下统一引用方便管理，也可全局使用封装好的请求方法，如`this.getRequest`等
-- Vue Cli 3.0 配置文件在 `vue.config.js`中，[官方中文配置文档](https://github.com/vuejs/vue-cli/tree/dev/docs/zh/config)
-- 组件使用详见[iView官网文档](https://www.iviewui.com/docs/guide/install)
-- 权限按钮或其他内容显示控制自定义标签：`v-has`，使用示例：
-    ```
-    <Button v-has="'add'">添加按钮</Button>
-    <Button v-has="'edit'">编辑按钮</Button>
-    <Button v-has="'delete'">删除按钮</Button>
-    <div v-has="'view'">需要view权限的界面内容</div>
-    ```
-    - 表格中[Render渲染函数](https://cn.vuejs.org/v2/guide/render-function.html)或js中权限判断示例
-    ```
-    render: (h, params) => {
-        if(this.$route.meta.permTypes.includes("edit")){
-            return ... ...
-        }else{
-            return ... ...
-        }
-    }
-    ```
-- 完整版
-    - 根据角色全局控制权限显示自定义标签：`v-hasRole`，使用示例：
-    ```
-    <Button v-has="'ROLE_ADMIN'">添加按钮</Button>
-    ```
-    - 表格中或js中判断使用
-    ```
-    if(this.getStore('roles').includes("ROLE_ADMIN")){
-        ... ...
-    }
-    ```
-    - [Vaptcha人机验证码配置使用](https://github.com/Exrick/x-boot/wiki/vaptcha%E4%BA%BA%E6%9C%BA%E9%AA%8C%E8%AF%81%E7%A0%81%E9%85%8D%E7%BD%AE%E4%BD%BF%E7%94%A8)
-    - 其余配置全在后台配置即可
+- 现已提供简单封装的带后台真实接口数据的组件，见XBoot业务组件菜单
 
 ### 学习记录（更新中）
 
