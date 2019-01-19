@@ -516,7 +516,7 @@ export default {
     checkPermTree(permData, rolePerms) {
       let that = this;
       permData.forEach(function(p) {
-        if (that.hasPerm(p, rolePerms)) {
+        if (that.hasPerm(p, rolePerms)&&p.status!=-1) {
           p.selected = true;
         } else {
           p.selected = false;

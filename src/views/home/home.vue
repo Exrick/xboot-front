@@ -48,6 +48,9 @@
                                             X-Boot Github开源版本地址
                                         </a>
                     </p>
+                    <p slot="extra">
+                        <a target="_blank" href="http://exrick.cn">作者：Exrick</a>
+                    </p>
                     <div class="to-do-list-con">
                         <Timeline>
                             <TimelineItem>
@@ -111,27 +114,28 @@
                             </p>
                             <div style="height:368px;overflow:auto">
                                 <div class="qr">
-                                    <img src="@/assets/qr.png" width="150">
+                                    <img src="@/assets/qr.png" width="120">
                                     <div>支持手机扫码支付，限时优惠！<br>赠送
                                         <a href="https://v.qq.com/x/page/f0627kf4x1e.html" target="_blank">XMall小程序(不含后台)</a> + 
-                                        <a href="https://github.com/Exrick/xpay" target="_blank">XPay个人收款支付系统v1.2</a>
+                                        <a href="https://github.com/Exrick/xpay" target="_blank">XPay个人收款支付系统v1.6</a>
                                     </div>
                                 </div>
                                 <div class="flex">
-                                    完整版获取(仅供学习)：
-                                    <span class="rmb">￥</span> <span class="price">98</span> 
-                                    <span class="origin">￥</span><s class="origin">138</s> 
+                                    完整版(仅供学习)：
+                                    <span class="rmb">￥</span> <span class="price">168</span> 
+                                    <span class="origin">￥</span><s class="origin">198</s> 
                                     <Button to="http://xpay.exrick.cn/pay?xboot" target="_blank" type="error" icon="md-paper-plane" style="margin-left:10px;">立即获取</Button>
                                 </div>
                                 <div class="flex">
                                     商用授权价格：
-                                    <span class="rmb">￥</span> <span class="price">998</span> 
-                                    <span class="origin">￥</span><s class="origin">1298</s> 
+                                    <span class="rmb">￥</span> <span class="price">5998</span> 
+                                    <span class="origin">￥</span><s class="origin">3598</s> 
                                     <Button to="http://wpa.qq.com/msgrd?v=3&uin=1012139570&site=qq&menu=yes" target="_blank" type="warning" icon="logo-vimeo" style="margin-left:10px;">获取商用授权</Button><br>
                                 </div>
                                 <Alert style="padding: 8px 16px 8px 16px;">
                                     支付后源码和更新维护群将自动发至您在支付页面所填写的邮箱，
-                                    开源版本请遵循GPLv3.0开源协议，不得闭源，商用需求请联系作者签署授权协议。
+                                    <span class="light">完整版与商用版都拥有在线demo全部功能，提供永久免费更新，但前者仅供学习使用。</span>
+                                    开源版本请遵循GPLv3.0开源协议，<span class="light">不得闭源</span>，商用需求请联系作者签署授权协议。
                                     价格可能随功能逐渐完善或物价变化。
                                 </Alert>
                             </div>
@@ -188,8 +192,6 @@
             width="1000"
             >
             <iframe src="//player.bilibili.com/player.html?aid=30284667&cid=52827707&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" style="width:100%;height:550px;"> </iframe>
-            <div slot="footer">
-            </div>
         </Modal>
     </div>
 </template>
@@ -270,9 +272,7 @@ export default {
       clientSecret: "a77691ecb662a8303a6c686ae651ae035868da6e",
       repo: "xboot-comments",
       owner: "Exrick",
-      admin: [
-        "Exrick"
-      ],
+      admin: ["Exrick"],
       distractionFreeMode: false // 遮罩效果
     });
     gitalk.render("comments");

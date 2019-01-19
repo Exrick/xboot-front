@@ -9,22 +9,28 @@
           <Row class="operation">
             <Button @click="addDcit" type="primary" icon="md-add">添加字典</Button>
             <Dropdown @on-click="handleDropdown">
-              <Button>
-                更多操作
-                <Icon type="md-arrow-dropdown" />
+              <Button>更多操作
+                <Icon type="md-arrow-dropdown"/>
               </Button>
-            <DropdownMenu slot="list">
-              <DropdownItem name="editDcit">编辑字典</DropdownItem>
-              <DropdownItem name="delDcit">删除字典</DropdownItem>
-              <DropdownItem name="refreshDcit">刷新</DropdownItem>
+              <DropdownMenu slot="list">
+                <DropdownItem name="editDcit">编辑字典</DropdownItem>
+                <DropdownItem name="delDcit">删除字典</DropdownItem>
+                <DropdownItem name="refreshDcit">刷新</DropdownItem>
               </DropdownMenu>
             </Dropdown>
           </Row>
           <Alert show-icon>
-            当前选择： <span class="select-title">{{editTitle}}</span>
+            当前选择：
+            <span class="select-title">{{editTitle}}</span>
             <a class="select-clear" v-if="editTitle" @click="cancelEdit">取消选择</a>
           </Alert>
-          <Input v-model="searchKey" suffix="ios-search" @on-change="search" placeholder="输入搜索字典" clearable/>
+          <Input
+            v-model="searchKey"
+            suffix="ios-search"
+            @on-change="search"
+            placeholder="输入搜索字典"
+            clearable
+          />
           <div class="tree-bar">
             <Tree ref="tree" :data="treeData" @on-select-change="selectTree"></Tree>
           </div>
@@ -37,17 +43,28 @@
           <Row>
             <Form ref="searchForm" :model="searchForm" inline :label-width="60" class="search-form">
               <Form-item label="数据名称" prop="title">
-                <Input type="text" v-model="searchForm.title" placeholder="请输入" clearable style="width: 200px"/>
+                <Input
+                  type="text"
+                  v-model="searchForm.title"
+                  placeholder="请输入"
+                  clearable
+                  style="width: 200px"
+                />
               </Form-item>
               <Form-item label="状态" prop="status">
-                <Select v-model="searchForm.status" placeholder="请选择" clearable style="width: 200px">
+                <Select
+                  v-model="searchForm.status"
+                  placeholder="请选择"
+                  clearable
+                  style="width: 200px"
+                >
                   <Option value="0">正常</Option>
                   <Option value="-1">禁用</Option>
                 </Select>
               </Form-item>
               <Form-item style="margin-left:-35px;" class="br">
                 <Button @click="handleSearch" type="primary" icon="ios-search">搜索</Button>
-                <Button @click="handleReset" >重置</Button>
+                <Button @click="handleReset">重置</Button>
               </Form-item>
             </Form>
           </Row>
@@ -59,21 +76,48 @@
           </Row>
           <Row>
             <Alert show-icon>
-              已选择 <span class="select-count">{{selectCount}}</span> 项
+              已选择
+              <span class="select-count">{{selectCount}}</span> 项
               <a class="select-clear" @click="clearSelectAll">清空</a>
             </Alert>
           </Row>
           <Row>
-            <Table :loading="loading" border :columns="columns" :data="data" sortable="custom" @on-sort-change="changeSort" @on-selection-change="showSelect" ref="table"></Table>
+            <Table
+              :loading="loading"
+              border
+              :columns="columns"
+              :data="data"
+              sortable="custom"
+              @on-sort-change="changeSort"
+              @on-selection-change="showSelect"
+              ref="table"
+            ></Table>
           </Row>
           <Row type="flex" justify="end" class="page">
-            <Page :current="searchForm.pageNumber" :total="total" :page-size="searchForm.pageSize" @on-change="changePage" @on-page-size-change="changePageSize" :page-size-opts="[10,20,50]" size="small" show-total show-elevator show-sizer></Page>
+            <Page
+              :current="searchForm.pageNumber"
+              :total="total"
+              :page-size="searchForm.pageSize"
+              @on-change="changePage"
+              @on-page-size-change="changePageSize"
+              :page-size-opts="[10,20,50]"
+              size="small"
+              show-total
+              show-elevator
+              show-sizer
+            ></Page>
           </Row>
         </Col>
       </Row>
     </Card>
 
-    <Modal :title="dictModalTitle" v-model="dictModalVisible" :mask-closable='false' :width="500" :styles="{top: '30px'}">
+    <Modal
+      :title="dictModalTitle"
+      v-model="dictModalVisible"
+      :mask-closable="false"
+      :width="500"
+      :styles="{top: '30px'}"
+    >
       <Form ref="dictForm" :model="dictForm" :label-width="70" :rules="dictFormValidate">
         <FormItem label="字典名称" prop="title">
           <Input v-model="dictForm.title"/>
@@ -86,6 +130,10 @@
         <FormItem label="备注" prop="description">
           <Input v-model="dictForm.description"/>
         </FormItem>
+        <FormItem label="排序值" prop="sortOrder">
+          <InputNumber :max="1000" :min="0" v-model="dictForm.sortOrder"></InputNumber>
+          <span style="margin-left:5px">值越小越靠前，支持小数</span>
+        </FormItem>
       </Form>
       <div slot="footer">
         <Button type="text" @click="dictModalVisible=false">取消</Button>
@@ -93,7 +141,13 @@
       </div>
     </Modal>
 
-    <Modal :title="modalTitle" v-model="modalVisible" :mask-closable='false' :width="500" :styles="{top: '30px'}">
+    <Modal
+      :title="modalTitle"
+      v-model="modalVisible"
+      :mask-closable="false"
+      :width="500"
+      :styles="{top: '30px'}"
+    >
       <Form ref="form" :model="form" :label-width="70" :rules="formValidate">
         <FormItem label="名称" prop="title">
           <Input v-model="form.title"/>
@@ -170,7 +224,8 @@ export default {
       dictModalTitle: "",
       modalTitle: "", // 添加或编辑标题
       dictForm: {
-        description: ""
+        description: "",
+        sortOrder: 0
       },
       form: {
         // 添加或编辑表单对象初始化数据
@@ -406,6 +461,9 @@ export default {
         this.searchForm.dictId = this.selectNode.id;
       } else {
         delete this.searchForm.dictId;
+      }
+      if (!this.searchForm.status) {
+        this.searchForm.status = "";
       }
       getAllDictDataList(this.searchForm).then(res => {
         this.loading = false;

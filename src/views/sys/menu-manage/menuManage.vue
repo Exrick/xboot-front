@@ -2,186 +2,252 @@
 @import "./menuManage.less";
 </style>
 <template>
-    <div class="search">
-        <Card>
-          <Row class="operation">
-            <Button @click="addMenu" type="primary" icon="md-add">添加子节点</Button>
-            <Button @click="addRootMenu" icon="md-add">添加一级菜单</Button>
-            <Button @click="delAll" icon="md-trash">批量删除</Button>
-            <Dropdown @on-click="handleDropdown">
-              <Button>
-                更多操作
-                <Icon type="md-arrow-dropdown"></Icon>
-              </Button>
-              <DropdownMenu slot="list">
-                <DropdownItem name="refresh">刷新</DropdownItem>
-                <DropdownItem name="expandOne">仅显示一级</DropdownItem>
-                <DropdownItem name="expandTwo">仅展开两级</DropdownItem>
-                <DropdownItem name="expandAll">展开所有</DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
-          </Row>
-          <Row type="flex" justify="start" class="code-row-bg">
-            <Col span="6">
-              <Alert show-icon>
-                当前选择编辑： <span class="select-title">{{editTitle}}</span>
-                <a class="select-clear" v-if="menuForm.id" @click="canelEdit">取消选择</a>
-              </Alert>
-              <Input v-model="searchKey" suffix="ios-search" @on-change="search" placeholder="输入菜单名搜索" clearable/>
-              <div class="tree-bar">
-                <Tree ref="tree" :data="data" show-checkbox @on-check-change="changeSelect" @on-select-change="selectTree"></Tree>
-              </div>
-              <Spin size="large" fix v-if="loading"></Spin>
-            </Col>
-            <Col span="9">
-              <Form ref="menuForm" :model="menuForm" :label-width="85" :rules="menuFormValidate">
-                <FormItem label="类型" prop="type">
-                  <RadioGroup v-model="menuForm.type">
-                    <Radio :label="0" :disabled="isButton">
-                      <Icon type="ios-list-box-outline" size="16" style="margin-bottom:3px;"></Icon>
-                      <span>页面菜单</span>
-                    </Radio>
-                    <Radio :label="1" :disabled="isMenu">
-                      <Icon type="md-log-in" size="16" style="margin-bottom:3px;"></Icon>
-                      <span>操作按钮</span>
-                    </Radio>
-                  </RadioGroup>
-                </FormItem>
-                <FormItem label="名称" prop="title" v-if="menuForm.type===0">
-                  <Input v-model="menuForm.title"/>
-                </FormItem>
-                <FormItem label="名称" prop="title" v-if="menuForm.type===1">
-                  <Poptip trigger="focus" placement="right" width="230" word-wrap title="提示" content="操作按钮名称不得重复">
-                    <Input v-model="menuForm.title"/>
-                  </Poptip>
-                </FormItem>
-                <FormItem label="路径" prop="path" v-if="menuForm.type===0">
-                  <Input v-model="menuForm.path"/>
-                </FormItem>
-                <FormItem label="请求路径" prop="path" v-if="menuForm.type===1">
-                  <Poptip trigger="focus" placement="right" width="230" word-wrap title="提示" content="填写后台请求URL，后台将作权限拦截，若无可填写'无'或其他">
-                    <Input v-model="menuForm.path"/>
-                  </Poptip>
-                </FormItem>
-                <FormItem label="按钮权限类型" prop="buttonType" v-if="menuForm.type===1">
-                  <Select v-model="menuForm.buttonType" placeholder="请选择或输入搜索" filterable clearable>
-                    <Option v-for="(item, i) in dcitPermissions" :key="i" :value="item.value">{{item.title}}</Option>
-                  </Select>
-                </FormItem>
-                <div v-if="menuForm.type===0">
-                  <FormItem label="英文名" prop="name">
-                    <Input v-model="menuForm.name"/>
-                  </FormItem>
-                  <FormItem label="图标" prop="icon" style="margin-bottom: 5px;">
-                    <Input :icon="menuForm.icon" v-model="menuForm.icon"/>
-                    <span>
-                      图标请参考 <a target="_blank" href="https://www.iviewui.com/components/icon"><Icon type="ionic"></Icon> ionicons</a>
-                    </span>
-                  </FormItem>
-                  <FormItem label="前端组件" prop="component">
-                    <Input v-model="menuForm.component"/>
-                  </FormItem>
-                  <FormItem label="跳转网页链接" prop="url">
-                    <Poptip trigger="focus" placement="right" width="230" word-wrap title="提示" content="前端组件需为 sys/monitor/monitor 时生效">
-                      <Input v-model="menuForm.url" placeholder="http://"/>
-                    </Poptip>
-                  </FormItem>
-                </div>
-                <FormItem label="排序值" prop="sortOrder">
-                  <InputNumber :max="1000" :min="0" v-model="menuForm.sortOrder"></InputNumber>
-                  <span style="margin-left:5px">值越小越靠前，支持小数</span>
-                </FormItem>
-                <FormItem label="是否启用" prop="status">
-                  <i-switch size="large" v-model="menuForm.status" :true-value="0" :false-value="-1">
-                    <span slot="open">启用</span>
-                    <span slot="close">禁用</span>
-                  </i-switch>
-                </FormItem>
-                <Form-item>
-                  <Button style="margin-right:5px" @click="submitEdit" :loading="submitLoading" type="primary" icon="ios-create-outline">修改并保存</Button>
-                  <Button @click="handleReset" >重置</Button>
-                </Form-item>
-              </Form>
-            </Col>
-          </Row>
-        </Card>
-
-        <Modal draggable :title="modalTitle" v-model="menuModalVisible" :mask-closable='false' :width="500" :styles="{top: '30px'}">
-          <Form ref="menuFormAdd" :model="menuFormAdd" :label-width="85" :rules="menuFormValidate">
-            <div v-if="showParent">
-              <FormItem label="上级节点：">
-                {{parentTitle}}
-              </FormItem>
-            </div>
+  <div class="search">
+    <Card>
+      <Row class="operation">
+        <Button @click="addMenu" type="primary" icon="md-add">添加子节点</Button>
+        <Button @click="addRootMenu" icon="md-add">添加一级菜单</Button>
+        <Button @click="delAll" icon="md-trash">批量删除</Button>
+        <Dropdown @on-click="handleDropdown">
+          <Button>更多操作
+            <Icon type="md-arrow-dropdown"></Icon>
+          </Button>
+          <DropdownMenu slot="list">
+            <DropdownItem name="refresh">刷新</DropdownItem>
+            <DropdownItem name="expandOne">仅显示一级</DropdownItem>
+            <DropdownItem name="expandTwo">仅展开两级</DropdownItem>
+            <DropdownItem name="expandAll">展开所有</DropdownItem>
+          </DropdownMenu>
+        </Dropdown>
+      </Row>
+      <Row type="flex" justify="start" class="code-row-bg">
+        <Col span="6">
+          <Alert show-icon>
+            当前选择编辑：
+            <span class="select-title">{{editTitle}}</span>
+            <a class="select-clear" v-if="menuForm.id" @click="cancelEdit">取消选择</a>
+          </Alert>
+          <Input
+            v-model="searchKey"
+            suffix="ios-search"
+            @on-change="search"
+            placeholder="输入菜单名搜索"
+            clearable
+          />
+          <div class="tree-bar">
+            <Tree
+              ref="tree"
+              :data="data"
+              show-checkbox
+              @on-check-change="changeSelect"
+              @on-select-change="selectTree"
+            ></Tree>
+          </div>
+          <Spin size="large" fix v-if="loading"></Spin>
+        </Col>
+        <Col span="9">
+          <Form ref="menuForm" :model="menuForm" :label-width="85" :rules="menuFormValidate">
             <FormItem label="类型" prop="type">
-              <RadioGroup v-model="menuFormAdd.type">
-                <Radio :label="0" :disabled="isButtonAdd">
+              <RadioGroup v-model="menuForm.type">
+                <Radio :label="0" :disabled="isButton">
                   <Icon type="ios-list-box-outline" size="16" style="margin-bottom:3px;"></Icon>
                   <span>页面菜单</span>
                 </Radio>
-                <Radio :label="1" :disabled="isMenuAdd">
+                <Radio :label="1" :disabled="isMenu">
                   <Icon type="md-log-in" size="16" style="margin-bottom:3px;"></Icon>
                   <span>操作按钮</span>
                 </Radio>
               </RadioGroup>
             </FormItem>
-            <FormItem label="名称" prop="title" v-if="menuFormAdd.type===0">
-              <Input v-model="menuFormAdd.title"/>
+            <FormItem label="名称" prop="title" v-if="menuForm.type===0">
+              <Input v-model="menuForm.title"/>
             </FormItem>
-            <FormItem label="名称" prop="title" v-if="menuFormAdd.type===1">
-              <Poptip trigger="focus" placement="right" width="230" word-wrap title="提示" content="操作按钮名称不得重复">
-                <Input v-model="menuFormAdd.title"/>
+            <FormItem label="名称" prop="title" v-if="menuForm.type===1">
+              <Poptip
+                trigger="focus"
+                placement="right"
+                width="230"
+                word-wrap
+                title="提示"
+                content="操作按钮名称不得重复"
+              >
+                <Input v-model="menuForm.title"/>
               </Poptip>
             </FormItem>
-            <FormItem label="路径" prop="path" v-if="menuFormAdd.type===0">
-              <Input v-model="menuFormAdd.path"/>
+            <FormItem label="路径" prop="path" v-if="menuForm.type===0">
+              <Input v-model="menuForm.path"/>
             </FormItem>
-            <FormItem label="请求路径" prop="path" v-if="menuFormAdd.type===1">
-              <Poptip trigger="focus" placement="right" width="230" word-wrap title="提示" content="填写后台请求URL，后台将作权限拦截，若无可填写'无'或其他">
-                <Input v-model="menuFormAdd.path"/>
+            <FormItem label="请求路径" prop="path" v-if="menuForm.type===1">
+              <Poptip
+                trigger="focus"
+                placement="right"
+                width="230"
+                word-wrap
+                title="提示"
+                content="填写后台请求URL，后台将作权限拦截，若无可填写'无'或其他"
+              >
+                <Input v-model="menuForm.path"/>
               </Poptip>
             </FormItem>
-            <FormItem label="按钮权限类型" prop="buttonType" v-if="menuFormAdd.type===1">
-              <Select v-model="menuFormAdd.buttonType" placeholder="请选择或输入搜索" filterable clearable>
-                <Option v-for="(item, i) in dcitPermissions" :key="i" :value="item.value">{{item.title}}</Option>
+            <FormItem label="按钮权限类型" prop="buttonType" v-if="menuForm.type===1">
+              <Select v-model="menuForm.buttonType" placeholder="请选择或输入搜索" filterable clearable>
+                <Option
+                  v-for="(item, i) in dcitPermissions"
+                  :key="i"
+                  :value="item.value"
+                >{{item.title}}</Option>
               </Select>
             </FormItem>
-            <div v-if="menuFormAdd.type===0">
+            <div v-if="menuForm.type===0">
               <FormItem label="英文名" prop="name">
-                <Input v-model="menuFormAdd.name"/>
+                <Input v-model="menuForm.name"/>
               </FormItem>
-              <FormItem label="图标" prop="icon"  style="margin-bottom: 5px;">
-                <Input :icon="menuFormAdd.icon" v-model="menuFormAdd.icon"/>
-                <span>
-                  图标请参考 <a target="_blank" href="https://www.iviewui.com/components/icon"><Icon type="ionic"></Icon> ionicons</a>
-                </span>
+              <FormItem label="图标" prop="icon">
+                <Input :icon="menuForm.icon" v-model="menuForm.icon" @on-focus="showEditIcon(0)"/>
               </FormItem>
               <FormItem label="前端组件" prop="component">
-                <Input v-model="menuFormAdd.component"/>
+                <Input v-model="menuForm.component"/>
               </FormItem>
-              <FormItem label="跳转网页链接" prop="url">
-                <Poptip trigger="focus" placement="right" width="230" word-wrap title="提示" content="前端组件需为 sys/monitor/monitor 时生效">
-                  <Input v-model="menuFormAdd.url" placeholder="http://"/>
+              <FormItem label="第三方网页链接" prop="url">
+                <Poptip
+                  trigger="focus"
+                  placement="right"
+                  width="230"
+                  word-wrap
+                  title="提示"
+                  content="前端组件需为 sys/monitor/monitor 时生效"
+                >
+                  <Input v-model="menuForm.url" placeholder="http://"/>
                 </Poptip>
               </FormItem>
             </div>
             <FormItem label="排序值" prop="sortOrder">
-              <InputNumber :max="1000" :min="0" v-model="menuFormAdd.sortOrder"></InputNumber>
+              <InputNumber :max="1000" :min="0" v-model="menuForm.sortOrder"></InputNumber>
               <span style="margin-left:5px">值越小越靠前，支持小数</span>
             </FormItem>
             <FormItem label="是否启用" prop="status">
-              <i-switch size="large" v-model="menuFormAdd.status" :true-value="0" :false-value="-1">
+              <i-switch size="large" v-model="menuForm.status" :true-value="0" :false-value="-1">
                 <span slot="open">启用</span>
                 <span slot="close">禁用</span>
               </i-switch>
             </FormItem>
+            <Form-item>
+              <Button
+                style="margin-right:5px"
+                @click="submitEdit"
+                :loading="submitLoading"
+                type="primary"
+                icon="ios-create-outline"
+              >修改并保存</Button>
+              <Button @click="handleReset">重置</Button>
+            </Form-item>
           </Form>
-          <div slot="footer">
-            <Button type="text" @click="cancelAdd">取消</Button>
-            <Button type="primary" :loading="submitLoading" @click="submitAdd">提交</Button>
-          </div>
-        </Modal>
-    </div>
+        </Col>
+      </Row>
+    </Card>
+
+    <Modal
+      draggable
+      :title="modalTitle"
+      v-model="menuModalVisible"
+      :mask-closable="false"
+      :width="500"
+      :styles="{top: '30px'}"
+    >
+      <Form ref="menuFormAdd" :model="menuFormAdd" :label-width="85" :rules="menuFormValidate">
+        <div v-if="showParent">
+          <FormItem label="上级节点：">{{parentTitle}}</FormItem>
+        </div>
+        <FormItem label="类型" prop="type">
+          <RadioGroup v-model="menuFormAdd.type">
+            <Radio :label="0" :disabled="isButtonAdd">
+              <Icon type="ios-list-box-outline" size="16" style="margin-bottom:3px;"></Icon>
+              <span>页面菜单</span>
+            </Radio>
+            <Radio :label="1" :disabled="isMenuAdd">
+              <Icon type="md-log-in" size="16" style="margin-bottom:3px;"></Icon>
+              <span>操作按钮</span>
+            </Radio>
+          </RadioGroup>
+        </FormItem>
+        <FormItem label="名称" prop="title" v-if="menuFormAdd.type===0">
+          <Input v-model="menuFormAdd.title"/>
+        </FormItem>
+        <FormItem label="名称" prop="title" v-if="menuFormAdd.type===1">
+          <Poptip
+            trigger="focus"
+            placement="right"
+            width="230"
+            word-wrap
+            title="提示"
+            content="操作按钮名称不得重复"
+          >
+            <Input v-model="menuFormAdd.title"/>
+          </Poptip>
+        </FormItem>
+        <FormItem label="路径" prop="path" v-if="menuFormAdd.type===0">
+          <Input v-model="menuFormAdd.path"/>
+        </FormItem>
+        <FormItem label="请求路径" prop="path" v-if="menuFormAdd.type===1">
+          <Poptip
+            trigger="focus"
+            placement="right"
+            width="230"
+            word-wrap
+            title="提示"
+            content="填写后台请求URL，后台将作权限拦截，若无可填写'无'或其他"
+          >
+            <Input v-model="menuFormAdd.path"/>
+          </Poptip>
+        </FormItem>
+        <FormItem label="按钮权限类型" prop="buttonType" v-if="menuFormAdd.type===1">
+          <Select v-model="menuFormAdd.buttonType" placeholder="请选择或输入搜索" filterable clearable>
+            <Option v-for="(item, i) in dcitPermissions" :key="i" :value="item.value">{{item.title}}</Option>
+          </Select>
+        </FormItem>
+        <div v-if="menuFormAdd.type===0">
+          <FormItem label="英文名" prop="name">
+            <Input v-model="menuFormAdd.name"/>
+          </FormItem>
+          <FormItem label="图标" prop="icon">
+            <Input :icon="menuFormAdd.icon" v-model="menuFormAdd.icon" @on-focus="showEditIcon(1)"/>
+          </FormItem>
+          <FormItem label="前端组件" prop="component">
+            <Input v-model="menuFormAdd.component"/>
+          </FormItem>
+          <FormItem label="第三方网页链接" prop="url">
+            <Poptip
+              trigger="focus"
+              placement="right"
+              width="230"
+              word-wrap
+              title="提示"
+              content="前端组件需为 sys/monitor/monitor 时生效"
+            >
+              <Input v-model="menuFormAdd.url" placeholder="http://"/>
+            </Poptip>
+          </FormItem>
+        </div>
+        <FormItem label="排序值" prop="sortOrder">
+          <InputNumber :max="1000" :min="0" v-model="menuFormAdd.sortOrder"></InputNumber>
+          <span style="margin-left:5px">值越小越靠前，支持小数</span>
+        </FormItem>
+        <FormItem label="是否启用" prop="status">
+          <i-switch size="large" v-model="menuFormAdd.status" :true-value="0" :false-value="-1">
+            <span slot="open">启用</span>
+            <span slot="close">禁用</span>
+          </i-switch>
+        </FormItem>
+      </Form>
+      <div slot="footer">
+        <Button type="text" @click="cancelAdd">取消</Button>
+        <Button type="primary" :loading="submitLoading" @click="submitAdd">提交</Button>
+      </div>
+    </Modal>
+    <Modal title="选择图标" v-model="iconModalVisible" :width="800" :styles="{top: '30px'}" footer-hide>
+      <icon-choose @on-select="handleSelectIcon"></icon-choose>
+    </Modal>
+  </div>
 </template>
 
 <script>
@@ -193,14 +259,19 @@ import {
   searchPermission,
   getDictDataByType
 } from "@/api/index";
+import IconChoose from "../../my-components/icon-choose";
 import util from "@/libs/util.js";
 export default {
   name: "menu-manage",
+  components: {
+    IconChoose
+  },
   data() {
     return {
       loading: true,
       expandLevel: 1,
       menuModalVisible: false,
+      iconModalVisible: false,
       selectList: [],
       selectCount: 0,
       showParent: false,
@@ -217,7 +288,7 @@ export default {
         parentId: "",
         buttonType: "",
         type: 0,
-        sortOrder: null,
+        sortOrder: 0,
         level: null,
         status: 0,
         url: ""
@@ -236,7 +307,8 @@ export default {
       },
       submitLoading: false,
       data: [],
-      dcitPermissions: []
+      dcitPermissions: [],
+      iconType: 0
     };
   },
   methods: {
@@ -250,6 +322,18 @@ export default {
           this.dcitPermissions = res.result;
         }
       });
+    },
+    showEditIcon(v) {
+      this.iconType = v;
+      this.iconModalVisible = true;
+    },
+    handleSelectIcon(v) {
+      if (this.iconType == 0) {
+        this.menuForm.icon = v;
+      } else {
+        this.menuFormAdd.icon = v;
+      }
+      this.iconModalVisible = false;
     },
     handleDropdown(name) {
       if (name === "expandOne") {
@@ -270,7 +354,7 @@ export default {
       this.getRequest("/permission/getAllList").then(res => {
         this.loading = false;
         if (res.success === true) {
-          // 仅展开指定级数 默认所有展开
+          // 仅展开指定级数 默认一级
           let expandLevel = this.expandLevel;
           res.result.forEach(function(e) {
             if (expandLevel === 1) {
@@ -338,12 +422,12 @@ export default {
         this.menuForm = menu;
         this.editTitle = menu.title;
       } else {
-        this.canelEdit();
+        this.cancelEdit();
       }
     },
-    canelEdit() {
+    cancelEdit() {
       let data = this.$refs.tree.getSelectedNodes()[0];
-      if(data){
+      if (data) {
         data.selected = false;
       }
       this.isMenu = false;
@@ -437,7 +521,7 @@ export default {
         this.isMenuAdd = false;
         this.isButtonAdd = true;
       } else if (this.menuForm.level === 3) {
-        this.$Modal.error({
+        this.$Modal.warning({
           title: "抱歉，不能添加啦",
           content: "仅支持2级菜单目录"
         });
@@ -451,7 +535,7 @@ export default {
         type: type,
         parentId: this.menuForm.id,
         level: Number(this.menuForm.level) + 1,
-        sortOrder: 1,
+        sortOrder: 0,
         buttonType: "",
         status: 0
       };
@@ -465,7 +549,7 @@ export default {
       this.menuFormAdd = {
         type: 0,
         level: 1,
-        sortOrder: 1,
+        sortOrder: 0,
         status: 0
       };
       this.menuModalVisible = true;
@@ -494,7 +578,7 @@ export default {
               util.initRouter(this);
               this.selectList = [];
               this.selectCount = 0;
-              this.canelEdit();
+              this.cancelEdit();
               this.init();
             }
           });

@@ -2,86 +2,124 @@
 @import "./departmentManage.less";
 </style>
 <template>
-    <div class="search">
-        <Card>
-          <Row class="operation">
-            <Button @click="add" type="primary" icon="md-add">添加子部门</Button>
-            <Button @click="addRoot" icon="md-add">添加一级部门</Button>
-            <Button @click="delAll" icon="md-trash">批量删除</Button>
-            <Button @click="getParentList" icon="md-refresh">刷新</Button>
-          </Row>
-          <Row type="flex" justify="start" class="code-row-bg">
-            <Col span="6">
-              <Alert show-icon>
-                当前选择编辑： <span class="select-title">{{editTitle}}</span>
-                <a class="select-clear" v-if="form.id" @click="canelEdit">取消选择</a>
-              </Alert>
-              <Input v-model="searchKey" suffix="ios-search" @on-change="search" placeholder="输入部门名搜索" clearable/>
-              <div class="tree-bar">
-                <Tree ref="tree" :data="data" :load-data="loadData" show-checkbox @on-check-change="changeSelect" @on-select-change="selectTree"></Tree>
-              </div>
-              <Spin size="large" fix v-if="loading"></Spin>
-            </Col>
-            <Col span="9">
-              <Form ref="form" :model="form" :label-width="85" :rules="menuFormValidate">
-                <FormItem label="上级部门" prop="parentTitle">
-                  <Poptip trigger="click" placement="right-start" title="选择上级部门" width="250">
-                    <Input v-model="form.parentTitle" readonly/>
-                    <div slot="content" style="position:relative;min-height:5vh">
-                      <Tree :data="dataEdit" :load-data="loadData" @on-select-change="selectTreeEdit"></Tree>
-                      <Spin size="large" fix v-if="loadingEdit"></Spin>
-                    </div>
-                  </Poptip>
-                </FormItem>
-                <FormItem label="部门名称" prop="title">
-                  <Input v-model="form.title"/>
-                </FormItem>
-                <FormItem label="排序值" prop="sortOrder">
-                  <InputNumber :max="1000" :min="0" v-model="form.sortOrder"></InputNumber>
-                  <span style="margin-left:5px">值越小越靠前，支持小数</span>
-                </FormItem>
-                <FormItem label="是否启用" prop="status">
-                  <i-switch size="large" v-model="form.status" :true-value="0" :false-value="-1">
-                    <span slot="open">启用</span>
-                    <span slot="close">禁用</span>
-                  </i-switch>
-                </FormItem>
-                <Form-item>
-                  <Button style="margin-right:5px" @click="submitEdit" :loading="submitLoading" type="primary" icon="ios-create-outline">修改并保存</Button>
-                  <Button @click="handleReset" >重置</Button>
-                </Form-item>
-              </Form>
-            </Col>
-          </Row>
-        </Card>
-
-        <Modal :title="modalTitle" v-model="menuModalVisible" :mask-closable='false' :width="500">
-          <Form ref="formAdd" :model="formAdd" :label-width="85" :rules="menuFormValidate">
-            <div v-if="showParent">
-              <FormItem label="上级部门：">
-                {{form.title}}
-              </FormItem>
-            </div>
+  <div class="search">
+    <Card>
+      <Row class="operation">
+        <Button @click="add" type="primary" icon="md-add">添加子部门</Button>
+        <Button @click="addRoot" icon="md-add">添加一级部门</Button>
+        <Button @click="delAll" icon="md-trash">批量删除</Button>
+        <Button @click="getParentList" icon="md-refresh">刷新</Button>
+      </Row>
+      <Row type="flex" justify="start" class="code-row-bg">
+        <Col span="6">
+          <Alert show-icon>
+            当前选择编辑：
+            <span class="select-title">{{editTitle}}</span>
+            <a class="select-clear" v-if="form.id" @click="cancelEdit">取消选择</a>
+          </Alert>
+          <Input
+            v-model="searchKey"
+            suffix="ios-search"
+            @on-change="search"
+            placeholder="输入部门名搜索"
+            clearable
+          />
+          <div class="tree-bar">
+            <Tree
+              ref="tree"
+              :data="data"
+              :load-data="loadData"
+              show-checkbox
+              @on-check-change="changeSelect"
+              @on-select-change="selectTree"
+            ></Tree>
+          </div>
+          <Spin size="large" fix v-if="loading"></Spin>
+        </Col>
+        <Col span="9">
+          <Form ref="form" :model="form" :label-width="85" :rules="formValidate">
+            <FormItem label="上级部门" prop="parentTitle">
+              <Poptip trigger="click" placement="right-start" title="选择上级部门" width="250">
+                <Input v-model="form.parentTitle" readonly/>
+                <div slot="content" style="position:relative;min-height:5vh">
+                  <Tree :data="dataEdit" :load-data="loadData" @on-select-change="selectTreeEdit"></Tree>
+                  <Spin size="large" fix v-if="loadingEdit"></Spin>
+                </div>
+              </Poptip>
+            </FormItem>
             <FormItem label="部门名称" prop="title">
-              <Input v-model="formAdd.title"/>
+              <Input v-model="form.title"/>
+            </FormItem>
+            <FormItem label="部门负责人" prop="mainHeader">
+              <Select
+                :loading="userLoading"
+                not-found-text="该部门暂无用户数据"
+                v-model="form.mainHeader"
+                multiple
+              >
+                <Option v-for="item in users" :value="item.id" :key="item.id">{{ item.username }}</Option>
+              </Select>
+            </FormItem>
+            <FormItem label="副负责人" prop="viceHeader">
+              <Select
+                :loading="userLoading"
+                not-found-text="该部门暂无用户数据"
+                v-model="form.viceHeader"
+                multiple
+              >
+                <Option v-for="item in users" :value="item.id" :key="item.id">{{ item.username }}</Option>
+              </Select>
             </FormItem>
             <FormItem label="排序值" prop="sortOrder">
-              <InputNumber :max="1000" :min="0" v-model="formAdd.sortOrder"></InputNumber>
+              <InputNumber :max="1000" :min="0" v-model="form.sortOrder"></InputNumber>
               <span style="margin-left:5px">值越小越靠前，支持小数</span>
             </FormItem>
             <FormItem label="是否启用" prop="status">
-              <i-switch size="large" v-model="formAdd.status" :true-value="0" :false-value="-1">
+              <i-switch size="large" v-model="form.status" :true-value="0" :false-value="-1">
                 <span slot="open">启用</span>
                 <span slot="close">禁用</span>
               </i-switch>
             </FormItem>
+            <Form-item>
+              <Button
+                style="margin-right:5px"
+                @click="submitEdit"
+                :loading="submitLoading"
+                type="primary"
+                icon="ios-create-outline"
+              >修改并保存</Button>
+              <Button @click="handleReset">重置</Button>
+            </Form-item>
           </Form>
-          <div slot="footer">
-            <Button type="text" @click="cancelAdd">取消</Button>
-            <Button type="primary" :loading="submitLoading" @click="submitAdd">提交</Button>
-          </div>
-        </Modal>
-    </div>
+        </Col>
+      </Row>
+    </Card>
+
+    <Modal :title="modalTitle" v-model="modalVisible" :mask-closable="false" :width="500">
+      <Form ref="formAdd" :model="formAdd" :label-width="85" :rules="formValidate">
+        <div v-if="showParent">
+          <FormItem label="上级部门：">{{form.title}}</FormItem>
+        </div>
+        <FormItem label="部门名称" prop="title">
+          <Input v-model="formAdd.title"/>
+        </FormItem>
+        <FormItem label="排序值" prop="sortOrder">
+          <InputNumber :max="1000" :min="0" v-model="formAdd.sortOrder"></InputNumber>
+          <span style="margin-left:5px">值越小越靠前，支持小数</span>
+        </FormItem>
+        <FormItem label="是否启用" prop="status">
+          <i-switch size="large" v-model="formAdd.status" :true-value="0" :false-value="-1">
+            <span slot="open">启用</span>
+            <span slot="close">禁用</span>
+          </i-switch>
+        </FormItem>
+      </Form>
+      <div slot="footer">
+        <Button type="text" @click="cancelAdd">取消</Button>
+        <Button type="primary" :loading="submitLoading" @click="submitAdd">提交</Button>
+      </div>
+    </Modal>
+  </div>
 </template>
 
 <script>
@@ -91,15 +129,17 @@ import {
   addDepartment,
   editDepartment,
   deleteDepartment,
-  searchDepartment
+  searchDepartment,
+  getUserByDepartmentId
 } from "@/api/index";
 export default {
   name: "department-manage",
   data() {
     return {
       loading: true,
+      userLoading: false,
       loadingEdit: true,
-      menuModalVisible: false,
+      modalVisible: false,
       selectList: [],
       selectCount: 0,
       showParent: false,
@@ -110,17 +150,18 @@ export default {
         id: "",
         parentId: "",
         parentTitle: "",
-        sortOrder: null,
+        sortOrder: 0,
         status: 0,
         url: ""
       },
       formAdd: {},
-      menuFormValidate: {
+      formValidate: {
         title: [{ required: true, message: "名称不能为空", trigger: "blur" }]
       },
       submitLoading: false,
       data: [],
-      dataEdit: []
+      dataEdit: [],
+      users: []
     };
   },
   methods: {
@@ -192,11 +233,6 @@ export default {
     },
     selectTree(v) {
       if (v.length > 0) {
-        if (Number(v[0].status) === 0) {
-          this.editStatus = true;
-        } else {
-          this.editStatus = false;
-        }
         // 转换null为""
         for (let attr in v[0]) {
           if (v[0][attr] === null) {
@@ -205,14 +241,26 @@ export default {
         }
         let str = JSON.stringify(v[0]);
         let data = JSON.parse(str);
-        this.form = data;
         this.editTitle = data.title;
+        // 加载部门用户数据
+        this.userLoading = true;
+        getUserByDepartmentId(data.id).then(res => {
+          this.userLoading = false;
+          if (res.success) {
+            this.users = res.result;
+            // 回显
+            this.form = data;
+          }
+        });
       } else {
-        this.canelEdit();
+        this.cancelEdit();
       }
     },
-    canelEdit() {
-      this.$refs.tree.getSelectedNodes()[0].selected = false;
+    cancelEdit() {
+      let data = this.$refs.tree.getSelectedNodes()[0];
+      if (data) {
+        data.selected = false;
+      }
       this.isMenu = false;
       this.isButton = false;
       this.$refs.form.resetFields();
@@ -234,11 +282,10 @@ export default {
       }
     },
     cancelAdd() {
-      this.menuModalVisible = false;
+      this.modalVisible = false;
     },
     handleReset() {
       this.$refs.form.resetFields();
-      this.editStatus = true;
       this.form.status = 0;
     },
     submitEdit() {
@@ -260,7 +307,7 @@ export default {
             if (res.success === true) {
               this.$Message.success("编辑成功");
               this.init();
-              this.menuModalVisible = false;
+              this.modalVisible = false;
             }
           });
         }
@@ -281,7 +328,7 @@ export default {
             if (res.success === true) {
               this.$Message.success("添加成功");
               this.init();
-              this.menuModalVisible = false;
+              this.modalVisible = false;
             }
           });
         }
@@ -296,20 +343,20 @@ export default {
       this.showParent = true;
       this.formAdd = {
         parentId: this.form.id,
-        sortOrder: 1,
+        sortOrder: 0,
         status: 0
       };
-      this.menuModalVisible = true;
+      this.modalVisible = true;
     },
     addRoot() {
       this.modalTitle = "添加一级部门";
       this.showParent = false;
       this.formAdd = {
         parentId: 0,
-        sortOrder: 1,
+        sortOrder: 0,
         status: 0
       };
-      this.menuModalVisible = true;
+      this.modalVisible = true;
     },
     changeSelect(v) {
       this.selectCount = v.length;
@@ -334,7 +381,7 @@ export default {
               this.$Message.success("删除成功");
               this.selectList = [];
               this.selectCount = 0;
-              this.canelEdit();
+              this.cancelEdit();
               this.init();
             }
           });
