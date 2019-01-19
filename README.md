@@ -77,8 +77,8 @@ location / {
     ...
 }
 ```
-### 开发指南及相应技术站说明
-- [XBoot前端配置说明【必读】](https://github.com/Exrick/xboot-front/wiki/XBoot%E5%89%8D%E7%AB%AF%E9%85%8D%E7%BD%AE%E8%AF%B4%E6%98%8E%E3%80%90%E5%BF%85%E8%AF%BB%E3%80%91)
+### 开发指南及技术栈说明
+- [XBoot前端开发配置及部署说明【必读】](https://github.com/Exrick/xboot-front/wiki/XBoot%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91%E9%85%8D%E7%BD%AE%E5%8F%8A%E9%83%A8%E7%BD%B2%E8%AF%B4%E6%98%8E%E3%80%90%E5%BF%85%E8%AF%BB%E3%80%91)
 - [如何使用XBoot前端Vue模板快速开发增删改页面](https://github.com/Exrick/xboot-front/wiki/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8XBoot%E5%89%8D%E7%AB%AFVue%E6%A8%A1%E6%9D%BF%E5%BF%AB%E9%80%9F%E5%BC%80%E5%8F%91%E5%A2%9E%E5%88%A0%E6%94%B9%E9%A1%B5%E9%9D%A2)
 - 现已提供简单封装的带后台真实接口数据的组件，见XBoot业务组件菜单
 
