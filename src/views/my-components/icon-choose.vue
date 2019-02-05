@@ -33,6 +33,15 @@ export default {
     };
   },
   methods: {
+    init() {
+      let re = [];
+      icons.forEach(e => {
+        e.icons.forEach(item => {
+          re.push(item);
+        });
+      });
+      this.icon = re;
+    },
     handleInput() {
       if (this.key) {
         // 搜索
@@ -47,6 +56,8 @@ export default {
           });
         });
         this.icon = re;
+      } else {
+        this.init();
       }
     },
     handleFocus() {
@@ -64,13 +75,7 @@ export default {
     }
   },
   created() {
-    let re = [];
-    icons.forEach(e => {
-      e.icons.forEach(item => {
-        re.push(item);
-      });
-    });
-    this.icon = re;
+    this.init();
   }
 };
 </script>
@@ -100,8 +105,8 @@ export default {
   overflow: auto;
 }
 .icon-bar {
-    overflow: auto;
-    overflow-x: hidden;
+  overflow: auto;
+  overflow-x: hidden;
 }
 .icon-bar::-webkit-scrollbar {
   width: 6px;

@@ -60,37 +60,34 @@
               </RadioGroup>
             </FormItem>
             <FormItem label="名称" prop="title" v-if="menuForm.type===0">
-              <Input v-model="menuForm.title"/>
+              <Input v-model="menuForm.title" style="width:400px"/>
             </FormItem>
             <FormItem label="名称" prop="title" v-if="menuForm.type===1">
-              <Poptip
-                trigger="focus"
-                placement="right"
-                width="230"
-                word-wrap
-                title="提示"
-                content="操作按钮名称不得重复"
-              >
-                <Input v-model="menuForm.title"/>
-              </Poptip>
+              <Tooltip placement="right" content="操作按钮名称不得重复">
+                <Input v-model="menuForm.title" style="width:400px"/>
+              </Tooltip>
             </FormItem>
             <FormItem label="路径" prop="path" v-if="menuForm.type===0">
-              <Input v-model="menuForm.path"/>
+              <Input v-model="menuForm.path" style="width:400px"/>
             </FormItem>
             <FormItem label="请求路径" prop="path" v-if="menuForm.type===1">
-              <Poptip
-                trigger="focus"
+              <Tooltip
                 placement="right"
-                width="230"
-                word-wrap
-                title="提示"
+                :max-width="230"
+                transfer
                 content="填写后台请求URL，后台将作权限拦截，若无可填写'无'或其他"
               >
-                <Input v-model="menuForm.path"/>
-              </Poptip>
+                <Input v-model="menuForm.path" style="width:400px"/>
+              </Tooltip>
             </FormItem>
             <FormItem label="按钮权限类型" prop="buttonType" v-if="menuForm.type===1">
-              <Select v-model="menuForm.buttonType" placeholder="请选择或输入搜索" filterable clearable>
+              <Select
+                v-model="menuForm.buttonType"
+                placeholder="请选择或输入搜索"
+                filterable
+                clearable
+                style="width:400px"
+              >
                 <Option
                   v-for="(item, i) in dcitPermissions"
                   :key="i"
@@ -99,26 +96,27 @@
               </Select>
             </FormItem>
             <div v-if="menuForm.type===0">
-              <FormItem label="英文名" prop="name">
-                <Input v-model="menuForm.name"/>
+              <FormItem label="路由英文名" prop="name">
+                <Tooltip trigger="focus" placement="right" content="需唯一">
+                  <Input v-model="menuForm.name" style="width:400px"/>
+                </Tooltip>
               </FormItem>
               <FormItem label="图标" prop="icon">
-                <Input :icon="menuForm.icon" v-model="menuForm.icon" @on-focus="showEditIcon(0)"/>
+                <Input
+                  :icon="menuForm.icon"
+                  placeholder="点击选择图标"
+                  v-model="menuForm.icon"
+                  @on-focus="showEditIcon(0)"
+                  style="width:400px"
+                />
               </FormItem>
               <FormItem label="前端组件" prop="component">
-                <Input v-model="menuForm.component"/>
+                <Input v-model="menuForm.component" style="width:400px"/>
               </FormItem>
               <FormItem label="第三方网页链接" prop="url">
-                <Poptip
-                  trigger="focus"
-                  placement="right"
-                  width="230"
-                  word-wrap
-                  title="提示"
-                  content="前端组件需为 sys/monitor/monitor 时生效"
-                >
-                  <Input v-model="menuForm.url" placeholder="http://"/>
-                </Poptip>
+                <Tooltip placement="right" content="前端组件需为 sys/monitor/monitor 时生效">
+                  <Input v-model="menuForm.url" placeholder="http://" style="width:400px"/>
+                </Tooltip>
               </FormItem>
             </div>
             <FormItem label="排序值" prop="sortOrder">
@@ -174,31 +172,22 @@
           <Input v-model="menuFormAdd.title"/>
         </FormItem>
         <FormItem label="名称" prop="title" v-if="menuFormAdd.type===1">
-          <Poptip
-            trigger="focus"
-            placement="right"
-            width="230"
-            word-wrap
-            title="提示"
-            content="操作按钮名称不得重复"
-          >
-            <Input v-model="menuFormAdd.title"/>
-          </Poptip>
+          <Tooltip trigger="focus" placement="right" content="操作按钮名称不得重复">
+            <Input v-model="menuFormAdd.title" style="width:380px"/>
+          </Tooltip>
         </FormItem>
         <FormItem label="路径" prop="path" v-if="menuFormAdd.type===0">
           <Input v-model="menuFormAdd.path"/>
         </FormItem>
         <FormItem label="请求路径" prop="path" v-if="menuFormAdd.type===1">
-          <Poptip
-            trigger="focus"
+          <Tooltip
             placement="right"
-            width="230"
-            word-wrap
-            title="提示"
+            :max-width="230"
+            transfer
             content="填写后台请求URL，后台将作权限拦截，若无可填写'无'或其他"
           >
-            <Input v-model="menuFormAdd.path"/>
-          </Poptip>
+            <Input v-model="menuFormAdd.path" style="width:380px"/>
+          </Tooltip>
         </FormItem>
         <FormItem label="按钮权限类型" prop="buttonType" v-if="menuFormAdd.type===1">
           <Select v-model="menuFormAdd.buttonType" placeholder="请选择或输入搜索" filterable clearable>
@@ -206,26 +195,26 @@
           </Select>
         </FormItem>
         <div v-if="menuFormAdd.type===0">
-          <FormItem label="英文名" prop="name">
-            <Input v-model="menuFormAdd.name"/>
+          <FormItem label="路由英文名" prop="name">
+            <Tooltip trigger="focus" placement="right" content="需唯一">
+              <Input v-model="menuFormAdd.name" style="width:380px"/>
+            </Tooltip>
           </FormItem>
           <FormItem label="图标" prop="icon">
-            <Input :icon="menuFormAdd.icon" v-model="menuFormAdd.icon" @on-focus="showEditIcon(1)"/>
+            <Input
+              :icon="menuFormAdd.icon"
+              placeholder="点击选择图标"
+              v-model="menuFormAdd.icon"
+              @on-focus="showEditIcon(1)"
+            />
           </FormItem>
           <FormItem label="前端组件" prop="component">
             <Input v-model="menuFormAdd.component"/>
           </FormItem>
           <FormItem label="第三方网页链接" prop="url">
-            <Poptip
-              trigger="focus"
-              placement="right"
-              width="230"
-              word-wrap
-              title="提示"
-              content="前端组件需为 sys/monitor/monitor 时生效"
-            >
-              <Input v-model="menuFormAdd.url" placeholder="http://"/>
-            </Poptip>
+            <Tooltip placement="right" content="前端组件需为 sys/monitor/monitor 时生效">
+              <Input v-model="menuFormAdd.url" placeholder="http://" style="width:380px"/>
+            </Tooltip>
           </FormItem>
         </div>
         <FormItem label="排序值" prop="sortOrder">
@@ -259,7 +248,7 @@ import {
   searchPermission,
   getDictDataByType
 } from "@/api/index";
-import IconChoose from "../../my-components/icon-choose";
+import IconChoose from "@/views/my-components/icon-choose";
 import util from "@/libs/util.js";
 export default {
   name: "menu-manage",
@@ -298,7 +287,7 @@ export default {
       },
       menuFormValidate: {
         title: [{ required: true, message: "名称不能为空", trigger: "blur" }],
-        name: [{ required: true, message: "英文名不能为空", trigger: "blur" }],
+        name: [{ required: true, message: "路由英文名不能为空", trigger: "blur" }],
         icon: [{ required: true, message: "图标不能为空", trigger: "blur" }],
         path: [{ required: true, message: "路径不能为空", trigger: "blur" }],
         component: [

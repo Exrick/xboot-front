@@ -142,7 +142,7 @@ export default {
         {
           title: "备注",
           key: "description",
-          width: 190,
+          minWidth: 190,
           sortable: true
         },
         {

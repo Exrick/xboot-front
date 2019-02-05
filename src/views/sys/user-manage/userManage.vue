@@ -331,7 +331,7 @@ export default {
         {
           title: "用户名",
           key: "username",
-          width: 145,
+          minWidth: 145,
           sortable: true,
           fixed: "left"
         },

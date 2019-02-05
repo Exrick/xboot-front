@@ -38,7 +38,7 @@
                 :src="go"
                 frameborder="0"
                 width="100%"
-                height="525px"
+                :height="height"
                 scrolling="auto"
               ></iframe>
               <Spin fix size="large" v-if="loading"></Spin>
@@ -59,7 +59,8 @@ export default {
       loading: false,
       go: "",
       url: "",
-      html: ""
+      html: "",
+      height: "525px"
     };
   },
   computed: {},
@@ -101,6 +102,9 @@ export default {
     }
   },
   mounted() {
+    // 计算高度
+    let height = document.documentElement.clientHeight;
+    this.height = Number(height-217) + "px";
     this.initUrl();
   }
 };

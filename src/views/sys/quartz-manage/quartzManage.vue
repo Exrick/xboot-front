@@ -2,56 +2,80 @@
 @import "./quartzManage.less";
 </style>
 <template>
-    <div class="search">
-        <Row>
-            <Col>
-                <Card>     
-                    <Row class="operation">
-                        <Button @click="addRole" type="primary" icon="md-add">安排新任务</Button>
-                        <Button @click="delAll" icon="md-trash">批量删除</Button>
-                        <Button @click="init" icon="md-refresh">刷新</Button>
-                        <circleLoading v-if="operationLoading"/>
-                    </Row>
-                     <Row>
-                        <Alert show-icon>
-                            已选择 <span class="select-count">{{selectCount}}</span> 项
-                            <a class="select-clear" @click="clearSelectAll">清空</a>
-                        </Alert>
-                    </Row>
-                    <Row>
-                        <Table :loading="loading" border :columns="columns" :data="data" ref="table" sortable="custom" @on-sort-change="changeSort" @on-selection-change="changeSelect"></Table>
-                    </Row>
-                    <Row type="flex" justify="end" class="page">
-                        <Page :current="pageNumber" :total="total" :page-size="pageSize" @on-change="changePage" @on-page-size-change="changePageSize" :page-size-opts="[10,20,50]" size="small" show-total show-elevator show-sizer></Page>
-                    </Row>
-                </Card>
-            </Col>
-        </Row>
-        <Modal :title="modalTitle" v-model="modalVisible" :mask-closable='false' :width="500">
-          <Form ref="form" :model="form" :label-width="80" :rules="formValidate">
-            <FormItem label="任务类名" prop="jobClassName">
-              <Input v-model="form.jobClassName" placeholder="例如 cn.exrick.xboot.quartz.jobs.Job" clearable/>
-            </FormItem>
-            <FormItem label="cron表达式" prop="cronExpression" style="margin-bottom: 5px;">
-              <Input v-model="form.cronExpression" clearable/>
-              <a target="_blank" href="http://cron.qqe2.com/">
-                <Icon type="md-arrow-dropright-circle" size="16" style="margin:0 3px 3px 0;"/> 
-                在线cron表达式生成
-              </a>
-            </FormItem>
-            <FormItem label="参数" prop="parameter">
-              <Input v-model="form.parameter"/>
-            </FormItem>
-            <FormItem label="备注" prop="description">
-              <Input v-model="form.description"/>
-            </FormItem>
-          </Form>
-          <div slot="footer">
-            <Button type="text" @click="cancelSubmit">取消</Button>
-            <Button type="primary" :loading="submitLoading" @click="handleSubmit">保存并安排</Button>
-          </div>
-        </Modal>
-    </div>
+  <div class="search">
+    <Row>
+      <Col>
+        <Card>
+          <Row class="operation">
+            <Button @click="addRole" type="primary" icon="md-add">安排新任务</Button>
+            <Button @click="delAll" icon="md-trash">批量删除</Button>
+            <Button @click="init" icon="md-refresh">刷新</Button>
+            <circleLoading v-if="operationLoading"/>
+          </Row>
+          <Row>
+            <Alert show-icon>
+              已选择
+              <span class="select-count">{{selectCount}}</span> 项
+              <a class="select-clear" @click="clearSelectAll">清空</a>
+            </Alert>
+          </Row>
+          <Row>
+            <Table
+              :loading="loading"
+              border
+              :columns="columns"
+              :data="data"
+              ref="table"
+              sortable="custom"
+              @on-sort-change="changeSort"
+              @on-selection-change="changeSelect"
+            ></Table>
+          </Row>
+          <Row type="flex" justify="end" class="page">
+            <Page
+              :current="pageNumber"
+              :total="total"
+              :page-size="pageSize"
+              @on-change="changePage"
+              @on-page-size-change="changePageSize"
+              :page-size-opts="[10,20,50]"
+              size="small"
+              show-total
+              show-elevator
+              show-sizer
+            ></Page>
+          </Row>
+        </Card>
+      </Col>
+    </Row>
+    <Modal draggable :title="modalTitle" v-model="modalVisible" :mask-closable="false" :width="500">
+      <Form ref="form" :model="form" :label-width="80" :rules="formValidate">
+        <FormItem label="任务类名" prop="jobClassName">
+          <Input
+            v-model="form.jobClassName"
+            placeholder="例如 cn.exrick.xboot.quartz.jobs.Job"
+            clearable
+          />
+        </FormItem>
+        <FormItem label="cron表达式" prop="cronExpression" style="margin-bottom: 5px;">
+          <Input v-model="form.cronExpression" clearable/>
+          <a target="_blank" href="http://cron.qqe2.com/">
+            <Icon type="md-arrow-dropright-circle" size="16" style="margin:0 3px 3px 0;"/>在线cron表达式生成
+          </a>
+        </FormItem>
+        <FormItem label="参数" prop="parameter">
+          <Input v-model="form.parameter"/>
+        </FormItem>
+        <FormItem label="备注" prop="description">
+          <Input v-model="form.description"/>
+        </FormItem>
+      </Form>
+      <div slot="footer">
+        <Button type="text" @click="cancelSubmit">取消</Button>
+        <Button type="primary" :loading="submitLoading" @click="handleSubmit">保存并安排</Button>
+      </div>
+    </Modal>
+  </div>
 </template>
 
 <script>
@@ -63,7 +87,7 @@ import {
   resumeQuartz,
   deleteQuartz
 } from "@/api/index";
-import circleLoading from "../../my-components/circle-loading.vue";
+import circleLoading from "@/views/my-components/circle-loading.vue";
 export default {
   name: "quartz-manage",
   components: {
@@ -114,18 +138,20 @@ export default {
         {
           title: "cron表达式",
           key: "cronExpression",
-          sortable: true
+          sortable: true,
+          width: 200
         },
         {
           title: "参数",
           key: "parameter",
-          sortable: true
+          sortable: true,
+          width: 180
         },
         {
           title: "备注",
           key: "description",
           sortable: true,
-          width: 180
+          minWidth: 180
         },
         {
           title: "状态",
@@ -213,7 +239,7 @@ export default {
                 "Button",
                 {
                   props: {
-                    type: "info",
+                    type: "success",
                     size: "small",
                     icon: "md-play"
                   },

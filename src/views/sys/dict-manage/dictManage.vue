@@ -123,8 +123,8 @@
           <Input v-model="dictForm.title"/>
         </FormItem>
         <FormItem label="字典类型" prop="type">
-          <Tooltip placement="right" content="建议英文名且需唯一 非开发人员谨慎修改" class="form-tooltip">
-            <Input v-model="dictForm.type"/>
+          <Tooltip placement="right" :max-width="220" transfer content="建议英文名且需唯一 非开发人员谨慎修改">
+            <Input v-model="dictForm.type" style="width:395px"/>
           </Tooltip>
         </FormItem>
         <FormItem label="备注" prop="description">
@@ -189,7 +189,7 @@ import {
   editDictData,
   deleteData
 } from "@/api/index";
-import circleLoading from "../../my-components/circle-loading.vue";
+import circleLoading from "@/views/my-components/circle-loading.vue";
 export default {
   name: "dic-manage",
   components: {
@@ -258,7 +258,7 @@ export default {
         {
           title: "名称",
           key: "title",
-          width: 150,
+          minWidth: 150,
           sortable: true
         },
         {

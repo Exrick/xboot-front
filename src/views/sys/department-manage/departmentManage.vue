@@ -40,7 +40,7 @@
           <Form ref="form" :model="form" :label-width="85" :rules="formValidate">
             <FormItem label="上级部门" prop="parentTitle">
               <Poptip trigger="click" placement="right-start" title="选择上级部门" width="250">
-                <Input v-model="form.parentTitle" readonly/>
+                <Input v-model="form.parentTitle" readonly style="width:400px"/>
                 <div slot="content" style="position:relative;min-height:5vh">
                   <Tree :data="dataEdit" :load-data="loadData" @on-select-change="selectTreeEdit"></Tree>
                   <Spin size="large" fix v-if="loadingEdit"></Spin>
@@ -48,7 +48,7 @@
               </Poptip>
             </FormItem>
             <FormItem label="部门名称" prop="title">
-              <Input v-model="form.title"/>
+              <Input v-model="form.title" style="width:400px"/>
             </FormItem>
             <FormItem label="部门负责人" prop="mainHeader">
               <Select
@@ -56,6 +56,7 @@
                 not-found-text="该部门暂无用户数据"
                 v-model="form.mainHeader"
                 multiple
+                style="width:400px"
               >
                 <Option v-for="item in users" :value="item.id" :key="item.id">{{ item.username }}</Option>
               </Select>
@@ -66,6 +67,7 @@
                 not-found-text="该部门暂无用户数据"
                 v-model="form.viceHeader"
                 multiple
+                style="width:400px"
               >
                 <Option v-for="item in users" :value="item.id" :key="item.id">{{ item.username }}</Option>
               </Select>

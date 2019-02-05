@@ -48,7 +48,8 @@ http://xboot.exrick.cn
 - [wangeditor](https://github.com/wangfupeng1988/wangEditor)：轻量富文本编辑器
 - [gitalk](https://github.com/gitalk/gitalk)：基于github issue评论插件
 - [vue-stomp](https://github.com/FlySkyBear/vue-stomp)
-- [vue-json-pretty](https://github.com/leezng/vue-json-pretty)
+- [vue-json-pretty](https://github.com/leezng/vue-json-pretty)：Json美化
+- [Print.js](http://printjs.crabbly.com/)：打印
 - ES6
 - webpack
 - axios
@@ -56,8 +57,7 @@ http://xboot.exrick.cn
 - cookie
 - 第三方插件或服务
     - [hotjar](https://github.com/Exrick/xmall/blob/master/study/hotjar.md)：一体化分析和反馈
-    - 完整版
-        - [Vaptcha人机验证码](https://www.vaptcha.com/)
+    - [Vaptcha人机验证码](https://www.vaptcha.com/)
 
 ### 本地开发构建运行
 

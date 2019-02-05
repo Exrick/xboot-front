@@ -50,7 +50,7 @@
 
 <script>
 import { getLogListData, deleteLog, deleteAllLog } from "@/api/index";
-import circleLoading from "../../my-components/circle-loading.vue";
+import circleLoading from "@/views/my-components/circle-loading.vue";
 export default {
   name: "role-manage",
   components: {
@@ -137,7 +137,7 @@ export default {
         },
         {
           title: "请求参数",
-          width: 200,
+          minWidth: 200,
           key: "requestParam",
           tooltip: true
         },
