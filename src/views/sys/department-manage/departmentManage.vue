@@ -263,8 +263,6 @@ export default {
       if (data) {
         data.selected = false;
       }
-      this.isMenu = false;
-      this.isButton = false;
       this.$refs.form.resetFields();
       delete this.form.id;
       this.editTitle = "";

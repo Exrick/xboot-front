@@ -89,7 +89,7 @@
                 style="width:400px"
               >
                 <Option
-                  v-for="(item, i) in dcitPermissions"
+                  v-for="(item, i) in dictPermissions"
                   :key="i"
                   :value="item.value"
                 >{{item.title}}</Option>
@@ -191,7 +191,7 @@
         </FormItem>
         <FormItem label="按钮权限类型" prop="buttonType" v-if="menuFormAdd.type===1">
           <Select v-model="menuFormAdd.buttonType" placeholder="请选择或输入搜索" filterable clearable>
-            <Option v-for="(item, i) in dcitPermissions" :key="i" :value="item.value">{{item.title}}</Option>
+            <Option v-for="(item, i) in dictPermissions" :key="i" :value="item.value">{{item.title}}</Option>
           </Select>
         </FormItem>
         <div v-if="menuFormAdd.type===0">
@@ -296,7 +296,7 @@ export default {
       },
       submitLoading: false,
       data: [],
-      dcitPermissions: [],
+      dictPermissions: [],
       iconType: 0
     };
   },
@@ -308,7 +308,7 @@ export default {
     getDictPermissions() {
       getDictDataByType("permission_type").then(res => {
         if (res.success) {
-          this.dcitPermissions = res.result;
+          this.dictPermissions = res.result;
         }
       });
     },

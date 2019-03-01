@@ -19,12 +19,16 @@ import { getRequest, postRequest, putRequest, deleteRequest, uploadFileRequest }
 import { setStore, getStore, removeStore } from '@/libs/storage'
 import util from '@/libs/util';
 import hasPermission from '@/libs/hasPermission';
+import VueClipboard from 'vue-clipboard2'
+import TreeTable from 'tree-table-vue'
 import '@babel/polyfill'
 
 Vue.config.productionTip = false
 Vue.use(VueI18n);
 Vue.use(iView);
 Vue.use(iviewArea);
+Vue.use(VueClipboard);
+Vue.use(TreeTable);
 Vue.component('icon', Icon);
 Vue.use(hasPermission);
 // 挂载全局使用的方法
