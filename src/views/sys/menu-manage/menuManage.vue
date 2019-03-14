@@ -19,6 +19,10 @@
             <DropdownItem name="expandAll">展开所有</DropdownItem>
           </DropdownMenu>
         </Dropdown>
+        <i-switch v-model="strict" size="large" style="margin-left:5px">
+          <span slot="open">级联</span>
+          <span slot="close">单选</span>
+        </i-switch>
       </Row>
       <Row type="flex" justify="start" class="code-row-bg">
         <Col span="6">
@@ -34,13 +38,14 @@
             placeholder="输入菜单名搜索"
             clearable
           />
-          <div class="tree-bar">
+          <div class="tree-bar" :style="{maxHeight: maxHeight}">
             <Tree
               ref="tree"
               :data="data"
               show-checkbox
               @on-check-change="changeSelect"
               @on-select-change="selectTree"
+              :check-strictly="!strict"
             ></Tree>
           </div>
           <Spin size="large" fix v-if="loading"></Spin>
@@ -258,6 +263,8 @@ export default {
   data() {
     return {
       loading: true,
+      strict: true,
+      maxHeight: "500px",
       expandLevel: 1,
       menuModalVisible: false,
       iconModalVisible: false,
@@ -274,6 +281,11 @@ export default {
       modalTitle: "",
       menuForm: {
         id: "",
+        title: "",
+        name: "",
+        icon: "",
+        path: "",
+        component: "",
         parentId: "",
         buttonType: "",
         type: 0,
@@ -288,7 +300,7 @@ export default {
       menuFormValidate: {
         title: [{ required: true, message: "名称不能为空", trigger: "blur" }],
         name: [{ required: true, message: "路由英文名不能为空", trigger: "blur" }],
-        icon: [{ required: true, message: "图标不能为空", trigger: "blur" }],
+        icon: [{ required: true, message: "图标不能为空", trigger: "click" }],
         path: [{ required: true, message: "路径不能为空", trigger: "blur" }],
         component: [
           { required: true, message: "前端组件不能为空", trigger: "blur" }
@@ -469,12 +481,6 @@ export default {
       this.$refs.menuFormAdd.validate(valid => {
         if (valid) {
           this.submitLoading = true;
-          if (this.menuFormAdd.sortOrder === null) {
-            this.menuFormAdd.sortOrder = "";
-          }
-          if (this.menuFormAdd.buttonType === null) {
-            this.menuFormAdd.buttonType = "";
-          }
           if (this.menuFormAdd.type == 1) {
             this.menuFormAdd.name = "";
             this.menuFormAdd.icon = "";
@@ -576,6 +582,9 @@ export default {
     }
   },
   mounted() {
+    // 计算高度
+    let height = document.documentElement.clientHeight;
+    this.maxHeight = Number(height-287) + "px";
     this.init();
   }
 };

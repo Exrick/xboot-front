@@ -104,6 +104,8 @@ export default {
       modalTitle: "",
       form: {
         id: "",
+        jobClassName: "",
+        cronExpression: "",
         paramter: "",
         description: ""
       },

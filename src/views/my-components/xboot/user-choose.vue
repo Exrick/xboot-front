@@ -18,7 +18,7 @@
         </p>
       </Panel>
     </Collapse>
-    <Drawer title="选择用户" closable v-model="userModalVisible" width="800">
+    <Drawer title="选择用户" closable v-model="userModalVisible" width="800" draggable>
       <Form
         ref="searchUserForm"
         :model="searchUserForm"

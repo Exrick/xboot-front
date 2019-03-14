@@ -50,12 +50,12 @@
         <Card>
           <p slot="title">
             <Icon type="md-grid" style="margin-bottom:2px"></Icon>
-            表格Render函数中权限判断
+            表格中权限判断
           </p>
           <div>
             <Alert show-icon>
-              由于表格中操作按钮或其他自定义内容使用
-              <a target="_blank" href="https://cn.vuejs.org/v2/guide/render-function.html">Render渲染函数</a> ，需在函数内实现权限判断，详见该示例页面代码
+              iView Table组件已支持 slot-scope 用法，建议使用该新用法。
+              以下为Render函数中实现权限按钮显示示例
             </Alert>
             <Table border :columns="columns" :data="data"></Table>
           </div>
@@ -65,16 +65,24 @@
         <Card>
           <p slot="title" style="overflow:visible">
             <Icon type="md-contacts" style="margin-bottom:2px;margin-right:3px;"></Icon>
-            <Badge dot>通过当前用户角色显示(付费)</Badge>
+            通过当前用户角色显示
           </p>
           <p slot="extra">
             无需配置，全局可用
           </p>
           <Row>
-            <div class="sorry">
-              <img src="@/assets/sorry.png" width="215">
-              <span class="text">抱歉，请获取完整版</span>
-              <Button to="http://xpay.exrick.cn/pay?xboot" target="_blank" type="error" icon="md-paper-plane">立即获取</Button>
+            <div class="access-user-roles">
+              <p>当前用户拥有角色:</p>
+              <b>{{ roles }}</b>
+            </div>
+            <div class="btns">
+              <Button v-hasRole="'ROLE_USER'" type="primary" style="margin-right:5px;">添加按钮</Button>
+              <Button v-hasRole="'ROLE_TEST'" type="error">删除按钮</Button>
+              <Button v-hasRole="'ROLE_ADMIN'">编辑按钮</Button>
+            </div>
+            <div class="role-demo">
+              自定义角色权限标签：<code>v-hasRole</code><br><br>
+              示例：<code>{{exampleRole}}</code>
             </div>
           </Row>
         </Card>
@@ -90,6 +98,7 @@
     data() {
       return {
         permTypes: [],
+        roles: [],
         example: "<Button v-has=\"'add'\">添加按钮</Button>",
         exampleRole: "<Button v-hasRole=\"'ROLE_ADMIN'\">添加按钮</Button>",
         columns: [{
@@ -205,6 +214,7 @@
     },
     created() {
       this.initMeta();
+      this.roles = this.getStore("roles")
     }
   };
 </script>

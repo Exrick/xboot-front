@@ -85,6 +85,22 @@
           <br>
 
           <span class="href-text">示例：{{time}}</span>
+
+          <Divider orientation="left">图片懒加载 - vue-lazyload</Divider>
+          <span class="href-text">Github：</span>
+          <a
+            href="https://github.com/hilongjw/vue-lazyload"
+            target="_blank"
+            class="href-text"
+          >https://github.com/hilongjw/vue-lazyload</a>
+          <br>
+          <span class="href-text">官网：</span>
+          <a
+            class="href-text"
+            href="http://hilongjw.github.io/vue-lazyload"
+            target="_blank"
+          >http://hilongjw.github.io/vue-lazyload</a>
+          <br>
         </TabPane>
 
         <TabPane label="组件类">
@@ -169,6 +185,47 @@
             </template>
           </tree-table>
 
+          <Divider orientation="left">图片裁剪 - vue-cropper</Divider>
+          <span class="href-text">Github：</span>
+          <a
+            href="https://github.com/xyxiao001/vue-cropper"
+            target="_blank"
+            class="href-text"
+          >https://github.com/xyxiao001/vue-cropper</a>
+          <br>
+          <span class="href-text">官方文档：</span>
+          <a
+            class="href-text"
+            href="http://xyxiao.cn/vue-cropper/example"
+            target="_blank"
+          >http://xyxiao.cn/vue-cropper/example</a>
+          <br>
+          <br>
+
+          <vueCropper
+            style="height:300px;width:500px"
+            ref="cropper"
+            :img="option.img"
+            :outputType="option.outputType"
+            autoCrop
+            @realTime="realTime"
+          ></vueCropper>
+
+          <br>
+          <div :style="previewStyle">
+            <div :style="previews.div">
+              <img :src="previews.url" :style="previews.img">
+            </div>
+          </div>
+          <br>
+          <Alert type="warning" show-icon style="width:500px">base64上传，上传接口传入参数base64即可</Alert>
+          <Button
+            type="primary"
+            @click="upload"
+            :loading="uploadLoading"
+            icon="ios-cloud-upload-outline"
+          >上传裁剪后的图片</Button>
+
           <Divider orientation="left">弹幕视频播放器 - DPlayer</Divider>
           <span class="href-text">Github：</span>
           <a
@@ -178,9 +235,14 @@
           >https://github.com/MoePlayer/DPlayer</a>
           <br>
           <span class="href-text">官方文档：</span>
-          <a class="href-text" href="http://dplayer.js.org" target="_blank">http://dplayer.js.org</a><br>
+          <a class="href-text" href="http://dplayer.js.org" target="_blank">http://dplayer.js.org</a>
+          <br>
           <span class="href-text">自己搭建弹幕服务：</span>
-          <a class="href-text" href="https://github.com/MoePlayer/DPlayer-node" target="_blank">https://github.com/MoePlayer/DPlayer-node</a>
+          <a
+            class="href-text"
+            href="https://github.com/MoePlayer/DPlayer-node"
+            target="_blank"
+          >https://github.com/MoePlayer/DPlayer-node</a>
           <br>
           <br>
 
@@ -200,14 +262,19 @@
 </template>
 
 <script>
+// 组件内使用
+import { VueCropper } from "vue-cropper";
 import printJS from "print-js";
 import html2canvas from "html2canvas";
 import { format } from "date-fns";
 import "dplayer/dist/DPlayer.min.css";
 import DPlayer from "dplayer";
+import { base64Upload } from "@/api/index.js";
 export default {
   name: "xboot-library",
-  components: {},
+  components: {
+    VueCropper
+  },
   data() {
     return {
       resArr: [],
@@ -361,7 +428,14 @@ export default {
           type: "template",
           template: "action"
         }
-      ]
+      ],
+      option: {
+        img: "https://i.loli.net/2019/03/12/5c87521fb8ae9.jpeg",
+        outputType: "png"
+      },
+      previews: "",
+      previewStyle: {},
+      uploadLoading: false
     };
   },
   methods: {
@@ -438,6 +512,31 @@ export default {
           id: "弹幕ID210877258798",
           api: "https://api.prprpr.me/dplayer/"
         }
+      });
+    },
+    // 实时预览
+    realTime(data) {
+      let preview = data,
+        h = 0.5;
+      this.previewStyle = {
+        width: preview.w + "px",
+        height: preview.h + "px",
+        overflow: "hidden",
+        margin: "0",
+        zoom: h
+      };
+      this.previews = data;
+    },
+    upload() {
+      // 获取截图的base64 数据
+      this.$refs.cropper.getCropData(data => {
+        this.uploadLoading = true;
+        base64Upload({ base64: data }).then(res => {
+          this.uploadLoading = false;
+          if (res.success) {
+            this.$Message.success("上传成功");
+          }
+        });
       });
     }
   },

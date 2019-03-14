@@ -114,6 +114,7 @@ export default {
       depModalVisible: false,
       modalTitle: "",
       roleForm: {
+        name: "",
         description: ""
       },
       roleFormValidate: {

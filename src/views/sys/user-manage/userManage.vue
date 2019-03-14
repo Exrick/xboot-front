@@ -279,6 +279,9 @@ export default {
       userModalVisible: false,
       modalTitle: "",
       userForm: {
+        username: "",
+        mobile: "",
+        email: "",
         sex: 1,
         type: 0,
         avatar: "",

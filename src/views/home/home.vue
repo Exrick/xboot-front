@@ -117,7 +117,7 @@
                                     <img src="@/assets/qr.png" width="120">
                                     <div>支持手机扫码支付，限时优惠！<br>赠送
                                         <a href="https://v.qq.com/x/page/f0627kf4x1e.html" target="_blank">XMall小程序(不含后台)</a> + 
-                                        <a href="https://github.com/Exrick/xpay" target="_blank">XPay个人收款支付系统v1.6</a>
+                                        <a href="https://github.com/Exrick/xpay" target="_blank">最新XPay个人收款支付系统</a>
                                     </div>
                                 </div>
                                 <div class="flex">
@@ -128,7 +128,7 @@
                                 </div>
                                 <div class="flex">
                                     商用授权价格：
-                                    <span class="rmb">￥</span> <span class="price">5998</span> 
+                                    <span class="rmb">￥</span> <span class="price">6998</span> 
                                     <span class="origin">￥</span><s class="origin">9998</s> 
                                     <Button to="http://wpa.qq.com/msgrd?v=3&uin=1012139570&site=qq&menu=yes" target="_blank" type="warning" icon="logo-vimeo" style="margin-left:10px;">获取商用授权</Button><br>
                                 </div>

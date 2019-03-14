@@ -325,3 +325,10 @@ export const editMessageSend = (params) => {
 export const deleteMessageSend = (ids, params) => {
     return deleteRequest(`/messageSend/delByIds/${ids}`, params)
 }
+
+
+
+// base64上传
+export const base64Upload = (params) => {
+    return postRequest('/upload/file', params)
+}

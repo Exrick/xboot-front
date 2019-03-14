@@ -128,7 +128,7 @@ export default {
       maxLength: 6,
       errorCode: "",
       form: {
-        username: "test或test2 可注册",
+        username: "admin或test或test2 可注册",
         password: "123456",
         mobile: "捐赠获取完整版功能",
         code: ""
@@ -205,6 +205,11 @@ export default {
                   if (res.success === true) {
                     // 避免超过大小限制
                     delete res.result.permissions;
+                    let roles = [];
+                    res.result.roles.forEach(e => {
+                      roles.push(e.name);
+                    });
+                    this.setStore("roles", roles);
                     if (this.saveLogin) {
                       // 保存7天
                       Cookies.set("userInfo", JSON.stringify(res.result), {

@@ -31,7 +31,7 @@
             placeholder="输入搜索字典"
             clearable
           />
-          <div class="tree-bar">
+          <div class="tree-bar" :style="{maxHeight: maxHeight}">
             <Tree ref="tree" :data="treeData" @on-select-change="selectTree"></Tree>
           </div>
           <Spin size="large" fix v-if="treeLoading"></Spin>
@@ -118,7 +118,7 @@
       :width="500"
       :styles="{top: '30px'}"
     >
-      <Form ref="dictForm" :model="dictForm" :label-width="70" :rules="dictFormValidate">
+      <Form ref="dictForm" :model="dictForm" :label-width="75" :rules="dictFormValidate">
         <FormItem label="字典名称" prop="title">
           <Input v-model="dictForm.title"/>
         </FormItem>
@@ -198,6 +198,7 @@ export default {
   data() {
     return {
       treeLoading: false, // 树加载状态
+      maxHeight: "500px",
       loading: false, // 表格加载状态
       editTitle: "", // 编辑节点名称
       searchKey: "", // 搜索树
@@ -224,11 +225,15 @@ export default {
       dictModalTitle: "",
       modalTitle: "", // 添加或编辑标题
       dictForm: {
+        title: "",
+        type: "",
         description: "",
         sortOrder: 0
       },
       form: {
         // 添加或编辑表单对象初始化数据
+        title: "",
+        value: "",
         status: 0,
         description: "",
         sortOrder: 0
@@ -681,6 +686,9 @@ export default {
     }
   },
   mounted() {
+    // 计算高度
+    let height = document.documentElement.clientHeight;
+    this.maxHeight = Number(height-287) + "px";
     this.init();
   }
 };

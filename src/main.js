@@ -8,7 +8,7 @@ import { router } from './router/index'
 import store from './store'
 import '@/locale'
 import 'iview/dist/styles/iview.css'
-import VueI18n from 'vue-i18n';
+import VueI18n from 'vue-i18n'
 import Icon from 'vue-awesome/components/Icon'
 // 按需引入awesome图标
 import 'vue-awesome/icons/brands/qq'
@@ -17,13 +17,19 @@ import 'vue-awesome/icons/brands/weibo'
 import 'vue-awesome/icons/brands/github'
 import { getRequest, postRequest, putRequest, deleteRequest, uploadFileRequest } from '@/libs/axios'
 import { setStore, getStore, removeStore } from '@/libs/storage'
-import util from '@/libs/util';
-import hasPermission from '@/libs/hasPermission';
+import util from '@/libs/util'
+import hasPermission from '@/libs/hasPermission'
+import hasRole from '@/libs/hasRole'
+import VueLazyload from 'vue-lazyload'
 import VueClipboard from 'vue-clipboard2'
 import TreeTable from 'tree-table-vue'
 import '@babel/polyfill'
 
 Vue.config.productionTip = false
+Vue.use(VueLazyload, {
+    error: require('./assets/img-error.png'),
+    loading: require('./assets/loading2.gif')
+})
 Vue.use(VueI18n);
 Vue.use(iView);
 Vue.use(iviewArea);
@@ -31,6 +37,7 @@ Vue.use(VueClipboard);
 Vue.use(TreeTable);
 Vue.component('icon', Icon);
 Vue.use(hasPermission);
+Vue.use(hasRole);
 // 挂载全局使用的方法
 Vue.prototype.getRequest = getRequest;
 Vue.prototype.postRequest = postRequest;

@@ -9,6 +9,10 @@
         <Button @click="addRoot" icon="md-add">添加一级节点</Button>
         <Button @click="delAll" icon="md-trash">批量删除</Button>
         <Button @click="getParentList" icon="md-refresh">刷新</Button>
+        <i-switch v-model="strict" size="large" style="margin-left:5px">
+          <span slot="open">级联</span>
+          <span slot="close">单选</span>
+        </i-switch>
       </Row>
       <Row type="flex" justify="start" class="code-row-bg">
         <Col span="6">
@@ -24,7 +28,7 @@
             placeholder="输入节点名搜索"
             clearable
           />
-          <div class="tree-bar">
+          <div class="tree-bar" :style="{maxHeight: maxHeight}">
             <Tree
               ref="tree"
               :data="data"
@@ -32,6 +36,7 @@
               show-checkbox
               @on-check-change="changeSelect"
               @on-select-change="selectTree"
+              :check-strictly="!strict"
             ></Tree>
           </div>
           <Spin size="large" fix v-if="loading"></Spin>
@@ -58,6 +63,12 @@
               <i-switch size="large" v-model="form.status" :true-value="0" :false-value="-1">
                 <span slot="open">启用</span>
                 <span slot="close">禁用</span>
+              </i-switch>
+            </FormItem>
+            <FormItem label="是否为父节点">
+              <i-switch v-model="form.isParent">
+                <span slot="open">是</span>
+                <span slot="close">否</span>
               </i-switch>
             </FormItem>
             <Form-item>
@@ -108,6 +119,8 @@ export default {
   data() {
     return {
       loading: false, // 树加载状态
+      maxHeight: "500px",
+      strict: true,
       loadingEdit: false, // 编辑上级树加载状态
       modalVisible: false, // 添加显示
       selectList: [], // 多选数据
@@ -119,11 +132,11 @@ export default {
       form: {
         // 编辑对象初始化数据
         id: "",
+        title: "",
         parentId: "",
         parentTitle: "",
         sortOrder: 0,
-        status: 0,
-        url: ""
+        status: 0
       },
       formAdd: {
         // 添加对象初始化数据
@@ -378,12 +391,6 @@ export default {
           }
           this.submitLoading = true;
           // 避免传入null字符串
-          if (this.form.sortOrder === null) {
-            this.form.sortOrder = "";
-          }
-          if (this.form.buttonType === null) {
-            this.form.buttonType = "";
-          }
           // this.postRequest("请求路径，如/tree/edit", this.form).then(res => {
           //   this.submitLoading = false;
           //   if (res.success === true) {
@@ -403,12 +410,6 @@ export default {
       this.$refs.formAdd.validate(valid => {
         if (valid) {
           this.submitLoading = true;
-          if (this.formAdd.sortOrder === null) {
-            this.formAdd.sortOrder = "";
-          }
-          if (this.formAdd.buttonType === null) {
-            this.formAdd.buttonType = "";
-          }
           // this.postRequest("请求路径，如/tree/add", this.formAdd).then(res => {
           //   this.submitLoading = false;
           //   if (res.success === true) {
@@ -485,6 +486,9 @@ export default {
     }
   },
   mounted() {
+    // 计算高度
+    let height = document.documentElement.clientHeight;
+    this.maxHeight = Number(height-287) + "px";
     this.init();
   }
 };
