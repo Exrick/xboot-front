@@ -19,7 +19,7 @@
     "echarts": "^4.1.0",
     "gitalk": "^1.4.0",
     "html2canvas": "^1.0.0-alpha.12",
-    "iview": "^3.3.0",
+    "iview": "^3.3.2",
     "iview-area": "^1.6.0",
     "js-cookie": "^2.2.0",
     "print-js": "^1.0.54",
