@@ -527,6 +527,7 @@ export default {
         this.isButtonAdd = false;
       }
       this.menuFormAdd = {
+        icon: "",
         type: type,
         parentId: this.menuForm.id,
         level: Number(this.menuForm.level) + 1,
