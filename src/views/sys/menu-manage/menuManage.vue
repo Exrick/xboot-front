@@ -543,6 +543,7 @@ export default {
       this.isButtonAdd = false;
       this.showParent = false;
       this.menuFormAdd = {
+        component: "Main",
         type: 0,
         level: 1,
         sortOrder: 0,
