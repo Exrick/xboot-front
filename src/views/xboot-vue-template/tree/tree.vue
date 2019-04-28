@@ -41,11 +41,11 @@
           </div>
           <Spin size="large" fix v-if="loading"></Spin>
         </Col>
-        <Col span="9">
+        <Col span="9" style="margin-left:10px">
           <Form ref="form" :model="form" :label-width="85" :rules="formValidate">
             <FormItem label="上级节点" prop="parentTitle">
               <Poptip trigger="click" placement="right-start" title="选择上级节点" width="250">
-                <Input v-model="form.parentTitle" readonly style="width:400px"/>
+                <Input v-model="form.parentTitle" readonly/>
                 <div slot="content" style="position:relative;min-height:5vh">
                   <Tree :data="dataEdit" :load-data="loadData" @on-select-change="selectTreeEdit"></Tree>
                   <Spin size="large" fix v-if="loadingEdit"></Spin>
@@ -53,7 +53,7 @@
               </Poptip>
             </FormItem>
             <FormItem label="节点名称" prop="title">
-              <Input v-model="form.title" style="width:400px"/>
+              <Input v-model="form.title"/>
             </FormItem>
             <FormItem label="排序值" prop="sortOrder">
               <InputNumber :max="1000" :min="0" v-model="form.sortOrder"></InputNumber>
@@ -161,7 +161,7 @@ export default {
       // this.loading = true;
       // this.getRequest("一级数据请求路径，如/tree/getByParentId/0").then(res => {
       //   this.loading = false;
-      //   if (res.success === true) {
+      //   if (res.success == true) {
       //     res.result.forEach(function(e) {
       //       if (e.isParent) {
       //         e.loading = false;
@@ -220,7 +220,7 @@ export default {
       // this.loadingEdit = true;
       // this.getRequest("/tree/getByParentId/0").then(res => {
       //   this.loadingEdit = false;
-      //   if (res.success === true) {
+      //   if (res.success == true) {
       //     res.result.forEach(function(e) {
       //       if (e.isParent) {
       //         e.loading = false;
@@ -288,7 +288,7 @@ export default {
     loadData(item, callback) {
       // 异步加载树子节点数据
       // this.getRequest("请求路径，如/tree/getByParentId/" + item.id).then(res => {
-      //   if (res.success === true) {
+      //   if (res.success == true) {
       //     res.result.forEach(function(e) {
       //       if (e.isParent) {
       //         e.loading = false;
@@ -306,7 +306,7 @@ export default {
         // this.loading = true;
         // this.getRequest("搜索请求路径", { title: this.searchKey }).then(res => {
         //   this.loading = false;
-        //   if (res.success === true) {
+        //   if (res.success == true) {
         //     this.data = res.result;
         //   }
         // });
@@ -343,7 +343,7 @@ export default {
       if (v.length > 0) {
         // 转换null为""
         for (let attr in v[0]) {
-          if (v[0][attr] === null) {
+          if (v[0][attr] == null) {
             v[0][attr] = "";
           }
         }
@@ -368,7 +368,7 @@ export default {
       if (v.length > 0) {
         // 转换null为""
         for (let attr in v[0]) {
-          if (v[0][attr] === null) {
+          if (v[0][attr] == null) {
             v[0][attr] = "";
           }
         }
@@ -393,7 +393,7 @@ export default {
           // 避免传入null字符串
           // this.postRequest("请求路径，如/tree/edit", this.form).then(res => {
           //   this.submitLoading = false;
-          //   if (res.success === true) {
+          //   if (res.success == true) {
           //     this.$Message.success("编辑成功");
           //     this.init();
           //     this.modalVisible = false;
@@ -412,7 +412,7 @@ export default {
           this.submitLoading = true;
           // this.postRequest("请求路径，如/tree/add", this.formAdd).then(res => {
           //   this.submitLoading = false;
-          //   if (res.success === true) {
+          //   if (res.success == true) {
           //     this.$Message.success("添加成功");
           //     this.init();
           //     this.modalVisible = false;
@@ -468,7 +468,7 @@ export default {
           });
           ids = ids.substring(0, ids.length - 1);
           // this.deleteRequest("请求路径，如/tree/delByIds/" + ids).then(res => {
-          //   if (res.success === true) {
+          //   if (res.success == true) {
           //     this.$Message.success("删除成功");
           //     this.selectList = [];
           //     this.selectCount = 0;

@@ -1,23 +1,52 @@
 <template>
   <div>
-    <div class="icon-search">
-      <input
-        type="text"
-        v-model="key"
-        :placeholder="tip"
-        @input="handleInput"
-        @focus="handleFocus"
-        @blur="handleBlur"
-      >
+    <div style="display:flex">
+      <Input
+        v-model="currentValue"
+        @on-change="handleChange"
+        :placeholder="placeholder"
+        :size="size"
+        :disabled="disabled"
+        :readonly="readonly"
+        :maxlength="maxlength"
+        :icon="currentValue"
+      />
+      <Button
+        @click="iconModalVisible=true"
+        :size="size"
+        :disabled="disabled"
+        :icon="icon"
+        style="margin-left:10px"
+      >选择图标</Button>
     </div>
-    <div class="icon-block icon-bar">
-      <div class="icon-wrap" v-for="(item, i) in icon" :key="i" @click="hanleChoose(item)">
-        <div class="icons-item">
-          <Icon :type="item" style="font-size: 32px;"/>
-          <p>{{item}}</p>
+
+    <Modal
+      title="选择图标"
+      v-model="iconModalVisible"
+      :width="1000"
+      :styles="{top: '30px'}"
+      footer-hide
+      :z-index="1060"
+    >
+      <div class="icon-search">
+        <input
+          type="text"
+          v-model="key"
+          :placeholder="tip"
+          @input="handleInput"
+          @focus="handleFocus"
+          @blur="handleBlur"
+        >
+      </div>
+      <div class="icon-block icon-bar">
+        <div class="icon-wrap" v-for="(item, i) in iconData" :key="i" @click="hanleChoose(item)">
+          <div class="icons-item">
+            <Icon :type="item" style="font-size: 32px;"/>
+            <p>{{item}}</p>
+          </div>
         </div>
       </div>
-    </div>
+    </Modal>
   </div>
 </template>
 
@@ -25,9 +54,35 @@
 import { icons } from "@/libs/icon";
 export default {
   name: "iconChoose",
+  props: {
+    value: {
+      type: String,
+      default: ""
+    },
+    size: String,
+    placeholder: {
+      type: String,
+      default: "输入图标名或选择图标"
+    },
+    disabled: {
+      type: Boolean,
+      default: false
+    },
+    readonly: {
+      type: Boolean,
+      default: false
+    },
+    maxlength: Number,
+    icon: {
+      type: String,
+      default: "md-ionic"
+    }
+  },
   data() {
     return {
-      icon: [],
+      iconModalVisible: false,
+      currentValue: this.value,
+      iconData: [],
       key: "",
       tip: "输入英文关键词搜索，比如 success"
     };
@@ -40,7 +95,7 @@ export default {
           re.push(item);
         });
       });
-      this.icon = re;
+      this.iconData = re;
     },
     handleInput() {
       if (this.key) {
@@ -55,7 +110,7 @@ export default {
             }
           });
         });
-        this.icon = re;
+        this.iconData = re;
       } else {
         this.init();
       }
@@ -70,8 +125,26 @@ export default {
         this.tip = "输入英文关键词搜索，比如 success";
       }
     },
+    handleChange(v) {
+      this.$emit("input", this.currentValue);
+      this.$emit("on-change", this.currentValue);
+    },
+    setCurrentValue(value) {
+      if (value == this.currentValue) {
+        return;
+      }
+      this.currentValue = value;
+    },
     hanleChoose(v) {
-      this.$emit("on-select", v);
+      this.currentValue = v;
+      this.$emit("input", this.currentValue);
+      this.$emit("on-change", this.currentValue);
+      this.iconModalVisible = false;
+    }
+  },
+  watch: {
+    value(val) {
+      this.setCurrentValue(val);
     }
   },
   created() {

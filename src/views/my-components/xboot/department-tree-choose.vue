@@ -5,7 +5,6 @@
         <Input
           v-model="departmentTitle"
           readonly
-          :style="{width: width}"
           style="margin-right:10px;"
           :placeholder="placeholder"
         />
@@ -40,10 +39,6 @@ export default {
       type: Boolean,
       default: false
     },
-    width: {
-      type: String,
-      default: "200px"
-    },
     placeholder: {
       type: String,
       default: "点击选择部门"
@@ -62,13 +57,13 @@ export default {
   methods: {
     initDepartmentData() {
       initDepartment().then(res => {
-        if (res.success === true) {
+        if (res.success == true) {
           res.result.forEach(function(e) {
             if (e.isParent) {
               e.loading = false;
               e.children = [];
             }
-            if (e.status === -1) {
+            if (e.status == -1) {
               e.title = "[已禁用] " + e.title;
               e.disabled = true;
             }
@@ -79,13 +74,13 @@ export default {
     },
     loadData(item, callback) {
       loadDepartment(item.id).then(res => {
-        if (res.success === true) {
+        if (res.success == true) {
           res.result.forEach(function(e) {
             if (e.isParent) {
               e.loading = false;
               e.children = [];
             }
-            if (e.status === -1) {
+            if (e.status == -1) {
               e.title = "[已禁用] " + e.title;
               e.disabled = true;
             }
@@ -102,7 +97,7 @@ export default {
           this.depLoading = false;
           if (res.success) {
             res.result.forEach(function(e) {
-              if (e.status === -1) {
+              if (e.status == -1) {
                 e.title = "[已禁用] " + e.title;
                 e.disabled = true;
               }
@@ -135,7 +130,7 @@ export default {
       this.initDepartmentData();
       this.$emit("on-change", this.departmentId);
     },
-    setSelectDep(ids, title){
+    setData(ids, title){
       this.departmentId = ids;
       this.departmentTitle = title;
       this.$emit("on-change", this.departmentId);

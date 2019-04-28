@@ -1,15 +1,18 @@
 <template>
-  <div>
+  <div style="display: flex;">
     <Poptip trigger="hover" title="图片预览" placement="right" width="350">
       <Input
-        v-model="picUrl"
+        v-model="currentValue"
         @on-change="handleChange"
-        placeholder="可直接填入网络图片链接"
-        :style="{width: width}"
+        :placeholder="placeholder"
+        :size="size"
+        :disabled="disabled"
+        :readonly="readonly"
+        :maxlength="maxlength"
         clearable
       />
       <div slot="content">
-        <img :src="picUrl" alt="无效的图片链接" style="width: 100%;margin: 0 auto;display: block;">
+        <img :src="currentValue" alt="无效的图片链接" style="width: 100%;margin: 0 auto;display: block;">
         <a @click="viewImage=true" style="margin-top:5px;text-align:right;display:block">查看大图</a>
       </div>
     </Poptip>
@@ -28,11 +31,11 @@
       ref="up"
       class="upload"
     >
-      <Button :loading="loading" icon="ios-cloud-upload-outline">上传图片</Button>
+      <Button :loading="loading" :size="size" :disabled="disabled" :icon="icon">上传图片</Button>
     </Upload>
 
     <Modal title="图片预览" v-model="viewImage" :styles="{top: '30px'}" draggable>
-      <img :src="picUrl" alt="无效的图片链接" style="width: 100%;margin: 0 auto;display: block;">
+      <img :src="currentValue" alt="无效的图片链接" style="width: 100%;margin: 0 auto;display: block;">
       <div slot="footer">
         <Button @click="viewImage=false">关闭</Button>
       </div>
@@ -45,15 +48,30 @@ import { uploadFile } from "@/api/index";
 export default {
   name: "uploadPicInput",
   props: {
-    width: {
+    value: String,
+    size: String,
+    placeholder: {
       type: String,
-      default: "200px"
+      default: "可输入图片链接"
+    },
+    disabled: {
+      type: Boolean,
+      default: false
+    },
+    readonly: {
+      type: Boolean,
+      default: false
+    },
+    maxlength: Number,
+    icon: {
+      type: String,
+      default: "ios-cloud-upload-outline"
     }
   },
   data() {
     return {
       accessToken: {},
-      picUrl: "",
+      currentValue: this.value,
       loading: false,
       viewImage: false,
       uploadFileUrl: uploadFile
@@ -88,10 +106,11 @@ export default {
     },
     handleSuccess(res, file) {
       this.loading = false;
-      if (res.success === true) {
+      if (res.success == true) {
         file.url = res.result;
-        this.picUrl = res.result;
-        this.$emit("on-change", this.picUrl);
+        this.currentValue = res.result;
+        this.$emit("input", this.currentValue);
+        this.$emit("on-change", this.currentValue);
       } else {
         this.$Message.error(res.message);
       }
@@ -101,11 +120,20 @@ export default {
       this.$Message.error(error.toString());
     },
     handleChange(v) {
-      this.$emit("on-change", this.picUrl);
+      this.$emit("input", this.currentValue);
+      this.$emit("on-change", this.currentValue);
     },
-    setPicUrl(v) {
-      this.picUrl = v;
-      this.$emit("on-change", this.picUrl);
+    setCurrentValue(value) {
+      if (value == this.currentValue) {
+        return;
+      }
+      this.currentValue = value;
+      this.$emit("on-change", this.currentValue);
+    }
+  },
+  watch: {
+    value(val) {
+      this.setCurrentValue(val);
     }
   },
   created() {

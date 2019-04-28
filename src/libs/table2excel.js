@@ -26,7 +26,7 @@ function tranform (table, aId, name) {
         let len = tableBody.rows.length;
         let i = -1;
         while (i < len) {
-            if (i === -1) {
+            if (i == -1) {
                 Array.from(tableHead.rows[0].children).forEach((td) => {
                     tableInnerHTML = tableInnerHTML + '<th>' + td.children[0].children[0].innerHTML + '</th>';
                 });
@@ -47,7 +47,7 @@ function tranform (table, aId, name) {
         name += '.xls';
     }
 
-    if (getExplorer() === 'ie') {
+    if (getExplorer() == 'ie') {
         var curTbl = table;
         var oXL = new ActiveXObject('Excel.Application');
         var oWB = oXL.Workbooks.Add();

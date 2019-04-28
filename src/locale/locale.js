@@ -9,8 +9,7 @@ export default {
         logout: '退出登录',
         tagOption: '标签选项',
         closeAll: '关闭全部',
-        closeOthers: '关闭其他',
-        tip: '注：iview-admin只是为了示范如何实现多语言切换，所以只对当前页做了翻译。',
+        closeOthers: '关闭其他'
     },
     'en-US': {
         home: 'home',
@@ -22,7 +21,6 @@ export default {
         logout: 'Logout',
         tagOption: 'Tag Options',
         closeAll: 'Close All',
-        closeOthers: 'Close Others',
-        tip: 'Note: iview-admin just to demonstrate how to achieve multi-language switching, so only the current page to do the translation.',
+        closeOthers: 'Close Others'
     }
 };

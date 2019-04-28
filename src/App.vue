@@ -40,4 +40,21 @@ body {
 .ivu-btn-text:focus {
   box-shadow: none !important;
 }
+
+.ivu-poptip {
+  width: 100%;
+  display: block !important;
+}
+
+.ivu-poptip-rel {
+  display: block !important;
+}
+
+.ivu-tooltip {
+    display: block !important;
+}
+
+.ivu-tooltip-rel {
+    display: block !important;
+}
 </style>

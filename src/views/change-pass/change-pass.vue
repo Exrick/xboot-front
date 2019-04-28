@@ -153,7 +153,7 @@ export default {
           this.savePassLoading = true;
           changePass(params).then(res => {
             this.savePassLoading = false;
-            if (res.success === true) {
+            if (res.success == true) {
               this.$Modal.success({
                 title: "修改密码成功",
                 content: "修改密码成功，需重新登录",

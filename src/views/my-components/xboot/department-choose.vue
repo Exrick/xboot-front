@@ -9,7 +9,6 @@
       filterable
       clearable
       placeholder="请选择或输入搜索部门"
-      :style="{width: width}"
     ></Cascader>
   </div>
 </template>
@@ -19,10 +18,7 @@ import { initDepartment, loadDepartment } from "@/api/index";
 export default {
   name: "departmentChoose",
   props: {
-    width: {
-      type: String,
-      default: "200px"
-    }
+
   },
   data() {
     return {
@@ -33,7 +29,7 @@ export default {
   methods: {
     initDepartmentData() {
       initDepartment().then(res => {
-        if (res.success === true) {
+        if (res.success == true) {
           res.result.forEach(function(e) {
             if (e.isParent) {
               e.value = e.id;
@@ -44,7 +40,7 @@ export default {
               e.value = e.id;
               e.label = e.title;
             }
-            if (e.status === -1) {
+            if (e.status == -1) {
               e.label = "[已禁用] " + e.label;
               e.disabled = true;
             }
@@ -57,7 +53,7 @@ export default {
       item.loading = true;
       loadDepartment(item.value).then(res => {
         item.loading = false;
-        if (res.success === true) {
+        if (res.success == true) {
           res.result.forEach(function(e) {
             if (e.isParent) {
               e.value = e.id;
@@ -68,7 +64,7 @@ export default {
               e.value = e.id;
               e.label = e.title;
             }
-            if (e.status === -1) {
+            if (e.status == -1) {
               e.label = "[已禁用] " + e.label;
               e.disabled = true;
             }
@@ -84,7 +80,7 @@ export default {
       if (value && value.length > 0) {
         departmentId = value[value.length - 1];
       }
-      this.$emit("on-select", departmentId);
+      this.$emit("on-change", departmentId);
     },
     clearSelect() {
       this.selectDep = [];

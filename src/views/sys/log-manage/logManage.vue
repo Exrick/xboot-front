@@ -119,14 +119,14 @@ export default {
           ],
           filterMultiple: false,
           filterMethod(value, row) {
-            if (value === "GET") {
-              return row.requestType === "GET";
-            } else if (value === "POST") {
-              return row.requestType === "POST";
-            } else if (value === "PUT") {
-              return row.requestType === "PUT";
-            } else if (value === "DELETE") {
-              return row.requestType === "DELETE";
+            if (value == "GET") {
+              return row.requestType == "GET";
+            } else if (value == "POST") {
+              return row.requestType == "POST";
+            } else if (value == "PUT") {
+              return row.requestType == "PUT";
+            } else if (value == "DELETE") {
+              return row.requestType == "DELETE";
             }
           }
         },
@@ -177,9 +177,9 @@ export default {
           ],
           filterMultiple: false,
           filterMethod(value, row) {
-            if (value === 0) {
+            if (value == 0) {
               return row.costTime <= 1000;
-            } else if (value === 1) {
+            } else if (value == 1) {
               return row.costTime > 1000;
             }
           }
@@ -292,7 +292,7 @@ export default {
       this.searchForm.key = this.searchKey;
       getLogListData(this.searchForm).then(res => {
         this.loading = false;
-        if (res.success === true) {
+        if (res.success == true) {
           this.data = res.result.content;
           this.total = res.result.totalElements;
         }
@@ -313,7 +313,7 @@ export default {
           this.operationLoading = true;
           deleteLog(v.id).then(res => {
             this.operationLoading = false;
-            if (res.success === true) {
+            if (res.success == true) {
               this.$Message.success("删除成功");
               this.init();
             }
@@ -331,7 +331,7 @@ export default {
     changeSort(e) {
       this.searchForm.sort = e.key;
       this.searchForm.order = e.order;
-      if (e.order === "normal") {
+      if (e.order == "normal") {
         this.searchForm.order = "";
       }
       this.getLogList();
@@ -353,7 +353,7 @@ export default {
           this.operationLoading = true;
           deleteLog(ids).then(res => {
             this.operationLoading = false;
-            if (res.success === true) {
+            if (res.success == true) {
               this.$Message.success("删除成功");
               this.clearSelectAll();
               this.init();
@@ -375,7 +375,7 @@ export default {
           ids = ids.substring(0, ids.length - 1);
           deleteAllLog().then(res => {
             this.loading = false;
-            if (res.success === true) {
+            if (res.success == true) {
               this.$Message.success("清空日志成功");
               this.clearSelectAll();
               this.init();

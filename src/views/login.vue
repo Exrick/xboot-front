@@ -3,7 +3,7 @@
     <Col :xs="{span:22}" style="width: 368px;">
     <Row class="header">
       <img src="../assets/xboot.png" width="220px" />
-      <div class="description">X-Boot 是很不错的Web前后端分离架构开发平台</div>
+      <div class="description">XBoot是很不错的Web前后端分离架构开发平台</div>
     </Row>
   
     <Alert type="error" show-icon v-if="error">{{errorMsg}}</Alert>
@@ -176,7 +176,7 @@ export default {
     },
     countDown() {
       let that = this;
-      if (this.count === 0) {
+      if (this.count == 0) {
         this.sended = false;
         this.count = 60;
         return;
@@ -189,7 +189,7 @@ export default {
       }, 1000);
     },
     submitLogin() {
-      if (this.tabName === "username") {
+      if (this.tabName == "username") {
         this.$refs.usernameLoginForm.validate(valid => {
           if (valid) {
             this.loading = true;
@@ -198,11 +198,11 @@ export default {
               password: this.form.password,
               saveLogin: this.saveLogin
             }).then(res => {
-              if (res.success === true) {
+              if (res.success == true) {
                 this.setStore("accessToken", res.result);
                 // 获取用户信息
                 userInfo().then(res => {
-                  if (res.success === true) {
+                  if (res.success == true) {
                     // 避免超过大小限制
                     delete res.result.permissions;
                     let roles = [];
@@ -235,10 +235,10 @@ export default {
             });
           }
         });
-      } else if (this.tabName === "mobile") {
+      } else if (this.tabName == "mobile") {
         this.$refs.mobileLoginForm.validate(valid => {
           if (valid) {
-            if (this.form.code === "") {
+            if (this.form.code == "") {
               this.errorCode = "验证码不能为空";
               return;
             } else {

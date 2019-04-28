@@ -1,60 +1,66 @@
 <style lang="less">
-@import "./newWindow.less";
+@import "./singleWindow.less";
 </style>
 <template>
   <div class="search">
-    <Row>
-      <Col>
-        <Card>
-          <Row class="operation">
-            <Button @click="add" type="primary" icon="md-add">新窗口中添加</Button>
-            <Button @click="delAll" icon="md-trash">批量删除</Button>
-            <Button @click="getDataList" icon="md-refresh">刷新</Button>
-          </Row>
-          <Row>
-            <Alert show-icon>
-              已选择
-              <span class="select-count">{{selectCount}}</span> 项
-              <a class="select-clear" @click="clearSelectAll">清空</a>
-            </Alert>
-          </Row>
-          <Row>
-            <Table
-              :loading="loading"
-              border
-              :columns="columns"
-              :data="data"
-              ref="table"
-              sortable="custom"
-              @on-sort-change="changeSort"
-              @on-selection-change="changeSelect"
-            ></Table>
-          </Row>
-          <Row type="flex" justify="end" class="page">
-            <Page
-              :current="pageNumber"
-              :total="total"
-              :page-size="pageSize"
-              @on-change="changePage"
-              @on-page-size-change="changePageSize"
-              :page-size-opts="[10,20,50]"
-              size="small"
-              show-total
-              show-elevator
-              show-sizer
-            ></Page>
-          </Row>
-        </Card>
-      </Col>
-    </Row>
+    <add v-if="currView=='add'" @close="currView='index'" @submited="submited"/>
+    <edit v-if="currView=='edit'" @close="currView='index'" @submited="submited" :id="id"/>
+    <Card v-show="currView=='index'">
+      <Row class="operation">
+        <Button @click="add" type="primary" icon="md-add">动态组件添加</Button>
+        <Button @click="delAll" icon="md-trash">批量删除</Button>
+        <Button @click="getDataList" icon="md-refresh">刷新</Button>
+      </Row>
+      <Row>
+        <Alert show-icon>
+          已选择
+          <span class="select-count">{{selectCount}}</span> 项
+          <a class="select-clear" @click="clearSelectAll">清空</a>
+        </Alert>
+      </Row>
+      <Row>
+        <Table
+          :loading="loading"
+          border
+          :columns="columns"
+          :data="data"
+          ref="table"
+          sortable="custom"
+          @on-sort-change="changeSort"
+          @on-selection-change="changeSelect"
+        ></Table>
+      </Row>
+      <Row type="flex" justify="end" class="page">
+        <Page
+          :current="pageNumber"
+          :total="total"
+          :page-size="pageSize"
+          @on-change="changePage"
+          @on-page-size-change="changePageSize"
+          :page-size-opts="[10,20,50]"
+          size="small"
+          show-total
+          show-elevator
+          show-sizer
+        ></Page>
+      </Row>
+    </Card>
   </div>
 </template>
 
 <script>
+import add from "./add.vue";
+import edit from "./edit.vue";
 export default {
-  name: "new-window",
+  name: "single-window",
+  components: {
+    add,
+    edit
+  },
   data() {
     return {
+      id: "",
+      currView: "index",
       loading: true, // 表单加载状态
       sortColumn: "createTime", // 排序字段
       sortType: "desc", // 排序方式
@@ -112,7 +118,7 @@ export default {
                     }
                   }
                 },
-                "新窗口中编辑"
+                "动态组件编辑"
               ),
               h(
                 "Button",
@@ -142,6 +148,10 @@ export default {
   },
   methods: {
     init() {
+      this.getDataList();
+    },
+    submited() {
+      this.currView = "index";
       this.getDataList();
     },
     changePage(v) {
@@ -181,13 +191,13 @@ export default {
       this.data = [
         {
           id: "1",
-          name: "X-BOOT(新窗口提交自动关闭后可返回该页面)",
+          name: "XBoot",
           createTime: "2018-08-08 00:08:00",
           updateTime: "2018-08-08 00:08:00"
         },
         {
           id: "2",
-          name: "Exrick(新窗口提交自动关闭后可返回该页面)",
+          name: "Exrick",
           createTime: "2018-08-08 00:08:00",
           updateTime: "2018-08-08 00:08:00"
         }
@@ -199,22 +209,15 @@ export default {
       this.modalVisible = false;
     },
     add() {
-      // 记录返回路由
-      let query = { backRoute: this.$route.name };
-      this.$router.push({
-        // 该路由已在/router/router.js中定义好
-        name: "add",
-        query: query
-      });
+      this.currView = "add";
     },
     edit(v) {
-      // 记录返回路由
-      let query = { id: v.id, backRoute: this.$route.name };
-      this.$router.push({
-        // 该路由已在/router/router.js中定义好 携带id参数
-        name: "edit",
-        query: query
-      });
+      if (!v.id) {
+        this.$Message.error("id不能为空");
+        return;
+      }
+      this.currView = "edit";
+      this.id = v.id;
     },
     remove(v) {
       this.$Modal.confirm({

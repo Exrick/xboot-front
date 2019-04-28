@@ -1,58 +1,51 @@
-<style lang="less">
-@import "./newWindow.less";
-</style>
 <template>
-  <div class="search">
-    <Row>
-      <Col>
-        <Card>
-          <Row class="operation">
-            <Button @click="add" type="primary" icon="md-add">新窗口中添加</Button>
-            <Button @click="delAll" icon="md-trash">批量删除</Button>
-            <Button @click="getDataList" icon="md-refresh">刷新</Button>
-          </Row>
-          <Row>
-            <Alert show-icon>
-              已选择
-              <span class="select-count">{{selectCount}}</span> 项
-              <a class="select-clear" @click="clearSelectAll">清空</a>
-            </Alert>
-          </Row>
-          <Row>
-            <Table
-              :loading="loading"
-              border
-              :columns="columns"
-              :data="data"
-              ref="table"
-              sortable="custom"
-              @on-sort-change="changeSort"
-              @on-selection-change="changeSelect"
-            ></Table>
-          </Row>
-          <Row type="flex" justify="end" class="page">
-            <Page
-              :current="pageNumber"
-              :total="total"
-              :page-size="pageSize"
-              @on-change="changePage"
-              @on-page-size-change="changePageSize"
-              :page-size-opts="[10,20,50]"
-              size="small"
-              show-total
-              show-elevator
-              show-sizer
-            ></Page>
-          </Row>
-        </Card>
-      </Col>
-    </Row>
+  <div>
+    <Card>
+      <Row class="operation">
+        <Button @click="add" type="primary" icon="md-add">动态组件添加</Button>
+        <Button @click="delAll" icon="md-trash">批量删除</Button>
+        <Button @click="getDataList" icon="md-refresh">刷新</Button>
+      </Row>
+      <Row>
+        <Alert show-icon>
+          已选择
+          <span class="select-count">{{selectCount}}</span> 项
+          <a class="select-clear" @click="clearSelectAll">清空</a>
+        </Alert>
+      </Row>
+      <Row>
+        <Table
+          :loading="loading"
+          border
+          :columns="columns"
+          :data="data"
+          ref="table"
+          sortable="custom"
+          @on-sort-change="changeSort"
+          @on-selection-change="changeSelect"
+        ></Table>
+      </Row>
+      <Row type="flex" justify="end" class="page">
+        <Page
+          :current="pageNumber"
+          :total="total"
+          :page-size="pageSize"
+          @on-change="changePage"
+          @on-page-size-change="changePageSize"
+          :page-size-opts="[10,20,50]"
+          size="small"
+          show-total
+          show-elevator
+          show-sizer
+        ></Page>
+      </Row>
+    </Card>
   </div>
 </template>
 
 <script>
 export default {
-  name: "new-window",
+  name: "index",
   data() {
     return {
       loading: true, // 表单加载状态
@@ -181,13 +174,13 @@ export default {
       this.data = [
         {
           id: "1",
-          name: "X-BOOT(新窗口提交自动关闭后可返回该页面)",
+          name: "XBoot",
           createTime: "2018-08-08 00:08:00",
           updateTime: "2018-08-08 00:08:00"
         },
         {
           id: "2",
-          name: "Exrick(新窗口提交自动关闭后可返回该页面)",
+          name: "Exrick",
           createTime: "2018-08-08 00:08:00",
           updateTime: "2018-08-08 00:08:00"
         }

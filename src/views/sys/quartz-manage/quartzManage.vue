@@ -49,8 +49,8 @@
       </Col>
     </Row>
     <Modal draggable :title="modalTitle" v-model="modalVisible" :mask-closable="false" :width="500">
-      <Form ref="form" :model="form" :label-width="80" :rules="formValidate">
-        <FormItem label="任务类名" prop="jobClassName">
+      <Form ref="form" :model="form" :label-width="90" :rules="formValidate">
+        <FormItem label="任务类引用路径" prop="jobClassName">
           <Input
             v-model="form.jobClassName"
             placeholder="例如 cn.exrick.xboot.quartz.jobs.Job"
@@ -132,7 +132,7 @@ export default {
           align: "center"
         },
         {
-          title: "任务类名",
+          title: "任务类",
           key: "jobClassName",
           sortable: true,
           width: 200
@@ -162,30 +162,28 @@ export default {
           width: 140,
           render: (h, params) => {
             let re = "";
-            if (params.row.status === 0) {
+            if (params.row.status == 0) {
               return h("div", [
                 h(
-                  "Tag",
+                  "Badge",
                   {
                     props: {
-                      type: "dot",
-                      color: "success"
+                      status: "success",
+                      text: "执行中"
                     }
-                  },
-                  "执行中"
+                  }
                 )
               ]);
-            } else if (params.row.status === -1) {
+            } else if (params.row.status == -1) {
               return h("div", [
                 h(
-                  "Tag",
+                  "Badge",
                   {
                     props: {
-                      type: "dot",
-                      color: "error"
+                      status: "error",
+                      text: "已停止"
                     }
-                  },
-                  "已停止"
+                  }
                 )
               ]);
             }
@@ -202,10 +200,10 @@ export default {
           ],
           filterMultiple: false,
           filterMethod(value, row) {
-            if (value === 0) {
-              return row.status === 0;
-            } else if (value === -1) {
-              return row.status === -1;
+            if (value == 0) {
+              return row.status == 0;
+            } else if (value == -1) {
+              return row.status == -1;
             }
           }
         },
@@ -318,7 +316,7 @@ export default {
     changeSort(e) {
       this.sortColumn = e.key;
       this.sortType = e.order;
-      if (e.order === "normal") {
+      if (e.order == "normal") {
         this.sortType = "";
       }
       this.getQuartzList();
@@ -333,7 +331,7 @@ export default {
       };
       getQuartzListData(params).then(res => {
         this.loading = false;
-        if (res.success === true) {
+        if (res.success == true) {
           this.data = res.result.content;
           this.total = res.result.totalElements;
         }
@@ -345,12 +343,12 @@ export default {
     handleSubmit() {
       this.$refs.form.validate(valid => {
         if (valid) {
-          if (this.modalType === 0) {
+          if (this.modalType == 0) {
             // 添加
             this.submitLoading = true;
             addQuartz(this.form).then(res => {
               this.submitLoading = false;
-              if (res.success === true) {
+              if (res.success == true) {
                 this.$Message.success("操作成功");
                 this.getQuartzList();
                 this.modalVisible = false;
@@ -360,7 +358,7 @@ export default {
             this.submitLoading = true;
             editQuartz(this.form).then(res => {
               this.submitLoading = false;
-              if (res.success === true) {
+              if (res.success == true) {
                 this.$Message.success("操作成功");
                 this.getQuartzList();
                 this.modalVisible = false;
@@ -385,7 +383,7 @@ export default {
       this.modalTitle = "编辑任务";
       // 转换null为""
       for (let attr in v) {
-        if (v[attr] === null) {
+        if (v[attr] == null) {
           v[attr] = "";
         }
       }
@@ -402,7 +400,7 @@ export default {
           this.operationLoading = true;
           pauseQuartz(v).then(res => {
             this.operationLoading = false;
-            if (res.success === true) {
+            if (res.success == true) {
               this.$Message.success("操作成功");
               this.getQuartzList();
             }
@@ -418,7 +416,7 @@ export default {
           this.operationLoading = true;
           resumeQuartz(v).then(res => {
             this.operationLoading = false;
-            if (res.success === true) {
+            if (res.success == true) {
               this.$Message.success("操作成功");
               this.getQuartzList();
             }
@@ -434,7 +432,7 @@ export default {
           this.operationLoading = true;
           deleteQuartz(v.id).then(res => {
             this.operationLoading = false;
-            if (res.success === true) {
+            if (res.success == true) {
               this.$Message.success("操作成功");
               this.getQuartzList();
             }
@@ -466,7 +464,7 @@ export default {
           this.operationLoading = true;
           deleteQuartz(ids).then(res => {
             this.operationLoading = false;
-            if (res.success === true) {
+            if (res.success == true) {
               this.$Message.success("删除成功");
               this.clearSelectAll();
               this.getQuartzList();

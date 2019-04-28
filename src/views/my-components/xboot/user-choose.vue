@@ -1,7 +1,7 @@
 <template>
   <div>
-    <Button @click="userModalVisible=true" :icon="icon">{{buttonText}}</Button>
-    <span @click="clearSelectUser" class="clear">清空已选</span>
+    <Button @click="userModalVisible=true" :icon="icon">{{text}}</Button>
+    <span @click="clearSelectData" class="clear">清空已选</span>
     <Collapse simple class="collapse">
       <Panel name="1">
         已选择
@@ -36,14 +36,14 @@
           />
         </Form-item>
         <Form-item label="部门" prop="department">
-          <department-choose @on-select="handleSelectDep" ref="dep"></department-choose>
+          <department-choose @on-change="handleSelectDep" style="width: 200px" ref="dep"></department-choose>
         </Form-item>
         <Form-item style="margin-left:-35px;" class="br">
           <Button @click="handleSearchUser" type="primary" icon="ios-search">搜索</Button>
           <Button @click="handleResetUser">重置</Button>
         </Form-item>
       </Form>
-      <Table :loading="userLoading" border :columns="userColumns" :data="userData" ref="userTable"></Table>
+      <Table :loading="userLoading" border :columns="userColumns" :data="userData" :height="height" ref="userTable"></Table>
       <Row type="flex" justify="end" class="code-row-bg page" style="margin: 10px 0;">
         <Page
           :current="searchUserForm.pageNumber"
@@ -51,18 +51,17 @@
           :page-size="searchUserForm.pageSize"
           @on-change="changeUserPage"
           @on-page-size-change="changeUserPageSize"
-          :page-size-opts="[9,18,36]"
+          :page-size-opts="[10,20,50]"
           size="small"
           show-total
           show-elevator
           show-sizer
         ></Page>
       </Row>
-      <div class="drawer-footer">
+      <div class="my-drawer-footer">
         已选择
         <span class="select-count">{{selectUsers.length}}</span> 人
-        <Button @click="clearSelectUser" style="margin-left:10px">清空已选</Button>
-        <Button @click="setSelectAllUser" type="info" style="margin-left:10px">勾选全部</Button>
+        <Button @click="clearSelectData" style="margin-left:10px">清空已选</Button>
         <Button @click="userModalVisible=false" type="primary" style="margin-left:10px">关闭</Button>
       </div>
     </Drawer>
@@ -70,7 +69,7 @@
 </template>
 
 <script>
-import { getUserListData, getDictDataByType } from "@/api/index";
+import { getUserListData } from "@/api/index";
 import departmentChoose from "./department-choose";
 export default {
   name: "userChoose",
@@ -78,7 +77,7 @@ export default {
     departmentChoose
   },
   props: {
-    buttonText: {
+    text: {
       type: String,
       default: "选择用户"
     },
@@ -89,6 +88,7 @@ export default {
   },
   data() {
     return {
+      height: 500,
       userLoading: true,
       userModalVisible: false,
       selectUsers: [],
@@ -97,7 +97,7 @@ export default {
         type: "",
         status: "",
         pageNumber: 1, // 当前页数
-        pageSize: 9, // 页面大小
+        pageSize: 10, // 页面大小
         sort: "createTime", // 默认排序字段
         order: "desc" // 默认排序方式
       },
@@ -147,16 +147,7 @@ export default {
           title: "性别",
           key: "sex",
           width: 70,
-          align: "center",
-          render: (h, params) => {
-            let re = "";
-            this.dictSex.forEach(e => {
-              if (e.value == params.row.sex) {
-                re = e.title;
-              }
-            });
-            return h("div", re);
-          }
+          align: "center"
         },
         {
           title: "用户类型",
@@ -165,9 +156,9 @@ export default {
           width: 100,
           render: (h, params) => {
             let re = "";
-            if (params.row.type === 1) {
+            if (params.row.type == 1) {
               re = "管理员";
-            } else if (params.row.type === 0) {
+            } else if (params.row.type == 0) {
               re = "普通用户";
             }
             return h("div", re);
@@ -179,28 +170,28 @@ export default {
           align: "center",
           width: 120,
           render: (h, params) => {
-            if (params.row.status === 0) {
+            if (params.row.status == 0) {
               return h("div", [
                 h(
-                  "Tag",
+                  "Badge",
                   {
                     props: {
-                      color: "green"
+                      status: "success",
+                      text: "正常启用"
                     }
-                  },
-                  "正常启用"
+                  }
                 )
               ]);
-            } else if (params.row.status === -1) {
+            } else if (params.row.status == -1) {
               return h("div", [
                 h(
-                  "Tag",
+                  "Badge",
                   {
                     props: {
-                      color: "red"
+                      status: "error",
+                      text: "禁用"
                     }
-                  },
-                  "禁用"
+                  }
                 )
               ]);
             }
@@ -241,24 +232,10 @@ export default {
         }
       ],
       userData: [],
-      totalUser: 0,
-      dictMessageType: []
+      totalUser: 0
     };
   },
   methods: {
-    getDictDataType() {
-      getDictDataByType("message_type").then(res => {
-        if (res.success) {
-          this.dictMessageType = res.result;
-        }
-      });
-      // 获取性别字典数据
-      getDictDataByType("sex").then(res => {
-        if (res.success) {
-          this.dictSex = res.result;
-        }
-      });
-    },
     handleSelectDep(v) {
       this.searchUserForm.departmentId = v;
     },
@@ -274,7 +251,7 @@ export default {
       this.userLoading = true;
       getUserListData(this.searchUserForm).then(res => {
         this.userLoading = false;
-        if (res.success === true) {
+        if (res.success == true) {
           this.userData = res.result.content;
           this.totalUser = res.result.totalElements;
         }
@@ -294,21 +271,9 @@ export default {
       // 重新加载数据
       this.getUserDataList();
     },
-    setSelectUser(v) {
+    setData(v) {
       this.selectUsers = v;
-      // this.$emit("on-change", this.selectUsers);
-    },
-    setSelectAllUser() {
-      let data = [];
-      this.userData.forEach(e => {
-        let u = {
-          id: e.id,
-          username: e.username
-        };
-        data.push(u);
-      });
-      this.selectUsers = data;
-      this.$emit("on-change", data);
+      this.$emit("on-change", this.selectUsers);
     },
     chooseUser(v) {
       // 去重
@@ -330,7 +295,7 @@ export default {
         this.$Message.success(`添加用户 ${v.username} 成功`);
       }
     },
-    clearSelectUser() {
+    clearSelectData() {
       this.selectUsers = [];
       this.$emit("on-change", this.selectUsers);
     },
@@ -348,7 +313,8 @@ export default {
     }
   },
   created() {
-    this.getDictDataType();
+    // 计算高度
+    this.height = Number(document.documentElement.clientHeight - 230);
     this.getUserDataList();
   }
 };
@@ -366,7 +332,7 @@ export default {
   margin-top: 15px;
   width: 500px;
 }
-.drawer-footer {
+.my-drawer-footer {
   z-index: 10;
   width: 100%;
   position: absolute;

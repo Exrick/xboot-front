@@ -44,7 +44,7 @@
     </Modal>
     <!-- 菜单权限 -->
     <Modal :title="modalTitle" v-model="permModalVisible" :mask-closable='false' :width="500" :styles="{top: '30px'}" class="permModal">
-      <Tree ref="tree" :data="permData" multiple></Tree>
+      <Tree ref="tree" :data="permData" multiple show-checkbox :render="renderContent" :check-strictly="true"></Tree>
       <Spin size="large" v-if="treeLoading"></Spin>
       <div slot="footer">
         <Button type="text" @click="cancelPermEdit">取消</Button>
@@ -91,7 +91,7 @@ import {
   editRoleDep
 } from "@/api/index";
 import util from "@/libs/util.js";
-import circleLoading from "../../my-components/circle-loading.vue";
+import circleLoading from "@/views/my-components/circle-loading.vue";
 export default {
   name: "role-manage",
   components: {
@@ -307,6 +307,49 @@ export default {
       // 获取所有菜单权限树
       this.getPermList();
     },
+    renderContent(h, { root, node, data }) {
+      let icon = "";
+      if (data.level == 0) {
+        icon = "ios-navigate";
+      } else if (data.level == 1) {
+        icon = "md-list-box";
+      } else if (data.level == 2) {
+        icon = "md-list";
+      } else if (data.level == 3) {
+        icon = "md-radio-button-on";
+      } else {
+        icon = "md-radio-button-off";
+      }
+      return h(
+        "span",
+        {
+          style: {
+            display: "inline-block",
+            cursor: "pointer"
+          },
+          on: {
+            click: () => {
+              data.checked = !data.checked
+            }
+          }
+        },
+        [
+          h("span", [
+            h("Icon", {
+              props: {
+                type: icon,
+                size: "16"
+              },
+              style: {
+                "margin-right": "8px",
+                "margin-bottom": "3px"
+              }
+            }),
+            h("span", { class: "ivu-tree-title" }, data.title)
+          ])
+        ]
+      );
+    },
     changePage(v) {
       this.pageNumber = v;
       this.getRoleList();
@@ -319,7 +362,7 @@ export default {
     changeSort(e) {
       this.sortColumn = e.key;
       this.sortType = e.order;
-      if (e.order === "normal") {
+      if (e.order == "normal") {
         this.sortType = "";
       }
       this.getRoleList();
@@ -334,7 +377,7 @@ export default {
       };
       getRoleList(params).then(res => {
         this.loading = false;
-        if (res.success === true) {
+        if (res.success == true) {
           this.data = res.result.content;
           this.total = res.result.totalElements;
         }
@@ -344,7 +387,7 @@ export default {
       this.treeLoading = true;
       getAllPermissionList().then(res => {
         this.treeLoading = false;
-        if (res.success === true) {
+        if (res.success == true) {
           this.deleteDisableNode(res.result);
           this.permData = res.result;
         }
@@ -354,7 +397,7 @@ export default {
     deleteDisableNode(permData) {
       let that = this;
       permData.forEach(function(e) {
-        if (e.status === -1) {
+        if (e.status == -1) {
           e.title = "[已禁用] " + e.title;
           e.disabled = true;
         }
@@ -369,12 +412,12 @@ export default {
     submitRole() {
       this.$refs.roleForm.validate(valid => {
         if (valid) {
-          if (this.modalType === 0) {
+          if (this.modalType == 0) {
             // 添加
             this.submitLoading = true;
             addRole(this.roleForm).then(res => {
               this.submitLoading = false;
-              if (res.success === true) {
+              if (res.success == true) {
                 this.$Message.success("操作成功");
                 this.getRoleList();
                 this.roleModalVisible = false;
@@ -384,7 +427,7 @@ export default {
             this.submitLoading = true;
             editRole(this.roleForm).then(res => {
               this.submitLoading = false;
-              if (res.success === true) {
+              if (res.success == true) {
                 this.$Message.success("操作成功");
                 this.getRoleList();
                 this.roleModalVisible = false;
@@ -406,7 +449,7 @@ export default {
       this.modalTitle = "编辑角色";
       // 转换null为""
       for (let attr in v) {
-        if (v[attr] === null) {
+        if (v[attr] == null) {
           v[attr] = "";
         }
       }
@@ -423,7 +466,7 @@ export default {
           this.operationLoading = true;
           deleteRole(v.id).then(res => {
             this.operationLoading = false;
-            if (res.success === true) {
+            if (res.success == true) {
               this.$Message.success("删除成功");
               this.getRoleList();
             }
@@ -443,7 +486,7 @@ export default {
           this.operationLoading = true;
           setDefaultRole(params).then(res => {
             this.operationLoading = false;
-            if (res.success === true) {
+            if (res.success == true) {
               this.$Message.success("操作成功");
               this.getRoleList();
             }
@@ -463,7 +506,7 @@ export default {
           this.operationLoading = true;
           setDefaultRole(params).then(res => {
             this.operationLoading = false;
-            if (res.success === true) {
+            if (res.success == true) {
               this.$Message.success("操作成功");
               this.getRoleList();
             }
@@ -495,7 +538,7 @@ export default {
           this.operationLoading = true;
           deleteRole(ids).then(res => {
             this.operationLoading = false;
-            if (res.success === true) {
+            if (res.success == true) {
               this.$Message.success("删除成功");
               this.clearSelectAll();
               this.getRoleList();
@@ -506,7 +549,7 @@ export default {
     },
     editPerm(v) {
       this.editRolePermId = v.id;
-      this.modalTitle = "分配 " + v.name + " 的菜单权限(点击选择)";
+      this.modalTitle = "分配 " + v.name + " 的菜单权限";
       // 匹配勾选
       let rolePerms = v.permissions;
       // 递归判断子节点
@@ -518,9 +561,9 @@ export default {
       let that = this;
       permData.forEach(function(p) {
         if (that.hasPerm(p, rolePerms)&&p.status!=-1) {
-          p.selected = true;
+          p.checked = true;
         } else {
-          p.selected = false;
+          p.checked = false;
         }
         if (p.children && p.children.length > 0) {
           that.checkPermTree(p.children, rolePerms);
@@ -531,7 +574,7 @@ export default {
     hasPerm(p, rolePerms) {
       let flag = false;
       for (let i = 0; i < rolePerms.length; i++) {
-        if (p.id === rolePerms[i].permissionId) {
+        if (p.id == rolePerms[i].permissionId) {
           flag = true;
           break;
         }
@@ -551,7 +594,7 @@ export default {
     selectedTreeAll(permData, select) {
       let that = this;
       permData.forEach(function(e) {
-        e.selected = select;
+        e.checked = select;
         if (e.children && e.children.length > 0) {
           that.selectedTreeAll(e.children, select);
         }
@@ -560,7 +603,7 @@ export default {
     submitPermEdit() {
       this.submitPermLoading = true;
       let permIds = "";
-      let selectedNodes = this.$refs.tree.getSelectedNodes();
+      let selectedNodes = this.$refs.tree.getCheckedNodes();
       selectedNodes.forEach(function(e) {
         permIds += e.id + ",";
       });
@@ -570,7 +613,7 @@ export default {
         permIds: permIds
       }).then(res => {
         this.submitPermLoading = false;
-        if (res.success === true) {
+        if (res.success == true) {
           this.$Message.success("操作成功");
           util.initRouter(this);
           this.getRoleList();
@@ -583,14 +626,14 @@ export default {
     },
     loadData(item, callback) {
       loadDepartment(item.id, { openDataFilter: false }).then(res => {
-        if (res.success === true) {
+        if (res.success == true) {
           res.result.forEach(function(e) {
             e.selected = false;
             if (e.isParent) {
               e.loading = false;
               e.children = [];
             }
-            if (e.status === -1) {
+            if (e.status == -1) {
               e.title = "[已禁用] " + e.title;
               e.disabled = true;
             }
@@ -612,14 +655,14 @@ export default {
       this.depTreeLoading = true;
       initDepartment({ openDataFilter: false }).then(res => {
         this.depTreeLoading = false;
-        if (res.success === true) {
+        if (res.success == true) {
           res.result.forEach(function(e) {
             e.selected = false;
             if (e.isParent) {
               e.loading = false;
               e.children = [];
             }
-            if (e.status === -1) {
+            if (e.status == -1) {
               e.title = "[已禁用] " + e.title;
               e.disabled = true;
             }
@@ -650,7 +693,7 @@ export default {
     hasDepPerm(p, roleDepIds) {
       let flag = false;
       for (let i = 0; i < roleDepIds.length; i++) {
-        if (p.id === roleDepIds[i].departmentId) {
+        if (p.id == roleDepIds[i].departmentId) {
           flag = true;
           break;
         }
@@ -680,7 +723,7 @@ export default {
         depIds: depIds
       }).then(res => {
         this.submitDepLoading = false;
-        if (res.success === true) {
+        if (res.success == true) {
           this.$Message.success("操作成功");
           this.getRoleList();
           this.depModalVisible = false;

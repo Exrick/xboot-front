@@ -51,7 +51,7 @@ export default {
         if (valid) {
           // this.postRequest("请求路径", this.form).then(res => {
           //   this.submitLoading = false;
-          //   if (res.success === true) {
+          //   if (res.success == true) {
           //     this.$Message.success("添加成功");
           //     this.closeCurrentPage();
           //   }
@@ -76,7 +76,7 @@ export default {
   },
   watch: {
     $route(to, from) {
-      if (to.name === "add") {
+      if (to.name == "add") {
         this.handleReset();
       }
     }

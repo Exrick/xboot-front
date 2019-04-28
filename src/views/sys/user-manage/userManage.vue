@@ -18,7 +18,7 @@
                 />
               </Form-item>
               <Form-item label="部门" prop="department">
-                <department-choose @on-select="handleSelectDep" ref="dep"></department-choose>
+                <department-choose @on-change="handleSelectDep" style="width: 200px" ref="dep"></department-choose>
               </Form-item>
               <span v-if="drop">
                 <Form-item label="手机号" prop="mobile">
@@ -157,7 +157,7 @@
         <FormItem label="用户名" prop="username">
           <Input v-model="userForm.username" autocomplete="off"/>
         </FormItem>
-        <FormItem label="密码" prop="password" v-if="modalType===0" :error="errorPass">
+        <FormItem label="密码" prop="password" v-if="modalType==0" :error="errorPass">
           <Input type="password" v-model="userForm.password" autocomplete="off"/>
         </FormItem>
         <FormItem label="邮箱" prop="email">
@@ -168,14 +168,14 @@
         </FormItem>
         <FormItem label="性别" prop="sex">
           <RadioGroup v-model="userForm.sex">
-            <Radio v-for="(item, i) in dictSex" :key="i" :label="Number(item.value)">{{item.title}}</Radio>
+            <Radio v-for="(item, i) in dictSex" :key="i" :label="item.value">{{item.title}}</Radio>
           </RadioGroup>
         </FormItem>
         <Form-item label="头像" prop="avatar">
-          <upload-pic-input @on-change="handleUpload" width="285px" ref="upload"></upload-pic-input>
+          <upload-pic-input v-model="userForm.avatar"></upload-pic-input>
         </Form-item>
         <Form-item label="所属部门">
-          <department-tree-choose width="285px" @on-change="handleSelectDepTree" ref="depTree"></department-tree-choose>
+          <department-tree-choose @on-change="handleSelectDepTree" ref="depTree"></department-tree-choose>
         </Form-item>
         <FormItem label="用户类型" prop="type">
           <Select v-model="userForm.type" placeholder="请选择">
@@ -214,8 +214,7 @@ import {
   enableUser,
   disableUser,
   deleteUser,
-  getAllUserData,
-  getDictDataByType
+  getAllUserData
 } from "@/api/index";
 import expandRow from "./expand.vue";
 import departmentChoose from "../../my-components/xboot/department-choose";
@@ -372,16 +371,7 @@ export default {
           title: "性别",
           key: "sex",
           width: 70,
-          align: "center",
-          render: (h, params) => {
-            let re = "";
-            this.dictSex.forEach(e => {
-              if (e.value == params.row.sex) {
-                re = e.title;
-              }
-            });
-            return h("div", re);
-          }
+          align: "center"
         },
         {
           title: "用户类型",
@@ -390,9 +380,9 @@ export default {
           width: 100,
           render: (h, params) => {
             let re = "";
-            if (params.row.type === 1) {
+            if (params.row.type == 1) {
               re = "管理员";
-            } else if (params.row.type === 0) {
+            } else if (params.row.type == 0) {
               re = "普通用户";
             }
             return h("div", re);
@@ -404,31 +394,28 @@ export default {
           align: "center",
           width: 140,
           render: (h, params) => {
-            let re = "";
-            if (params.row.status === 0) {
+            if (params.row.status == 0) {
               return h("div", [
                 h(
-                  "Tag",
+                  "Badge",
                   {
                     props: {
-                      type: "dot",
-                      color: "success"
+                      status: "success",
+                      text: "正常启用"
                     }
-                  },
-                  "正常启用"
+                  }
                 )
               ]);
-            } else if (params.row.status === -1) {
+            } else if (params.row.status == -1) {
               return h("div", [
                 h(
-                  "Tag",
+                  "Badge",
                   {
                     props: {
-                      type: "dot",
-                      color: "error"
+                      status: "error",
+                      text: "禁用"
                     }
-                  },
-                  "禁用"
+                  }
                 )
               ]);
             }
@@ -445,10 +432,10 @@ export default {
           ],
           filterMultiple: false,
           filterMethod(value, row) {
-            if (value === 0) {
-              return row.status === 0;
-            } else if (value === -1) {
-              return row.status === -1;
+            if (value == 0) {
+              return row.status == 0;
+            } else if (value == -1) {
+              return row.status == -1;
             }
           }
         },
@@ -597,21 +584,12 @@ export default {
       data: [],
       exportData: [],
       total: 0,
-      dictSex: []
+      dictSex: this.$store.state.dict.sex
     };
   },
   methods: {
     init() {
       this.getUserList();
-      this.getDictSexData();
-    },
-    getDictSexData() {
-      // 获取性别字典数据
-      getDictDataByType("sex").then(res => {
-        if (res.success) {
-          this.dictSex = res.result;
-        }
-      });
     },
     handleSelectDepTree(v) {
       this.userForm.departmentId = v[0];
@@ -646,7 +624,7 @@ export default {
       }
       getUserListData(this.searchForm).then(res => {
         this.loading = false;
-        if (res.success === true) {
+        if (res.success == true) {
           this.data = res.result.content;
           this.total = res.result.totalElements;
         }
@@ -672,22 +650,22 @@ export default {
     changeSort(e) {
       this.searchForm.sort = e.key;
       this.searchForm.order = e.order;
-      if (e.order === "normal") {
+      if (e.order == "normal") {
         this.searchForm.order = "";
       }
       this.getUserList();
     },
     getRoleList() {
       getAllRoleList().then(res => {
-        if (res.success === true) {
+        if (res.success == true) {
           this.roleList = res.result;
         }
       });
     },
     handleDropdown(name) {
-      if (name === "refresh") {
+      if (name == "refresh") {
         this.getUserList();
-      } else if (name === "exportData") {
+      } else if (name == "exportData") {
         if (this.selectCount <= 0) {
           this.$Message.warning("您还未选择要导出的数据");
           return;
@@ -701,9 +679,9 @@ export default {
             });
           }
         });
-      } else if (name === "exportAll") {
+      } else if (name == "exportAll") {
         this.modalExportAll = true;
-      } else if (name === "importData") {
+      } else if (name == "importData") {
         this.$Modal.info({
           title: "请获取完整版",
           content: "支付链接: http://xpay.exrick.cn/pay?xboot"
@@ -729,7 +707,7 @@ export default {
     submitUser() {
       this.$refs.userForm.validate(valid => {
         if (valid) {
-          if (this.modalType === 0) {
+          if (this.modalType == 0) {
             // 添加用户 避免编辑后传入id
             delete this.userForm.id;
             delete this.userForm.status;
@@ -747,7 +725,7 @@ export default {
             this.submitLoading = true;
             addUser(this.userForm).then(res => {
               this.submitLoading = false;
-              if (res.success === true) {
+              if (res.success == true) {
                 this.$Message.success("操作成功");
                 this.getUserList();
                 this.userModalVisible = false;
@@ -758,7 +736,7 @@ export default {
             this.submitLoading = true;
             editUser(this.userForm).then(res => {
               this.submitLoading = false;
-              if (res.success === true) {
+              if (res.success == true) {
                 this.$Message.success("操作成功");
                 this.getUserList();
                 this.userModalVisible = false;
@@ -767,9 +745,6 @@ export default {
           }
         }
       });
-    },
-    handleUpload(v) {
-      this.userForm.avatar = v;
     },
     add() {
       this.modalType = 0;
@@ -783,15 +758,14 @@ export default {
       this.$refs.userForm.resetFields();
       // 转换null为""
       for (let attr in v) {
-        if (v[attr] === null) {
+        if (v[attr] == null) {
           v[attr] = "";
         }
       }
       let str = JSON.stringify(v);
       let data = JSON.parse(str);
       this.userForm = data;
-      this.$refs.depTree.setSelectDep([data.departmentId], data.departmentTitle);
-      this.$refs.upload.setPicUrl(data.avatar);
+      this.$refs.depTree.setData([data.departmentId], data.departmentTitle);
       let selectRolesId = [];
       this.userForm.roles.forEach(function(e) {
         selectRolesId.push(e.id);
@@ -807,7 +781,7 @@ export default {
           this.operationLoading = true;
           enableUser(v.id).then(res => {
             this.operationLoading = false;
-            if (res.success === true) {
+            if (res.success == true) {
               this.$Message.success("操作成功");
               this.getUserList();
             }
@@ -823,7 +797,7 @@ export default {
           this.operationLoading = true;
           disableUser(v.id).then(res => {
             this.operationLoading = false;
-            if (res.success === true) {
+            if (res.success == true) {
               this.$Message.success("操作成功");
               this.getUserList();
             }
@@ -839,7 +813,7 @@ export default {
           this.operationLoading = true;
           deleteUser(v.id).then(res => {
             this.operationLoading = false;
-            if (res.success === true) {
+            if (res.success == true) {
               this.$Message.success("删除成功");
               this.getUserList();
             }
@@ -882,7 +856,7 @@ export default {
           this.operationLoading = true;
           deleteUser(ids).then(res => {
             this.operationLoading = false;
-            if (res.success === true) {
+            if (res.success == true) {
               this.$Message.success("删除成功");
               this.clearSelectAll();
               this.getUserList();

@@ -3,7 +3,7 @@
     <Col :xs="{span:22}" style="width: 368px;">
     <Row class="header">
       <img src="../assets/xboot.png" width="220px" />
-      <div class="description">X-Boot 是很不错的Web前后端分离架构开发平台</div>
+      <div class="description">XBoot是很不错的Web前后端分离架构开发平台</div>
     </Row>
   
     <Alert type="error" show-icon v-if="error">{{errorMsg}}</Alert>
@@ -238,7 +238,7 @@ export default {
     },
     countDown() {
       let that = this;
-      if (this.count === 0) {
+      if (this.count == 0) {
         this.sended = false;
         this.count = 60;
         return;
@@ -253,7 +253,7 @@ export default {
     submitRegist() {
       this.$refs.registForm.validate(valid => {
         if (valid) {
-          if (this.form.verifyCode === "") {
+          if (this.form.verifyCode == "") {
             this.errorCode = "验证码不能为空";
             return;
           } else {
@@ -264,7 +264,7 @@ export default {
           this.form.passStrength = this.strength;
           regist(this.form).then(res => {
             this.loading = false;
-            if (res.success === true) {
+            if (res.success == true) {
               let query = {
                 username: this.form.username
               };
@@ -282,7 +282,7 @@ export default {
     getVerifyCode() {
       this.loadingCode = true;
       initCaptcha().then(res => {
-        if (res.success === true) {
+        if (res.success == true) {
           this.captchaId = res.result.captchaId;
           this.verifyCodeImg = drawCodeImage + this.captchaId;
           this.loadingCode = false;

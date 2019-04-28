@@ -15,7 +15,7 @@
                   >
                       <FormItem label="用户头像：">
                           <div class="upload-list" v-for="item in uploadList" :key="item.url">
-                            <template v-if="item.status === 'finished'">
+                            <template v-if="item.status == 'finished'">
                                 <img :src="item.url">
                                 <div class="upload-list-cover">
                                     <Icon type="ios-eye-outline" @click.native="handleView(item.url)"></Icon>
@@ -243,7 +243,7 @@ export default {
       let v = JSON.parse(Cookies.get("userInfo"));
       // 转换null为""
       for (let attr in v) {
-        if (v[attr] === null) {
+        if (v[attr] == null) {
           v[attr] = "";
         }
       }
@@ -260,9 +260,9 @@ export default {
         this.userForm.address = userInfo.address;
         this.userForm.addressArray = JSON.parse(userInfo.address);
       }
-      if (this.userForm.type === 0) {
+      if (this.userForm.type == 0) {
         this.userForm.typeTxt = "普通用户";
-      } else if (this.userForm.type === 1) {
+      } else if (this.userForm.type == 1) {
         this.userForm.typeTxt = "管理员";
       }
     },
@@ -283,7 +283,7 @@ export default {
       this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
     },
     handleSuccess(res, file) {
-      if (res.success === true) {
+      if (res.success == true) {
         file.url = res.result;
         this.userForm.avatar = res.result;
         this.defaultList[0].url = res.result;
@@ -369,7 +369,7 @@ export default {
       delete params.description;
       userInfoEdit(params).then(res => {
         this.saveLoading = false;
-        if (res.success === true) {
+        if (res.success == true) {
           this.$Message.success("保存成功");
           // 更新用户信息
           Cookies.set("userInfo", this.userForm);
@@ -393,7 +393,7 @@ export default {
       this.checkIdentifyCodeLoading = true;
       this.$refs["mobileEditForm"].validate(valid => {
         if (valid) {
-          if (this.mobileEditForm.code.length === 0) {
+          if (this.mobileEditForm.code.length == 0) {
             this.codeError = "请填写短信验证码";
             this.checkIdentifyCodeLoading = false;
             return;
@@ -406,7 +406,7 @@ export default {
       });
     },
     hasChangePhone() {
-      if (this.mobileEditForm.mobile === this.initPhone) {
+      if (this.mobileEditForm.mobile == this.initPhone) {
         this.canGetIdentifyCode = true;
       } else {
         this.$refs["mobileEditForm"].validate(valid => {
@@ -419,7 +419,7 @@ export default {
       }
     },
     hasChangeEmail() {
-      if (this.emailEditForm.email === this.initEmail) {
+      if (this.emailEditForm.email == this.initEmail) {
         this.canSendEditEmail = true;
       } else {
         this.canSendEditEmail = false;

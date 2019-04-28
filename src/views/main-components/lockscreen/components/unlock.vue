@@ -64,7 +64,7 @@ export default {
       this.$refs.inputEle.focus();
     },
     handleUnlock() {
-      if (this.password === "") {
+      if (this.password == "") {
         this.$Message.error("请输入密码");
         return;
       }
@@ -72,7 +72,7 @@ export default {
       let flag = false;
       unlock({ password: this.password }).then(
         res => {
-          if (res.success === true) {
+          if (res.success == true) {
             this.unlock();
           }
         }

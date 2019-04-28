@@ -18,7 +18,7 @@
         </div>
         <div ref="scrollBody" class="tags-inner-scroll-body" :style="{left: tagBodyLeft + 'px'}">
             <transition-group name="taglist-moving-animation">
-                <Tag type="dot" v-for="(item, index) in pageTagsList" ref="tagsPageOpened" :key="item.name" :name="item.name" @on-close="closePage" @click.native="linkTo(item)" :closable="item.name==='home_index'?false:true" :color="item.children?(item.children[0].name===currentPageName?'primary':'default'):(item.name===currentPageName?'primary':'default')">{{ itemTitle(item) }}</Tag>
+                <Tag type="dot" v-for="(item, index) in pageTagsList" ref="tagsPageOpened" :key="item.name" :name="item.name" @on-close="closePage" @click.native="linkTo(item)" :closable="item.name=='home_index'?false:true" :color="item.children?(item.children[0].name==currentPageName?'primary':'default'):(item.name==currentPageName?'primary':'default')">{{ itemTitle(item) }}</Tag>
             </transition-group>
         </div>
     </div>
@@ -57,7 +57,7 @@ export default {
   },
   methods: {
     itemTitle(item) {
-      if (typeof item.title === "object") {
+      if (typeof item.title == "object") {
         return this.$t(item.title.i18n);
       } else {
         return item.title;
@@ -66,10 +66,10 @@ export default {
     closePage(event, name) {
       let pageOpenedList = this.$store.state.app.pageOpenedList;
       let lastPageObj = pageOpenedList[0];
-      if (this.currentPageName === name) {
+      if (this.currentPageName == name) {
         let len = pageOpenedList.length;
         for (let i = 1; i < len; i++) {
-          if (pageOpenedList[i].name === name) {
+          if (pageOpenedList[i].name == name) {
             if (i < len - 1) {
               lastPageObj = pageOpenedList[i + 1];
             } else {
@@ -86,7 +86,7 @@ export default {
       this.$store.commit("closePage", name);
       pageOpenedList = this.$store.state.app.pageOpenedList;
       localStorage.pageOpenedList = JSON.stringify(pageOpenedList);
-      if (this.currentPageName === name) {
+      if (this.currentPageName == name) {
         this.linkTo(lastPageObj);
       }
     },
@@ -106,7 +106,7 @@ export default {
     handlescroll(e) {
       var type = e.type;
       let delta = 0;
-      if (type === "DOMMouseScroll" || type === "mousewheel") {
+      if (type == "DOMMouseScroll" || type == "mousewheel") {
         delta = e.wheelDelta ? e.wheelDelta : -(e.detail || 0) * 40;
       }
       let left = 0;
@@ -141,7 +141,7 @@ export default {
       this.tagBodyLeft = left;
     },
     handleTagsOption(type) {
-      if (type === "clearAll") {
+      if (type == "clearAll") {
         this.$store.commit("clearAllTags");
         this.$router.push({
           name: "home_index"
@@ -183,7 +183,7 @@ export default {
     this.refsTag = this.$refs.tagsPageOpened;
     setTimeout(() => {
       this.refsTag.forEach((item, index) => {
-        if (this.$route.name === item.name) {
+        if (this.$route.name == item.name) {
           let tag = this.refsTag[index].$el;
           this.moveToView(tag);
         }
@@ -196,7 +196,7 @@ export default {
       this.currentPageName = to.name;
       this.$nextTick(() => {
         this.refsTag.forEach((item, index) => {
-          if (to.name === item.name) {
+          if (to.name == item.name) {
             let tag = this.refsTag[index].$el;
             this.moveToView(tag);
           }

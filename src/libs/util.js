@@ -9,7 +9,7 @@ let util = {
 };
 
 util.title = function (title) {
-    title = title || 'X-Boot 前后端分离开发平台';
+    title = title || 'XBoot前后端分离开发平台';
     window.document.title = title;
 };
 
@@ -38,7 +38,7 @@ util.getRouterObjByName = function (routers, name) {
     // debugger;
     let routerObj = null;
     for (let item of routers) {
-        if (item.name === name) {
+        if (item.name == name) {
             return item;
         }
         routerObj = util.getRouterObjByName(item.children, name);
@@ -50,7 +50,7 @@ util.getRouterObjByName = function (routers, name) {
 };
 
 util.handleTitle = function (vm, item) {
-    if (typeof item.title === 'object') {
+    if (typeof item.title == 'object') {
         return vm.$t(item.title.i18n);
     } else {
         return item.title;
@@ -61,18 +61,18 @@ util.setCurrentPath = function (vm, name) {
     let title = '';
     let isOtherRouter = false;
     vm.$store.state.app.routers.forEach(item => {
-        if (item.children.length === 1) {
-            if (item.children[0].name === name) {
+        if (item.children.length == 1) {
+            if (item.children[0].name == name) {
                 title = util.handleTitle(vm, item);
-                if (item.name === 'otherRouter') {
+                if (item.name == 'otherRouter') {
                     isOtherRouter = true;
                 }
             }
         } else {
             item.children.forEach(child => {
-                if (child.name === name) {
+                if (child.name == name) {
                     title = util.handleTitle(vm, child);
-                    if (item.name === 'otherRouter') {
+                    if (item.name == 'otherRouter') {
                         isOtherRouter = true;
                     }
                 }
@@ -80,7 +80,7 @@ util.setCurrentPath = function (vm, name) {
         }
     });
     let currentPathArr = [];
-    if (name === 'home_index') {
+    if (name == 'home_index') {
         currentPathArr = [
             {
                 title: util.handleTitle(vm, util.getRouterObjByName(vm.$store.state.app.routers, 'home_index')),
@@ -104,13 +104,13 @@ util.setCurrentPath = function (vm, name) {
     } else {
         let currentPathObj = vm.$store.state.app.routers.filter(item => {
             if (item.children.length <= 1) {
-                return item.children[0].name === name;
+                return item.children[0].name == name;
             } else {
                 let i = 0;
                 let childArr = item.children;
                 let len = childArr.length;
                 while (i < len) {
-                    if (childArr[i].name === name) {
+                    if (childArr[i].name == name) {
                         return true;
                     }
                     i++;
@@ -118,7 +118,7 @@ util.setCurrentPath = function (vm, name) {
                 return false;
             }
         })[0];
-        if (currentPathObj.children.length <= 1 && currentPathObj.name === 'home') {
+        if (currentPathObj.children.length <= 1 && currentPathObj.name == 'home') {
             currentPathArr = [
                 {
                     title: '首页',
@@ -141,7 +141,7 @@ util.setCurrentPath = function (vm, name) {
             ];
         } else {
             let childObj = currentPathObj.children.filter((child) => {
-                return child.name === name;
+                return child.name == name;
             })[0];
             currentPathArr = [
                 {
@@ -173,7 +173,7 @@ util.openNewPage = function (vm, name, argu, query) {
     let i = 0;
     let tagHasOpened = false;
     while (i < openedPageLen) {
-        if (name === pageOpenedList[i].name) { // 页面已经打开
+        if (name == pageOpenedList[i].name) { // 页面已经打开
             vm.$store.commit('pageOpenedList', {
                 index: i,
                 argu: argu,
@@ -187,9 +187,9 @@ util.openNewPage = function (vm, name, argu, query) {
     if (!tagHasOpened) {
         let tag = vm.$store.state.app.tagsList.filter((item) => {
             if (item.children) {
-                return name === item.children[0].name;
+                return name == item.children[0].name;
             } else {
-                return name === item.name;
+                return name == item.name;
             }
         });
         tag = tag[0];
@@ -212,7 +212,7 @@ util.toDefaultPage = function (routers, name, route, next) {
     let i = 0;
     let notHandle = true;
     while (i < len) {
-        if (routers[i].name === name && routers[i].children && routers[i].redirect === undefined) {
+        if (routers[i].name == name && routers[i].children && routers[i].redirect == undefined) {
             route.replace({
                 name: routers[i].children[0].name
             });
@@ -235,7 +235,7 @@ util.initRouter = function (vm) {
     const constRoutes = [];
     const otherRoutes = [];
 
-    // 404路由需要和动态路由一起注入
+    // 404路由需要和动态路由一起加载
     const otherRouter = [{
         path: '/*',
         name: 'error-404',
@@ -244,43 +244,119 @@ util.initRouter = function (vm) {
         },
         component: 'error-page/404'
     }];
-
     // 判断用户是否登录
     let userInfo = Cookies.get('userInfo')
-    if (userInfo === null || userInfo === "" || userInfo === undefined) {
+    if (!userInfo) {
         // 未登录
         return;
     }
-    let accessToken = window.localStorage.getItem('accessToken')
-    // 加载菜单
-    axios.get(getMenuList, {headers: {'accessToken': accessToken}}).then(res => {
-        let menuData = res.result;
-        if (menuData === null || menuData === "" || menuData === undefined) {
+    if (!vm.$store.state.app.added) {
+        // 第一次加载 读取数据
+        let accessToken = window.localStorage.getItem('accessToken');
+        // 加载菜单
+        axios.get(getMenuList, { headers: { 'accessToken': accessToken } }).then(res => {
+            let menuData = res.result;
+            if (!menuData) {
+                return;
+            }
+            util.initAllMenuData(constRoutes, menuData);
+            util.initRouterNode(otherRoutes, otherRouter);
+            // 添加所有主界面路由
+            vm.$store.commit('updateAppRouter', constRoutes.filter(item => item.children.length > 0));
+            // 添加全局路由
+            vm.$store.commit('updateDefaultRouter', otherRoutes);
+            // 添加菜单路由
+            util.initMenuData(vm, menuData);
+            // 缓存数据 修改加载标识
+            window.localStorage.setItem('menuData', JSON.stringify(menuData));
+            vm.$store.commit('setAdded', true);
+        });
+    } else {
+        // 读取缓存数据
+        let data = window.localStorage.getItem('menuData');
+        if(!data){
+            vm.$store.commit('setAdded', false);
             return;
         }
-        util.initRouterNode(constRoutes, menuData);
-        util.initRouterNode(otherRoutes, otherRouter);
-        // 添加主界面路由
-        vm.$store.commit('updateAppRouter', constRoutes.filter(item => item.children.length > 0));
-        // 添加全局路由
-        vm.$store.commit('updateDefaultRouter', otherRoutes);
-        // 刷新界面菜单
-        vm.$store.commit('updateMenulist', constRoutes.filter(item => item.children.length > 0));
+        let menuData = JSON.parse(data);
+        // 添加菜单路由
+        util.initMenuData(vm, menuData);
+    }
+};
 
-        let tagsList = [];
-        vm.$store.state.app.routers.map((item) => {
-            if (item.children.length <= 1) {
-                tagsList.push(item.children[0]);
-            } else {
-                tagsList.push(...item.children);
+// 添加所有顶部导航栏下的菜单路由
+util.initAllMenuData = function (constRoutes, data) {
+
+    let allMenuData = [];
+    data.forEach(e => {
+        if(e.type==-1){
+            e.children.forEach(item=>{
+                allMenuData.push(item);
+            })
+        }
+    })
+    util.initRouterNode(constRoutes, allMenuData);
+}
+
+// 生成菜单格式数据
+util.initMenuData = function (vm, data) {
+    const menuRoutes = [];
+    let menuData = data;
+    // 顶部菜单
+    let navList = [];
+    menuData.forEach(e => {
+        let nav = {
+            name: e.name,
+            title: e.title,
+            icon: e.icon
+        }
+        navList.push(nav);
+    })
+    if (navList.length < 1) {
+        return;
+    }
+    // 存入vuex
+    vm.$store.commit('setNavList', navList);
+    let currNav = window.localStorage.getItem('currNav')
+    if (currNav) {
+        // 读取缓存title
+        for (var item of navList) {
+            if (item.name == currNav) {
+                vm.$store.commit('setCurrNavTitle', item.title);
+                break;
             }
-        });
-        vm.$store.commit('setTagsList', tagsList);
+        }
+    } else {
+        // 默认第一个
+        currNav = navList[0].name;
+        vm.$store.commit('setCurrNavTitle', navList[0].title);
+    }
+    vm.$store.commit('setCurrNav', currNav);
+    for (var item of menuData) {
+        if (item.name == currNav) {
+            // 过滤
+            menuData = item.children;
+            break;
+        }
+    }
+    util.initRouterNode(menuRoutes, menuData);
+    // 刷新界面菜单
+    vm.$store.commit('updateMenulist', menuRoutes.filter(item => item.children.length > 0));
+
+    let tagsList = [];
+    vm.$store.state.app.routers.map((item) => {
+        if (item.children.length <= 1) {
+            tagsList.push(item.children[0]);
+        } else {
+            tagsList.push(...item.children);
+        }
     });
+    vm.$store.commit('setTagsList', tagsList);
 };
 
 // 生成路由节点
 util.initRouterNode = function (routers, data) {
+
     for (var item of data) {
         let menu = Object.assign({}, item);
         // menu.component = import(`@/views/${menu.component}.vue`);
@@ -294,7 +370,7 @@ util.initRouterNode = function (routers, data) {
         let meta = {};
         // 给页面添加权限、标题、第三方网页链接
         meta.permTypes = menu.permTypes ? menu.permTypes : null;
-        meta.title = menu.title ? menu.title + " - X-Boot前后端分离开发平台 By: Exrick" : null;
+        meta.title = menu.title ? menu.title + " - XBoot前后端分离开发平台 By: Exrick" : null;
         meta.url = menu.url ? menu.url : null;
         menu.meta = meta;
 
