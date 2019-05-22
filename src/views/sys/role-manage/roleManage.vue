@@ -214,6 +214,7 @@ export default {
           title: "操作",
           key: "action",
           align: "center",
+          fixed: "right",
           width: 300,
           render: (h, params) => {
             return h("div", [
@@ -447,6 +448,7 @@ export default {
     edit(v) {
       this.modalType = 1;
       this.modalTitle = "编辑角色";
+      this.$refs.roleForm.resetFields();
       // 转换null为""
       for (let attr in v) {
         if (v[attr] == null) {

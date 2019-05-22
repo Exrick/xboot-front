@@ -73,7 +73,7 @@
             </FormItem>
             <FormItem label="名称" prop="title" v-if="menuForm.type==1">
               <Tooltip placement="right" content="操作按钮名称不得重复">
-                <Input v-model="menuForm.title" />
+                <Input v-model="menuForm.title"/>
               </Tooltip>
             </FormItem>
             <FormItem label="路径" prop="path" v-if="menuForm.type==0">
@@ -90,12 +90,7 @@
               </Tooltip>
             </FormItem>
             <FormItem label="按钮权限类型" prop="buttonType" v-if="menuForm.type==1">
-              <Select
-                v-model="menuForm.buttonType"
-                placeholder="请选择或输入搜索"
-                filterable
-                clearable
-              >
+              <Select v-model="menuForm.buttonType" placeholder="请选择或输入搜索" filterable clearable>
                 <Option
                   v-for="(item, i) in dictPermissions"
                   :key="i"
@@ -501,6 +496,8 @@ export default {
     handleReset() {
       let type = this.menuForm.type;
       this.$refs.menuForm.resetFields();
+      this.menuForm.icon = "";
+      this.menuForm.component = "";
       this.menuForm.type = type;
     },
     submitEdit() {

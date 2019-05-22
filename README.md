@@ -10,12 +10,12 @@
 - 官网源码：https://github.com/Exrick/xboot-show
 ### 在线Demo
 http://xboot.exrick.cn
-### 新在线开发文档
+### 最新最全面在线文档
 https://www.kancloud.cn/exrick/xboot/content
 ### 后台项目地址：[X-Boot](https://github.com/Exrick/x-boot)
 > 涉及技术：Spring Boot 2.x/Spring Security/JWT/Spring Data JPA+Mybatis-Plus/Redis/Elasticsearch 分布式限流/同步锁/验证码/SnowFlake雪花算法ID生成 动态权限管理 数据权限 代码生成 日志记录 定时任务 第三方账号、短信登录
 ### 项目简介
-- 项目基于 Vue-Cli 3.x 创建
+- 项目基于 Vue-Cli 3.7.x 创建
 - 主要Main组件框架基于iView-admin 1.0版本 修复其部分BUG
 - 组件库升级最新iView 3.x
 - 后台加载动态权限菜单 多方式轻松权限控制至按钮显示
@@ -23,6 +23,9 @@ https://www.kancloud.cn/exrick/xboot/content
 - 多语言切换、消息管理、第三方社交账号或短信登录
 - iView使用图标库 [ionicons](http://ionicons.com/) 额外图标库 [vue-awesome](https://github.com/Justineo/vue-awesome)
 - 现已提供封装的带后台真实接口数据的组件，详见XBoot业务组件菜单
+
+![](https://i.loli.net/2019/04/29/5cc70cac4b7a4.png)
+
 ### 截图预览
 
 ![QQ截图20180826163917.png](https://i.loli.net/2018/08/26/5b826868e2359.png)
@@ -34,6 +37,10 @@ https://www.kancloud.cn/exrick/xboot/content
 ![QQ截图20180826164144.png](https://i.loli.net/2018/08/26/5b8268e6a091f.png)
 
 ### [完整版截图细节展示](https://github.com/Exrick/x-boot/wiki/%E5%AE%8C%E6%95%B4%E7%89%88%E6%88%AA%E5%9B%BE%E7%BB%86%E8%8A%82%E5%B1%95%E7%A4%BA)
+
+### 系统架构
+
+<img src="https://i.loli.net/2019/05/01/5cc87695f109d.png" width="600px"/>
 
 ### 主要所用技术
 - [Vue 2.5.x](https://cn.vuejs.org/)

@@ -2,42 +2,63 @@
 @import "./simpleTable.less";
 </style>
 <template>
-    <div class="search">
-        <Row>
-            <Col>
-                <Card>     
-                    <Row class="operation">
-                        <Button @click="add" type="primary" icon="md-add">添加</Button>
-                        <Button @click="delAll" icon="md-trash">批量删除</Button>
-                        <Button @click="getDataList" icon="md-refresh">刷新</Button>
-                    </Row>
-                     <Row>
-                        <Alert show-icon>
-                            已选择 <span class="select-count">{{selectCount}}</span> 项
-                            <a class="select-clear" @click="clearSelectAll">清空</a> 这里还可以做一些数据统计显示
-                        </Alert>
-                    </Row>
-                    <Row>
-                        <Table :loading="loading" border :columns="columns" :data="data" ref="table" sortable="custom" @on-sort-change="changeSort" @on-selection-change="changeSelect"></Table>
-                    </Row>
-                    <Row type="flex" justify="end" class="page">
-                        <Page :current="pageNumber" :total="total" :page-size="pageSize" @on-change="changePage" @on-page-size-change="changePageSize" :page-size-opts="[10,20,50]" size="small" show-total show-elevator show-sizer></Page>
-                    </Row>
-                </Card>
-            </Col>
-        </Row>
-        <Modal :title="modalTitle" v-model="modalVisible" :mask-closable='false' :width="500">
-          <Form ref="form" :model="form" :label-width="80" :rules="formValidate">
-            <FormItem label="名称" prop="name">
-              <Input v-model="form.name"/>
-            </FormItem>
-          </Form>
-          <div slot="footer">
-            <Button type="text" @click="handleCancel">取消</Button>
-            <Button type="primary" :loading="submitLoading" @click="handleSubmit">提交</Button>
-          </div>
-        </Modal>
-    </div>
+  <div class="search">
+    <Row>
+      <Col>
+        <Card>
+          <Row class="operation">
+            <Button @click="add" type="primary" icon="md-add">添加</Button>
+            <Button @click="delAll" icon="md-trash">批量删除</Button>
+            <Button @click="getDataList" icon="md-refresh">刷新</Button>
+          </Row>
+          <Row>
+            <Alert show-icon>
+              已选择
+              <span class="select-count">{{selectCount}}</span> 项
+              <a class="select-clear" @click="clearSelectAll">清空</a> 这里还可以做一些数据统计显示
+            </Alert>
+          </Row>
+          <Row>
+            <Table
+              :loading="loading"
+              border
+              :columns="columns"
+              :data="data"
+              ref="table"
+              sortable="custom"
+              @on-sort-change="changeSort"
+              @on-selection-change="changeSelect"
+            ></Table>
+          </Row>
+          <Row type="flex" justify="end" class="page">
+            <Page
+              :current="pageNumber"
+              :total="total"
+              :page-size="pageSize"
+              @on-change="changePage"
+              @on-page-size-change="changePageSize"
+              :page-size-opts="[10,20,50]"
+              size="small"
+              show-total
+              show-elevator
+              show-sizer
+            ></Page>
+          </Row>
+        </Card>
+      </Col>
+    </Row>
+    <Modal :title="modalTitle" v-model="modalVisible" :mask-closable="false" :width="500">
+      <Form ref="form" :model="form" :label-width="80" :rules="formValidate">
+        <FormItem label="名称" prop="name">
+          <Input v-model="form.name"/>
+        </FormItem>
+      </Form>
+      <div slot="footer">
+        <Button type="text" @click="handleCancel">取消</Button>
+        <Button type="primary" :loading="submitLoading" @click="handleSubmit">提交</Button>
+      </div>
+    </Modal>
+  </div>
 </template>
 
 <script>
@@ -248,6 +269,7 @@ export default {
     edit(v) {
       this.modalType = 1;
       this.modalTitle = "编辑";
+      this.$refs.form.resetFields();
       // 转换null为""
       for (let attr in v) {
         if (v[attr] == null) {

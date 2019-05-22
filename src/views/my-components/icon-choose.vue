@@ -23,7 +23,7 @@
     <Modal
       title="选择图标"
       v-model="iconModalVisible"
-      :width="1000"
+      :width="950"
       :styles="{top: '30px'}"
       footer-hide
       :z-index="1060"

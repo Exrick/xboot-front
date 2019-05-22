@@ -293,6 +293,7 @@ export default {
     edit(v) {
       this.modalType = 1;
       this.modalTitle = "编辑";
+      this.$refs.form.resetFields();
       // 转换null为""
       for (let attr in v) {
         if (v[attr] == null) {

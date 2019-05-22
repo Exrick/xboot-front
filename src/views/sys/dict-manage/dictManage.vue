@@ -533,6 +533,7 @@ export default {
     editDcit() {
       this.modalType = 1;
       this.dictModalTitle = "编辑字典";
+      this.$refs.dictForm.resetFields();
       this.dictModalVisible = true;
     },
     delDcit() {

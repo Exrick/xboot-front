@@ -41,7 +41,7 @@ export default {
               enabled: true,
               easing: "linear",
               dynamicAnimation: {
-                speed: 3000
+                speed: 5000
               }
             },
             toolbar: {
@@ -81,7 +81,7 @@ export default {
               enabled: true,
               easing: "linear",
               dynamicAnimation: {
-                speed: 3000
+                speed: 5000
               }
             },
             toolbar: {
@@ -146,7 +146,7 @@ export default {
       this.timer = setInterval(() => {
         // 内存
         getRedisMemory().then(res => {
-          let currentMemory = res.result.memory / 1024;
+          let currentMemory = Number(res.result.memory) / 1024;
           // 更新最大最小值
           if (currentMemory < minMemory) {
             minMemory = currentMemory;
@@ -155,7 +155,7 @@ export default {
             maxMemory = currentMemory;
           }
 
-          this.memory.data.push(currentMemory);
+          this.memory.data.push(Number(currentMemory.toFixed(2)));
           this.memory.xdata.push(res.result.time);
           // 5个点
           if (this.memory.data.length >= 6) {
@@ -166,18 +166,19 @@ export default {
           this.$refs.memoryInfo.updateSeries([
             {
               name: "内存(KB)",
-              data: this.memory.data.slice()
+              data: this.memory.data
             }
           ]);
+
           // 更新最大最小值
           this.$refs.memoryInfo.updateOptions(
             {
               xaxis: {
-                categories: this.memory.xdata.slice()
+                categories: this.memory.xdata
               },
               yaxis: {
-                min: minMemory,
-                max: maxMemory
+                min: minMemory - 2,
+                max: maxMemory + 2
               }
             },
             true,
@@ -206,15 +207,16 @@ export default {
           this.$refs.keySize.updateSeries([
             {
               name: "key数量",
-              data: this.key.data.slice()
+              data: this.key.data
             }
           ]);
           // 更新最大最小值
           this.$refs.keySize.updateOptions(
             {
               xaxis: {
-                categories: this.key.xdata.slice()
+                categories: this.key.xdata
               },
+              // 避免最大最小值一致
               yaxis: {
                 min: minSize - 2,
                 max: maxSize + 2
