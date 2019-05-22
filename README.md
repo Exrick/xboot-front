@@ -43,7 +43,7 @@ https://www.kancloud.cn/exrick/xboot/content
 <img src="https://i.loli.net/2019/05/01/5cc87695f109d.png" width="600px"/>
 
 ### 主要所用技术
-- [Vue 2.5.x](https://cn.vuejs.org/)
+- [Vue 2.6.x](https://cn.vuejs.org/)
 - [Vue Cli 3.x](https://github.com/vuejs/vue-cli)：[官方中文文档](https://github.com/vuejs/vue-cli/tree/dev/docs/zh/config)
 - Vue Router
 - [Vuex](https://vuex.vuejs.org/zh-cn/)
