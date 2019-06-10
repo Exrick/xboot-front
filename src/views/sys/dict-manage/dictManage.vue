@@ -408,6 +408,7 @@ export default {
     },
     selectTree(v) {
       if (v.length > 0) {
+        this.$refs.dictForm.resetFields();
         // 转换null为""
         for (let attr in v[0]) {
           if (v[0][attr] == null) {
@@ -533,7 +534,6 @@ export default {
     editDcit() {
       this.modalType = 1;
       this.dictModalTitle = "编辑字典";
-      this.$refs.dictForm.resetFields();
       this.dictModalVisible = true;
     },
     delDcit() {
