@@ -115,7 +115,6 @@
                 </a>
                 <DropdownMenu slot="list">
                   <DropdownItem name="ownSpace">{{ $t('userCenter') }}</DropdownItem>
-                  <DropdownItem name="ownSpaceOld">{{ $t('userCenterOld') }}</DropdownItem>
                   <DropdownItem name="changePass">{{ $t('changePass') }}</DropdownItem>
                   <DropdownItem name="loginout" divided>{{ $t('logout') }}</DropdownItem>
                 </DropdownMenu>
@@ -135,6 +134,8 @@
         </keep-alive>
       </div>
     </div>
+    <!-- 全局加载动画 -->
+    <circleLoading class="loading-position" v-show="loading"/>
   </div>
 </template>
 
@@ -145,9 +146,9 @@ import breadcrumbNav from "./main-components/breadcrumb-nav.vue";
 import fullScreen from "./main-components/fullscreen.vue";
 import lockScreen from "./main-components/lockscreen/lockscreen.vue";
 import messageTip from "./main-components/message-tip.vue";
+import circleLoading from "@/views/my-components/circle-loading.vue";
 import Cookies from "js-cookie";
 import util from "@/libs/util.js";
-
 export default {
   components: {
     shrinkableMenu,
@@ -155,7 +156,8 @@ export default {
     breadcrumbNav,
     fullScreen,
     lockScreen,
-    messageTip
+    messageTip,
+    circleLoading
   },
   data() {
     return {
@@ -170,6 +172,9 @@ export default {
     };
   },
   computed: {
+    loading() {
+      return this.$store.state.app.loading;
+    },
     navList() {
       return this.$store.state.app.navList;
     },
@@ -235,7 +240,7 @@ export default {
       this.shrink = !this.shrink;
     },
     handleLanDropdown(name) {
-      localStorage.lang = name;
+      this.$i18n.locale = name;
       this.$store.commit("switchLang", name);
     },
     handleClickUserDropdown(name) {
@@ -258,6 +263,7 @@ export default {
         // 退出登录
         this.$store.commit("logout", this);
         this.$store.commit("clearOpenedSubmenu");
+        this.setStore("accessToken", "");
         // 强制刷新页面 重新加载router
         location.reload();
       }

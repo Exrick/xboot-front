@@ -1,19 +1,8 @@
 .login {
-    height: 100vh;
+    height: 100%;
     background: url('../assets/background.svg');
-    .header {
-        margin-top: 9vh;
-        margin-bottom: 6vh;
-        text-align: center;
-        .description {
-            font-size: 14px;
-            color: rgba(0, 0, 0, .45);
-            margin-top: 1vh;
-        }
-    }
-    .login-form {
-        margin-bottom: 16vh;
-    }
+    background-color: #f0f2f5;
+
     .ivu-tabs-nav-container {
         line-height: 2;
         font-size: 17px;
@@ -23,59 +12,50 @@
         position: relative;
         zoom: 1;
     }
+
     .form {
         padding-top: 1vh;
+
         .input-verify {
             width: 70%;
         }
-        .count-verify,
-        .send-verify {
-            width: 100px;
-        }
     }
+
     .forget-pass,
     .other-way {
         font-size: 14px;
     }
+
     .login-btn,
     .other-login {
         margin-top: 3vh;
     }
+
     .icons {
         display: flex;
         align-items: center;
     }
+
     .other-icon {
         cursor: pointer;
         margin-left: 10px;
         display: flex;
         align-items: center;
         color: rgba(0, 0, 0, .2);
+
         :hover {
             color: #2d8cf0;
         }
     }
-    .foot {
-        margin-bottom: 2vh;
-        color: rgba(0, 0, 0, .45);
-        font-size: 14px;
-        .help {
-            margin: 0 auto;
-            margin-bottom: 1vh;
-            width: 60%;
-            .item {
-                color: rgba(0, 0, 0, .45);
-            }
-            :hover {
-                color: rgba(0, 0, 0, .65);
-            }
-        }
-    }
-}
 
-.ivu-tabs-nav .ivu-tabs-tab .ivu-icon {
-    width: 14px;
-    height: 14px;
-    margin-right: 8px;
-    margin-bottom: 5px;
+    .ivu-spin-fix .ivu-spin-main {
+        top: 70%;
+    }
+
+    .ivu-tabs-nav .ivu-tabs-tab .ivu-icon {
+        width: 14px;
+        height: 14px;
+        margin-right: 8px;
+        margin-bottom: 5px;
+    }
 }

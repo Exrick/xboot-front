@@ -123,6 +123,10 @@ export const disableUser = (id, params) => {
 export const deleteUser = (ids, params) => {
     return deleteRequest(`/user/delByIds/${ids}`, params)
 }
+// 重置用户密码
+export const resetUserPass = (params) => {
+    return postRequest('/user/resetPass', params)
+}
 
 
 

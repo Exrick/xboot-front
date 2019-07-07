@@ -292,7 +292,7 @@ export default {
       this.searchForm.key = this.searchKey;
       getLogListData(this.searchForm).then(res => {
         this.loading = false;
-        if (res.success == true) {
+        if (res.success) {
           this.data = res.result.content;
           this.total = res.result.totalElements;
         }
@@ -310,10 +310,10 @@ export default {
         title: "确认删除",
         content: "您确认要删除该条数据?",
         onOk: () => {
-          this.operationLoading = true;
+          this.$store.commit("setLoading", true);
           deleteLog(v.id).then(res => {
-            this.operationLoading = false;
-            if (res.success == true) {
+            this.$store.commit("setLoading", false);
+            if (res.success) {
               this.$Message.success("删除成功");
               this.init();
             }
@@ -350,10 +350,10 @@ export default {
             ids += e.id + ",";
           });
           ids = ids.substring(0, ids.length - 1);
-          this.operationLoading = true;
+          this.$store.commit("setLoading", true);
           deleteLog(ids).then(res => {
-            this.operationLoading = false;
-            if (res.success == true) {
+            this.$store.commit("setLoading", false);
+            if (res.success) {
               this.$Message.success("删除成功");
               this.clearSelectAll();
               this.init();
@@ -375,7 +375,7 @@ export default {
           ids = ids.substring(0, ids.length - 1);
           deleteAllLog().then(res => {
             this.loading = false;
-            if (res.success == true) {
+            if (res.success) {
               this.$Message.success("清空日志成功");
               this.clearSelectAll();
               this.init();

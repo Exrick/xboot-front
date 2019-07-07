@@ -57,7 +57,7 @@ export default {
   methods: {
     initDepartmentData() {
       initDepartment().then(res => {
-        if (res.success == true) {
+        if (res.success) {
           res.result.forEach(function(e) {
             if (e.isParent) {
               e.loading = false;
@@ -74,7 +74,7 @@ export default {
     },
     loadData(item, callback) {
       loadDepartment(item.id).then(res => {
-        if (res.success == true) {
+        if (res.success) {
           res.result.forEach(function(e) {
             if (e.isParent) {
               e.loading = false;

@@ -92,17 +92,19 @@
             <Button @click="add" type="primary" icon="md-add">添加用户</Button>
             <Button @click="delAll" icon="md-trash">批量删除</Button>
             <Dropdown @on-click="handleDropdown">
-              <Button>更多操作
-                <Icon type="md-arrow-dropdown"/>
+              <Button>
+                更多操作
+                <Icon type="md-arrow-dropdown" />
               </Button>
               <DropdownMenu slot="list">
                 <DropdownItem name="refresh">刷新</DropdownItem>
+                <DropdownItem name="reset">重置用户密码</DropdownItem>
                 <DropdownItem name="exportData">导出所选数据</DropdownItem>
                 <DropdownItem name="exportAll">导出全部数据</DropdownItem>
                 <DropdownItem name="importData">导入数据(付费)</DropdownItem>
               </DropdownMenu>
             </Dropdown>
-            <circleLoading v-if="operationLoading"/>
+            <circleLoading v-if="operationLoading" />
           </Row>
           <Row>
             <Alert show-icon>
@@ -155,16 +157,16 @@
     >
       <Form ref="userForm" :model="userForm" :label-width="70" :rules="userFormValidate">
         <FormItem label="用户名" prop="username">
-          <Input v-model="userForm.username" autocomplete="off"/>
+          <Input v-model="userForm.username" autocomplete="off" />
         </FormItem>
         <FormItem label="密码" prop="password" v-if="modalType==0" :error="errorPass">
-          <Input type="password" v-model="userForm.password" autocomplete="off"/>
+          <Input type="password" v-model="userForm.password" autocomplete="off" />
         </FormItem>
         <FormItem label="邮箱" prop="email">
-          <Input v-model="userForm.email"/>
+          <Input v-model="userForm.email" />
         </FormItem>
         <FormItem label="手机号" prop="mobile">
-          <Input v-model="userForm.mobile"/>
+          <Input v-model="userForm.mobile" />
         </FormItem>
         <FormItem label="性别" prop="sex">
           <RadioGroup v-model="userForm.sex">
@@ -186,22 +188,22 @@
         <FormItem label="角色分配" prop="roles">
           <Select v-model="userForm.roles" multiple>
             <Option v-for="item in roleList" :value="item.id" :key="item.id" :label="item.name">
-              <!-- <div style="display:flex;flex-direction:column"> -->
               <span style="margin-right:10px;">{{ item.name }}</span>
               <span style="color:#ccc;">{{ item.description }}</span>
-              <!-- </div> -->
             </Option>
           </Select>
         </FormItem>
       </Form>
       <div slot="footer">
-        <Button type="text" @click="cancelUser">取消</Button>
+        <Button type="text" @click="userModalVisible = false">取消</Button>
         <Button type="primary" :loading="submitLoading" @click="submitUser">提交</Button>
       </div>
     </Modal>
     <Modal v-model="modalExportAll" title="确认导出" :loading="loadingExport" @on-ok="exportAll">
       <p>您确认要导出全部 {{total}} 条数据？</p>
     </Modal>
+
+    <check-password ref="checkPass" @on-success="resetPass" />
   </div>
 </template>
 
@@ -214,13 +216,16 @@ import {
   enableUser,
   disableUser,
   deleteUser,
-  getAllUserData
+  getAllUserData,
+  resetUserPass
 } from "@/api/index";
 import expandRow from "./expand.vue";
+import { validateMobile, validatePassword } from "@/libs/validate";
 import departmentChoose from "../../my-components/xboot/department-choose";
 import departmentTreeChoose from "../../my-components/xboot/department-tree-choose";
 import uploadPicInput from "../../my-components/xboot/upload-pic-input";
 import circleLoading from "../../my-components/circle-loading.vue";
+import checkPassword from "@/views/my-components/xboot/check-password";
 export default {
   name: "user-manage",
   components: {
@@ -228,24 +233,10 @@ export default {
     expandRow,
     departmentChoose,
     departmentTreeChoose,
-    uploadPicInput
+    uploadPicInput,
+    checkPassword
   },
   data() {
-    const validatePassword = (rule, value, callback) => {
-      if (value.length < 6) {
-        callback(new Error("密码长度不得小于6位"));
-      } else {
-        callback();
-      }
-    };
-    const validateMobile = (rule, value, callback) => {
-      var reg = /^[1][3,4,5,7,8][0-9]{9}$/;
-      if (!reg.test(value)) {
-        callback(new Error("手机号格式错误"));
-      } else {
-        callback();
-      }
-    };
     return {
       loading: true,
       operationLoading: false,
@@ -396,27 +387,21 @@ export default {
           render: (h, params) => {
             if (params.row.status == 0) {
               return h("div", [
-                h(
-                  "Badge",
-                  {
-                    props: {
-                      status: "success",
-                      text: "正常启用"
-                    }
+                h("Badge", {
+                  props: {
+                    status: "success",
+                    text: "正常启用"
                   }
-                )
+                })
               ]);
             } else if (params.row.status == -1) {
               return h("div", [
-                h(
-                  "Badge",
-                  {
-                    props: {
-                      status: "error",
-                      text: "禁用"
-                    }
+                h("Badge", {
+                  props: {
+                    status: "error",
+                    text: "禁用"
                   }
-                )
+                })
               ]);
             }
           },
@@ -624,7 +609,7 @@ export default {
       }
       getUserListData(this.searchForm).then(res => {
         this.loading = false;
-        if (res.success == true) {
+        if (res.success) {
           this.data = res.result.content;
           this.total = res.result.totalElements;
         }
@@ -657,7 +642,7 @@ export default {
     },
     getRoleList() {
       getAllRoleList().then(res => {
-        if (res.success == true) {
+        if (res.success) {
           this.roleList = res.result;
         }
       });
@@ -665,6 +650,12 @@ export default {
     handleDropdown(name) {
       if (name == "refresh") {
         this.getUserList();
+      } else if (name == "reset") {
+        if (this.selectCount <= 0) {
+          this.$Message.warning("您还未选择要重置密码的用户");
+          return;
+        }
+        this.$refs.checkPass.show();
       } else if (name == "exportData") {
         if (this.selectCount <= 0) {
           this.$Message.warning("您还未选择要导出的数据");
@@ -701,8 +692,30 @@ export default {
         }
       });
     },
-    cancelUser() {
-      this.userModalVisible = false;
+    resetPass() {
+      this.$Modal.confirm({
+        title: "确认重置",
+        content:
+          "您确认要重置所选的 " +
+          this.selectCount +
+          " 条用户数据密码为【123456】?",
+        onOk: () => {
+          let ids = "";
+          this.selectList.forEach(function(e) {
+            ids += e.id + ",";
+          });
+          ids = ids.substring(0, ids.length - 1);
+          this.$store.commit("setLoading", true);
+          resetUserPass({ ids: ids }).then(res => {
+            this.$store.commit("setLoading", false);
+            if (res.success) {
+              this.$Message.success("操作成功");
+              this.clearSelectAll();
+              this.getUserList();
+            }
+          });
+        }
+      });
     },
     submitUser() {
       this.$refs.userForm.validate(valid => {
@@ -725,7 +738,7 @@ export default {
             this.submitLoading = true;
             addUser(this.userForm).then(res => {
               this.submitLoading = false;
-              if (res.success == true) {
+              if (res.success) {
                 this.$Message.success("操作成功");
                 this.getUserList();
                 this.userModalVisible = false;
@@ -736,7 +749,7 @@ export default {
             this.submitLoading = true;
             editUser(this.userForm).then(res => {
               this.submitLoading = false;
-              if (res.success == true) {
+              if (res.success) {
                 this.$Message.success("操作成功");
                 this.getUserList();
                 this.userModalVisible = false;
@@ -778,10 +791,10 @@ export default {
         title: "确认启用",
         content: "您确认要启用用户 " + v.username + " ?",
         onOk: () => {
-          this.operationLoading = true;
+          this.$store.commit("setLoading", true);
           enableUser(v.id).then(res => {
-            this.operationLoading = false;
-            if (res.success == true) {
+            this.$store.commit("setLoading", false);
+            if (res.success) {
               this.$Message.success("操作成功");
               this.getUserList();
             }
@@ -794,10 +807,10 @@ export default {
         title: "确认禁用",
         content: "您确认要禁用用户 " + v.username + " ?",
         onOk: () => {
-          this.operationLoading = true;
+          this.$store.commit("setLoading", true);
           disableUser(v.id).then(res => {
-            this.operationLoading = false;
-            if (res.success == true) {
+            this.$store.commit("setLoading", false);
+            if (res.success) {
               this.$Message.success("操作成功");
               this.getUserList();
             }
@@ -810,10 +823,10 @@ export default {
         title: "确认删除",
         content: "您确认要删除用户 " + v.username + " ?",
         onOk: () => {
-          this.operationLoading = true;
+          this.$store.commit("setLoading", true);
           deleteUser(v.id).then(res => {
-            this.operationLoading = false;
-            if (res.success == true) {
+            this.$store.commit("setLoading", false);
+            if (res.success) {
               this.$Message.success("删除成功");
               this.getUserList();
             }
@@ -853,10 +866,10 @@ export default {
             ids += e.id + ",";
           });
           ids = ids.substring(0, ids.length - 1);
-          this.operationLoading = true;
+          this.$store.commit("setLoading", true);
           deleteUser(ids).then(res => {
-            this.operationLoading = false;
-            if (res.success == true) {
+            this.$store.commit("setLoading", false);
+            if (res.success) {
               this.$Message.success("删除成功");
               this.clearSelectAll();
               this.getUserList();

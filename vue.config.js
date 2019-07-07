@@ -21,6 +21,7 @@ module.exports = {
         // 使用CDN
         // externals: {
         //     vue: 'Vue',
+        //     'vue-i18n': 'VueI18n',
         //     axios: 'axios',
         //     'vue-router': 'VueRouter',
         //     vuex: 'Vuex',

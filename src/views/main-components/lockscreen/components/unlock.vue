@@ -72,7 +72,7 @@ export default {
       let flag = false;
       unlock({ password: this.password }).then(
         res => {
-          if (res.success == true) {
+          if (res.success) {
             this.unlock();
           }
         }

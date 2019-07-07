@@ -9,7 +9,8 @@
           <Row class="operation">
             <Button @click="addDcit" type="primary" icon="md-add">添加字典</Button>
             <Dropdown @on-click="handleDropdown">
-              <Button>更多操作
+              <Button>
+                更多操作
                 <Icon type="md-arrow-dropdown"/>
               </Button>
               <DropdownMenu slot="list">
@@ -72,7 +73,6 @@
             <Button @click="add" type="primary" icon="md-add">添加数据</Button>
             <Button @click="delAll" icon="md-trash">批量删除</Button>
             <Button @click="getDataList" icon="md-refresh">刷新数据</Button>
-            <circleLoading v-if="operationLoading"/>
           </Row>
           <Row>
             <Alert show-icon>
@@ -189,12 +189,8 @@ import {
   editDictData,
   deleteData
 } from "@/api/index";
-import circleLoading from "@/views/my-components/circle-loading.vue";
 export default {
   name: "dic-manage",
-  components: {
-    circleLoading
-  },
   data() {
     return {
       treeLoading: false, // 树加载状态
@@ -207,7 +203,6 @@ export default {
       expandIcon: "ios-arrow-back",
       selectNode: {},
       treeData: [], // 树数据
-      operationLoading: false, // 操作加载状态
       selectCount: 0, // 多选计数
       selectList: [], // 多选数据
       searchForm: {
@@ -294,27 +289,21 @@ export default {
             let re = "";
             if (params.row.status == 0) {
               return h("div", [
-                h(
-                  "Badge",
-                  {
-                    props: {
-                      status: "success",
-                      text: "正常启用"
-                    }
+                h("Badge", {
+                  props: {
+                    status: "success",
+                    text: "正常启用"
                   }
-                )
+                })
               ]);
             } else if (params.row.status == -1) {
               return h("div", [
-                h(
-                  "Badge",
-                  {
-                    props: {
-                      status: "error",
-                      text: "禁用"
-                    }
+                h("Badge", {
+                  props: {
+                    status: "error",
+                    text: "禁用"
                   }
-                )
+                })
               ]);
             }
           }
@@ -386,7 +375,7 @@ export default {
       this.treeLoading = true;
       getAllDictList().then(res => {
         this.treeLoading = false;
-        if (res.success == true) {
+        if (res.success) {
           this.treeData = res.result;
         }
       });
@@ -397,7 +386,7 @@ export default {
         this.treeLoading = true;
         searchDict({ key: this.searchKey }).then(res => {
           this.treeLoading = false;
-          if (res.success == true) {
+          if (res.success) {
             this.treeData = res.result;
           }
         });
@@ -473,7 +462,7 @@ export default {
       }
       getAllDictDataList(this.searchForm).then(res => {
         this.loading = false;
-        if (res.success == true) {
+        if (res.success) {
           this.data = res.result.content;
           this.total = res.result.totalElements;
         }
@@ -549,7 +538,7 @@ export default {
           // 删除
           deleteDict(this.selectNode.id).then(res => {
             this.$Modal.remove();
-            if (res.success == true) {
+            if (res.success) {
               this.$Message.success("操作成功");
               this.refreshDict();
             }
@@ -591,7 +580,7 @@ export default {
             delete this.dictForm.id;
             addDict(this.dictForm).then(res => {
               this.submitLoading = false;
-              if (res.success == true) {
+              if (res.success) {
                 this.$Message.success("操作成功");
                 this.getAllDict();
                 this.dictModalVisible = false;
@@ -601,7 +590,7 @@ export default {
             // 编辑
             editDict(this.dictForm).then(res => {
               this.submitLoading = false;
-              if (res.success == true) {
+              if (res.success) {
                 this.$Message.success("操作成功");
                 this.getAllDict();
                 this.dictModalVisible = false;
@@ -621,7 +610,7 @@ export default {
             this.form.dictId = this.selectNode.id;
             addDictData(this.form).then(res => {
               this.submitLoading = false;
-              if (res.success == true) {
+              if (res.success) {
                 this.$Message.success("操作成功");
                 this.getDataList();
                 this.modalVisible = false;
@@ -631,7 +620,7 @@ export default {
             // 编辑
             editDictData(this.form).then(res => {
               this.submitLoading = false;
-              if (res.success == true) {
+              if (res.success) {
                 this.$Message.success("操作成功");
                 this.getDataList();
                 this.modalVisible = false;
@@ -647,10 +636,10 @@ export default {
         content: "您确认要删除 " + v.title + " ?",
         onOk: () => {
           // 删除
-          this.operationLoading = true;
+          this.$store.commit("setLoading", true);
           deleteData(v.id).then(res => {
-            this.operationLoading = false;
-            if (res.success == true) {
+            this.$store.commit("setLoading", false);
+            if (res.success) {
               this.$Message.success("操作成功");
               this.getDataList();
             }
@@ -673,10 +662,10 @@ export default {
           });
           ids = ids.substring(0, ids.length - 1);
           // 批量删除
-          this.operationLoading = true;
+          this.$store.commit("setLoading", true);
           deleteData(ids).then(res => {
-            this.operationLoading = false;
-            if (res.success == true) {
+            this.$store.commit("setLoading", false);
+            if (res.success) {
               this.$Message.success("操作成功");
               this.clearSelectAll();
               this.getDataList();
@@ -689,7 +678,7 @@ export default {
   mounted() {
     // 计算高度
     let height = document.documentElement.clientHeight;
-    this.maxHeight = Number(height-287) + "px";
+    this.maxHeight = Number(height - 287) + "px";
     this.init();
   }
 };

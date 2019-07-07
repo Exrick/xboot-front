@@ -54,7 +54,7 @@ export default {
       this.loading = true;
       // this.getRequest("请求地址，如/getById/" + this.form.id).then(res => {
       //   this.loading = false;
-      //   if (res.success == true) {
+      //   if (res.success) {
       //     // 转换null为""
       //     let v = res.result
       //     for (let attr in v) {
@@ -80,7 +80,7 @@ export default {
         if (valid) {
           // this.postRequest("请求路径", this.form).then(res => {
           //   this.submitLoading = false;
-          //   if (res.success == true) {
+          //   if (res.success) {
           //     this.$Message.success("编辑成功");
           //     this.closeCurrentPage();
           //   }

@@ -15,7 +15,7 @@
           </Button>
           <DropdownMenu slot="list">
             <DropdownItem name="refresh">刷新</DropdownItem>
-            <DropdownItem name="expandOne">仅显示一级</DropdownItem>
+            <DropdownItem name="expandOne">收合所有</DropdownItem>
             <DropdownItem name="expandTwo">仅展开一级</DropdownItem>
             <DropdownItem name="expandThree">仅展开两级</DropdownItem>
             <DropdownItem name="expandAll">展开所有</DropdownItem>
@@ -123,6 +123,26 @@
               <InputNumber :max="1000" :min="0" v-model="menuForm.sortOrder"></InputNumber>
               <span style="margin-left:5px">值越小越靠前，支持小数</span>
             </FormItem>
+            <FormItem label="始终显示" prop="showAlways" v-if="menuForm.level==1">
+              <i-switch size="large" v-model="menuForm.showAlways">
+                <span slot="open">启用</span>
+                <span slot="close">禁用</span>
+              </i-switch>
+              <Tooltip
+                content="当设为不始终显示时，一级菜单下仅有一个子级菜单只会显示该子级菜单，避免用户多次点击"
+                placement="right"
+                transfer
+                max-width="280"
+                style="display: inline-block !important;"
+              >
+                <Icon
+                  type="md-help-circle"
+                  size="20"
+                  color="#c5c5c5"
+                  style="margin-left:10px;cursor:pointer;"
+                />
+              </Tooltip>
+            </FormItem>
             <FormItem label="是否启用" prop="status">
               <i-switch size="large" v-model="menuForm.status" :true-value="0" :false-value="-1">
                 <span slot="open">启用</span>
@@ -221,6 +241,26 @@
           <InputNumber :max="1000" :min="0" v-model="menuFormAdd.sortOrder"></InputNumber>
           <span style="margin-left:5px">值越小越靠前，支持小数</span>
         </FormItem>
+        <FormItem label="始终显示" prop="showAlways" v-if="menuFormAdd.level==1">
+          <i-switch size="large" v-model="menuForm.showAlways">
+            <span slot="open">启用</span>
+            <span slot="close">禁用</span>
+          </i-switch>
+          <Tooltip
+            content="当设为不始终显示时，一级菜单下仅有一个子级菜单只会显示该子级菜单，避免用户多次点击"
+            placement="right"
+            transfer
+            max-width="280"
+            style="display: inline-block !important;"
+          >
+            <Icon
+              type="md-help-circle"
+              size="20"
+              color="#c5c5c5"
+              style="margin-left:10px;cursor:pointer;"
+            />
+          </Tooltip>
+        </FormItem>
         <FormItem label="是否启用" prop="status">
           <i-switch size="large" v-model="menuFormAdd.status" :true-value="0" :false-value="-1">
             <span slot="open">启用</span>
@@ -280,7 +320,8 @@ export default {
         sortOrder: 0,
         level: null,
         status: 0,
-        url: ""
+        url: "",
+        showAlways: true
       },
       menuFormAdd: {
         buttonType: ""
@@ -387,7 +428,7 @@ export default {
       this.loading = true;
       this.getRequest("/permission/getAllList").then(res => {
         this.loading = false;
-        if (res.success == true) {
+        if (res.success) {
           // 仅展开指定级数 默认后台已展开所有
           let expandLevel = this.expandLevel;
           res.result.forEach(function(e) {
@@ -521,8 +562,10 @@ export default {
           }
           editPermission(this.menuForm).then(res => {
             this.submitLoading = false;
-            if (res.success == true) {
+            if (res.success) {
               this.$Message.success("编辑成功");
+              // 标记重新获取菜单数据
+              this.$store.commit("setAdded", false);
               util.initRouter(this);
               this.init();
               this.menuModalVisible = false;
@@ -542,8 +585,10 @@ export default {
           }
           addPermission(this.menuFormAdd).then(res => {
             this.submitLoading = false;
-            if (res.success == true) {
+            if (res.success) {
               this.$Message.success("添加成功");
+              // 标记重新获取菜单数据
+              this.$store.commit("setAdded", false);
               util.initRouter(this);
               this.init();
               this.menuModalVisible = false;
@@ -582,7 +627,8 @@ export default {
         level: Number(this.menuForm.level) + 1,
         sortOrder: 0,
         buttonType: "",
-        status: 0
+        status: 0,
+        showAlways: true
       };
       if (this.menuForm.level == 0) {
         this.menuFormAdd.path = "/";
@@ -620,8 +666,10 @@ export default {
           });
           ids = ids.substring(0, ids.length - 1);
           deletePermission(ids).then(res => {
-            if (res.success == true) {
+            if (res.success) {
               this.$Message.success("删除成功");
+              // 标记重新获取菜单数据
+              this.$store.commit("setAdded", false);
               util.initRouter(this);
               this.selectList = [];
               this.selectCount = 0;

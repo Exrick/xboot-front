@@ -6,6 +6,7 @@ import Vue from 'vue';
 
 const app = {
     state: {
+        loading: false, // 全局加载动画
         added: false, // 加载路由标志
         navList: [], // 顶部菜单
         currNav: "", // 当前顶部菜单name
@@ -48,6 +49,9 @@ const app = {
         // 动态添加全局路由404、500等页面，不需要缓存
         updateDefaultRouter(state, routes) {
             router.addRoutes(routes);
+        },
+        setLoading(state, v) {
+            state.loading = v;
         },
         setAdded(state, v) {
             state.added = v;

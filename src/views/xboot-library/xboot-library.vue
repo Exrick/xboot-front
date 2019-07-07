@@ -124,66 +124,6 @@
           {{resArr}}
           <al-cascader v-model="resArr2" class="example-btn" style="width: 400px"/>
           {{resArr2}}
-          <Divider orientation="left">树表格 - tree-table-vue</Divider>
-          <span class="href-text">Github：</span>
-          <a
-            href="https://github.com/lison16/tree-table-vue"
-            target="_blank"
-            class="href-text"
-          >https://github.com/lison16/tree-table-vue</a>
-          <br>
-          <br>
-
-          <div class="operation">
-            <Button icon="md-add">添加一级节点</Button>
-            <Button icon="md-refresh">刷新</Button>
-          </div>
-          <Alert show-icon>
-            已选择
-            <span class="select-count">{{selectCount}}</span> 项
-            这里还可以做一些数据统计显示
-          </Alert>
-          <tree-table
-            ref="treeTable"
-            index-text="#"
-            :data="tableData"
-            :columns="columns"
-            :stripe="props.stripe"
-            :border="props.border"
-            :show-header="props.showHeader"
-            :show-summary="props.showSummary"
-            :show-row-hover="props.showRowHover"
-            :show-index="props.showIndex"
-            :tree-type="props.treeType"
-            :is-fold="props.isFold"
-            :expand-type="props.expandType"
-            expand-key="name"
-            select-type="checkbox"
-            @radio-click="handleRadioClick"
-            :selectable="props.selectable"
-          >
-            <template slot="$expand" slot-scope="scope">
-              {{ `我的姓名是 ${scope.row.name},
-              这一行的索引是 ${scope.rowIndex}.`
-              }}
-            </template>
-            <template slot="action" slot-scope="scope">
-              <Button
-                type="primary"
-                @click="click(scope.row)"
-                size="small"
-                icon="md-add"
-                style="margin-right:5px"
-              >添加子节点</Button>
-              <Button
-                size="small"
-                @click="click(scope.row)"
-                icon="ios-create-outline"
-                style="margin-right:5px"
-              >编辑</Button>
-              <Button type="error" @click="click(scope.row)" size="small" icon="md-trash">删除</Button>
-            </template>
-          </tree-table>
 
           <Divider orientation="left">图片裁剪 - vue-cropper</Divider>
           <span class="href-text">Github：</span>
@@ -287,7 +227,7 @@ export default {
       data: [
         {
           id: "1",
-          name: "X-BOOT",
+          name: "XBoot",
           createTime: "2018-08-08 00:08:00",
           updateTime: "2018-08-08 00:08:00"
         },
@@ -296,137 +236,6 @@ export default {
           name: "Exrick",
           createTime: "2018-08-08 00:08:00",
           updateTime: "2018-08-08 00:08:00"
-        }
-      ],
-      selectCount: 0,
-      props: {
-        stripe: false,
-        border: true,
-        showHeader: true,
-        showSummary: false,
-        showRowHover: true,
-        showIndex: true,
-        treeType: true,
-        isFold: true,
-        expandType: true,
-        selectable: true
-      },
-      ids: "",
-      tableData: [
-        {
-          id: 1,
-          name: "Jack",
-          sex: "男",
-          createTime: "2018-08-08 00:08:00",
-          updateTime: "2018-08-08 00:08:00",
-          children: [
-            {
-              id: 2,
-              name: "Ashley",
-              sex: "女",
-              createTime: "2018-08-08 00:08:00",
-              updateTime: "2018-08-08 00:08:00",
-              children: [
-                {
-                  id: 3,
-                  name: "Ashley",
-                  sex: "女",
-                  createTime: "2018-08-08 00:08:00",
-                  updateTime: "2018-08-08 00:08:00"
-                },
-                {
-                  id: 4,
-                  name: "Taki",
-                  sex: "男",
-                  createTime: "2018-08-08 00:08:00",
-                  updateTime: "2018-08-08 00:08:00"
-                }
-              ]
-            },
-            {
-              id: 5,
-              name: "Taki",
-              sex: "男",
-              createTime: "2018-08-08 00:08:00",
-              updateTime: "2018-08-08 00:08:00"
-            }
-          ]
-        },
-        {
-          id: 6,
-          name: "Tom",
-          sex: "男",
-          createTime: "2018-08-08 00:08:00",
-          updateTime: "2018-08-08 00:08:00",
-          children: [
-            {
-              id: 7,
-              name: "Ashley",
-              sex: "女",
-              createTime: "2018-08-08 00:08:00",
-              updateTime: "2018-08-08 00:08:00"
-            }
-          ]
-        },
-        {
-          id: 8,
-          name: "Tom",
-          sex: "男",
-          createTime: "2018-08-08 00:08:00",
-          updateTime: "2018-08-08 00:08:00"
-        },
-        {
-          id: 9,
-          name: "Tom",
-          sex: "男",
-          createTime: "2018-08-08 00:08:00",
-          updateTime: "2018-08-08 00:08:00",
-          children: [
-            {
-              id: 10,
-              name: "Ashley",
-              sex: "女",
-              createTime: "2018-08-08 00:08:00",
-              updateTime: "2018-08-08 00:08:00"
-            }
-          ]
-        }
-      ],
-      columns: [
-        {
-          title: "姓名",
-          key: "name",
-          minWidth: "200px"
-        },
-        {
-          title: "性别",
-          key: "sex",
-          headerAlign: "center",
-          align: "center",
-          minWidth: "50px"
-        },
-        {
-          title: "创建时间",
-          key: "createTime",
-          headerAlign: "center",
-          align: "center",
-          minWidth: "200px"
-        },
-        {
-          title: "更新时间",
-          key: "updateTime",
-          headerAlign: "center",
-          align: "center",
-          minWidth: "200px"
-        },
-        {
-          title: "操作",
-          key: "action",
-          headerAlign: "center",
-          align: "center",
-          width: "250px",
-          type: "template",
-          template: "action"
         }
       ],
       option: {
@@ -528,6 +337,10 @@ export default {
       this.previews = data;
     },
     upload() {
+      if (!this.$route.meta.permTypes.includes("upload")) {
+        this.$Message.error("您此处没有上传权限");
+        return;
+      }
       // 获取截图的base64 数据
       this.$refs.cropper.getCropData(data => {
         this.uploadLoading = true;
@@ -553,13 +366,5 @@ export default {
 .example-btn {
   margin: 10px 0;
   display: block;
-}
-.operation {
-  margin-bottom: 2vh;
-}
-.select-count {
-  font-size: 13px;
-  font-weight: 600;
-  color: #40a9ff;
 }
 </style>

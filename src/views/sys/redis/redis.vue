@@ -261,7 +261,7 @@ export default {
       this.loading = true;
       getRedisData(this.searchForm).then(res => {
         this.loading = false;
-        if (res.success == true) {
+        if (res.success) {
           this.data = res.result.content;
           this.total = res.result.totalElements;
         }
@@ -274,7 +274,7 @@ export default {
           // 添加或编辑
           saveRedis(this.form).then(res => {
             this.submitLoading = false;
-            if (res.success == true) {
+            if (res.success) {
               this.$Message.success("操作成功");
               this.getDataList();
               this.modalVisible = false;
@@ -318,10 +318,10 @@ export default {
         content: "您确认要彻底清空删除所有数据?",
         onOk: () => {
           // 删除
-          this.operationLoading = true;
+          this.$store.commit("setLoading", true);
           deleteAllRedis().then(res => {
-            this.operationLoading = false;
-            if (res.success == true) {
+            this.$store.commit("setLoading", false);
+            if (res.success) {
               this.$Message.success("操作成功");
               this.getDataList();
             }
@@ -336,10 +336,10 @@ export default {
         content: "您确认要删除 " + v.key + " ?",
         onOk: () => {
           // 删除
-          this.operationLoading = true;
+          this.$store.commit("setLoading", true);
           deleteRedis({ keys: v.key }).then(res => {
-            this.operationLoading = false;
-            if (res.success == true) {
+            this.$store.commit("setLoading", false);
+            if (res.success) {
               this.$Message.success("操作成功");
               this.getDataList();
             }
@@ -362,10 +362,10 @@ export default {
           });
           keys = keys.substring(0, keys.length - 1);
           // 批量删除
-          this.operationLoading = true;
+          this.$store.commit("setLoading", true);
           deleteRedis({ keys: keys }).then(res => {
-            this.operationLoading = false;
-            if (res.success == true) {
+            this.$store.commit("setLoading", false);
+            if (res.success) {
               this.$Message.success("操作成功");
               this.clearSelectAll();
               this.getDataList();

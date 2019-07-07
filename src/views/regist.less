@@ -1,63 +1,60 @@
 .regist {
-    height: 100vh;
+    height: 100%;
     background: url('../assets/background.svg');
-    .header {
-        margin-top: 5vh;
-        margin-bottom: 4vh;
-        text-align: center;
-        .description {
-            font-size: 14px;
-            color: rgba(0, 0, 0, .45);
-            margin-top: 1vh;
-        }
-    }
-    .regist-form {
-        margin-bottom: 6vh;
-    }
+    background-color: #f0f2f5;
+
     .form {
         padding-top: 1vh;
+
         .regist-title {
             display: block;
+            font-weight: bold;
             font-size: 16px;
             margin-bottom: 2vh;
         }
+
         .input-verify {
             width: 70%;
         }
-        .count-verify,
-        .send-verify {
-            width: 100px;
-        }
+
         .ivu-poptip {
             display: inline-block;
             width: 100%;
         }
+
         .ivu-poptip-rel {
             width: 100%;
             display: inline-block;
             position: relative;
         }
+
         .ivu-slider-button {
             display: none;
         }
+
         .ivu-slider-button-wrap .ivu-tooltip {
             display: none;
         }
+
         .password-tip-none {
             padding: 1vh 0;
             font-size: 14px;
+
             .ivu-slider-bar {
                 height: 4px;
                 border-radius: 3px;
                 position: absolute;
             }
         }
+
         .password-tip-weak {
             padding: 1vh 0;
             font-size: 14px;
+
             .words {
                 color: #ed3f14;
             }
+
             .ivu-slider-bar {
                 height: 4px;
                 background: #ed3f14;
@@ -65,12 +62,15 @@
                 position: absolute;
             }
         }
+
         .password-tip-middle {
             padding: 1vh 0;
             font-size: 14px;
+
             .words {
                 color: #faad14;
             }
+
             .ivu-slider-bar {
                 height: 4px;
                 background: #faad14;
@@ -78,12 +78,15 @@
                 position: absolute;
             }
         }
+
         .password-tip-strong {
             padding: 1vh 0;
             font-size: 14px;
+
             .words {
                 color: #52c41a;
             }
+
             .ivu-slider-bar {
                 height: 4px;
                 background: #52c41a;
@@ -91,6 +94,7 @@
                 position: absolute;
             }
         }
+
         .ivu-input-group-append,
         .ivu-input-group-prepend {
             padding: 4px 7px;
@@ -104,29 +108,16 @@
             border-radius: 6px;
         }
     }
+
     .regist-btn {
         width: 50%;
     }
+
     .to-login {
         font-size: 14px;
         line-height: 35px;
     }
-    .foot {
-        margin-bottom: 2vh;
-        color: rgba(0, 0, 0, .45);
-        font-size: 14px;
-        .help {
-            margin: 0 auto;
-            margin-bottom: 1vh;
-            width: 60%;
-            .item {
-                color: rgba(0, 0, 0, .45);
-            }
-            :hover {
-                color: rgba(0, 0, 0, .65);
-            }
-        }
-    }
+
     .ivu-spin-fix .ivu-spin-main {
         top: 70%;
     }

@@ -17,7 +17,7 @@
           <FormItem label="新密码" prop="newPass">
             <Poptip trigger="focus" placement="right" width="250">
               <Input type="password" v-model="editPasswordForm.newPass" @on-change="strengthChange" placeholder="请输入新密码，长度为6-20个字符"></Input>
-              <div v-bind:class="tipStyle" slot="content">
+              <div :class="tipStyle" slot="content">
                 <span class="words">强度 : {{strength}}</span>
                 <Slider v-model="strengthValue" :step="33" style="width:95%"></Slider>
                 请至少输入 6 个字符。请不要使<br>用容易被猜到的密码。
@@ -153,7 +153,7 @@ export default {
           this.savePassLoading = true;
           changePass(params).then(res => {
             this.savePassLoading = false;
-            if (res.success == true) {
+            if (res.success) {
               this.$Modal.success({
                 title: "修改密码成功",
                 content: "修改密码成功，需重新登录",

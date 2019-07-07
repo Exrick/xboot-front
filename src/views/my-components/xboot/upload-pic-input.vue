@@ -106,7 +106,7 @@ export default {
     },
     handleSuccess(res, file) {
       this.loading = false;
-      if (res.success == true) {
+      if (res.success) {
         file.url = res.result;
         this.currentValue = res.result;
         this.$emit("input", this.currentValue);
@@ -124,7 +124,7 @@ export default {
       this.$emit("on-change", this.currentValue);
     },
     setCurrentValue(value) {
-      if (value == this.currentValue) {
+      if (value === this.currentValue) {
         return;
       }
       this.currentValue = value;

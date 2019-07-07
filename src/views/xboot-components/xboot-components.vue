@@ -4,7 +4,7 @@
       <Layout>
         <Sider hide-trigger style="background: #fff;max-width: 205px;flex: 0 0 205px;">
           <Menu
-            active-name="1-1"
+            active-name="1-0"
             theme="light"
             width="auto"
             :open-names="['1','2']"
@@ -14,12 +14,16 @@
               <template slot="title">
                 <Icon type="md-ionic"/>XBoot通用组件
               </template>
+              <MenuItem name="1-0">全局Loading加载动画</MenuItem>
+              <MenuItem name="0-0"><Badge dot :offset="[5,-3]">树表格组件</Badge></MenuItem>
               <MenuItem name="1-1">倒计时按钮</MenuItem>
               <MenuItem name="1-2">图标选择输入框</MenuItem>
               <MenuItem name="1-3">部门级联选择</MenuItem>
               <MenuItem name="1-4">部门树选择</MenuItem>
               <MenuItem name="1-5">用户抽屉选择</MenuItem>
               <MenuItem name="1-6">图片上传输入框</MenuItem>
+              <MenuItem name="1-7">图片上传缩略图</MenuItem>
+              <MenuItem name="1-8">身份验证全屏弹框</MenuItem>
             </Submenu>
             <Submenu name="2">
               <template slot="title">
@@ -32,8 +36,28 @@
           </Menu>
         </Sider>
         <Content :style="{padding: '0 24px 24px 24px', minHeight: '280px', background: '#fff'}">
-          <div v-show="currName=='1-1'">
+          <div v-show="currName=='0-0'">
+            <tree-table/>
+          </div>
+          <div v-show="currName=='1-0'">
             <Alert type="warning" show-icon>说明：大部分组件为包含真实数据接口的简单封装，方便大家的直接复用！</Alert>
+            <Divider class="blue" orientation="left">全局Loading加载动画</Divider>
+            <Button @click="showLoading">显示右上角加载动画</Button>
+            <Button @click="closeLoading" style="margin-left:5px">关闭右上角加载动画</Button>
+            <h3 class="article">使用方式</h3>修改全局Vuex即可，开启：
+            <code>this.$store.commit("setLoading", true)</code> 关闭：
+            <code>this.$store.commit("setLoading", false)</code>
+            <Divider class="blue" orientation="left">iView官方 LoadingBar加载进度条</Divider>
+            <Button @click="start">开始加载</Button>
+            <Button @click="finish" style="margin-left:5px">结束加载</Button>
+            <Button @click="error" style="margin-left:5px">错误</Button>
+            <h3 class="article">说明</h3>如果你觉得上方XBoot提供的动画不明显，你还可以使用iView官方自带的顶部
+            <a
+              href="https://www.iviewui.com/components/loading-bar"
+              target="_blank"
+            >LoadingBar组件</a>
+          </div>
+          <div v-show="currName=='1-1'">
             <Divider class="blue" orientation="left">倒计时按钮</Divider>
             <count-down-button countTime="10"/>
             <h3 class="article">提示</h3>你可以将
@@ -42,6 +66,8 @@
             <code>startCountDown()</code>，用于验证手机号或发送短信成功后开始倒计时等场景。
             <h3 class="article">props</h3>
             <Table :columns="props" :data="data20" border size="small" width="1000"></Table>
+            <h3 class="article">events</h3>
+            <Table :columns="events" :data="data22" border size="small" width="1000"></Table>
             <h3 class="article">methods</h3>
             <Table :columns="methods" :data="data21" border size="small" width="1000"></Table>
           </div>
@@ -100,6 +126,25 @@
             <h3 class="article">events</h3>
             <Table :columns="events" :data="data12" border size="small" width="1000"></Table>
           </div>
+          <div v-show="currName=='1-7'">
+            <Divider class="blue" orientation="left">图片上传缩略图</Divider>
+            <upload-pic-thumb @on-change="picUrls=$event" ref="uploadThumb"></upload-pic-thumb>
+            {{picUrls}}
+            <h3 class="article">props</h3>
+            <Table :columns="props" :data="data23" border size="small" width="1000"></Table>
+            <h3 class="article">events</h3>
+            <Table :columns="events" :data="data24" border size="small" width="1000"></Table>
+            <h3 class="article">methods</h3>
+            <Table :columns="methods" :data="data25" border size="small" width="1000"></Table>
+          </div>
+          <div v-show="currName=='1-8'">
+            <Divider class="blue" orientation="left">身份验证全屏弹框</Divider>
+            <Button @click="showCheckPass">开始验证</Button>
+            <h3 class="article">events</h3>
+            <Table :columns="events" :data="data26" border size="small" width="1000"></Table>
+            <h3 class="article">methods</h3>
+            <Table :columns="methods" :data="data27" border size="small" width="1000"></Table>
+          </div>
 
           <div v-show="currName=='2-1'||currName=='2-2'||currName=='2-3'">
             <div class="sorry">
@@ -116,34 +161,45 @@
         </Content>
       </Layout>
     </Card>
+
+    <check-password ref="checkPass" @on-success="checkSuccess"/>
+    
   </div>
 </template>
 
 <script>
+import TreeTable from "./tree-table";
 import iconChoose from "@/views/my-components/icon-choose";
 import countDownButton from "@/views/my-components/count-down-button";
 import departmentChoose from "@/views/my-components/xboot/department-choose";
 import departmentTreeChoose from "@/views/my-components/xboot/department-tree-choose";
 import userChoose from "@/views/my-components/xboot/user-choose";
 import uploadPicInput from "@/views/my-components/xboot/upload-pic-input";
+import uploadPicThumb from "@/views/my-components/xboot/upload-pic-thumb";
+import checkPassword from "@/views/my-components/xboot/check-password";
 export default {
   name: "xboot-components",
   components: {
+    TreeTable,
     iconChoose,
     countDownButton,
     departmentChoose,
     userChoose,
     departmentTreeChoose,
-    uploadPicInput
+    uploadPicInput,
+    uploadPicThumb,
+    checkPassword
   },
   data() {
     return {
-      currName: "1-1",
+      currName: "1-0",
       processModalVisible: false,
       icon: "",
       selectDeps: [],
       selectUsers: [],
       picUrl: "",
+      picUrls: [],
+      checkPass: false,
       processLoading: false,
       events: [
         {
@@ -459,11 +515,71 @@ export default {
           type: "当autoCountDown设置为false时生效，手动开启倒计时",
           value: "无"
         }
+      ],
+      data22: [
+        {
+          name: "on-click",
+          type: "用户点击事件",
+          value: "无"
+        }
+      ],
+      data23: [
+        {
+          name: "multiple",
+          desc: "是否选开启多张上传，默认true开启，设为false仅限制一张",
+          type: "Boolean",
+          value: "true"
+        }
+      ],
+      data24: [
+        {
+          name: "on-change",
+          type: "返回上传成功图片链接",
+          value:
+            "当开启多张上传时，返回图片链接数组，如['http://1.png','http://2.png']；限制单张时返回单个图片链接，如'http://3.png'"
+        }
+      ],
+      data25: [
+        {
+          name: "setData",
+          type: "设置图片链接值（回显使用）",
+          value:
+            "根据多张上传配置，传入多张图片链接数组或单张图片链接，如['http://1.png','http://2.png']或'http://3.png'"
+        }
+      ],
+      data26: [
+        {
+          name: "on-success",
+          type: "仅当验证密码正确触发回调",
+          value: "true"
+        }
+      ],
+      data27: [
+        {
+          name: "show",
+          type: "显示密码验证组件",
+          value: "无"
+        }
       ]
     };
   },
   methods: {
     init() {},
+    showLoading() {
+      this.$store.commit("setLoading", true);
+    },
+    closeLoading() {
+      this.$store.commit("setLoading", false);
+    },
+    start() {
+      this.$Loading.start();
+    },
+    finish() {
+      this.$Loading.finish();
+    },
+    error() {
+      this.$Loading.error();
+    },
     handleSelectDep(v) {
       this.$Message.info(`所选部门ID为 ${v}`);
     },
@@ -476,15 +592,11 @@ export default {
     handleSelectDepTree(v) {
       this.selectDeps = v;
     },
-    processChoose() {
-      this.$refs.processChoose.setID("123456");
-      this.processModalVisible = true;
+    showCheckPass() {
+      this.$refs.checkPass.show();
     },
-    startByKey() {
-      this.$refs.processStart.show("leave", "123456");
-    },
-    cancelProcess() {
-      this.$refs.processCancel.show("123456", "123456");
+    checkSuccess() {
+      this.$Message.success("验证成功");
     }
   },
   mounted() {

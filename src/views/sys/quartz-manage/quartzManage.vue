@@ -331,7 +331,7 @@ export default {
       };
       getQuartzListData(params).then(res => {
         this.loading = false;
-        if (res.success == true) {
+        if (res.success) {
           this.data = res.result.content;
           this.total = res.result.totalElements;
         }
@@ -348,7 +348,7 @@ export default {
             this.submitLoading = true;
             addQuartz(this.form).then(res => {
               this.submitLoading = false;
-              if (res.success == true) {
+              if (res.success) {
                 this.$Message.success("操作成功");
                 this.getQuartzList();
                 this.modalVisible = false;
@@ -358,7 +358,7 @@ export default {
             this.submitLoading = true;
             editQuartz(this.form).then(res => {
               this.submitLoading = false;
-              if (res.success == true) {
+              if (res.success) {
                 this.$Message.success("操作成功");
                 this.getQuartzList();
                 this.modalVisible = false;
@@ -398,10 +398,10 @@ export default {
         title: "确认停止",
         content: "您确认要停止任务 " + v.jobClassName + " ?",
         onOk: () => {
-          this.operationLoading = true;
+          this.$store.commit("setLoading", true);
           pauseQuartz(v).then(res => {
-            this.operationLoading = false;
-            if (res.success == true) {
+            this.$store.commit("setLoading", false);
+            if (res.success) {
               this.$Message.success("操作成功");
               this.getQuartzList();
             }
@@ -414,10 +414,10 @@ export default {
         title: "确认恢复",
         content: "您确认要恢复任务 " + v.jobClassName + " ?",
         onOk: () => {
-          this.operationLoading = true;
+          this.$store.commit("setLoading", true);
           resumeQuartz(v).then(res => {
-            this.operationLoading = false;
-            if (res.success == true) {
+            this.$store.commit("setLoading", false);
+            if (res.success) {
               this.$Message.success("操作成功");
               this.getQuartzList();
             }
@@ -430,10 +430,10 @@ export default {
         title: "确认删除",
         content: "您确认要删除任务 " + v.jobClassName + " ?",
         onOk: () => {
-          this.operationLoading = true;
+          this.$store.commit("setLoading", true);
           deleteQuartz(v.id).then(res => {
-            this.operationLoading = false;
-            if (res.success == true) {
+            this.$store.commit("setLoading", false);
+            if (res.success) {
               this.$Message.success("操作成功");
               this.getQuartzList();
             }
@@ -462,10 +462,10 @@ export default {
             ids += e.id + ",";
           });
           ids = ids.substring(0, ids.length - 1);
-          this.operationLoading = true;
+          this.$store.commit("setLoading", true);
           deleteQuartz(ids).then(res => {
-            this.operationLoading = false;
-            if (res.success == true) {
+            this.$store.commit("setLoading", false);
+            if (res.success) {
               this.$Message.success("删除成功");
               this.clearSelectAll();
               this.getQuartzList();

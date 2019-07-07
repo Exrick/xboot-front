@@ -165,7 +165,7 @@ export default {
       // 请求后端获取表单数据 请自行修改接口
       // this.getRequest("请求路径", params).then(res => {
       //   this.loading = false;
-      //   if (res.success == true) {
+      //   if (res.success) {
       //     this.data = res.result.content;
       //     this.total = res.result.totalElements;
       //   }
@@ -217,7 +217,7 @@ export default {
         onOk: () => {
           // 删除
           // this.deleteRequest("请求地址，如/deleteByIds/" + v.id).then(res => {
-          //   if (res.success == true) {
+          //   if (res.success) {
           //     this.$Message.success("操作成功");
           //     this.getDataList();
           //   }
@@ -251,7 +251,7 @@ export default {
           ids = ids.substring(0, ids.length - 1);
           // 批量删除
           // this.deleteRequest("请求地址，如/deleteByIds/" + ids).then(res => {
-          //   if (res.success == true) {
+          //   if (res.success) {
           //     this.$Message.success("操作成功");
           //     this.clearSelectAll();
           //     this.getDataList();

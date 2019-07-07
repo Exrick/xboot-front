@@ -1,136 +1,192 @@
 <template>
-  <Row type="flex" justify="center" align="middle" class="login" @keydown.enter.native="submitLogin">
-    <Col :xs="{span:22}" style="width: 368px;">
-    <Row class="header">
-      <img src="../assets/xboot.png" width="220px" />
-      <div class="description">XBoot是很不错的Web前后端分离架构开发平台</div>
+  <div class="login">
+    <Row type="flex" justify="center" align="middle" @keydown.enter.native="submitLogin">
+      <Col style="width: 368px;">
+        <Header />
+        <Row>
+          <Tabs v-model="tabName">
+            <TabPane :label="$t('usernameLogin')" name="username" icon="md-person">
+              <Form
+                ref="usernameLoginForm"
+                :model="form"
+                :rules="rules"
+                class="form"
+                v-if="tabName=='username'"
+              >
+                <FormItem prop="username">
+                  <Input
+                    v-model="form.username"
+                    prefix="ios-contact"
+                    size="large"
+                    clearable
+                    placeholder="请输入用户名"
+                    autocomplete="off"
+                  />
+                </FormItem>
+                <FormItem prop="password">
+                  <Input
+                    type="password"
+                    v-model="form.password"
+                    prefix="ios-lock"
+                    size="large"
+                    clearable
+                    placeholder="请输入密码"
+                    autocomplete="off"
+                  />
+                </FormItem>
+                <FormItem prop="imgCode">
+                  <Row
+                    type="flex"
+                    justify="space-between"
+                    style="align-items: center;overflow: hidden;"
+                  >
+                    <Input
+                      v-model="form.imgCode"
+                      size="large"
+                      clearable
+                      placeholder="请输入图片验证码"
+                      :maxlength="10"
+                      class="input-verify"
+                    />
+                    <div style="position:relative">
+                      <Spin v-if="loadingCaptcha" fix></Spin>
+                      <img
+                        :src="captchaImg"
+                        @click="getCaptchaImg"
+                        alt="加载验证码失败"
+                        style="width:100px;cursor:pointer;display:block"
+                      />
+                    </div>
+                  </Row>
+                </FormItem>
+              </Form>
+            </TabPane>
+            <TabPane :label="$t('mobileLogin')" name="mobile" icon="ios-phone-portrait">
+              <Form
+                ref="mobileLoginForm"
+                :model="form"
+                :rules="rules"
+                class="form"
+                v-if="tabName=='mobile'"
+              >
+                <FormItem prop="mobile">
+                  <Input
+                    v-model="form.mobile"
+                    prefix="ios-phone-portrait"
+                    size="large"
+                    clearable
+                    placeholder="请输入手机号"
+                  />
+                </FormItem>
+                <FormItem prop="code" :error="errorCode">
+                  <Row type="flex" justify="space-between">
+                    <Input
+                      v-model="form.code"
+                      prefix="ios-mail-outline"
+                      size="large"
+                      clearable
+                      placeholder="请输入短信验证码"
+                      :maxlength="6"
+                      class="input-verify"
+                    />
+                    <CountDownButton
+                      ref="countDown"
+                      @on-click="sendSmsCode"
+                      :autoCountDown="false"
+                      size="large"
+                      :loading="sending"
+                      :text="getSms"
+                    />
+                  </Row>
+                </FormItem>
+              </Form>
+            </TabPane>
+          </Tabs>
+
+          <Row type="flex" justify="space-between">
+            <Checkbox v-model="saveLogin" size="large">{{ $t('autoLogin') }}</Checkbox>
+            <Dropdown trigger="click" @on-click="handleDropDown">
+              <a class="forget-pass">{{ $t('forgetPass') }}</a>
+              <DropdownMenu slot="list">
+                <DropdownItem name="showAccount">体验测试账号</DropdownItem>
+                <DropdownItem name="resetByMobile">使用手机号重置密码(付费)</DropdownItem>
+                <DropdownItem name="resetByEmail">使用邮箱重置密码(付费)</DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
+          </Row>
+          <Row>
+            <Button
+              class="login-btn"
+              type="primary"
+              size="large"
+              :loading="loading"
+              @click="submitLogin"
+              long
+            >
+              <span v-if="!loading">{{ $t('login') }}</span>
+              <span v-else>{{ $t('logining') }}</span>
+            </Button>
+          </Row>
+          <Row type="flex" justify="space-between" class="other-login">
+            <div class="other-way icons">
+              {{ $t('otherLogin') }}
+              <div class="other-icon" @click="toGithubLogin">
+                <icon scale="1.1" name="brands/github"></icon>
+              </div>
+              <div class="other-icon" @click="toQQLogin">
+                <icon name="brands/qq"></icon>
+              </div>
+              <div class="other-icon" @click="toWeiboLogin">
+                <icon scale="1.2" name="brands/weibo"></icon>
+              </div>
+              <div class="other-icon" @click="toWeixinLogin">
+                <icon scale="1.2" name="brands/weixin"></icon>
+              </div>
+            </div>
+            <router-link to="/regist">
+              <a class="forget-pass">{{ $t('regist') }}</a>
+            </router-link>
+          </Row>
+        </Row>
+      </Col>
+      <Footer />
+      <LangSwitch />
     </Row>
-  
-    <Alert type="error" show-icon v-if="error">{{errorMsg}}</Alert>
-  
-    <Row class="login-form">
-      <Tabs v-model="tabName">
-        <TabPane label="账户密码登录" name="username" icon="md-person">
-          <Form ref="usernameLoginForm" :model="form" :rules="rules" class="form">
-            <FormItem prop="username">
-              <Input v-model="form.username" prefix="ios-contact" size="large" clearable placeholder="请输入用户名" autocomplete="off" />
-            </FormItem>
-            <FormItem prop="password">
-              <Input type="password" v-model="form.password" prefix="ios-lock" size="large" clearable placeholder="请输入密码" autocomplete="off" />
-            </FormItem>
-          </Form>
-        </TabPane>
-        <TabPane label="手机号登录" name="mobile" icon="ios-phone-portrait">
-          <Form ref="mobileLoginForm" :model="form" :rules="rules" class="form">
-            <FormItem prop="mobile">
-              <Input v-model="form.mobile" prefix="ios-phone-portrait" size="large" clearable placeholder="请输入手机号" />
-            </FormItem>
-            <FormItem prop="code" :error="errorCode">
-              <Row type="flex" justify="space-between" class="code-row-bg">
-                <Input v-model="form.code" prefix="ios-mail-outline" size="large" clearable placeholder="请输入短信验证码" :maxlength="maxLength" class="input-verify" />
-                <Button size="large" :loading="sending" @click="sendVerify" v-if="!sended" class="send-verify">
-                  <span v-if="!sending">获取验证码</span>
-                  <span v-else>发送中</span>
-                </Button>
-                <Button size="large" disabled v-if="sended" class="count-verify">{{countButton}}</Button>
-              </Row>
-            </FormItem>
-          </Form>
-        </TabPane>
-      </Tabs>
-  
-      <Row type="flex" justify="space-between" class="code-row-bg">
-        <Checkbox v-model="saveLogin" size="large">自动登录</Checkbox>
-        <Dropdown trigger="click" @on-click="handleDropDown">
-          <a class="forget-pass">
-            忘记密码
-          </a>
-          <DropdownMenu slot="list">
-            <DropdownItem name="showAccount">体验测试账号</DropdownItem>
-            <DropdownItem name="resetByMobile">使用手机号重置密码(付费)</DropdownItem>
-            <DropdownItem name="resetByEmail">使用邮箱重置密码(付费)</DropdownItem>
-          </DropdownMenu>
-        </Dropdown>
-      </Row>
-      <Row>
-        <Button class="login-btn" type="primary" size="large" :loading="loading" @click="submitLogin" long>
-                            <span v-if="!loading">登录</span>
-                            <span v-else>登录中...</span>
-                        </Button>
-      </Row>
-      <Row type="flex" justify="space-between" class="code-row-bg other-login">
-        <div class="other-way icons">
-          其它方式登录
-          <div class="other-icon" @click="toGithubLogin">
-            <icon scale="1.1" name="brands/github"></icon>
-          </div>
-          <div class="other-icon" @click="toQQLogin">
-            <icon name="brands/qq"></icon>
-          </div>
-          <div class="other-icon" @click="toWeiboLogin">
-            <icon scale="1.2" name="brands/weibo"></icon>
-          </div>
-          <div class="other-icon" @click="toWeixinLogin">
-            <icon scale="1.2" name="brands/weixin"></icon>
-          </div>
-        </div>
-        <router-link to="/regist"><a class="forget-pass">注册账户</a></router-link>
-      </Row>
-    </Row>
-  
-    <Row class="foot">
-      <Row type="flex" justify="space-around" class="code-row-bg help">
-        <a class="item" href="https://github.com/Exrick/x-boot" target="_blank">帮助</a>
-        <a class="item" href="https://github.com/Exrick/x-boot" target="_blank">隐私</a>
-        <a class="item" href="https://github.com/Exrick/x-boot" target="_blank">条款</a>
-      </Row>
-      <Row type="flex" justify="center" class="code-row-bg copyright">
-        Copyright © 2018 - Present <a href="http://exrick.cn" target="_blank" style="margin:0 5px;">Exrick</a> 版权所有
-      </Row>
-    </Row>
-    </Col>
-  </Row>
+  </div>
 </template>
 
 <script>
+import { login, userInfo, initCaptcha, drawCodeImage } from "@/api/index";
+import { validateMobile } from "@/libs/validate";
 import Cookies from "js-cookie";
-import {
-  login,
-  userInfo,
-  githubLogin,
-  qqLogin,
-  weiboLogin,
-  getJWT,
-  sendSms,
-  smsLogin
-} from "@/api/index";
+import Header from "@/views/main-components/header";
+import Footer from "@/views/main-components/footer";
+import LangSwitch from "@/views/main-components/lang-switch";
+import CountDownButton from "@/views/my-components/count-down-button";
 import util from "@/libs/util.js";
 export default {
+  components: {
+    CountDownButton,
+    LangSwitch,
+    Header,
+    Footer
+  },
   data() {
-    const validateMobile = (rule, value, callback) => {
-      var reg = /^[1][3,4,5,7,8][0-9]{9}$/;
-      if (!reg.test(value)) {
-        callback(new Error("手机号格式错误"));
-      } else {
-        callback();
-      }
-    };
     return {
+      captchaId: "",
+      captchaImg: "",
+      loadingCaptcha: true,
       error: false,
-      errorMsg: "",
       tabName: "username",
       saveLogin: true,
+      getSms: "获取验证码",
       loading: false,
       sending: false,
-      sended: false,
-      count: 60,
-      countButton: "60 s",
-      maxLength: 6,
       errorCode: "",
       form: {
-        username: "admin或test或test2 可注册",
+        username: "test或test2 可注册 支持Github、QQ、微博登录",
         password: "123456",
-        mobile: "捐赠获取完整版功能",
+        mobile: "阿里云短信0.045/条 若余额不足联系作者充值",
         code: ""
       },
       rules: {
@@ -145,6 +201,13 @@ export default {
           {
             required: true,
             message: "密码不能为空",
+            trigger: "blur"
+          }
+        ],
+        imgCode: [
+          {
+            required: true,
+            message: "验证码不能为空",
             trigger: "blur"
           }
         ],
@@ -163,30 +226,25 @@ export default {
     };
   },
   methods: {
-    showErrorMsg(msg) {
-      this.error = true;
-      this.errorMsg = msg;
-    },
-    sendVerify() {
-      this.$refs.mobileLoginForm.validate(valid => {
-        if (valid) {
-          this.showErrorMsg("请捐赠获取完整版")
+    getCaptchaImg() {
+      this.loadingCaptcha = true;
+      initCaptcha().then(res => {
+        this.loadingCaptcha = false;
+        if (res.success) {
+          this.captchaId = res.result;
+          this.captchaImg = drawCodeImage + this.captchaId;
         }
       });
     },
-    countDown() {
-      let that = this;
-      if (this.count == 0) {
-        this.sended = false;
-        this.count = 60;
-        return;
-      } else {
-        this.countButton = this.count + " s";
-        this.count--;
-      }
-      setTimeout(function() {
-        that.countDown();
-      }, 1000);
+    sendSmsCode() {
+      this.$refs.mobileLoginForm.validate(valid => {
+        if (valid) {
+          this.$Modal.info({
+            title: "抱歉，请获取完整版",
+            content: "支付链接: http://xpay.exrick.cn/pay?xboot"
+          });
+        }
+      });
     },
     submitLogin() {
       if (this.tabName == "username") {
@@ -196,13 +254,15 @@ export default {
             login({
               username: this.form.username,
               password: this.form.password,
+              code: this.form.imgCode,
+              captchaId: this.captchaId,
               saveLogin: this.saveLogin
             }).then(res => {
-              if (res.success == true) {
+              if (res.success) {
                 this.setStore("accessToken", res.result);
                 // 获取用户信息
                 userInfo().then(res => {
-                  if (res.success == true) {
+                  if (res.success) {
                     // 避免超过大小限制
                     delete res.result.permissions;
                     let roles = [];
@@ -210,6 +270,7 @@ export default {
                       roles.push(e.name);
                     });
                     this.setStore("roles", roles);
+                    this.setStore("saveLogin", this.saveLogin);
                     if (this.saveLogin) {
                       // 保存7天
                       Cookies.set("userInfo", JSON.stringify(res.result), {
@@ -231,6 +292,7 @@ export default {
                 });
               } else {
                 this.loading = false;
+                this.getCaptchaImg();
               }
             });
           }
@@ -244,34 +306,42 @@ export default {
             } else {
               this.errorCode = "";
             }
-            this.showErrorMsg("请捐赠获取完整版")
+            this.form.saveLogin = this.saveLogin;
+            this.$Modal.info({
+              title: "抱歉，请获取完整版",
+              content: "支付链接: http://xpay.exrick.cn/pay?xboot"
+            });
           }
         });
       }
     },
     toGithubLogin() {
-      this.showErrorMsg("请捐赠获取完整版")
+      this.$Modal.info({
+        title: "抱歉，请获取完整版",
+        content: "支付链接: http://xpay.exrick.cn/pay?xboot"
+      });
     },
     toQQLogin() {
-     this.showErrorMsg("请捐赠获取完整版")
+      this.$Modal.info({
+        title: "抱歉，请获取完整版",
+        content: "支付链接: http://xpay.exrick.cn/pay?xboot"
+      });
     },
     toWeiboLogin() {
-      this.showErrorMsg("请捐赠获取完整版")
+      this.$Modal.info({
+        title: "抱歉，请获取完整版",
+        content: "支付链接: http://xpay.exrick.cn/pay?xboot"
+      });
     },
     toWeixinLogin() {
       this.$Message.error("开通微信登录官方收费300/年");
     },
-    relatedLogin() {
-      
-    },
+    relatedLogin() {},
     handleDropDown(v) {
-      if (v == "showAccount") {
-        this.showAccount();
-      } else if (v == "resetByMobile") {
-        this.showErrorMsg("请捐赠获取完整版")
-      } else if (v == "resetByEmail") {
-        this.showErrorMsg("请捐赠获取完整版")
-      }
+      this.$Modal.info({
+        title: "抱歉，请获取完整版",
+        content: "支付链接: http://xpay.exrick.cn/pay?xboot"
+      });
     },
     showAccount() {
       this.$Notice.info({
@@ -280,19 +350,12 @@ export default {
           "账号1：test 密码：123456 <br>账号2：test2 密码：123456 已开放注册！",
         duration: 10
       });
-    },
-    showMessage() {
-      this.$Notice.success({
-        title: "已升级至iView3.0",
-        desc: "完善多项功能，包括数据权限、部门管理、定时任务、数据字典、前端模版等 修复已知BUG",
-        duration: 5
-      });
     }
   },
   mounted() {
-    this.showMessage();
     this.showAccount();
     this.relatedLogin();
+    this.getCaptchaImg();
   }
 };
 </script>

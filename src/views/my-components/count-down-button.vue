@@ -92,7 +92,7 @@ export default {
       }, 1000);
     },
     setText(value) {
-      if (value == this.buttonText) {
+      if (value === this.buttonText) {
         return;
       }
       this.buttonText = value;
@@ -100,7 +100,7 @@ export default {
   },
   watch: {
     text(val) {
-      this.setCurrentValue(val);
+      this.setText(val);
     }
   },
   mounted() {

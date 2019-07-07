@@ -6,9 +6,8 @@ import iviewArea from 'iview-area'
 import App from './App'
 import { router } from './router/index'
 import store from './store'
-import '@/locale'
 import 'iview/dist/styles/iview.css'
-import VueI18n from 'vue-i18n'
+import i18n from '@/locale'
 import Icon from 'vue-awesome/components/Icon'
 // 按需引入awesome图标
 import 'vue-awesome/icons/brands/qq'
@@ -23,7 +22,6 @@ import hasPermission from '@/libs/hasPermission'
 import hasRole from '@/libs/hasRole'
 import VueLazyload from 'vue-lazyload'
 import VueClipboard from 'vue-clipboard2'
-import TreeTable from 'tree-table-vue'
 import VueApexCharts from 'vue-apexcharts'
 import '@babel/polyfill'
 
@@ -32,11 +30,11 @@ Vue.use(VueLazyload, {
     error: require('./assets/img-error.png'),
     loading: require('./assets/loading2.gif')
 })
-Vue.use(VueI18n);
-Vue.use(iView);
+Vue.use(iView, {
+    i18n: (key, value) => i18n.t(key, value)
+});
 Vue.use(iviewArea);
 Vue.use(VueClipboard);
-Vue.use(TreeTable);
 Vue.component('icon', Icon);
 Vue.use(hasPermission);
 Vue.use(hasRole);
@@ -57,6 +55,7 @@ new Vue({
     el: '#app',
     router,
     store,
+    i18n,
     render: h => h(App),
     data: {
         currentPageName: ''

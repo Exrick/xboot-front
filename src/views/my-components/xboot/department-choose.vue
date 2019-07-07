@@ -29,7 +29,7 @@ export default {
   methods: {
     initDepartmentData() {
       initDepartment().then(res => {
-        if (res.success == true) {
+        if (res.success) {
           res.result.forEach(function(e) {
             if (e.isParent) {
               e.value = e.id;
@@ -53,7 +53,7 @@ export default {
       item.loading = true;
       loadDepartment(item.value).then(res => {
         item.loading = false;
-        if (res.success == true) {
+        if (res.success) {
           res.result.forEach(function(e) {
             if (e.isParent) {
               e.value = e.id;

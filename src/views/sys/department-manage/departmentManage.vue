@@ -186,7 +186,7 @@ export default {
       this.loading = true;
       initDepartment().then(res => {
         this.loading = false;
-        if (res.success == true) {
+        if (res.success) {
           res.result.forEach(function(e) {
             if (e.isParent) {
               e.loading = false;
@@ -201,7 +201,7 @@ export default {
       this.loadingEdit = true;
       initDepartment().then(res => {
         this.loadingEdit = false;
-        if (res.success == true) {
+        if (res.success) {
           res.result.forEach(function(e) {
             if (e.isParent) {
               e.loading = false;
@@ -220,7 +220,7 @@ export default {
     },
     loadData(item, callback) {
       loadDepartment(item.id).then(res => {
-        if (res.success == true) {
+        if (res.success) {
           res.result.forEach(function(e) {
             if (e.isParent) {
               e.loading = false;
@@ -309,7 +309,7 @@ export default {
           this.submitLoading = true;
           editDepartment(this.form).then(res => {
             this.submitLoading = false;
-            if (res.success == true) {
+            if (res.success) {
               this.$Message.success("编辑成功");
               this.init();
               this.modalVisible = false;
@@ -324,7 +324,7 @@ export default {
           this.submitLoading = true;
           addDepartment(this.formAdd).then(res => {
             this.submitLoading = false;
-            if (res.success == true) {
+            if (res.success) {
               this.$Message.success("添加成功");
               this.init();
               this.modalVisible = false;
@@ -368,7 +368,7 @@ export default {
       }
       this.$Modal.confirm({
         title: "确认删除",
-        content: "您确认要删除所选的 " + this.selectCount + " 条数据?",
+        content: "您确认要删除所选的 " + this.selectCount + " 条数据及其下级所有数据?",
         onOk: () => {
           let ids = "";
           this.selectList.forEach(function(e) {
@@ -376,7 +376,7 @@ export default {
           });
           ids = ids.substring(0, ids.length - 1);
           deleteDepartment(ids).then(res => {
-            if (res.success == true) {
+            if (res.success) {
               this.$Message.success("删除成功");
               this.selectList = [];
               this.selectCount = 0;

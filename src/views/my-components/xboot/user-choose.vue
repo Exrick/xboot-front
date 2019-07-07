@@ -251,7 +251,7 @@ export default {
       this.userLoading = true;
       getUserListData(this.searchUserForm).then(res => {
         this.userLoading = false;
-        if (res.success == true) {
+        if (res.success) {
           this.userData = res.result.content;
           this.totalUser = res.result.totalElements;
         }
