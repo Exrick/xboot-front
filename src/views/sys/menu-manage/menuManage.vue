@@ -242,7 +242,7 @@
           <span style="margin-left:5px">值越小越靠前，支持小数</span>
         </FormItem>
         <FormItem label="始终显示" prop="showAlways" v-if="menuFormAdd.level==1">
-          <i-switch size="large" v-model="menuForm.showAlways">
+          <i-switch size="large" v-model="menuFormAdd.showAlways">
             <span slot="open">启用</span>
             <span slot="close">禁用</span>
           </i-switch>
