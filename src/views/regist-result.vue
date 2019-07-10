@@ -15,8 +15,8 @@
             </router-link>
           </Row>
         </Row>
+        <Footer/>
       </Col>
-      <Footer/>
     </Row>
   </div>
 </template>

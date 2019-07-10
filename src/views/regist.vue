@@ -87,8 +87,8 @@
             </router-link>
           </Row>
         </Row>
+        <Footer />
       </Col>
-      <Footer />
       <LangSwitch />
     </Row>
   </div>
