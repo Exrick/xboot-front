@@ -316,11 +316,11 @@ export default {
       this.$Modal.confirm({
         title: "请谨慎进行此操作！",
         content: "您确认要彻底清空删除所有数据?",
+        loading: true,
         onOk: () => {
           // 删除
-          this.$store.commit("setLoading", true);
           deleteAllRedis().then(res => {
-            this.$store.commit("setLoading", false);
+            this.$Modal.remove();
             if (res.success) {
               this.$Message.success("操作成功");
               this.getDataList();
@@ -334,11 +334,11 @@ export default {
         title: "确认删除",
         // 记得确认修改此处
         content: "您确认要删除 " + v.key + " ?",
+        loading: true,
         onOk: () => {
           // 删除
-          this.$store.commit("setLoading", true);
           deleteRedis({ keys: v.key }).then(res => {
-            this.$store.commit("setLoading", false);
+            this.$Modal.remove();
             if (res.success) {
               this.$Message.success("操作成功");
               this.getDataList();
@@ -355,6 +355,7 @@ export default {
       this.$Modal.confirm({
         title: "确认删除",
         content: "您确认要删除所选的 " + this.selectCount + " 条数据?",
+        loading: true,
         onOk: () => {
           let keys = "";
           this.selectList.forEach(function(e) {
@@ -362,9 +363,8 @@ export default {
           });
           keys = keys.substring(0, keys.length - 1);
           // 批量删除
-          this.$store.commit("setLoading", true);
           deleteRedis({ keys: keys }).then(res => {
-            this.$store.commit("setLoading", false);
+            this.$Modal.remove();
             if (res.success) {
               this.$Message.success("操作成功");
               this.clearSelectAll();

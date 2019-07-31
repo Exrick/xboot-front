@@ -699,15 +699,15 @@ export default {
           "您确认要重置所选的 " +
           this.selectCount +
           " 条用户数据密码为【123456】?",
+        loading: true,
         onOk: () => {
           let ids = "";
           this.selectList.forEach(function(e) {
             ids += e.id + ",";
           });
           ids = ids.substring(0, ids.length - 1);
-          this.$store.commit("setLoading", true);
           resetUserPass({ ids: ids }).then(res => {
-            this.$store.commit("setLoading", false);
+            this.$Modal.remove();
             if (res.success) {
               this.$Message.success("操作成功");
               this.clearSelectAll();
@@ -790,10 +790,10 @@ export default {
       this.$Modal.confirm({
         title: "确认启用",
         content: "您确认要启用用户 " + v.username + " ?",
+        loading: true,
         onOk: () => {
-          this.$store.commit("setLoading", true);
           enableUser(v.id).then(res => {
-            this.$store.commit("setLoading", false);
+            this.$Modal.remove();
             if (res.success) {
               this.$Message.success("操作成功");
               this.getUserList();
@@ -806,10 +806,10 @@ export default {
       this.$Modal.confirm({
         title: "确认禁用",
         content: "您确认要禁用用户 " + v.username + " ?",
+        loading: true,
         onOk: () => {
-          this.$store.commit("setLoading", true);
           disableUser(v.id).then(res => {
-            this.$store.commit("setLoading", false);
+            this.$Modal.remove();
             if (res.success) {
               this.$Message.success("操作成功");
               this.getUserList();
@@ -822,10 +822,10 @@ export default {
       this.$Modal.confirm({
         title: "确认删除",
         content: "您确认要删除用户 " + v.username + " ?",
+        loading: true,
         onOk: () => {
-          this.$store.commit("setLoading", true);
           deleteUser(v.id).then(res => {
-            this.$store.commit("setLoading", false);
+            this.$Modal.remove();
             if (res.success) {
               this.$Message.success("删除成功");
               this.getUserList();
@@ -860,15 +860,15 @@ export default {
       this.$Modal.confirm({
         title: "确认删除",
         content: "您确认要删除所选的 " + this.selectCount + " 条数据?",
+        loading: true,
         onOk: () => {
           let ids = "";
           this.selectList.forEach(function(e) {
             ids += e.id + ",";
           });
           ids = ids.substring(0, ids.length - 1);
-          this.$store.commit("setLoading", true);
           deleteUser(ids).then(res => {
-            this.$store.commit("setLoading", false);
+            this.$Modal.remove();
             if (res.success) {
               this.$Message.success("删除成功");
               this.clearSelectAll();

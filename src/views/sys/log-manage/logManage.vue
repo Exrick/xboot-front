@@ -309,10 +309,10 @@ export default {
       this.$Modal.confirm({
         title: "确认删除",
         content: "您确认要删除该条数据?",
+        loading: true,
         onOk: () => {
-          this.$store.commit("setLoading", true);
           deleteLog(v.id).then(res => {
-            this.$store.commit("setLoading", false);
+            this.$Modal.remove();
             if (res.success) {
               this.$Message.success("删除成功");
               this.init();
@@ -344,15 +344,15 @@ export default {
       this.$Modal.confirm({
         title: "确认删除",
         content: "您确认要删除所选的 " + this.selectCount + " 条数据?",
+        loading: true,
         onOk: () => {
           let ids = "";
           this.selectList.forEach(function(e) {
             ids += e.id + ",";
           });
           ids = ids.substring(0, ids.length - 1);
-          this.$store.commit("setLoading", true);
           deleteLog(ids).then(res => {
-            this.$store.commit("setLoading", false);
+            this.$Modal.remove();
             if (res.success) {
               this.$Message.success("删除成功");
               this.clearSelectAll();

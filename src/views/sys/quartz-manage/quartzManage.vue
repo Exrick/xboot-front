@@ -397,10 +397,10 @@ export default {
       this.$Modal.confirm({
         title: "确认停止",
         content: "您确认要停止任务 " + v.jobClassName + " ?",
+        loading: true,
         onOk: () => {
-          this.$store.commit("setLoading", true);
           pauseQuartz(v).then(res => {
-            this.$store.commit("setLoading", false);
+            this.$Modal.remove();
             if (res.success) {
               this.$Message.success("操作成功");
               this.getQuartzList();
@@ -413,10 +413,10 @@ export default {
       this.$Modal.confirm({
         title: "确认恢复",
         content: "您确认要恢复任务 " + v.jobClassName + " ?",
+        loading: true,
         onOk: () => {
-          this.$store.commit("setLoading", true);
           resumeQuartz(v).then(res => {
-            this.$store.commit("setLoading", false);
+            this.$Modal.remove();
             if (res.success) {
               this.$Message.success("操作成功");
               this.getQuartzList();
@@ -429,10 +429,10 @@ export default {
       this.$Modal.confirm({
         title: "确认删除",
         content: "您确认要删除任务 " + v.jobClassName + " ?",
+        loading: true,
         onOk: () => {
-          this.$store.commit("setLoading", true);
           deleteQuartz(v.id).then(res => {
-            this.$store.commit("setLoading", false);
+            this.$Modal.remove();
             if (res.success) {
               this.$Message.success("操作成功");
               this.getQuartzList();
@@ -456,15 +456,15 @@ export default {
       this.$Modal.confirm({
         title: "确认删除",
         content: "您确认要删除所选的 " + this.selectCount + " 条数据?",
+        loading: true,
         onOk: () => {
           let ids = "";
           this.selectList.forEach(function(e) {
             ids += e.id + ",";
           });
           ids = ids.substring(0, ids.length - 1);
-          this.$store.commit("setLoading", true);
           deleteQuartz(ids).then(res => {
-            this.$store.commit("setLoading", false);
+            this.$Modal.remove();
             if (res.success) {
               this.$Message.success("删除成功");
               this.clearSelectAll();

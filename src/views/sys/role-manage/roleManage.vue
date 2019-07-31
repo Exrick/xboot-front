@@ -516,10 +516,10 @@ export default {
       this.$Modal.confirm({
         title: "确认删除",
         content: "您确认要删除角色 " + v.name + " ?",
+        loading: true,
         onOk: () => {
-          this.$store.commit("setLoading", true);
           deleteRole(v.id).then(res => {
-            this.$store.commit("setLoading", false);
+            this.$Modal.remove();
             if (res.success) {
               this.$Message.success("删除成功");
               this.getRoleList();
@@ -532,14 +532,14 @@ export default {
       this.$Modal.confirm({
         title: "确认设置",
         content: "您确认要设置所选的 " + v.name + " 为注册用户默认角色?",
+        loading: true,
         onOk: () => {
           let params = {
             id: v.id,
             isDefault: true
           };
-          this.$store.commit("setLoading", true);
           setDefaultRole(params).then(res => {
-            this.$store.commit("setLoading", false);
+            this.$Modal.remove();
             if (res.success) {
               this.$Message.success("操作成功");
               this.getRoleList();
@@ -552,14 +552,14 @@ export default {
       this.$Modal.confirm({
         title: "确认取消",
         content: "您确认要取消所选的 " + v.name + " 角色为默认?",
+        loading: true,
         onOk: () => {
           let params = {
             id: v.id,
             isDefault: false
           };
-          this.$store.commit("setLoading", true);
           setDefaultRole(params).then(res => {
-            this.$store.commit("setLoading", false);
+            this.$Modal.remove();
             if (res.success) {
               this.$Message.success("操作成功");
               this.getRoleList();
@@ -583,15 +583,15 @@ export default {
       this.$Modal.confirm({
         title: "确认删除",
         content: "您确认要删除所选的 " + this.selectCount + " 条数据?",
+        loading: true,
         onOk: () => {
           let ids = "";
           this.selectList.forEach(function(e) {
             ids += e.id + ",";
           });
           ids = ids.substring(0, ids.length - 1);
-          this.$store.commit("setLoading", true);
           deleteRole(ids).then(res => {
-            this.$store.commit("setLoading", false);
+            this.$Modal.remove();
             if (res.success) {
               this.$Message.success("删除成功");
               this.clearSelectAll();

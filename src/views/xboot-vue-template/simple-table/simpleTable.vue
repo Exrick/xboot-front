@@ -203,7 +203,7 @@ export default {
       this.data = [
         {
           id: "1",
-          name: "X-BOOT",
+          name: "XBoot",
           createTime: "2018-08-08 00:08:00",
           updateTime: "2018-08-08 00:08:00"
         },
@@ -286,9 +286,11 @@ export default {
         title: "确认删除",
         // 记得确认修改此处
         content: "您确认要删除 " + v.name + " ?",
+        loading: true,
         onOk: () => {
           // 删除
           // this.deleteRequest("请求地址，如/deleteByIds/" + v.id).then(res => {
+          // this.$Modal.remove();
           //   if (res.success) {
           //     this.$Message.success("操作成功");
           //     this.getDataList();
@@ -296,6 +298,7 @@ export default {
           // });
           // 模拟请求成功
           this.$Message.success("操作成功");
+          this.$Modal.remove();
           this.getDataList();
         }
       });
@@ -315,6 +318,7 @@ export default {
       this.$Modal.confirm({
         title: "确认删除",
         content: "您确认要删除所选的 " + this.selectCount + " 条数据?",
+        loading: true,
         onOk: () => {
           let ids = "";
           this.selectList.forEach(function(e) {
@@ -323,6 +327,7 @@ export default {
           ids = ids.substring(0, ids.length - 1);
           // 批量删除
           // this.deleteRequest("请求地址，如/deleteByIds/" + ids).then(res => {
+          // this.$Modal.remove();
           //   if (res.success) {
           //     this.$Message.success("操作成功");
           //     this.clearSelectAll();
@@ -331,6 +336,7 @@ export default {
           // });
           // 模拟请求成功
           this.$Message.success("操作成功");
+          this.$Modal.remove();
           this.clearSelectAll();
           this.getDataList();
         }
