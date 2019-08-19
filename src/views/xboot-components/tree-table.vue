@@ -295,7 +295,7 @@ export default {
         },
         {
           name: "data",
-          desc: "是否选开启多张上传，默认true开启，设为false仅限制一张",
+          desc: "数据",
           type: "Array",
           value: "[]"
         },

@@ -9,13 +9,14 @@
 - 官网地址：http://xb.exrick.cn
 - 官网源码：https://github.com/Exrick/xboot-show
 ### 在线Demo
-http://xboot.exrick.cn
+- 在线Demo：http://xboot.exrick.cn
+- 单点登录测试页：http://sso.exrick.cn
 ### 最新最全面在线文档
 https://www.kancloud.cn/exrick/xboot/content
 ### 后台项目地址：[X-Boot](https://github.com/Exrick/x-boot)
 > 涉及技术：Spring Boot 2.x/Spring Security/JWT/Spring Data JPA+Mybatis-Plus/Redis/Elasticsearch 分布式限流/同步锁/验证码/SnowFlake雪花算法ID生成 动态权限管理 数据权限 代码生成 日志记录 定时任务 第三方账号、短信登录
 ### 项目简介
-- 项目基于 Vue-Cli 3.7.x 创建
+- 项目基于 Vue-Cli 3.10.x 创建
 - 主要Main组件框架基于iView-admin 1.0版本 修复其部分BUG
 - 组件库升级最新iView 3.x
 - 后台加载动态权限菜单 多方式轻松权限控制至按钮显示

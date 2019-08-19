@@ -51,6 +51,10 @@ export default {
     multiple: {
       type: Boolean,
       default: true
+    },
+    limit: {
+      type: Number,
+      default: 10
     }
   },
   data() {
@@ -111,6 +115,10 @@ export default {
       });
     },
     handleBeforeUpload() {
+      if(this.multiple&&this.uploadList.length>=this.limit){
+        this.$Message.warning("最多只能上传"+this.limit+"张图片");
+        return false;
+      }
       return true;
     },
     returnValue() {
@@ -135,13 +143,19 @@ export default {
       }
     },
     setData(v) {
+      if(this.multiple&&v.length>this.limit){
+        this.$Message.warning("设置图片数据失败，最多只能设置"+this.limit+"张图片");
+        return;
+      }
       if (typeof v == "string") {
+        this.uploadList = [];
         let item = {
           url: v,
           status: "finished"
         };
         this.uploadList.push(item);
       } else if (typeof v == "object") {
+        this.uploadList = [];
         v.forEach(e => {
           let item = {
             url: e,

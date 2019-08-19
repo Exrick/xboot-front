@@ -529,6 +529,12 @@ export default {
           desc: "是否选开启多张上传，默认true开启，设为false仅限制一张",
           type: "Boolean",
           value: "true"
+        },
+        {
+          name: "limit",
+          desc: "限制上传数量，开启多张上传multiple设为true时生效，默认限制10张",
+          type: "Number",
+          value: "10"
         }
       ],
       data24: [
