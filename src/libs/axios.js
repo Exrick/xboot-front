@@ -77,6 +77,7 @@ export const postRequest = (url, params) => {
             for (let it in data) {
                 ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&';
             }
+            ret = ret.substring(0, ret.length - 1);
             return ret;
         }],
         headers: {
@@ -97,6 +98,7 @@ export const putRequest = (url, params) => {
             for (let it in data) {
                 ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&';
             }
+            ret = ret.substring(0, ret.length - 1);
             return ret;
         }],
         headers: {
@@ -127,5 +129,18 @@ export const uploadFileRequest = (url, params) => {
         headers: {
             'accessToken': accessToken
         }
+    });
+};
+
+/**
+ * 无需token验证的请求 避免旧token过期导致请求失败
+ * @param {*} url 
+ * @param {*} params 
+ */
+export const getRequestWithNoToken = (url, params) => {
+    return axios({
+        method: 'get',
+        url: `${base}${url}`,
+        params: params
     });
 };

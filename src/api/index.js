@@ -1,5 +1,5 @@
 // 统一请求路径前缀在libs/axios.js中修改
-import { getRequest, postRequest, putRequest, deleteRequest, uploadFileRequest } from '@/libs/axios';
+import { getRequest, postRequest, putRequest, deleteRequest, getRequestWithNoToken } from '@/libs/axios';
 
 
 
@@ -28,7 +28,7 @@ export const regist = (params) => {
 }
 // 初始化验证码
 export const initCaptcha = (params) => {
-    return getRequest('/common/captcha/init', params)
+    return getRequestWithNoToken('/common/captcha/init', params)
 }
 // 发送短信验证码
 export const sendSms = (mobile, params) => {
