@@ -42,7 +42,6 @@ body {
 }
 
 .ivu-poptip {
-  width: 100%;
   display: block !important;
 }
 

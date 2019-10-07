@@ -18,7 +18,7 @@ https://www.kancloud.cn/exrick/xboot/content
 ### 项目简介
 - 项目基于 Vue-Cli 3.10.x 创建
 - 主要Main组件框架基于iView-admin 1.0版本 修复其部分BUG
-- 组件库升级最新iView 3.x
+- UI组件库升级至iView 3.x
 - 后台加载动态权限菜单 多方式轻松权限控制至按钮显示
 - 提供Vue空白模版，只需修改后台请求和对应实体字段即可完成页面开发
 - 多语言切换、消息管理、第三方社交账号或短信登录
@@ -109,11 +109,15 @@ https://www.kancloud.cn/exrick/xboot/content
 3.XBoot前端集群部署及负载均衡配置
 
 ### 作者其他项目推荐
-- [XPay个人免签收款支付系统](https://github.com/Exrick/xpay)
+- [XMall微信小程序APP前端 现已开源！](https://github.com/Exrick/xmall-weapp)
+    
+    [![WX20190924-234416@2x.png](https://s2.ax1x.com/2019/10/06/ucEsBD.md.png)](https://www.bilibili.com/video/av70226175)
 
 - [XMall：基于SOA架构的分布式电商购物商城](https://github.com/Exrick/xmall)
 
     ![](https://i.loli.net/2018/07/22/5b54615b95788.jpg)
+    
+- [XPay个人免签收款支付系统](https://github.com/Exrick/xpay)
 
 - 机器学习笔记
     - [Machine-Learning](https://github.com/Exrick/Machine-Learning)
