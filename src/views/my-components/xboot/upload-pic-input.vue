@@ -1,41 +1,43 @@
 <template>
-  <div style="display: flex;">
+  <div>
     <Poptip trigger="hover" title="图片预览" placement="right" width="350">
-      <Input
-        v-model="currentValue"
-        @on-change="handleChange"
-        :placeholder="placeholder"
-        :size="size"
-        :disabled="disabled"
-        :readonly="readonly"
-        :maxlength="maxlength"
-        clearable
-      />
+      <div style="display:flex;">
+        <Input
+          v-model="currentValue"
+          @on-change="handleChange"
+          :placeholder="placeholder"
+          :size="size"
+          :disabled="disabled"
+          :readonly="readonly"
+          :maxlength="maxlength"
+          clearable
+        />
+        <Upload
+          :action="uploadFileUrl"
+          :headers="accessToken"
+          :on-success="handleSuccess"
+          :on-error="handleError"
+          :format="['jpg','jpeg','png','gif','bmp']"
+          accept=".jpg, .jpeg, .png, .gif, .bmp"
+          :max-size="5120"
+          :on-format-error="handleFormatError"
+          :on-exceeded-size="handleMaxSize"
+          :before-upload="beforeUpload"
+          :show-upload-list="false"
+          ref="up"
+          class="upload"
+        >
+          <Button :loading="loading" :size="size" :disabled="disabled" :icon="icon">上传图片</Button>
+        </Upload>
+      </div>
       <div slot="content">
-        <img :src="currentValue" alt="无效的图片链接" style="width: 100%;margin: 0 auto;display: block;">
+        <img :src="currentValue" alt="无效的图片链接" style="width: 100%;margin: 0 auto;display: block;" />
         <a @click="viewImage=true" style="margin-top:5px;text-align:right;display:block">查看大图</a>
       </div>
     </Poptip>
-    <Upload
-      :action="uploadFileUrl"
-      :headers="accessToken"
-      :on-success="handleSuccess"
-      :on-error="handleError"
-      :format="['jpg','jpeg','png','gif','bmp']"
-      accept=".jpg, .jpeg, .png, .gif, .bmp"
-      :max-size="5120"
-      :on-format-error="handleFormatError"
-      :on-exceeded-size="handleMaxSize"
-      :before-upload="beforeUpload"
-      :show-upload-list="false"
-      ref="up"
-      class="upload"
-    >
-      <Button :loading="loading" :size="size" :disabled="disabled" :icon="icon">上传图片</Button>
-    </Upload>
 
     <Modal title="图片预览" v-model="viewImage" :styles="{top: '30px'}" draggable>
-      <img :src="currentValue" alt="无效的图片链接" style="width: 100%;margin: 0 auto;display: block;">
+      <img :src="currentValue" alt="无效的图片链接" style="width: 100%;margin: 0 auto;display: block;" />
       <div slot="footer">
         <Button @click="viewImage=false">关闭</Button>
       </div>
