@@ -302,7 +302,7 @@ import {
   changeMobile
 } from "@/api/index";
 import { validateMobile } from "@/libs/validate";
-import CountDownButton from "@/views/my-components/count-down-button";
+import CountDownButton from "@/views/my-components/xboot/count-down-button";
 import uploadPicThumb from "@/views/my-components/xboot/upload-pic-thumb";
 import checkPassword from "@/views/my-components/xboot/check-password";
 import Cookies from "js-cookie";

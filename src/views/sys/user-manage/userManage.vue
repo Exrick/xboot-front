@@ -1,153 +1,135 @@
 <style lang="less">
+@import "../../../styles/table-common.less";
 @import "./userManage.less";
 </style>
 <template>
   <div class="search">
-    <Row>
-      <Col>
-        <Card>
-          <Row>
-            <Form ref="searchForm" :model="searchForm" inline :label-width="70" class="search-form">
-              <Form-item label="用户名称" prop="username">
-                <Input
-                  type="text"
-                  v-model="searchForm.username"
-                  clearable
-                  placeholder="请输入用户名"
-                  style="width: 200px"
-                />
-              </Form-item>
-              <Form-item label="部门" prop="department">
-                <department-choose @on-change="handleSelectDep" style="width: 200px" ref="dep"></department-choose>
-              </Form-item>
-              <span v-if="drop">
-                <Form-item label="手机号" prop="mobile">
-                  <Input
-                    type="text"
-                    v-model="searchForm.mobile"
-                    clearable
-                    placeholder="请输入手机号"
-                    style="width: 200px"
-                  />
-                </Form-item>
-                <Form-item label="邮箱" prop="email">
-                  <Input
-                    type="text"
-                    v-model="searchForm.email"
-                    clearable
-                    placeholder="请输入邮箱"
-                    style="width: 200px"
-                  />
-                </Form-item>
-                <Form-item label="性别" prop="sex">
-                  <Select v-model="searchForm.sex" placeholder="请选择" clearable style="width: 200px">
-                    <Option v-for="(item, i) in dictSex" :key="i" :value="item.value">{{item.title}}</Option>
-                  </Select>
-                </Form-item>
-                <Form-item label="用户类型" prop="type">
-                  <Select
-                    v-model="searchForm.type"
-                    placeholder="请选择"
-                    clearable
-                    style="width: 200px"
-                  >
-                    <Option value="0">普通用户</Option>
-                    <Option value="1">管理员</Option>
-                  </Select>
-                </Form-item>
-                <Form-item label="用户状态" prop="status">
-                  <Select
-                    v-model="searchForm.status"
-                    placeholder="请选择"
-                    clearable
-                    style="width: 200px"
-                  >
-                    <Option value="0">正常</Option>
-                    <Option value="-1">禁用</Option>
-                  </Select>
-                </Form-item>
-                <Form-item label="创建时间">
-                  <DatePicker
-                    v-model="selectDate"
-                    type="daterange"
-                    format="yyyy-MM-dd"
-                    clearable
-                    @on-change="selectDateRange"
-                    placeholder="选择起始时间"
-                    style="width: 200px"
-                  ></DatePicker>
-                </Form-item>
-              </span>
-              <Form-item style="margin-left:-35px;" class="br">
-                <Button @click="handleSearch" type="primary" icon="ios-search">搜索</Button>
-                <Button @click="handleReset">重置</Button>
-                <a class="drop-down" @click="dropDown">
-                  {{dropDownContent}}
-                  <Icon :type="dropDownIcon"></Icon>
-                </a>
-              </Form-item>
-            </Form>
-          </Row>
-          <Row class="operation">
-            <Button @click="add" type="primary" icon="md-add">添加用户</Button>
-            <Button @click="delAll" icon="md-trash">批量删除</Button>
-            <Dropdown @on-click="handleDropdown">
-              <Button>
-                更多操作
-                <Icon type="md-arrow-dropdown" />
-              </Button>
-              <DropdownMenu slot="list">
-                <DropdownItem name="refresh">刷新</DropdownItem>
-                <DropdownItem name="reset">重置用户密码</DropdownItem>
-                <DropdownItem name="exportData">导出所选数据</DropdownItem>
-                <DropdownItem name="exportAll">导出全部数据</DropdownItem>
-                <DropdownItem name="importData">导入数据(付费)</DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
-            <circleLoading v-if="operationLoading" />
-          </Row>
-          <Row>
-            <Alert show-icon>
-              已选择
-              <span class="select-count">{{selectCount}}</span> 项
-              <a class="select-clear" @click="clearSelectAll">清空</a>
-            </Alert>
-          </Row>
-          <Row>
-            <Table
-              :loading="loading"
-              border
-              :columns="columns"
-              :data="data"
-              sortable="custom"
-              @on-sort-change="changeSort"
-              @on-selection-change="showSelect"
-              ref="table"
-            ></Table>
-            <Table
-              :columns="exportColumns"
-              :data="exportData"
-              ref="exportTable"
-              style="display:none"
-            ></Table>
-          </Row>
-          <Row type="flex" justify="end" class="page">
-            <Page
-              :current="searchForm.pageNumber"
-              :total="total"
-              :page-size="searchForm.pageSize"
-              @on-change="changePage"
-              @on-page-size-change="changePageSize"
-              :page-size-opts="[10,20,50]"
-              size="small"
-              show-total
-              show-elevator
-              show-sizer
-            ></Page>
-          </Row>
-        </Card>
-      </Col>
-    </Row>
+    <Card>
+      <Row>
+        <Form ref="searchForm" :model="searchForm" inline :label-width="70" class="search-form">
+          <Form-item label="用户名称" prop="username">
+            <Input
+              type="text"
+              v-model="searchForm.username"
+              clearable
+              placeholder="请输入用户名"
+              style="width: 200px"
+            />
+          </Form-item>
+          <Form-item label="部门" prop="department">
+            <department-choose @on-change="handleSelectDep" style="width: 200px" ref="dep"></department-choose>
+          </Form-item>
+          <span v-if="drop">
+            <Form-item label="手机号" prop="mobile">
+              <Input
+                type="text"
+                v-model="searchForm.mobile"
+                clearable
+                placeholder="请输入手机号"
+                style="width: 200px"
+              />
+            </Form-item>
+            <Form-item label="邮箱" prop="email">
+              <Input
+                type="text"
+                v-model="searchForm.email"
+                clearable
+                placeholder="请输入邮箱"
+                style="width: 200px"
+              />
+            </Form-item>
+            <Form-item label="性别" prop="sex">
+              <Select v-model="searchForm.sex" placeholder="请选择" clearable style="width: 200px">
+                <Option v-for="(item, i) in dictSex" :key="i" :value="item.value">{{item.title}}</Option>
+              </Select>
+            </Form-item>
+            <Form-item label="用户类型" prop="type">
+              <Select v-model="searchForm.type" placeholder="请选择" clearable style="width: 200px">
+                <Option value="0">普通用户</Option>
+                <Option value="1">管理员</Option>
+              </Select>
+            </Form-item>
+            <Form-item label="用户状态" prop="status">
+              <Select v-model="searchForm.status" placeholder="请选择" clearable style="width: 200px">
+                <Option value="0">正常</Option>
+                <Option value="-1">禁用</Option>
+              </Select>
+            </Form-item>
+            <Form-item label="创建时间">
+              <DatePicker
+                v-model="selectDate"
+                type="daterange"
+                format="yyyy-MM-dd"
+                clearable
+                @on-change="selectDateRange"
+                placeholder="选择起始时间"
+                style="width: 200px"
+              ></DatePicker>
+            </Form-item>
+          </span>
+          <Form-item style="margin-left:-35px;" class="br">
+            <Button @click="handleSearch" type="primary" icon="ios-search">搜索</Button>
+            <Button @click="handleReset">重置</Button>
+            <a class="drop-down" @click="dropDown">
+              {{dropDownContent}}
+              <Icon :type="dropDownIcon"></Icon>
+            </a>
+          </Form-item>
+        </Form>
+      </Row>
+      <Row class="operation">
+        <Button @click="add" type="primary" icon="md-add">添加用户</Button>
+        <Button @click="delAll" icon="md-trash">批量删除</Button>
+        <Dropdown @on-click="handleDropdown">
+          <Button>
+            更多操作
+            <Icon type="md-arrow-dropdown" />
+          </Button>
+          <DropdownMenu slot="list">
+            <DropdownItem name="refresh">刷新</DropdownItem>
+            <DropdownItem name="reset">重置用户密码</DropdownItem>
+            <DropdownItem name="exportData">导出所选数据</DropdownItem>
+            <DropdownItem name="exportAll">导出全部数据</DropdownItem>
+            <DropdownItem name="importData">导入数据(付费)</DropdownItem>
+          </DropdownMenu>
+        </Dropdown>
+      </Row>
+      <Row>
+        <Alert show-icon>
+          已选择
+          <span class="select-count">{{selectCount}}</span> 项
+          <a class="select-clear" @click="clearSelectAll">清空</a>
+        </Alert>
+      </Row>
+      <Row>
+        <Table
+          :loading="loading"
+          border
+          :columns="columns"
+          :data="data"
+          sortable="custom"
+          @on-sort-change="changeSort"
+          @on-selection-change="showSelect"
+          ref="table"
+        ></Table>
+        <Table :columns="exportColumns" :data="exportData" ref="exportTable" style="display:none"></Table>
+      </Row>
+      <Row type="flex" justify="end" class="page">
+        <Page
+          :current="searchForm.pageNumber"
+          :total="total"
+          :page-size="searchForm.pageSize"
+          @on-change="changePage"
+          @on-page-size-change="changePageSize"
+          :page-size-opts="[10,20,50]"
+          size="small"
+          show-total
+          show-elevator
+          show-sizer
+        ></Page>
+      </Row>
+    </Card>
+
     <Modal
       :title="modalTitle"
       v-model="userModalVisible"
@@ -155,38 +137,38 @@
       :width="500"
       :styles="{top: '30px'}"
     >
-      <Form ref="userForm" :model="userForm" :label-width="70" :rules="userFormValidate">
+      <Form ref="form" :model="form" :label-width="70" :rules="userFormValidate">
         <FormItem label="用户名" prop="username">
-          <Input v-model="userForm.username" autocomplete="off" />
+          <Input v-model="form.username" autocomplete="off" />
         </FormItem>
         <FormItem label="密码" prop="password" v-if="modalType==0" :error="errorPass">
-          <Input type="password" v-model="userForm.password" autocomplete="off" />
+          <Input type="password" password v-model="form.password" autocomplete="off" />
         </FormItem>
         <FormItem label="邮箱" prop="email">
-          <Input v-model="userForm.email" />
+          <Input v-model="form.email" />
         </FormItem>
         <FormItem label="手机号" prop="mobile">
-          <Input v-model="userForm.mobile" />
+          <Input v-model="form.mobile" />
         </FormItem>
         <FormItem label="性别" prop="sex">
-          <RadioGroup v-model="userForm.sex">
+          <RadioGroup v-model="form.sex">
             <Radio v-for="(item, i) in dictSex" :key="i" :label="item.value">{{item.title}}</Radio>
           </RadioGroup>
         </FormItem>
         <Form-item label="头像" prop="avatar">
-          <upload-pic-input v-model="userForm.avatar"></upload-pic-input>
+          <upload-pic-input v-model="form.avatar"></upload-pic-input>
         </Form-item>
         <Form-item label="所属部门">
           <department-tree-choose @on-change="handleSelectDepTree" ref="depTree"></department-tree-choose>
         </Form-item>
         <FormItem label="用户类型" prop="type">
-          <Select v-model="userForm.type" placeholder="请选择">
+          <Select v-model="form.type" placeholder="请选择">
             <Option :value="0">普通用户</Option>
             <Option :value="1">管理员</Option>
           </Select>
         </FormItem>
         <FormItem label="角色分配" prop="roles">
-          <Select v-model="userForm.roles" multiple>
+          <Select v-model="form.roles" multiple>
             <Option v-for="item in roleList" :value="item.id" :key="item.id" :label="item.name">
               <span style="margin-right:10px;">{{ item.name }}</span>
               <span style="color:#ccc;">{{ item.description }}</span>
@@ -224,12 +206,10 @@ import { validateMobile, validatePassword } from "@/libs/validate";
 import departmentChoose from "../../my-components/xboot/department-choose";
 import departmentTreeChoose from "../../my-components/xboot/department-tree-choose";
 import uploadPicInput from "../../my-components/xboot/upload-pic-input";
-import circleLoading from "../../my-components/circle-loading.vue";
 import checkPassword from "@/views/my-components/xboot/check-password";
 export default {
   name: "user-manage",
   components: {
-    circleLoading,
     expandRow,
     departmentChoose,
     departmentTreeChoose,
@@ -268,7 +248,7 @@ export default {
       modalType: 0,
       userModalVisible: false,
       modalTitle: "",
-      userForm: {
+      form: {
         username: "",
         mobile: "",
         email: "",
@@ -349,7 +329,7 @@ export default {
         {
           title: "手机",
           key: "mobile",
-          width: 115,
+          width: 130,
           sortable: true
         },
         {
@@ -429,7 +409,7 @@ export default {
           key: "createTime",
           sortable: true,
           sortType: "desc",
-          width: 150
+          width: 170
         },
         {
           title: "操作",
@@ -577,7 +557,7 @@ export default {
       this.getUserList();
     },
     handleSelectDepTree(v) {
-      this.userForm.departmentId = v[0];
+      this.form.departmentId = v;
     },
     handleSelectDep(v) {
       this.searchForm.departmentId = v;
@@ -718,25 +698,22 @@ export default {
       });
     },
     submitUser() {
-      this.$refs.userForm.validate(valid => {
+      this.$refs.form.validate(valid => {
         if (valid) {
           if (this.modalType == 0) {
             // 添加用户 避免编辑后传入id
-            delete this.userForm.id;
-            delete this.userForm.status;
-            if (
-              this.userForm.password == "" ||
-              this.userForm.password == undefined
-            ) {
+            delete this.form.id;
+            delete this.form.status;
+            if (this.form.password == "" || this.form.password == undefined) {
               this.errorPass = "密码不能为空";
               return;
             }
-            if (this.userForm.password.length < 6) {
+            if (this.form.password.length < 6) {
               this.errorPass = "密码长度不得少于6位";
               return;
             }
             this.submitLoading = true;
-            addUser(this.userForm).then(res => {
+            addUser(this.form).then(res => {
               this.submitLoading = false;
               if (res.success) {
                 this.$Message.success("操作成功");
@@ -747,7 +724,7 @@ export default {
           } else {
             // 编辑
             this.submitLoading = true;
-            editUser(this.userForm).then(res => {
+            editUser(this.form).then(res => {
               this.submitLoading = false;
               if (res.success) {
                 this.$Message.success("操作成功");
@@ -762,13 +739,14 @@ export default {
     add() {
       this.modalType = 0;
       this.modalTitle = "添加用户";
-      this.$refs.userForm.resetFields();
+      this.$refs.form.resetFields();
+      this.$refs.depTree.setData("", "");
       this.userModalVisible = true;
     },
     edit(v) {
       this.modalType = 1;
       this.modalTitle = "编辑用户";
-      this.$refs.userForm.resetFields();
+      this.$refs.form.resetFields();
       // 转换null为""
       for (let attr in v) {
         if (v[attr] == null) {
@@ -777,13 +755,13 @@ export default {
       }
       let str = JSON.stringify(v);
       let data = JSON.parse(str);
-      this.userForm = data;
-      this.$refs.depTree.setData([data.departmentId], data.departmentTitle);
+      this.form = data;
+      this.$refs.depTree.setData(data.departmentId, data.departmentTitle);
       let selectRolesId = [];
-      this.userForm.roles.forEach(function(e) {
+      this.form.roles.forEach(function(e) {
         selectRolesId.push(e.id);
       });
-      this.userForm.roles = selectRolesId;
+      this.form.roles = selectRolesId;
       this.userModalVisible = true;
     },
     enable(v) {

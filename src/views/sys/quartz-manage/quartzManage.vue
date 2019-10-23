@@ -1,55 +1,52 @@
 <style lang="less">
+@import "../../../styles/table-common.less";
 @import "./quartzManage.less";
 </style>
 <template>
   <div class="search">
-    <Row>
-      <Col>
-        <Card>
-          <Row class="operation">
-            <Button @click="addRole" type="primary" icon="md-add">安排新任务</Button>
-            <Button @click="delAll" icon="md-trash">批量删除</Button>
-            <Button @click="init" icon="md-refresh">刷新</Button>
-            <circleLoading v-if="operationLoading"/>
-          </Row>
-          <Row>
-            <Alert show-icon>
-              已选择
-              <span class="select-count">{{selectCount}}</span> 项
-              <a class="select-clear" @click="clearSelectAll">清空</a>
-            </Alert>
-          </Row>
-          <Row>
-            <Table
-              :loading="loading"
-              border
-              :columns="columns"
-              :data="data"
-              ref="table"
-              sortable="custom"
-              @on-sort-change="changeSort"
-              @on-selection-change="changeSelect"
-            ></Table>
-          </Row>
-          <Row type="flex" justify="end" class="page">
-            <Page
-              :current="pageNumber"
-              :total="total"
-              :page-size="pageSize"
-              @on-change="changePage"
-              @on-page-size-change="changePageSize"
-              :page-size-opts="[10,20,50]"
-              size="small"
-              show-total
-              show-elevator
-              show-sizer
-            ></Page>
-          </Row>
-        </Card>
-      </Col>
-    </Row>
+    <Card>
+      <Row class="operation">
+        <Button @click="addRole" type="primary" icon="md-add">安排新任务</Button>
+        <Button @click="delAll" icon="md-trash">批量删除</Button>
+        <Button @click="init" icon="md-refresh">刷新</Button>
+      </Row>
+      <Row>
+        <Alert show-icon>
+          已选择
+          <span class="select-count">{{selectCount}}</span> 项
+          <a class="select-clear" @click="clearSelectAll">清空</a>
+        </Alert>
+      </Row>
+      <Row>
+        <Table
+          :loading="loading"
+          border
+          :columns="columns"
+          :data="data"
+          ref="table"
+          sortable="custom"
+          @on-sort-change="changeSort"
+          @on-selection-change="changeSelect"
+        ></Table>
+      </Row>
+      <Row type="flex" justify="end" class="page">
+        <Page
+          :current="pageNumber"
+          :total="total"
+          :page-size="pageSize"
+          @on-change="changePage"
+          @on-page-size-change="changePageSize"
+          :page-size-opts="[10,20,50]"
+          size="small"
+          show-total
+          show-elevator
+          show-sizer
+        ></Page>
+      </Row>
+    </Card>
+
     <Modal draggable :title="modalTitle" v-model="modalVisible" :mask-closable="false" :width="500">
-      <Form ref="form" :model="form" :label-width="90" :rules="formValidate">
+      <Form ref="form" :model="form" :label-width="100" :rules="formValidate">
         <FormItem label="任务类引用路径" prop="jobClassName">
           <Input
             v-model="form.jobClassName"
@@ -58,16 +55,16 @@
           />
         </FormItem>
         <FormItem label="cron表达式" prop="cronExpression" style="margin-bottom: 5px;">
-          <Input v-model="form.cronExpression" clearable/>
+          <Input v-model="form.cronExpression" clearable />
           <a target="_blank" href="http://cron.qqe2.com/">
-            <Icon type="md-arrow-dropright-circle" size="16" style="margin:0 3px 3px 0;"/>在线cron表达式生成
+            <Icon type="md-arrow-dropright-circle" size="16" style="margin:0 3px 3px 0;" />在线cron表达式生成
           </a>
         </FormItem>
         <FormItem label="参数" prop="parameter">
-          <Input v-model="form.parameter"/>
+          <Input v-model="form.parameter" />
         </FormItem>
         <FormItem label="备注" prop="description">
-          <Input v-model="form.description"/>
+          <Input v-model="form.description" />
         </FormItem>
       </Form>
       <div slot="footer">
@@ -87,16 +84,11 @@ import {
   resumeQuartz,
   deleteQuartz
 } from "@/api/index";
-import circleLoading from "@/views/my-components/circle-loading.vue";
 export default {
   name: "quartz-manage",
-  components: {
-    circleLoading
-  },
   data() {
     return {
       loading: true,
-      operationLoading: false,
       sortColumn: "createTime",
       sortType: "desc",
       modalType: 0,
@@ -164,27 +156,21 @@ export default {
             let re = "";
             if (params.row.status == 0) {
               return h("div", [
-                h(
-                  "Badge",
-                  {
-                    props: {
-                      status: "success",
-                      text: "执行中"
-                    }
+                h("Badge", {
+                  props: {
+                    status: "success",
+                    text: "执行中"
                   }
-                )
+                })
               ]);
             } else if (params.row.status == -1) {
               return h("div", [
-                h(
-                  "Badge",
-                  {
-                    props: {
-                      status: "error",
-                      text: "已停止"
-                    }
+                h("Badge", {
+                  props: {
+                    status: "error",
+                    text: "已停止"
                   }
-                )
+                })
               ]);
             }
           },

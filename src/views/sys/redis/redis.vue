@@ -1,88 +1,86 @@
 <template>
   <div class="search">
-    <Row>
-      <Col>
-        <Card>
-          <Tabs :animated="false" @on-click="handleClickTab">
-            <TabPane label="Redis管理">
-              <Row @keydown.enter.native="handleSearch">
-                <Form
-                  ref="searchForm"
-                  :model="searchForm"
-                  inline
-                  :label-width="40"
-                  class="search-form"
-                >
-                  <Form-item label="Key" prop="key">
-                    <Input
-                      type="text"
-                      v-model="searchForm.key"
-                      placeholder="请输入Key"
-                      clearable
-                      style="width: 200px"
-                    />
-                  </Form-item>
-                  <Form-item style="margin-left:-35px;" class="br">
-                    <Button @click="handleSearch" type="primary" icon="ios-search">搜索</Button>
-                    <Button @click="handleReset">重置</Button>
-                  </Form-item>
-                </Form>
-              </Row>
-              <Row class="operation">
-                <Button @click="add" type="primary" icon="md-add">添加</Button>
-                <Button type="error" @click="clear" icon="md-trash">清空所有</Button>
-                <Button @click="delAll" icon="md-trash">批量删除</Button>
-                <Button @click="getDataList" icon="md-refresh">刷新</Button>
-                <circleLoading v-if="operationLoading"/>
-              </Row>
-              <Row>
-                <Alert show-icon>
-                  已选择
-                  <span class="select-count">{{selectCount}}</span> 项
-                  <a class="select-clear" @click="clearSelectAll">清空</a>
-                </Alert>
-              </Row>
-              <Row>
-                <Table
-                  :loading="loading"
-                  border
-                  :columns="columns"
-                  :data="data"
-                  ref="table"
-                  sortable="custom"
-                  @on-sort-change="changeSort"
-                  @on-selection-change="changeSelect"
-                ></Table>
-              </Row>
-              <Row type="flex" justify="end" class="page">
-                <Page
-                  :current="pageNumber"
-                  :total="total"
-                  :page-size="pageSize"
-                  @on-change="changePage"
-                  @on-page-size-change="changePageSize"
-                  :page-size-opts="[10,20,50]"
-                  size="small"
-                  show-total
-                  show-elevator
-                  show-sizer
-                ></Page>
-              </Row>
-            </TabPane>
-            <TabPane name="monitor" label="Redis监控">
-              <redis-monitor/>
-            </TabPane>
-          </Tabs>
-        </Card>
-      </Col>
-    </Row>
+    <Card>
+      <Tabs :animated="false" @on-click="handleClickTab">
+        <TabPane label="Redis管理">
+          <div class="redis-operation">
+            <Row @keydown.enter.native="handleSearch">
+              <Form
+                ref="searchForm"
+                :model="searchForm"
+                inline
+                :label-width="40"
+                class="search-form"
+              >
+                <Form-item label="Key" prop="key">
+                  <Input
+                    type="text"
+                    v-model="searchForm.key"
+                    placeholder="请输入Key"
+                    clearable
+                    style="width: 200px"
+                  />
+                </Form-item>
+                <Form-item style="margin-left:-35px;" class="br">
+                  <Button @click="handleSearch" type="primary" icon="ios-search">搜索</Button>
+                  <Button @click="handleReset">重置</Button>
+                </Form-item>
+              </Form>
+            </Row>
+            <div>
+              <Button @click="add" type="primary" icon="md-add">添加</Button>
+              <Button type="error" @click="clear" icon="md-trash">清空所有</Button>
+              <Button @click="delAll" icon="md-trash">批量删除</Button>
+              <Button @click="getDataList" icon="md-refresh">刷新</Button>
+            </div>
+          </div>
+          <Row>
+            <Alert show-icon>
+              已选择
+              <span class="select-count">{{selectCount}}</span> 项
+              <a class="select-clear" @click="clearSelectAll">清空</a>
+            </Alert>
+          </Row>
+          <Row>
+            <Table
+              :loading="loading"
+              border
+              :columns="columns"
+              :data="data"
+              ref="table"
+              sortable="custom"
+              @on-sort-change="changeSort"
+              @on-selection-change="changeSelect"
+            ></Table>
+          </Row>
+          <Row type="flex" justify="end" class="page">
+            <Page
+              :current="pageNumber"
+              :total="total"
+              :page-size="pageSize"
+              @on-change="changePage"
+              @on-page-size-change="changePageSize"
+              :page-size-opts="[10,20,50]"
+              size="small"
+              show-total
+              show-elevator
+              show-sizer
+            ></Page>
+          </Row>
+        </TabPane>
+        <TabPane name="monitor" label="Redis监控">
+          <redis-monitor />
+        </TabPane>
+      </Tabs>
+    </Card>
+
     <Modal :title="modalTitle" v-model="modalVisible" :mask-closable="false" :width="500">
       <Form ref="form" :model="form" :label-width="70" :rules="formValidate">
         <FormItem label="Key" prop="key">
-          <Input v-model="form.key" style="width:100%"/>
+          <Input v-model="form.key" style="width:100%" />
         </FormItem>
         <FormItem label="Value" prop="value">
-          <Input v-model="form.value" type="textarea" :rows="5" style="width:100%"/>
+          <Input v-model="form.value" type="textarea" :rows="5" style="width:100%" />
         </FormItem>
       </Form>
       <div slot="footer">
@@ -101,18 +99,15 @@ import {
   deleteAllRedis,
   getRedisByKey
 } from "@/api/index";
-import circleLoading from "@/views/my-components/circle-loading.vue";
 import redisMonitor from "./redisMonitor.vue";
 export default {
   name: "redis-notCache",
   components: {
-    circleLoading,
     redisMonitor
   },
   data() {
     return {
       loading: true, // 表单加载状态
-      operationLoading: false, // 操作加载状态
       modalType: 0, // 添加或编辑标识
       modalVisible: false, // 添加或编辑显示
       modalTitle: "", // 添加或编辑标题
@@ -216,8 +211,8 @@ export default {
     init() {
       this.getDataList();
     },
-    handleClickTab(name){
-      if(name=="monitor"){
+    handleClickTab(name) {
+      if (name == "monitor") {
         this.$Message.info("每隔5秒刷新一次数据，请耐心等待图表绘制");
       }
     },
@@ -302,9 +297,9 @@ export default {
       }
       let str = JSON.stringify(v);
       let data = JSON.parse(str);
-      this.form.value = "读取中..."
+      this.form.value = "读取中...";
       getRedisByKey(data.key).then(res => {
-        this.form.value = ""
+        this.form.value = "";
         if (res.success) {
           data.value = res.result;
           this.form = data;
@@ -381,31 +376,22 @@ export default {
 };
 </script>
 <style lang="less">
+@import "../../../styles/table-common.less";
 .search {
-  .operation {
+  .redis-operation {
     margin-bottom: 2vh;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+
+    button {
+      margin-right: 5px;
+    }
+
+    .ivu-form-item {
+      margin-bottom: 0px;
+    }
   }
-  .select-count {
-    font-size: 13px;
-    font-weight: 600;
-    color: #40a9ff;
-  }
-  .select-clear {
-    margin-left: 10px;
-  }
-  .page {
-    margin-top: 2vh;
-  }
-  .drop-down {
-    font-size: 13px;
-    margin-left: 5px;
-  }
-}
-textarea.ivu-input {
-  max-width: 100%;
-  height: auto;
-  min-height: 32px;
-  vertical-align: bottom;
-  font-size: 12px;
 }
 </style>

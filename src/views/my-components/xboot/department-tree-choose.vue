@@ -1,32 +1,34 @@
 <template>
   <div>
-    <Poptip trigger="click" placement="right" title="选择部门" width="250">
-      <div style="display:flex;">
-        <Input
-          v-model="departmentTitle"
-          readonly
-          style="margin-right:10px;"
-          :placeholder="placeholder"
-        />
-        <Button icon="md-trash" @click="clearSelect">清空已选</Button>
-      </div>
-      <div slot="content" class="tree-bar">
-        <Input
-          v-model="searchKey"
-          suffix="ios-search"
-          @on-change="searchDep"
-          placeholder="输入部门名搜索"
-          clearable
-        />
-        <Tree
-          :data="dataDep"
-          :load-data="loadData"
-          @on-select-change="selectTree"
-          :multiple="multiple"
-        ></Tree>
-        <Spin size="large" fix v-if="depLoading"></Spin>
-      </div>
-    </Poptip>
+    <div style="display:flex;">
+      <Input
+        v-model="departmentTitle"
+        readonly
+        style="margin-right:10px;"
+        :placeholder="placeholder"
+        :clearable="clearable"
+        @on-clear="clearSelect"
+      />
+      <Poptip trigger="click" placement="right" title="选择部门" width="250">
+        <Button icon="md-list">选择部门</Button>
+        <div slot="content" class="dep-tree-bar">
+          <Input
+            v-model="searchKey"
+            suffix="ios-search"
+            @on-change="searchDep"
+            placeholder="输入部门名搜索"
+            clearable
+          />
+          <Tree
+            :data="dataDep"
+            :load-data="loadData"
+            @on-select-change="selectTree"
+            :multiple="multiple"
+          ></Tree>
+          <Spin size="large" fix v-if="depLoading"></Spin>
+        </div>
+      </Poptip>
+    </div>
   </div>
 </template>
 
@@ -38,6 +40,10 @@ export default {
     multiple: {
       type: Boolean,
       default: false
+    },
+    clearable: {
+      type: Boolean,
+      default: true
     },
     placeholder: {
       type: String,
@@ -51,7 +57,7 @@ export default {
       searchKey: "",
       dataDep: [],
       selectDep: [],
-      department: []
+      departmentId: []
     };
   },
   methods: {
@@ -122,17 +128,30 @@ export default {
       });
       this.departmentId = ids;
       this.departmentTitle = title;
-      this.$emit("on-change", this.departmentId);
+      if (this.multiple) {
+        this.$emit("on-change", this.departmentId);
+      } else {
+        this.$emit("on-change", this.departmentId[0]);
+      }
     },
     clearSelect() {
       this.departmentId = [];
       this.departmentTitle = "";
       this.initDepartmentData();
-      this.$emit("on-change", this.departmentId);
+      if (this.multiple) {
+        this.$emit("on-change", []);
+      } else {
+        this.$emit("on-change", "");
+      }
+      this.$emit("on-clear");
     },
-    setData(ids, title){
-      this.departmentId = ids;
+    setData(ids, title) {
       this.departmentTitle = title;
+      if (this.multiple) {
+        this.departmentId = ids;
+      } else {
+        this.departmentId.push(ids);
+      }
       this.$emit("on-change", this.departmentId);
     }
   },
@@ -143,26 +162,21 @@ export default {
 </script>
 
 <style lang="less">
-.tree-bar {
-    max-height: 500px;
-    overflow: auto;
-    margin-top: 5px;
+.dep-tree-bar {
+  max-height: 500px;
+  overflow: auto;
+  margin-top: 5px;
 }
 
-.tree-bar::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+.dep-tree-bar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
 }
 
-.tree-bar::-webkit-scrollbar-thumb {
-    border-radius: 4px;
-    -webkit-box-shadow: inset 0 0 2px #d1d1d1;
-    background: #e4e4e4;
-}
-
-.ivu-tree .ivu-tree-empty {
-    margin-top: 10px;
-    font-size: 12px;
+.dep-tree-bar::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  -webkit-box-shadow: inset 0 0 2px #d1d1d1;
+  background: #e4e4e4;
 }
 </style>
 

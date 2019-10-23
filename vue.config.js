@@ -31,7 +31,9 @@ module.exports = {
         //     'vue-apexcharts': 'VueApexCharts',
         //     xlsx: 'XLSX',
         //     dplayer: 'DPlayer',
-        //     gitalk: 'Gitalk'
+        //     gitalk: 'Gitalk',
+        //     'js-cookie': 'Cookies',
+        //     wangEditor: 'wangEditor'
         // },
         // GZIP压缩
         plugins: [

@@ -1,60 +1,58 @@
 <style lang="less">
+@import "../../../styles/table-common.less";
 @import "./roleManage.less";
 </style>
 <template>
   <div class="search">
-    <Row>
-      <Col>
-        <Card>
-          <Row class="operation">
-            <Button @click="addRole" type="primary" icon="md-add">添加角色</Button>
-            <Button @click="delAll" icon="md-trash">批量删除</Button>
-            <Button @click="init" icon="md-refresh">刷新</Button>
-          </Row>
-          <Row>
-            <Alert show-icon>
-              已选择
-              <span class="select-count">{{selectCount}}</span> 项
-              <a class="select-clear" @click="clearSelectAll">清空</a>
-            </Alert>
-          </Row>
-          <Row>
-            <Table
-              :loading="loading"
-              border
-              :columns="columns"
-              :data="data"
-              ref="table"
-              sortable="custom"
-              @on-sort-change="changeSort"
-              @on-selection-change="changeSelect"
-            ></Table>
-          </Row>
-          <Row type="flex" justify="end" class="page">
-            <Page
-              :current="pageNumber"
-              :total="total"
-              :page-size="pageSize"
-              @on-change="changePage"
-              @on-page-size-change="changePageSize"
-              :page-size-opts="[10,20,50]"
-              size="small"
-              show-total
-              show-elevator
-              show-sizer
-            ></Page>
-          </Row>
-        </Card>
-      </Col>
-    </Row>
+    <Card>
+      <Row class="operation">
+        <Button @click="addRole" type="primary" icon="md-add">添加角色</Button>
+        <Button @click="delAll" icon="md-trash">批量删除</Button>
+        <Button @click="init" icon="md-refresh">刷新</Button>
+      </Row>
+      <Row>
+        <Alert show-icon>
+          已选择
+          <span class="select-count">{{selectCount}}</span> 项
+          <a class="select-clear" @click="clearSelectAll">清空</a>
+        </Alert>
+      </Row>
+      <Row>
+        <Table
+          :loading="loading"
+          border
+          :columns="columns"
+          :data="data"
+          ref="table"
+          sortable="custom"
+          @on-sort-change="changeSort"
+          @on-selection-change="changeSelect"
+        ></Table>
+      </Row>
+      <Row type="flex" justify="end" class="page">
+        <Page
+          :current="pageNumber"
+          :total="total"
+          :page-size="pageSize"
+          @on-change="changePage"
+          @on-page-size-change="changePageSize"
+          :page-size-opts="[10,20,50]"
+          size="small"
+          show-total
+          show-elevator
+          show-sizer
+        ></Page>
+      </Row>
+    </Card>
+
     <!-- 编辑 -->
     <Modal :title="modalTitle" v-model="roleModalVisible" :mask-closable="false" :width="500">
       <Form ref="roleForm" :model="roleForm" :label-width="80" :rules="roleFormValidate">
         <FormItem label="角色名称" prop="name">
-          <Input v-model="roleForm.name" placeholder="按照Spring Security约定建议以‘ROLE_’开头"/>
+          <Input v-model="roleForm.name" placeholder="按照Spring Security约定建议以‘ROLE_’开头" />
         </FormItem>
         <FormItem label="备注" prop="description">
-          <Input v-model="roleForm.description"/>
+          <Input v-model="roleForm.description" />
         </FormItem>
       </Form>
       <div slot="footer">
@@ -71,15 +69,17 @@
       :styles="{top: '30px'}"
       class="permModal"
     >
-      <Tree
-        ref="tree"
-        :data="permData"
-        multiple
-        show-checkbox
-        :render="renderContent"
-        :check-strictly="true"
-      ></Tree>
-      <Spin size="large" v-if="treeLoading"></Spin>
+      <div style="position:relative">
+        <Tree
+          ref="tree"
+          :data="permData"
+          multiple
+          show-checkbox
+          :render="renderContent"
+          :check-strictly="true"
+        ></Tree>
+        <Spin size="large" fix v-if="treeLoading"></Spin>
+      </div>
       <div slot="footer">
         <Button type="text" @click="cancelPermEdit">取消</Button>
         <Select
@@ -105,7 +105,7 @@
       :styles="{top: '30px'}"
       class="depModal"
     >
-      <Form :label-width="65">
+      <Form :label-width="85">
         <FormItem label="数据范围">
           <Select v-model="dataType">
             <Option :value="0">全部数据权限</Option>
@@ -115,15 +115,19 @@
       </Form>
       <Alert show-icon>默认可查看全部数据，自定义数据范围请点击选择下方数据</Alert>
       <div v-if="dataType!=0" style="margin-top:15px">
-        <Tree
-          ref="depTree"
-          :data="depData"
-          :load-data="loadData"
-          @on-toggle-expand="expandCheckDep"
-          multiple
-          style="margin-top:15px"
-        ></Tree>
-        <Spin size="large" v-if="depTreeLoading"></Spin>
+        <div style="position:relative">
+          <Tree
+            ref="depTree"
+            :data="depData"
+            :load-data="loadData"
+            show-checkbox
+            @on-toggle-expand="expandCheckDep"
+            :check-strictly="true"
+            style="margin-top:15px"
+            @on-select-change="$event[0].checked=!$event[0].checked"
+          ></Tree>
+          <Spin size="large" fix v-if="depTreeLoading"></Spin>
+        </div>
       </div>
       <div slot="footer">
         <Button type="text" @click="depModalVisible=false">取消</Button>
@@ -195,27 +199,27 @@ export default {
         {
           title: "备注",
           key: "description",
-          minWidth: 190,
+          minWidth: 150,
           sortable: true
         },
         {
           title: "创建时间",
           key: "createTime",
-          width: 160,
+          width: 170,
           sortable: true,
           sortType: "desc"
         },
         {
           title: "更新时间",
           key: "updateTime",
-          width: 160,
+          width: 170,
           sortable: true
         },
         {
           title: "是否设置为注册用户默认角色",
           key: "defaultRole",
           align: "center",
-          width: 180,
+          width: 220,
           render: (h, params) => {
             if (params.row.defaultRole) {
               return h("div", [
@@ -439,11 +443,12 @@ export default {
     getPermList() {
       this.treeLoading = true;
       getAllPermissionList().then(res => {
-        this.treeLoading = false;
         if (res.success) {
           this.deleteDisableNode(res.result);
           this.permData = res.result;
+          this.treeLoading = false;
         }
+        this.treeLoading = false;
       });
     },
     // 递归标记禁用节点
@@ -606,6 +611,10 @@ export default {
       this.modalTitle = "分配 " + v.name + " 的菜单权限";
       // 匹配勾选
       let rolePerms = v.permissions;
+      if (this.treeLoading) {
+        this.$Message.warning("菜单权限数据加载中，请稍后点击查看");
+        return;
+      }
       // 递归判断子节点
       this.checkPermTree(this.permData, rolePerms);
       this.permModalVisible = true;
@@ -739,9 +748,9 @@ export default {
       let that = this;
       depData.forEach(function(p) {
         if (that.hasDepPerm(p, roleDepIds)) {
-          p.selected = true;
+          p.checked = true;
         } else {
-          p.selected = false;
+          p.checked = false;
         }
       });
     },
@@ -762,7 +771,7 @@ export default {
     submitDepEdit() {
       let depIds = "";
       if (this.dataType != 0) {
-        let selectedNodes = this.$refs.depTree.getSelectedNodes();
+        let selectedNodes = this.$refs.depTree.getCheckedNodes();
         if (selectedNodes.length < 1) {
           this.$Message.error("请至少选择一条数据");
           return;

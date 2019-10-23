@@ -120,7 +120,7 @@ export default {
           key: "action",
           align: "center",
           headerAlign: "center",
-          width: "250px",
+          width: "300px",
           type: "template",
           template: "action"
         }
@@ -573,7 +573,6 @@ export default {
   margin-bottom: 2vh;
 }
 .select-count {
-  font-size: 13px;
   font-weight: 600;
   color: #40a9ff;
 }

@@ -9,22 +9,21 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
-    "apexcharts": "^3.6.12",
-    "axios": "^0.18.0",
+    "apexcharts": "^3.10.0",
+    "axios": "^0.19.0",
     "countup": "^1.8.2",
     "core-js": "^2.6.8",
-    "cropperjs": "^1.4.1",
     "date-fns": "^1.30.1",
     "dplayer": "^1.25.0",
-    "echarts": "^4.2.1",
+    "echarts": "^4.3.0",
     "gitalk": "^1.5.0",
-    "html2canvas": "^1.0.0-alpha.12",
-    "iview": "^3.4.2",
+    "html2canvas": "^1.0.0-rc.5",
+    "view-design": "^4.0.2",
     "iview-area": "^1.6.0",
-    "js-cookie": "^2.2.0",
+    "js-cookie": "^2.2.1",
     "print-js": "^1.0.58",
     "vue": "^2.6.10",
-    "vue-apexcharts": "^1.3.5",
+    "vue-apexcharts": "^1.5.0",
     "vue-awesome": "^3.5.2",
     "vue-clipboard2": "^0.3.0",
     "vue-cropper": "^0.4.8",
@@ -34,7 +33,7 @@
     "vue-router": "^3.0.3",
     "vuex": "^3.0.1",
     "wangeditor": "^3.1.1",
-    "xlsx": "^0.14.3"
+    "xlsx": "^0.15.1"
   },
   "devDependencies": {
     "@babel/polyfill": "^7.4.4",

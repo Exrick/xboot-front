@@ -3,16 +3,13 @@
 </style>
 <template>
   <div class="search">
-    <Row>
-      <Col>
-        <Card>
-          <p slot="title">Spring Boot 2.x Actuator监控列表</p>
-          <Row>
-            <Table border :columns="columns" :data="data" ref="table"></Table>
-          </Row>
-        </Card>
-      </Col>
-    </Row>
+    <Card>
+      <p slot="title">Spring Boot 2.x Actuator监控列表</p>
+      <Row>
+        <Table border :columns="columns" :data="data" ref="table"></Table>
+      </Row>
+    </Card>
+
     <Modal
       :title="modalTitle"
       v-model="modalVisible"

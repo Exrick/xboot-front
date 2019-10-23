@@ -1,12 +1,12 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
-import iView from 'iview'
+import ViewUI from 'view-design'
+import 'view-design/dist/styles/iview.css';
 import iviewArea from 'iview-area'
 import App from './App'
 import { router } from './router/index'
 import store from './store'
-import 'iview/dist/styles/iview.css'
 import i18n from '@/locale'
 import Icon from 'vue-awesome/components/Icon'
 // 按需引入awesome图标
@@ -30,7 +30,7 @@ Vue.use(VueLazyload, {
     error: require('./assets/img-error.png'),
     loading: require('./assets/loading2.gif')
 })
-Vue.use(iView, {
+Vue.use(ViewUI, {
     i18n: (key, value) => i18n.t(key, value)
 });
 Vue.use(iviewArea);

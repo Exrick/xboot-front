@@ -1,25 +1,32 @@
 <style lang="less">
 </style>
 <template>
-    <div class="search">
-      <Row>
-        <Card>     
-          <p slot="title">
-            编辑
-          </p>
-          <Form ref="form" :model="form" :label-width="90" :rules="formValidate" style="position:relative">
-            <FormItem label="名称" prop="name">
-              <Input v-model="form.name" style="width: 400px"/>
-            </FormItem>
-            <Form-item>
-              <Button @click="handleSubmit" :loading="submitLoading" type="primary" style="margin-right:5px">提交并保存</Button>
-              <Button @click="handleReset">重置</Button>
-            </Form-item>
-            <Spin size="large" fix v-if="loading"></Spin>
-          </Form> 
-        </Card>
-      </Row>
-    </div>
+  <div>
+    <Card>
+      <p slot="title">编辑</p>
+      <Form
+        ref="form"
+        :model="form"
+        :label-width="90"
+        :rules="formValidate"
+        style="position:relative"
+      >
+        <FormItem label="名称" prop="name">
+          <Input v-model="form.name" style="width: 400px" />
+        </FormItem>
+        <Form-item>
+          <Button
+            @click="handleSubmit"
+            :loading="submitLoading"
+            type="primary"
+            style="margin-right:5px"
+          >提交并保存</Button>
+          <Button @click="handleReset">重置</Button>
+        </Form-item>
+        <Spin size="large" fix v-if="loading"></Spin>
+      </Form>
+    </Card>
+  </div>
 </template>
 
 <script>
@@ -70,7 +77,7 @@ export default {
       // 模拟获取数据成功
       this.loading = false;
       if (this.form.id == "1") {
-        this.form.name = "X-BOOT";
+        this.form.name = "XBoot";
       } else {
         this.form.name = "Exrick";
       }

@@ -16,22 +16,7 @@
               />
             </FormItem>
             <FormItem prop="password">
-              <Poptip trigger="focus" placement="right" width="250">
-                <Input
-                  type="password"
-                  :maxlength="20"
-                  v-model="form.password"
-                  @on-change="strengthChange"
-                  size="large"
-                  clearable
-                  placeholder="请输入密码，长度为6-20个字符"
-                />
-                <div :class="tipStyle" slot="content">
-                  <span class="words">强度 : {{strength}}</span>
-                  <Slider v-model="strengthValue" :step="33" style="width:95%"></Slider>请至少输入 6 个字符。请不要使
-                  <br />用容易被猜到的密码。
-                </div>
-              </Poptip>
+              <SetPassword size="large" v-model="form.password" @on-change="changeInputPass" />
             </FormItem>
             <FormItem prop="confirmPass">
               <Input
@@ -100,11 +85,13 @@ import { validateMobile, validatePassword } from "@/libs/validate";
 import Header from "@/views/main-components/header";
 import Footer from "@/views/main-components/footer";
 import LangSwitch from "@/views/main-components/lang-switch";
-import CountDownButton from "@/views/my-components/count-down-button";
+import CountDownButton from "@/views/my-components/xboot/count-down-button";
+import SetPassword from "@/views/my-components/xboot/set-password";
 export default {
   components: {
     CountDownButton,
     LangSwitch,
+    SetPassword,
     Header,
     Footer
   },
@@ -123,10 +110,7 @@ export default {
       error: false,
       loading: false,
       sending: false,
-      tipStyle: "password-tip-none",
-      strength: "无",
       select: "86",
-      strengthValue: 0,
       errorCode: "",
       form: {
         username: "",
@@ -181,53 +165,14 @@ export default {
   },
   methods: {
     initVaptcha() {},
-    checkStrengthValue(v) {
-      // 评级制判断密码强度 最高5
-      let grade = 0;
-      if (/\d/.test(v)) {
-        grade++; //数字
-      }
-      if (/[a-z]/.test(v)) {
-        grade++; //小写
-      }
-      if (/[A-Z]/.test(v)) {
-        grade++; //大写
-      }
-      if (/\W/.test(v)) {
-        grade++; //特殊字符
-      }
-      if (v.length >= 10) {
-        grade++;
-      }
-      return grade;
-    },
-    strengthChange() {
-      if (!this.form.password) {
-        this.tipStyle = "password-tip-none";
-        this.strength = "无";
-        this.strengthValue = 0;
-        return;
-      }
-      let grade = this.checkStrengthValue(this.form.password);
-      if (grade <= 1) {
-        this.tipStyle = "password-tip-weak";
-        this.strength = "弱";
-        this.strengthValue = 33;
-      } else if (grade >= 2 && grade <= 4) {
-        this.tipStyle = "password-tip-middle";
-        this.strength = "中";
-        this.strengthValue = 66;
-      } else {
-        this.tipStyle = "password-tip-strong";
-        this.strength = "强";
-        this.strengthValue = 100;
-      }
-    },
     sendSmsCode() {
       this.$Modal.info({
         title: "抱歉，请获取完整版",
         content: "支付链接: http://xpay.exrick.cn/pay?xboot"
       });
+    },
+    changeInputPass(v, grade, strength) {
+      this.form.passStrength = strength;
     },
     submitRegist() {
       this.$refs.registForm.validate(valid => {
@@ -239,7 +184,6 @@ export default {
             this.errorCode = "";
           }
           this.loading = true;
-          this.form.passStrength = this.strength;
           regist(this.form).then(res => {
             this.loading = false;
             if (res.success) {

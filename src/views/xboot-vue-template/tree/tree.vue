@@ -1,5 +1,5 @@
 <style lang="less">
-@import "./tree.less";
+@import "../../../styles/tree-common.less";
 </style>
 <template>
   <div class="search">
@@ -42,33 +42,31 @@
           <Spin size="large" fix v-if="loading"></Spin>
         </Col>
         <Col span="9" style="margin-left:10px">
-          <Form ref="form" :model="form" :label-width="85" :rules="formValidate">
+          <Form ref="form" :model="form" :label-width="100" :rules="formValidate">
             <FormItem label="上级节点" prop="parentTitle">
-              <Poptip trigger="click" placement="right-start" title="选择上级节点" width="250">
-                <Input v-model="form.parentTitle" readonly/>
-                <div slot="content" style="position:relative;min-height:5vh">
-                  <Tree :data="dataEdit" :load-data="loadData" @on-select-change="selectTreeEdit"></Tree>
-                  <Spin size="large" fix v-if="loadingEdit"></Spin>
-                </div>
-              </Poptip>
+              <div style="display:flex;">
+                <Input v-model="form.parentTitle" readonly style="margin-right:10px;" />
+                <Poptip trigger="click" placement="right-start" title="选择上级节点" width="250">
+                  <Button icon="md-list">选择分类</Button>
+                  <div slot="content" style="position:relative;min-height:5vh">
+                    <Tree :data="dataEdit" :load-data="loadData" @on-select-change="selectTreeEdit"></Tree>
+                    <Spin size="large" fix v-if="loadingEdit"></Spin>
+                  </div>
+                </Poptip>
+              </div>
             </FormItem>
             <FormItem label="节点名称" prop="title">
-              <Input v-model="form.title"/>
+              <Input v-model="form.title" />
             </FormItem>
             <FormItem label="排序值" prop="sortOrder">
-              <InputNumber :max="1000" :min="0" v-model="form.sortOrder"></InputNumber>
-              <span style="margin-left:5px">值越小越靠前，支持小数</span>
+              <Tooltip trigger="hover" placement="right" content="值越小越靠前，支持小数">
+                <InputNumber :max="1000" :min="0" v-model="form.sortOrder"></InputNumber>
+              </Tooltip>
             </FormItem>
             <FormItem label="是否启用" prop="status">
               <i-switch size="large" v-model="form.status" :true-value="0" :false-value="-1">
                 <span slot="open">启用</span>
                 <span slot="close">禁用</span>
-              </i-switch>
-            </FormItem>
-            <FormItem label="是否为父节点">
-              <i-switch v-model="form.isParent">
-                <span slot="open">是</span>
-                <span slot="close">否</span>
               </i-switch>
             </FormItem>
             <Form-item>
@@ -87,16 +85,17 @@
     </Card>
 
     <Modal :title="modalTitle" v-model="modalVisible" :mask-closable="false" :width="500">
-      <Form ref="formAdd" :model="formAdd" :label-width="85" :rules="formValidate">
+      <Form ref="formAdd" :model="formAdd" :label-width="100" :rules="formValidate">
         <div v-if="showParent">
           <FormItem label="上级节点：">{{form.title}}</FormItem>
         </div>
         <FormItem label="节点名称" prop="title">
-          <Input v-model="formAdd.title"/>
+          <Input v-model="formAdd.title" />
         </FormItem>
         <FormItem label="排序值" prop="sortOrder">
-          <InputNumber :max="1000" :min="0" v-model="formAdd.sortOrder"></InputNumber>
-          <span style="margin-left:5px">值越小越靠前，支持小数</span>
+          <Tooltip trigger="hover" placement="right" content="值越小越靠前，支持小数">
+            <InputNumber :max="1000" :min="0" v-model="formAdd.sortOrder"></InputNumber>
+          </Tooltip>
         </FormItem>
         <FormItem label="是否启用" prop="status">
           <i-switch size="large" v-model="formAdd.status" :true-value="0" :false-value="-1">
@@ -143,7 +142,15 @@ export default {
       },
       formValidate: {
         // 表单验证规则
-        title: [{ required: true, message: "名称不能为空", trigger: "blur" }]
+        title: [{ required: true, message: "名称不能为空", trigger: "blur" }],
+        sortOrder: [
+          {
+            required: true,
+            type: "number",
+            message: "排序值不能为空",
+            trigger: "blur"
+          }
+        ]
       },
       submitLoading: false,
       data: [],
@@ -361,7 +368,7 @@ export default {
         data.selected = false;
       }
       this.$refs.form.resetFields();
-      delete this.form.id;
+      this.form.id = "";
       this.editTitle = "";
     },
     selectTreeEdit(v) {
@@ -426,7 +433,7 @@ export default {
       });
     },
     add() {
-      if (this.form.id == "" || this.form.id == null) {
+      if (!this.form.id) {
         this.$Message.warning("请先点击选择一个节点");
         return;
       }
@@ -460,7 +467,9 @@ export default {
       }
       this.$Modal.confirm({
         title: "确认删除",
-        content: "您确认要删除所选的 " + this.selectCount + " 条数据及其下级所有数据?",
+        content:
+          "您确认要删除所选的 " + this.selectCount + " 条数据及其下级所有数据?",
+        loading: true,
         onOk: () => {
           let ids = "";
           this.selectList.forEach(function(e) {
@@ -468,6 +477,7 @@ export default {
           });
           ids = ids.substring(0, ids.length - 1);
           // this.deleteRequest("请求路径，如/tree/delByIds/" + ids).then(res => {
+          //   this.$Modal.remove();
           //   if (res.success) {
           //     this.$Message.success("删除成功");
           //     this.selectList = [];
@@ -477,6 +487,7 @@ export default {
           //   }
           // });
           // 模拟成功
+          this.$Modal.remove();
           this.$Message.success("删除成功");
           this.selectList = [];
           this.selectCount = 0;
@@ -488,7 +499,7 @@ export default {
   mounted() {
     // 计算高度
     let height = document.documentElement.clientHeight;
-    this.maxHeight = Number(height-287) + "px";
+    this.maxHeight = Number(height - 287) + "px";
     this.init();
   }
 };

@@ -1,4 +1,5 @@
 <style lang="less">
+@import "../../../styles/tree&table-common.less";
 @import "./dictManage.less";
 </style>
 <template>
@@ -11,7 +12,7 @@
             <Dropdown @on-click="handleDropdown">
               <Button>
                 更多操作
-                <Icon type="md-arrow-dropdown"/>
+                <Icon type="md-arrow-dropdown" />
               </Button>
               <DropdownMenu slot="list">
                 <DropdownItem name="editDcit">编辑字典</DropdownItem>
@@ -38,11 +39,11 @@
           <Spin size="large" fix v-if="treeLoading"></Spin>
         </Col>
         <div class="expand">
-          <Icon :type="expandIcon" size="16" class="icon" @click="changeExpand"/>
+          <Icon :type="expandIcon" size="16" class="icon" @click="changeExpand" />
         </div>
         <Col :span="span">
           <Row>
-            <Form ref="searchForm" :model="searchForm" inline :label-width="60" class="search-form">
+            <Form ref="searchForm" :model="searchForm" inline :label-width="70" class="search-form">
               <Form-item label="数据名称" prop="title">
                 <Input
                   type="text"
@@ -118,21 +119,22 @@
       :width="500"
       :styles="{top: '30px'}"
     >
-      <Form ref="dictForm" :model="dictForm" :label-width="75" :rules="dictFormValidate">
+      <Form ref="dictForm" :model="dictForm" :label-width="85" :rules="dictFormValidate">
         <FormItem label="字典名称" prop="title">
-          <Input v-model="dictForm.title"/>
+          <Input v-model="dictForm.title" />
         </FormItem>
-        <FormItem label="字典类型" prop="type">
+        <FormItem label="字典类型" prop="type" class="block-tool">
           <Tooltip placement="right" :max-width="220" transfer content="建议英文名且需唯一 非开发人员谨慎修改">
-            <Input v-model="dictForm.type"/>
+            <Input v-model="dictForm.type" />
           </Tooltip>
         </FormItem>
         <FormItem label="备注" prop="description">
-          <Input v-model="dictForm.description"/>
+          <Input v-model="dictForm.description" />
         </FormItem>
         <FormItem label="排序值" prop="sortOrder">
-          <InputNumber :max="1000" :min="0" v-model="dictForm.sortOrder"></InputNumber>
-          <span style="margin-left:5px">值越小越靠前，支持小数</span>
+          <Tooltip trigger="hover" placement="right" content="值越小越靠前，支持小数">
+            <InputNumber :max="1000" :min="0" v-model="dictForm.sortOrder"></InputNumber>
+          </Tooltip>
         </FormItem>
       </Form>
       <div slot="footer">
@@ -148,19 +150,20 @@
       :width="500"
       :styles="{top: '30px'}"
     >
-      <Form ref="form" :model="form" :label-width="70" :rules="formValidate">
+      <Form ref="form" :model="form" :label-width="80" :rules="formValidate">
         <FormItem label="名称" prop="title">
-          <Input v-model="form.title"/>
+          <Input v-model="form.title" />
         </FormItem>
         <FormItem label="数据值" prop="value">
-          <Input v-model="form.value"/>
+          <Input v-model="form.value" />
         </FormItem>
         <FormItem label="备注" prop="description">
-          <Input v-model="form.description"/>
+          <Input v-model="form.description" />
         </FormItem>
         <FormItem label="排序值" prop="sortOrder">
-          <InputNumber :max="1000" :min="0" v-model="form.sortOrder"></InputNumber>
-          <span style="margin-left:5px">值越小越靠前，支持小数</span>
+          <Tooltip trigger="hover" placement="right" content="值越小越靠前，支持小数">
+            <InputNumber :max="1000" :min="0" v-model="form.sortOrder"></InputNumber>
+          </Tooltip>
         </FormItem>
         <FormItem label="是否启用" prop="status">
           <i-switch size="large" v-model="form.status" :true-value="0" :false-value="-1">
@@ -236,12 +239,28 @@ export default {
       dictFormValidate: {
         // 表单验证规则
         title: [{ required: true, message: "不能为空", trigger: "blur" }],
-        type: [{ required: true, message: "不能为空", trigger: "blur" }]
+        type: [{ required: true, message: "不能为空", trigger: "blur" }],
+        sortOrder: [
+          {
+            required: true,
+            type: "number",
+            message: "排序值不能为空",
+            trigger: "blur"
+          }
+        ]
       },
       formValidate: {
         // 表单验证规则
         title: [{ required: true, message: "不能为空", trigger: "blur" }],
-        value: [{ required: true, message: "不能为空", trigger: "blur" }]
+        value: [{ required: true, message: "不能为空", trigger: "blur" }],
+        sortOrder: [
+          {
+            required: true,
+            type: "number",
+            message: "排序值不能为空",
+            trigger: "blur"
+          }
+        ]
       },
       columns: [
         // 表头

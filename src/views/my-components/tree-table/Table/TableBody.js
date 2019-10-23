@@ -1,7 +1,7 @@
 import Checkbox from '../Checkbox/Checkbox'; // eslint-disable-line
 // import Radio from '../Radio/Radio'; // eslint-disable-line
 import { mixins } from './utils';
-import { Radio } from 'iview'; // eslint-disable-line
+import { Radio } from 'view-design'; // eslint-disable-line
 
 /* eslint-disable no-underscore-dangle */
 export default {

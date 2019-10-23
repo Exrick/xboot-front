@@ -1,65 +1,91 @@
 <style lang="less">
+@import "../../../styles/table-common.less";
 @import "./logManage.less";
 </style>
 <template>
   <div class="search">
-    <Row>
-      <Col>
-        <Card>
-          <Tabs :animated="false" @on-click="changeTab">
-            <TabPane label="登陆日志" name="login">
-            </TabPane>
-            <TabPane label="操作日志" name="operation">
-            </TabPane>
-          </Tabs>
-          <Form ref="searchForm" :model="searchForm" inline :label-width="70" class="search-form">
-            <Form-item label="搜索日志">
-              <Input type="text" v-model="searchKey" clearable placeholder="请输入搜索关键词" style="width: 200px"/>
-            </Form-item>
-            <Form-item label="创建时间">
-              <DatePicker type="daterange" v-model="selectDate" format="yyyy-MM-dd" clearable @on-change="selectDateRange" placeholder="选择起始时间" style="width: 200px"></DatePicker>
-            </Form-item>
-            <Form-item style="margin-left:-35px;" class="br">
-              <Button @click="handleSearch"  type="primary" icon="ios-search">搜索</Button>
-              <Button @click="handleReset" >重置</Button>
-            </Form-item>
-          </Form>
-          <Row class="operation">
-            <Button @click="clearAll" type="error" icon="md-trash">清空全部</Button>
-            <Button @click="delAll" icon="md-trash">批量删除</Button>
-            <Button @click="getLogList" icon="md-refresh">刷新</Button>
-            <circleLoading v-if="operationLoading"/>
-          </Row>
-          <Row>
-            <Alert show-icon>
-              已选择 <span class="select-count">{{selectCount}}</span> 项
-              <a class="select-clear" @click="clearSelectAll">清空</a>
-            </Alert>
-          </Row>
-          <Row>
-            <Table :loading="loading" border :columns="columns" :data="data" ref="table" sortable="custom" @on-sort-change="changeSort" @on-selection-change="changeSelect"></Table>
-          </Row>
-          <Row type="flex" justify="end" class="page">
-            <Page :current="searchForm.pageNumber" :total="total" :page-size="searchForm.pageSize" @on-change="changePage" @on-page-size-change="changePageSize" :page-size-opts="[10,20,50]" size="small" show-total show-elevator show-sizer></Page>
-          </Row>
-        </Card>
-      </Col>
-    </Row>
+    <Card>
+      <Tabs :animated="false" @on-click="changeTab">
+        <TabPane label="登陆日志" name="login"></TabPane>
+        <TabPane label="操作日志" name="operation"></TabPane>
+      </Tabs>
+      <div class="log-operation">
+        <Form ref="searchForm" :model="searchForm" inline :label-width="70" class="search-form">
+          <Form-item label="搜索日志">
+            <Input
+              type="text"
+              v-model="searchKey"
+              clearable
+              placeholder="请输入搜索关键词"
+              style="width: 200px"
+            />
+          </Form-item>
+          <Form-item label="创建时间">
+            <DatePicker
+              type="daterange"
+              v-model="selectDate"
+              format="yyyy-MM-dd"
+              clearable
+              @on-change="selectDateRange"
+              placeholder="选择起始时间"
+              style="width: 200px"
+            ></DatePicker>
+          </Form-item>
+          <Form-item style="margin-left:-35px;" class="br">
+            <Button @click="handleSearch" type="primary" icon="ios-search">搜索</Button>
+            <Button @click="handleReset">重置</Button>
+          </Form-item>
+        </Form>
+        <Row>
+          <Button @click="clearAll" type="error" icon="md-trash">清空全部</Button>
+          <Button @click="delAll" icon="md-trash">批量删除</Button>
+          <Button @click="getLogList" icon="md-refresh">刷新</Button>
+        </Row>
+      </div>
+      <Row>
+        <Alert show-icon>
+          已选择
+          <span class="select-count">{{selectCount}}</span> 项
+          <a class="select-clear" @click="clearSelectAll">清空</a>
+        </Alert>
+      </Row>
+      <Row>
+        <Table
+          :loading="loading"
+          border
+          :columns="columns"
+          :data="data"
+          ref="table"
+          sortable="custom"
+          @on-sort-change="changeSort"
+          @on-selection-change="changeSelect"
+        ></Table>
+      </Row>
+      <Row type="flex" justify="end" class="page">
+        <Page
+          :current="searchForm.pageNumber"
+          :total="total"
+          :page-size="searchForm.pageSize"
+          @on-change="changePage"
+          @on-page-size-change="changePageSize"
+          :page-size-opts="[10,20,50]"
+          size="small"
+          show-total
+          show-elevator
+          show-sizer
+        ></Page>
+      </Row>
+    </Card>
   </div>
 </template>
 
 <script>
 import { getLogListData, deleteLog, deleteAllLog } from "@/api/index";
-import circleLoading from "@/views/my-components/circle-loading.vue";
 export default {
-  name: "role-manage",
-  components: {
-    circleLoading
-  },
+  name: "log-manage",
   data() {
     return {
       loading: true,
-      operationLoading: false,
       selectList: [],
       selectCount: 0,
       selectDate: null,
@@ -89,14 +115,14 @@ export default {
         {
           title: "操作名称",
           key: "name",
-          width: 110,
+          width: 115,
           sortable: true,
           fixed: "left"
         },
         {
           title: "请求类型",
           key: "requestType",
-          width: 120,
+          width: 130,
           align: "center",
           sortable: true,
           filters: [
@@ -144,7 +170,7 @@ export default {
         {
           title: "登录用户",
           key: "username",
-          width: 105,
+          minWidth: 120,
           sortable: true
         },
         {
@@ -162,7 +188,7 @@ export default {
         {
           title: "耗时(毫秒)",
           key: "costTime",
-          width: 130,
+          width: 140,
           sortable: true,
           align: "center",
           filters: [
@@ -221,7 +247,7 @@ export default {
           title: "创建时间",
           key: "createTime",
           sortable: true,
-          width: 150,
+          width: 170,
           sortType: "desc"
         },
         {

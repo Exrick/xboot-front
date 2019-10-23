@@ -48,13 +48,13 @@
                       :maxlength="10"
                       class="input-verify"
                     />
-                    <div style="position:relative">
+                    <div style="position:relative;font-size:12px">
                       <Spin v-if="loadingCaptcha" fix></Spin>
                       <img
                         :src="captchaImg"
                         @click="getCaptchaImg"
                         alt="加载验证码失败"
-                        style="width:100px;cursor:pointer;display:block"
+                        style="width:110px;cursor:pointer;display:block"
                       />
                     </div>
                   </Row>
@@ -103,7 +103,7 @@
             </TabPane>
           </Tabs>
 
-          <Row type="flex" justify="space-between">
+          <Row type="flex" justify="space-between" align="middle">
             <Checkbox v-model="saveLogin" size="large">{{ $t('autoLogin') }}</Checkbox>
             <Dropdown trigger="click" @on-click="handleDropDown">
               <a class="forget-pass">{{ $t('forgetPass') }}</a>
@@ -162,7 +162,7 @@ import Cookies from "js-cookie";
 import Header from "@/views/main-components/header";
 import Footer from "@/views/main-components/footer";
 import LangSwitch from "@/views/main-components/lang-switch";
-import CountDownButton from "@/views/my-components/count-down-button";
+import CountDownButton from "@/views/my-components/xboot/count-down-button";
 import util from "@/libs/util.js";
 export default {
   components: {
@@ -184,7 +184,7 @@ export default {
       sending: false,
       errorCode: "",
       form: {
-        username: "test或test2 可注册 支持Github、QQ、微博登录",
+        username: "test或test2 可注册 支持Github、QQ、微博",
         password: "123456",
         mobile: "阿里云短信0.045/条 若余额不足联系作者充值",
         code: ""

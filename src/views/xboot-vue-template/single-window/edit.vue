@@ -3,36 +3,34 @@
 </style>
 <template>
   <div>
-    <Row>
-      <Card>
-        <div slot="title">
-          <a @click="close" class="back-title">
-            <Icon type="ios-arrow-back" style="margin: 0 0 2px 0"/>返回
-          </a>
-        </div>
-        <Form
-          ref="form"
-          :model="form"
-          :label-width="90"
-          :rules="formValidate"
-          style="position:relative"
-        >
-          <FormItem label="名称" prop="name">
-            <Input v-model="form.name" style="width: 400px"/>
-          </FormItem>
-          <Form-item>
-            <Button
-              @click="handleSubmit"
-              :loading="submitLoading"
-              type="primary"
-              style="margin-right:5px"
-            >提交并保存</Button>
-            <Button @click="handleReset">重置</Button>
-          </Form-item>
-          <Spin size="large" fix v-if="loading"></Spin>
-        </Form>
-      </Card>
-    </Row>
+    <Card>
+      <div slot="title">
+        <a @click="close" class="back-title">
+          <Icon type="ios-arrow-back" style="margin: 0 0 2px 0" />返回
+        </a>
+      </div>
+      <Form
+        ref="form"
+        :model="form"
+        :label-width="90"
+        :rules="formValidate"
+        style="position:relative"
+      >
+        <FormItem label="名称" prop="name">
+          <Input v-model="form.name" style="width: 400px" />
+        </FormItem>
+        <Form-item>
+          <Button
+            @click="handleSubmit"
+            :loading="submitLoading"
+            type="primary"
+            style="margin-right:5px"
+          >提交并保存</Button>
+          <Button @click="handleReset">重置</Button>
+        </Form-item>
+        <Spin size="large" fix v-if="loading"></Spin>
+      </Form>
+    </Card>
   </div>
 </template>
 

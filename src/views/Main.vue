@@ -26,7 +26,7 @@
       <div class="main-header">
         <div class="navicon-con">
           <Button
-            :style="{transform: 'rotateZ(' + (this.shrink ? '-90' : '0') + 'deg)'}"
+            :style="{transform: 'rotateZ(' + (this.shrink ? '-90' : '0') + 'deg)', height: '48px'}"
             type="text"
             @click="toggleClick"
           >
@@ -146,7 +146,7 @@ import breadcrumbNav from "./main-components/breadcrumb-nav.vue";
 import fullScreen from "./main-components/fullscreen.vue";
 import lockScreen from "./main-components/lockscreen/lockscreen.vue";
 import messageTip from "./main-components/message-tip.vue";
-import circleLoading from "@/views/my-components/circle-loading.vue";
+import circleLoading from "@/views/my-components/xboot/circle-loading.vue";
 import Cookies from "js-cookie";
 import util from "@/libs/util.js";
 export default {

@@ -24,6 +24,7 @@
               <MenuItem name="1-6">图片上传输入框</MenuItem>
               <MenuItem name="1-7">图片上传缩略图</MenuItem>
               <MenuItem name="1-8">身份验证全屏弹框</MenuItem>
+              <MenuItem name="1-9">密码强度输入框</MenuItem>
             </Submenu>
             <Submenu name="2">
               <template slot="title">
@@ -145,6 +146,16 @@
             <h3 class="article">methods</h3>
             <Table :columns="methods" :data="data27" border size="small" width="1000"></Table>
           </div>
+          <div v-show="currName=='1-9'">
+            <Divider class="blue" orientation="left">密码强度输入框</Divider>
+            <setPassword v-model="password" style="width:300px"/>
+            <h3 class="article">基础用法</h3>基本用法，使用
+            <code>v-model</code> 实现数据的双向绑定。
+            <h3 class="article">props</h3>
+            <Table :columns="props" :data="data28" border size="small" width="1000"></Table>
+            <h3 class="article">events</h3>
+            <Table :columns="events" :data="data29" border size="small" width="1000"></Table>
+          </div>
 
           <div v-show="currName=='2-1'||currName=='2-2'||currName=='2-3'">
             <div class="sorry">
@@ -169,14 +180,15 @@
 
 <script>
 import TreeTable from "./tree-table";
-import iconChoose from "@/views/my-components/icon-choose";
-import countDownButton from "@/views/my-components/count-down-button";
+import iconChoose from "@/views/my-components/xboot/icon-choose";
+import countDownButton from "@/views/my-components/xboot/count-down-button";
 import departmentChoose from "@/views/my-components/xboot/department-choose";
 import departmentTreeChoose from "@/views/my-components/xboot/department-tree-choose";
 import userChoose from "@/views/my-components/xboot/user-choose";
 import uploadPicInput from "@/views/my-components/xboot/upload-pic-input";
 import uploadPicThumb from "@/views/my-components/xboot/upload-pic-thumb";
 import checkPassword from "@/views/my-components/xboot/check-password";
+import setPassword from "@/views/my-components/xboot/set-password";
 export default {
   name: "xboot-components",
   components: {
@@ -188,7 +200,8 @@ export default {
     departmentTreeChoose,
     uploadPicInput,
     uploadPicThumb,
-    checkPassword
+    checkPassword,
+    setPassword
   },
   data() {
     return {
@@ -330,6 +343,12 @@ export default {
           desc: "是否选开启多选，默认false不开启",
           type: "Boolean",
           value: "false"
+        },
+        {
+          name: "clearable",
+          desc: "是否显示清空按钮",
+          type: "Boolean",
+          value: "true"
         }
       ],
       data6: [
@@ -337,6 +356,11 @@ export default {
           name: "on-change",
           type: "返回选择部门id数组",
           value: '选择部门id数组Array，仅包含部门id，例如 ["1","2","3"]'
+        },
+        {
+          name: "on-clear",
+          type: "开启clearable时可用，点击清空按钮时触发",
+          value: "无"
         }
       ],
       data7: [
@@ -565,6 +589,51 @@ export default {
           name: "show",
           type: "显示密码验证组件",
           value: "无"
+        }
+      ],
+      data28: [
+        {
+          name: "value",
+          desc: "绑定的值，可使用 v-model 双向绑定",
+          type: "String",
+          value: "空"
+        },
+        {
+          name: "size",
+          desc: "输入框尺寸，可选值为large、small、default或者不设置",
+          type: "String",
+          value: "-"
+        },
+        {
+          name: "placeholder",
+          desc: "占位文本",
+          type: "String",
+          value: "请输入密码，长度为6-20个字符"
+        },
+        {
+          name: "disabled",
+          desc: "设置输入框和上传按钮为禁用状态",
+          type: "Boolean",
+          value: "false"
+        },
+        {
+          name: "readonly",
+          desc: "设置输入框为只读",
+          type: "Boolean",
+          value: "false"
+        },
+        {
+          name: "maxlength",
+          desc: "设置输入框最大输入长度，默认20",
+          type: "Number",
+          value: "20"
+        }
+      ],
+      data29: [
+        {
+          name: "on-change",
+          type: "强度等级得分0-5，包含数字、小写字母、大写字母、特殊字符、长度≥10各累加1分，≤1分强度为弱、2-4分强度为中、5分强度为强",
+          value: "第一个参数为返回用户输入的内容，第二个参数为强度等级得分0-5，第三个参数为强度汉字"
         }
       ]
     };
