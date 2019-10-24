@@ -117,7 +117,6 @@
       v-model="dictModalVisible"
       :mask-closable="false"
       :width="500"
-      :styles="{top: '30px'}"
     >
       <Form ref="dictForm" :model="dictForm" :label-width="85" :rules="dictFormValidate">
         <FormItem label="字典名称" prop="title">
@@ -148,7 +147,6 @@
       v-model="modalVisible"
       :mask-closable="false"
       :width="500"
-      :styles="{top: '30px'}"
     >
       <Form ref="form" :model="form" :label-width="80" :rules="formValidate">
         <FormItem label="名称" prop="title">
