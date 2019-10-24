@@ -18,7 +18,7 @@ https://www.kancloud.cn/exrick/xboot/content
 ### 项目简介
 - 项目基于 Vue-Cli 3.10.x 创建
 - 主要Main组件框架基于iView-admin 1.0版本 修复其部分BUG
-- UI组件库升级至iView 3.x
+- UI组件库升级至iView/View UI 4.x
 - 后台加载动态权限菜单 多方式轻松权限控制至按钮显示
 - 提供Vue空白模版，只需修改后台请求和对应实体字段即可完成页面开发
 - 多语言切换、消息管理、第三方社交账号或短信登录
@@ -49,7 +49,7 @@ https://www.kancloud.cn/exrick/xboot/content
 - Vue Router
 - [Vuex](https://vuex.vuejs.org/zh-cn/)
 - [vue-i18n](https://github.com/kazupon/vue-i18n)：国际化多语言插件 使用5.0.x版本
-- [iView](https://www.iviewui.com/)
+- [iView/View UI](https://www.iviewui.com/)
 - [iview-admin](https://github.com/iview/iview-admin)
 - [iview-area](https://github.com/iview/iview-area)：城市级联组件
 - [wangeditor](https://github.com/wangfupeng1988/wangEditor)：轻量富文本编辑器
