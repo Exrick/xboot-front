@@ -40,7 +40,7 @@
           <div class="main-nav-menu" v-if="navType==1||navType==2">
             <Menu mode="horizontal" :active-name="currNav" @on-select="selectNav">
               <MenuItem v-for="(item, i) in navList.slice(0, 3)" :key="i" :name="item.name">
-                <Icon :type="item.icon" style="margin-bottom:3px" v-if="navType==1"/>
+                <Icon :type="item.icon" v-if="navType==1"/>
                 {{item.title}}
               </MenuItem>
               <Submenu name="sub" v-if="navList.length>3">
@@ -50,7 +50,7 @@
                   :key="i"
                   :name="item.name"
                 >
-                  <Icon :type="item.icon" style="margin-bottom:3px" v-if="navType==1"/>
+                  <Icon :type="item.icon" v-if="navType==1"/>
                   {{item.title}}
                 </MenuItem>
               </Submenu>
