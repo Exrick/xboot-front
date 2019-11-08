@@ -9,7 +9,7 @@
         :clearable="clearable"
         @on-clear="clearSelect"
       />
-      <Poptip trigger="click" placement="right" title="选择部门" width="250">
+      <Poptip transfer trigger="click" placement="right" title="选择部门" width="250">
         <Button icon="md-list">选择部门</Button>
         <div slot="content" class="dep-tree-bar">
           <Input

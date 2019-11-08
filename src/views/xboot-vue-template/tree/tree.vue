@@ -46,7 +46,7 @@
             <FormItem label="上级节点" prop="parentTitle">
               <div style="display:flex;">
                 <Input v-model="form.parentTitle" readonly style="margin-right:10px;" />
-                <Poptip trigger="click" placement="right-start" title="选择上级节点" width="250">
+                <Poptip transfer trigger="click" placement="right-start" title="选择上级节点" width="250">
                   <Button icon="md-list">选择分类</Button>
                   <div slot="content" style="position:relative;min-height:5vh">
                     <Tree :data="dataEdit" :load-data="loadData" @on-select-change="selectTreeEdit"></Tree>

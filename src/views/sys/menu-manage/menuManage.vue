@@ -57,15 +57,15 @@
           <Form ref="form" :model="form" :label-width="110" :rules="formValidate">
             <FormItem label="类型" prop="type">
               <div v-show="form.type==-1">
-                <Icon type="ios-navigate-outline" size="16" style="margin:0 5px 3px 0;"></Icon>
+                <Icon type="ios-navigate-outline" size="16" style="margin-right:5px;"></Icon>
                 <span>顶部菜单</span>
               </div>
               <div v-show="form.type==0">
-                <Icon type="ios-list-box-outline" size="16" style="margin:0 5px 3px 0;"></Icon>
+                <Icon type="ios-list-box-outline" size="16" style="margin-right:5px;"></Icon>
                 <span>页面菜单</span>
               </div>
               <div v-show="form.type==1">
-                <Icon type="md-radio-button-on" size="16" style="margin:0 5px 3px 0;"></Icon>
+                <Icon type="md-radio-button-on" size="16" style="margin-right:5px;"></Icon>
                 <span>操作按钮</span>
               </div>
             </FormItem>
@@ -185,15 +185,15 @@
         </div>
         <FormItem label="类型" prop="type">
           <div v-show="formAdd.type==-1">
-            <Icon type="ios-navigate-outline" size="16" style="margin:0 5px 3px 0;"></Icon>
+            <Icon type="ios-navigate-outline" size="16" style="margin-right:5px;"></Icon>
             <span>顶部菜单</span>
           </div>
           <div v-show="formAdd.type==0">
-            <Icon type="ios-list-box-outline" size="16" style="margin:0 5px 3px 0;"></Icon>
+            <Icon type="ios-list-box-outline" size="16" style="margin-right:5px;"></Icon>
             <span>页面菜单</span>
           </div>
           <div v-show="formAdd.type==1">
-            <Icon type="md-radio-button-on" size="16" style="margin:0 5px 3px 0;"></Icon>
+            <Icon type="md-radio-button-on" size="16" style="margin-right:5px;"></Icon>
             <span>操作按钮</span>
           </div>
         </FormItem>

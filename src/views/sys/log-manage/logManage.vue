@@ -176,13 +176,13 @@ export default {
         {
           title: "IP",
           key: "ip",
-          width: 120,
+          width: 140,
           sortable: true
         },
         {
           title: "IP信息",
           key: "ipInfo",
-          width: 100,
+          width: 150,
           sortable: true
         },
         {

@@ -1,6 +1,6 @@
 <template>
   <div class="set-password">
-    <Poptip trigger="focus" placement="right" width="250">
+    <Poptip transfer trigger="focus" placement="right" width="250">
       <Input
         type="password"
         password

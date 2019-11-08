@@ -5,7 +5,7 @@ const hasRole = {
         Vue.directive('hasRole', {
             inserted (el, binding) {
                 let roles = getStore("roles");
-                if (!roles.includes(binding.value)) {
+                if (roles&&!roles.includes(binding.value)) {
                     el.parentNode.removeChild(el);
                 }
             }

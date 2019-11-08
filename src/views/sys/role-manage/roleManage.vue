@@ -85,7 +85,7 @@
         <Select
           v-model="openLevel"
           @on-change="changeOpen"
-          style="width:100px;text-align:left;margin-right:10px"
+          style="width:110px;text-align:left;margin-right:10px"
         >
           <Option value="0">展开所有</Option>
           <Option value="1">收合所有</Option>

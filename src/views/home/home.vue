@@ -33,12 +33,6 @@
                   </Col>
                   <Col span="16" class="padding-left-8">{{city}}</Col>
                 </Row>
-                <Row class="margin-top-8">
-                  <Col span="8">
-                    <p class="notwrap">天气:</p>
-                  </Col>
-                  <Col span="16" class="padding-left-8">{{weather}}</Col>
-                </Row>
               </Card>
             </Col>
             <Col :md="12" :lg="24" style="margin-bottom: 10px;">
@@ -296,7 +290,6 @@ export default {
       cityData: cityData,
       newToDoItemValue: "",
       city: "",
-      weather: "",
       username: ""
     };
   },
@@ -314,24 +307,7 @@ export default {
       this.username = userInfo.username;
       ipInfo().then(res => {
         if (res.success) {
-          if (!res.result) {
-            return;
-          }
-          let ipInfo = JSON.parse(res.result);
-          if (ipInfo.retCode == "200") {
-            let info = ipInfo.result[0];
-            let weather =
-              info.weather +
-              " " +
-              info.temperature +
-              " 污染指数: " +
-              info.pollutionIndex;
-            this.city = info.city;
-            this.weather = weather;
-          } else {
-            this.city = "未知";
-            this.weather = "未知";
-          }
+          this.city = res.result;
         }
       });
     }

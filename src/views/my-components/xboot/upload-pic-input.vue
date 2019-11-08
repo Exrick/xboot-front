@@ -12,7 +12,7 @@
       >
         <Button slot="append" icon="md-eye"></Button>
       </Input>
-      <Poptip trigger="hover" title="图片预览" placement="right" width="350">
+      <Poptip transfer trigger="hover" title="图片预览" placement="right" width="350">
         <Icon type="md-eye" class="see-icon" />
         <div slot="content">
           <img :src="currentValue" alt="无效的图片链接" style="width: 100%;margin: 0 auto;display: block;" />
