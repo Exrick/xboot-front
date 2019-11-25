@@ -17,8 +17,8 @@
         :menu-list="menuList"
       >
         <div slot="top" class="logo-con">
-          <img v-show="!shrink" src="../assets/logo.png" key="max-logo">
-          <img v-show="shrink" src="../assets/logo-min.png" key="min-logo">
+          <img v-show="!shrink" src="../assets/logo.png" key="max-logo" />
+          <img v-show="shrink" src="../assets/logo-min.png" key="min-logo" />
         </div>
       </shrinkable-menu>
     </div>
@@ -39,18 +39,18 @@
           </div>
           <div class="main-nav-menu" v-if="navType==1||navType==2">
             <Menu mode="horizontal" :active-name="currNav" @on-select="selectNav">
-              <MenuItem v-for="(item, i) in navList.slice(0, 3)" :key="i" :name="item.name">
-                <Icon :type="item.icon" v-if="navType==1"/>
+              <MenuItem v-for="(item, i) in navList.slice(0, sliceNum)" :key="i" :name="item.name">
+                <Icon :type="item.icon" v-if="navType==1" />
                 {{item.title}}
               </MenuItem>
-              <Submenu name="sub" v-if="navList.length>3">
+              <Submenu name="sub" v-if="navList.length>sliceNum">
                 <template slot="title">更多</template>
                 <MenuItem
                   v-for="(item, i) in navList.slice(3, navList.length)"
                   :key="i"
                   :name="item.name"
                 >
-                  <Icon :type="item.icon" v-if="navType==1"/>
+                  <Icon :type="item.icon" v-if="navType==1" />
                   {{item.title}}
                 </MenuItem>
               </Submenu>
@@ -110,7 +110,7 @@
               <Dropdown transfer trigger="hover" @on-click="handleClickUserDropdown">
                 <a href="javascript:void(0)">
                   <span class="main-user-name">{{ username }}</span>
-                  <Icon type="md-arrow-dropdown"/>
+                  <Icon type="md-arrow-dropdown" />
                   <Avatar :src="avatarPath" style="background: #619fe7;margin-left: 10px;"></Avatar>
                 </a>
                 <DropdownMenu slot="list">
@@ -135,7 +135,7 @@
       </div>
     </div>
     <!-- 全局加载动画 -->
-    <circleLoading class="loading-position" v-show="loading"/>
+    <circleLoading class="loading-position" v-show="loading" />
   </div>
 </template>
 
@@ -161,6 +161,7 @@ export default {
   },
   data() {
     return {
+      sliceNum: 3,
       shrink: false,
       username: "",
       userId: "",
@@ -168,7 +169,7 @@ export default {
       openedSubmenuArr: this.$store.state.app.openedSubmenuArr,
       firstThreeNav: [],
       lastNav: [],
-      navType: 1,
+      navType: 1
     };
   },
   computed: {
@@ -293,6 +294,19 @@ export default {
     },
     fullscreenChange(isFullScreen) {
       // console.log(isFullScreen);
+    },
+    resize() {
+      let currWidth = document.body.clientWidth;
+      if (currWidth <= 1200 && currWidth > 900) {
+        this.sliceNum = 2;
+        this.shrink = true;
+      } else if (currWidth <= 900) {
+        this.sliceNum = 1;
+        this.shrink = true;
+      } else {
+        this.sliceNum = 3;
+        this.shrink = false;
+      }
     }
   },
   watch: {
@@ -311,6 +325,11 @@ export default {
   },
   mounted() {
     this.init();
+    let that = this;
+    this.resize();
+    window.addEventListener("resize", function() {
+      that.resize();
+    });
   },
   created() {
     // 显示打开的页面的列表

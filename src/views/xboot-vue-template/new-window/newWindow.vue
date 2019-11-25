@@ -8,8 +8,9 @@
         <Button @click="add" type="primary" icon="md-add">新窗口中添加</Button>
         <Button @click="delAll" icon="md-trash">批量删除</Button>
         <Button @click="getDataList" icon="md-refresh">刷新</Button>
+        <Button type="dashed" @click="openTip=!openTip">{{openTip ? "关闭提示" : "开启提示"}}</Button>
       </Row>
-      <Row>
+      <Row v-show="openTip">
         <Alert show-icon>
           已选择
           <span class="select-count">{{selectCount}}</span> 项
@@ -51,6 +52,7 @@ export default {
   name: "new-window",
   data() {
     return {
+      openTip: true, // 显示提示
       loading: true, // 表单加载状态
       sortColumn: "createTime", // 排序字段
       sortType: "desc", // 排序方式
@@ -89,6 +91,7 @@ export default {
           title: "操作",
           key: "action",
           align: "center",
+          width: 250,
           render: (h, params) => {
             return h("div", [
               h(

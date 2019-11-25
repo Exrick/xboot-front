@@ -25,15 +25,17 @@ module.exports = {
         //     axios: 'axios',
         //     'vue-router': 'VueRouter',
         //     vuex: 'Vuex',
-        //     iview: 'iview',
+        //     'view-design': 'iview',
+        //     'iview-area': 'iviewArea',
         //     echarts: 'echarts',
         //     apexcharts: 'ApexCharts',
         //     'vue-apexcharts': 'VueApexCharts',
-        //     xlsx: 'XLSX',
         //     dplayer: 'DPlayer',
+        //     'print-js': 'printJS',
+        //     html2canvas: 'html2canvas',
+        //     'vue-lazyload': 'VueLazyload',
         //     gitalk: 'Gitalk',
-        //     'js-cookie': 'Cookies',
-        //     wangEditor: 'wangEditor'
+        //     'js-cookie': 'Cookies'
         // },
         // GZIP压缩
         plugins: [

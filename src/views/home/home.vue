@@ -5,13 +5,13 @@
 
 <template>
   <div>
-    <div v-show="currNav=='xboot'">
+    <div v-show="currNav=='xboot'" class="home">
       <Row :gutter="10">
-        <Col :md="24" :lg="8">
-          <Row class-name="home-page-row1" :gutter="10">
-            <Col :md="12" :lg="24" :style="{marginBottom: '10px'}">
+        <Col :lg="24" :xl="8">
+          <Row :gutter="10">
+            <Col :lg="12" :xl="24" :style="{marginBottom: '10px'}">
               <Card>
-                <Row type="flex" class="user-infor">
+                <Row type="flex" class="user-info">
                   <Col span="8">
                     <Row class-name="made-child-con-middle" type="flex" align="middle">
                       <img class="avator-img" :src="avatarPath" />
@@ -20,7 +20,7 @@
                   <Col span="16" style="padding-left:6px;">
                     <Row class-name="made-child-con-middle" type="flex" align="middle">
                       <div>
-                        <b class="card-user-infor-name">{{ username }}</b>
+                        <b class="card-user-info-name">{{ username }}</b>
                         <p>XBoot 欢迎您的使用</p>
                       </div>
                     </Row>
@@ -35,16 +35,16 @@
                 </Row>
               </Card>
             </Col>
-            <Col :md="12" :lg="24" style="margin-bottom: 10px;">
+            <Col :lg="12" :xl="24" style="margin-bottom: 10px;">
               <Card>
-                <p slot="title" class="card-title">
-                  <Icon type="logo-github" size="20" style="margin-right:5px;" />
-                  <a href="https://github.com/Exrick/x-boot" target="_blank">XBoot Github开源版本地址</a>
+                <p slot="title">
+                  <Icon type="logo-github" size="20" style="margin-right:5px" />
+                  <a href="https://github.com/Exrick/x-boot" target="_blank">XBoot开源版本地址</a>
                 </p>
                 <p slot="extra">
                   <a target="_blank" href="http://exrick.cn">作者：Exrick</a>
                 </p>
-                <div class="to-do-list-con">
+                <div style="height: 268px;">
                   <Timeline>
                     <TimelineItem>
                       <Icon type="logo-youtube" color="#fb7299" slot="dot"></Icon>
@@ -78,52 +78,52 @@
             </Col>
           </Row>
         </Col>
-        <Col :md="24" :lg="16">
+        <Col :lg="24" :xl="16">
           <Row :gutter="5">
-            <Col :xs="24" :sm="12" :md="6" :style="{marginBottom: '10px'}">
-              <infor-card
+            <Col :sm="24" :md="12" :lg="6" :style="{marginBottom: '10px'}">
+              <info-card
                 id-name="user_created_count"
                 :end-val="count.createUser"
                 iconType="md-person-add"
                 color="#2d8cf0"
                 intro-text="今日新增用户"
-              ></infor-card>
+              ></info-card>
             </Col>
-            <Col :xs="24" :sm="12" :md="6" :style="{marginBottom: '10px'}">
-              <infor-card
+            <Col :sm="24" :md="12" :lg="6" :style="{marginBottom: '10px'}">
+              <info-card
                 id-name="visit_count"
                 :end-val="count.visit"
                 iconType="ios-eye"
                 color="#64d572"
                 :iconSize="50"
                 intro-text="今日浏览量"
-              ></infor-card>
+              ></info-card>
             </Col>
-            <Col :xs="24" :sm="12" :md="6" :style="{marginBottom: '10px'}">
-              <infor-card
+            <Col :sm="24" :md="12" :lg="6" :style="{marginBottom: '10px'}">
+              <info-card
                 id-name="collection_count"
                 :end-val="count.collection"
                 iconType="md-cloud-upload"
                 color="#ffd572"
                 intro-text="今日数据采集量"
-              ></infor-card>
+              ></info-card>
             </Col>
-            <Col :xs="24" :sm="12" :md="6" :style="{marginBottom: '10px'}">
-              <infor-card
+            <Col :sm="24" :md="12" :lg="6" :style="{marginBottom: '10px'}">
+              <info-card
                 id-name="transfer_count"
                 :end-val="count.transfer"
                 iconType="md-shuffle"
                 color="#f25e43"
                 intro-text="今日服务调用量"
-              ></infor-card>
+              ></info-card>
             </Col>
           </Row>
           <Row>
-            <Col :md="24" :lg="12" style="padding: 0 5px 10px 0;">
+            <Col :lg="24" :xl="12" style="padding: 0 5px 10px 0;">
               <Card>
-                <p slot="title" class="card-title" style="overflow:visible">
+                <p slot="title" style="overflow:visible">
                   <a href="http://xpay.exrick.cn/pay?xboot" target="_blank">
-                    <Icon type="ios-star" size="20" style="margin-right:5px;"></Icon>
+                    <Icon type="ios-star" size="20" style="margin-right:5px"></Icon>
                     <Badge dot>立即获取 XBoot 完整版</Badge>
                   </a>
                 </p>
@@ -182,10 +182,10 @@
                 </div>
               </Card>
             </Col>
-            <Col :md="24" :lg="12" style="padding: 0 0 10px 5px;">
+            <Col :lg="24" :xl="12" style="padding: 0 0 10px 5px;">
               <Card>
-                <p slot="title" class="card-title">
-                  <Icon type="md-bookmark" style="margin-right:5px;"></Icon>ISSUE/评论/更新日志
+                <p slot="title">
+                  <Icon type="md-bookmark" style="margin-right:5px"></Icon>ISSUE/评论/更新日志
                 </p>
                 <div id="comments" style="height:365px;overflow:auto;" class="inner-container"></div>
               </Card>
@@ -194,74 +194,46 @@
         </Col>
       </Row>
       <Row :gutter="10">
-        <Col :md="24" :lg="8" :style="{marginBottom: '10px'}">
-          <Card>
-            <p slot="title" class="card-title">
-              <Icon type="md-map" style="margin-right:5px;"></Icon>每日来访量统计
-            </p>
-            <div class="data-source-row">
-              <visite-volume></visite-volume>
-            </div>
-          </Card>
+        <Col :lg="24" :xl="16" :style="{marginBottom: '10px'}">
+          <visit-volume/>
         </Col>
-        <Col :md="24" :lg="16" :style="{marginBottom: '10px'}">
-          <Card :padding="0">
-            <p slot="title" class="card-title">
-              <Icon type="md-locate" style="margin-right:5px;"></Icon>今日服务调用地理分布
-            </p>
-            <div class="map-con">
-              <Col span="10">
-                <map-data-table
-                  :cityData="cityData"
-                  height="281"
-                  :style-obj="{margin: '12px 0 0 11px'}"
-                ></map-data-table>
-              </Col>
-              <Col span="14" class="map-incon">
-                <Row type="flex" justify="center" align="middle">
-                  <home-map :city-data="cityData"></home-map>
-                </Row>
-              </Col>
-            </div>
-          </Card>
+        <Col :lg="24" :xl="8" :style="{marginBottom: '10px'}">
+          <visit-separation/>
         </Col>
       </Row>
-      <Modal
-        v-model="showVideo"
-        title="作者亲自制作XBoot炫酷文字快闪宣传片"
-        :styles="{top: '30px'}"
-        footer-hide
-        width="1000"
-      >
-        <iframe
-          src="//player.bilibili.com/player.html?aid=30284667&cid=52827707&page=1"
-          scrolling="no"
-          border="0"
-          frameborder="no"
-          framespacing="0"
-          allowfullscreen="true"
-          style="width:100%;height:550px;"
-        ></iframe>
-      </Modal>
     </div>
     <div v-show="currNav=='doc'||currNav=='xboot-show'||currNav=='xpay'||currNav=='xmall'">
       <show />
     </div>
     <div v-show="currNav=='app'">
-      <h1>⬅️ 我是XBoot Flutter App的首页，点击左侧菜单查看详情</h1>
+      <h1>⬅️ 我是小程序与Flutter App的首页，点击左侧菜单查看详情</h1>
     </div>
+
+    <Modal
+      v-model="showVideo"
+      title="作者亲自制作XBoot炫酷文字快闪宣传片"
+      :styles="{top: '30px'}"
+      footer-hide
+      width="1000"
+    >
+      <iframe
+        src="//player.bilibili.com/player.html?aid=30284667&cid=52827707&page=1"
+        scrolling="no"
+        border="0"
+        frameborder="no"
+        framespacing="0"
+        allowfullscreen="true"
+        style="width:100%;height:550px;"
+      ></iframe>
+    </Modal>
   </div>
 </template>
 
 <script>
 import { ipInfo } from "@/api/index";
-import cityData from "./map-data/get-city-value.js";
-import homeMap from "./components/map.vue";
-import visiteVolume from "./components/visiteVolume.vue";
-import userFlow from "./components/userFlow.vue";
-import countUp from "./components/countUp.vue";
-import inforCard from "./components/inforCard.vue";
-import mapDataTable from "./components/mapDataTable.vue";
+import visitVolume from "./components/visitVolume.vue";
+import visitSeparation from "./components/visitSeparation.vue";
+import infoCard from "./components/infoCard.vue";
 import show from "./show.vue";
 import Cookies from "js-cookie";
 import "gitalk/dist/gitalk.css";
@@ -270,12 +242,9 @@ import Gitalk from "gitalk";
 export default {
   name: "home",
   components: {
-    homeMap,
-    visiteVolume,
-    userFlow,
-    countUp,
-    inforCard,
-    mapDataTable,
+    visitVolume,
+    visitSeparation,
+    infoCard,
     show
   },
   data() {
@@ -287,8 +256,6 @@ export default {
         collection: 24389305,
         transfer: 39503498
       },
-      cityData: cityData,
-      newToDoItemValue: "",
       city: "",
       username: ""
     };

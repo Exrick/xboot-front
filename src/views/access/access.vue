@@ -6,7 +6,7 @@
 <template>
   <div class="access">
     <Row>
-      <Col :md="12" :lg="8" style="padding:0 10px 10px 0">
+      <Col :lg="24" :xl="8" style="padding:0 10px 10px 0">
         <Card>
           <p slot="title">
             <Icon type="md-contact" style="margin-right:5px;"></Icon>当前用户
@@ -18,7 +18,7 @@
           </div>
         </Card>
       </Col>
-      <Col :md="12" :lg="16" style="padding:0 10px 10px 0">
+      <Col :lg="24" :xl="16" style="padding:0 10px 10px 0">
         <Card>
           <p slot="title">
             <Icon type="md-apps" style="margin-right:5px;"></Icon>当前用户本页面拥有的按钮操作
@@ -52,27 +52,27 @@
       </Col>
     </Row>
     <Row>
-      <Col :md="12" :lg="14" style="padding:0 10px 10px 0">
+      <Col :lg="24" :xl="14" style="padding:0 10px 10px 0">
         <Card>
           <p slot="title">
             <Icon type="md-grid" style="margin-right:5px;"></Icon>表格中权限判断
           </p>
-          <div>
+          <div class="content-table">
             <Alert show-icon>
               iView Table组件已支持 slot-scope 用法，建议使用该新用法。
-              以下为Render函数中实现权限按钮显示示例
+              以下为Render函数中权限按钮示例
             </Alert>
             <Table border :columns="columns" :data="data"></Table>
           </div>
         </Card>
       </Col>
-      <Col :md="12" :lg="10" style="padding:0 10px 10px 0">
+      <Col :lg="24" :xl="10" style="padding:0 10px 10px 0">
         <Card>
-          <p slot="title" style="overflow:visible">
+          <p slot="title">
             <Icon type="md-contacts" style="margin-right:5px;"></Icon>通过当前用户角色显示
           </p>
           <p slot="extra">无需配置，全局可用</p>
-          <Row>
+          <Row class="content-role">
             <div class="access-user-roles">
               <p>当前用户拥有角色:</p>
               <b>{{ roles }}</b>
@@ -216,9 +216,8 @@ export default {
   },
   methods: {
     initMeta() {
-      let permTypes = this.$route.meta.permTypes;
-      if (permTypes !== null && permTypes !== undefined) {
-        this.permTypes = permTypes;
+      if (this.$route.meta.permTypes) {
+        this.permTypes = this.$route.meta.permTypes;
       }
     }
   },

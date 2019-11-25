@@ -9,8 +9,9 @@
         <Button @click="addRole" type="primary" icon="md-add">安排新任务</Button>
         <Button @click="delAll" icon="md-trash">批量删除</Button>
         <Button @click="init" icon="md-refresh">刷新</Button>
+        <Button type="dashed" @click="openTip=!openTip">{{openTip ? "关闭提示" : "开启提示"}}</Button>
       </Row>
-      <Row>
+      <Row v-show="openTip">
         <Alert show-icon>
           已选择
           <span class="select-count">{{selectCount}}</span> 项
@@ -88,6 +89,7 @@ export default {
   name: "quartz-manage",
   data() {
     return {
+      openTip: true,
       loading: true,
       sortColumn: "createTime",
       sortType: "desc",

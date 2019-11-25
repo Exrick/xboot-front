@@ -29,7 +29,7 @@
                     v-model="form.password"
                     prefix="ios-lock"
                     size="large"
-                    clearable
+                    password
                     placeholder="请输入密码"
                     autocomplete="off"
                   />
@@ -108,7 +108,6 @@
             <Dropdown trigger="click" @on-click="handleDropDown">
               <a class="forget-pass">{{ $t('forgetPass') }}</a>
               <DropdownMenu slot="list">
-                <DropdownItem name="showAccount">体验测试账号</DropdownItem>
                 <DropdownItem name="resetByMobile">使用手机号重置密码(付费)</DropdownItem>
                 <DropdownItem name="resetByEmail">使用邮箱重置密码(付费)</DropdownItem>
               </DropdownMenu>
@@ -131,16 +130,16 @@
             <div class="other-way icons">
               {{ $t('otherLogin') }}
               <div class="other-icon" @click="toGithubLogin">
-                <icon scale="1.1" name="brands/github"></icon>
+                <icon scale="1.3" name="brands/github"></icon>
               </div>
               <div class="other-icon" @click="toQQLogin">
-                <icon name="brands/qq"></icon>
-              </div>
-              <div class="other-icon" @click="toWeiboLogin">
-                <icon scale="1.2" name="brands/weibo"></icon>
+                <icon scale="1.2" name="brands/qq"></icon>
               </div>
               <div class="other-icon" @click="toWeixinLogin">
-                <icon scale="1.2" name="brands/weixin"></icon>
+                <icon scale="1.3" name="brands/weixin"></icon>
+              </div>
+              <div class="other-icon" @click="toWeiboLogin">
+                <icon scale="1.3" name="brands/weibo"></icon>
               </div>
             </div>
             <router-link to="/regist">
@@ -184,9 +183,9 @@ export default {
       sending: false,
       errorCode: "",
       form: {
-        username: "test或test2 可注册 支持Github、QQ、微博",
+        username: "初始账户admin、test、test2",
         password: "123456",
-        mobile: "阿里云短信0.045/条 若余额不足联系作者充值",
+        mobile: "",
         code: ""
       },
       rules: {
@@ -334,7 +333,10 @@ export default {
       });
     },
     toWeixinLogin() {
-      this.$Message.error("开通微信登录官方收费300/年");
+      this.$Modal.info({
+        title: "抱歉，请获取完整版",
+        content: "支付链接: http://xpay.exrick.cn/pay?xboot"
+      });
     },
     relatedLogin() {},
     handleDropDown(v) {
@@ -342,18 +344,9 @@ export default {
         title: "抱歉，请获取完整版",
         content: "支付链接: http://xpay.exrick.cn/pay?xboot"
       });
-    },
-    showAccount() {
-      this.$Notice.info({
-        title: "体验账号密码",
-        desc:
-          "账号1：test 密码：123456 <br>账号2：test2 密码：123456 已开放注册！",
-        duration: 10
-      });
     }
   },
   mounted() {
-    this.showAccount();
     this.relatedLogin();
     this.getCaptchaImg();
   }

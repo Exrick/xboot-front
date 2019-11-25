@@ -6,11 +6,11 @@
   <div class="search">
     <Card>
       <Tabs :animated="false" @on-click="changeTab">
-        <TabPane label="登陆日志" name="login"></TabPane>
-        <TabPane label="操作日志" name="operation"></TabPane>
+        <TabPane label="登陆日志" name="1"></TabPane>
+        <TabPane label="操作日志" name="0"></TabPane>
       </Tabs>
-      <div class="log-operation">
-        <Form ref="searchForm" :model="searchForm" inline :label-width="70" class="search-form">
+      <Row v-show="openSearch" @keydown.enter.native="handleSearch">
+        <Form ref="searchForm" :model="searchForm" inline :label-width="70">
           <Form-item label="搜索日志">
             <Input
               type="text"
@@ -36,14 +36,16 @@
             <Button @click="handleReset">重置</Button>
           </Form-item>
         </Form>
-        <Row>
-          <Button @click="clearAll" type="error" icon="md-trash">清空全部</Button>
-          <Button @click="delAll" icon="md-trash">批量删除</Button>
-          <Button @click="getLogList" icon="md-refresh">刷新</Button>
-        </Row>
-      </div>
-      <Row>
-        <Alert show-icon>
+      </Row>
+      <Row class="operation">
+        <Button @click="clearAll" type="error" icon="md-trash">清空全部</Button>
+        <Button @click="delAll" icon="md-trash">批量删除</Button>
+        <Button @click="getLogList" icon="md-refresh">刷新</Button>
+        <Button type="dashed" @click="openSearch=!openSearch">{{openSearch ? "关闭搜索" : "开启搜索"}}</Button>
+        <Button type="dashed" @click="openTip=!openTip">{{openTip ? "关闭提示" : "开启提示"}}</Button>
+      </Row>
+      <Row v-show="openTip">
+        <Alert>
           已选择
           <span class="select-count">{{selectCount}}</span> 项
           <a class="select-clear" @click="clearSelectAll">清空</a>
@@ -85,6 +87,8 @@ export default {
   name: "log-manage",
   data() {
     return {
+      openSearch: true,
+      openTip: true,
       loading: true,
       selectList: [],
       selectCount: 0,
@@ -286,11 +290,7 @@ export default {
       this.getLogList();
     },
     changeTab(v) {
-      if (v == "login") {
-        this.searchForm.type = 1;
-      } else if (v == "operation") {
-        this.searchForm.type = 0;
-      }
+      this.searchForm.type = v;
       this.getLogList();
     },
     changePage(v) {

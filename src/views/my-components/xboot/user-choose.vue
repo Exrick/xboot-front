@@ -24,7 +24,7 @@
         :model="searchUserForm"
         inline
         :label-width="55"
-        class="search-form"
+       
       >
         <Form-item label="用户名" prop="username">
           <Input

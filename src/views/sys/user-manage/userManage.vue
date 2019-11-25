@@ -6,7 +6,7 @@
   <div class="search">
     <Card>
       <Row>
-        <Form ref="searchForm" :model="searchForm" inline :label-width="70" class="search-form">
+        <Form v-show="openSearch" ref="searchForm" :model="searchForm" inline :label-width="70">
           <Form-item label="用户名称" prop="username">
             <Input
               type="text"
@@ -93,8 +93,10 @@
             <DropdownItem name="importData">导入数据(付费)</DropdownItem>
           </DropdownMenu>
         </Dropdown>
+        <Button type="dashed" @click="openSearch=!openSearch">{{openSearch ? "关闭搜索" : "开启搜索"}}</Button>
+        <Button type="dashed" @click="openTip=!openTip">{{openTip ? "关闭提示" : "开启提示"}}</Button>
       </Row>
-      <Row>
+      <Row v-show="openTip">
         <Alert show-icon>
           已选择
           <span class="select-count">{{selectCount}}</span> 项
@@ -219,6 +221,8 @@ export default {
   data() {
     return {
       loading: true,
+      openSearch: true,
+      openTip: true,
       operationLoading: false,
       loadingExport: true,
       modalExportAll: false,
@@ -329,7 +333,7 @@ export default {
         {
           title: "手机",
           key: "mobile",
-          width: 130,
+          width: 125,
           sortable: true
         },
         {
@@ -363,7 +367,7 @@ export default {
           title: "状态",
           key: "status",
           align: "center",
-          width: 140,
+          width: 110,
           render: (h, params) => {
             if (params.row.status == 0) {
               return h("div", [
@@ -409,7 +413,7 @@ export default {
           key: "createTime",
           sortable: true,
           sortType: "desc",
-          width: 170
+          width: 180
         },
         {
           title: "操作",

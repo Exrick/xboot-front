@@ -2,12 +2,12 @@
   <div>
     <Card>
       <Layout>
-        <Sider hide-trigger style="background: #fff;max-width: 205px;flex: 0 0 205px;">
+        <Sider hide-trigger style="background: #fff;max-width: 220px;flex: 0 0 220px;">
           <Menu
             active-name="1-0"
             theme="light"
             width="auto"
-            :open-names="['1','2']"
+            :open-names="['1','2','3']"
             @on-select="currName=$event"
           >
             <Submenu name="1">
@@ -25,6 +25,14 @@
               <MenuItem name="1-7">图片上传缩略图</MenuItem>
               <MenuItem name="1-8">身份验证全屏弹框</MenuItem>
               <MenuItem name="1-9">密码强度输入框</MenuItem>
+            </Submenu>
+            <Submenu name="3">
+              <template slot="title">
+                <Icon type="ios-create" />
+                <Badge dot :offset="[5,-3]">富文本编辑器(付费)</Badge>
+              </template>
+              <MenuItem name="3-1">wangEditor</MenuItem>
+              <MenuItem name="3-2">Quill</MenuItem>
             </Submenu>
             <Submenu name="2">
               <template slot="title">
@@ -157,7 +165,7 @@
             <Table :columns="events" :data="data29" border size="small" width="1000"></Table>
           </div>
 
-          <div v-show="currName=='2-1'||currName=='2-2'||currName=='2-3'">
+          <div v-show="currName=='2-1'||currName=='2-2'||currName=='2-3'||currName=='3-1'||currName=='3-2'">
             <div class="sorry">
               <img src="@/assets/sorry.png">
               <span class="text">抱歉，请获取完整版</span>
@@ -205,6 +213,7 @@ export default {
   },
   data() {
     return {
+      password: "",
       currName: "1-0",
       processModalVisible: false,
       icon: "",

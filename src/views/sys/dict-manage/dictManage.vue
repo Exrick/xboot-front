@@ -42,8 +42,8 @@
           <Icon :type="expandIcon" size="16" class="icon" @click="changeExpand" />
         </div>
         <Col :span="span">
-          <Row>
-            <Form ref="searchForm" :model="searchForm" inline :label-width="70" class="search-form">
+          <Row v-show="openSearch" @keydown.enter.native="handleSearch">
+            <Form ref="searchForm" :model="searchForm" inline :label-width="70">
               <Form-item label="数据名称" prop="title">
                 <Input
                   type="text"
@@ -74,8 +74,10 @@
             <Button @click="add" type="primary" icon="md-add">添加数据</Button>
             <Button @click="delAll" icon="md-trash">批量删除</Button>
             <Button @click="getDataList" icon="md-refresh">刷新数据</Button>
+            <Button type="dashed" @click="openSearch=!openSearch">{{openSearch ? "关闭搜索" : "开启搜索"}}</Button>
+            <Button type="dashed" @click="openTip=!openTip">{{openTip ? "关闭提示" : "开启提示"}}</Button>
           </Row>
-          <Row>
+          <Row v-show="openTip">
             <Alert show-icon>
               已选择
               <span class="select-count">{{selectCount}}</span> 项
@@ -112,12 +114,7 @@
       </Row>
     </Card>
 
-    <Modal
-      :title="dictModalTitle"
-      v-model="dictModalVisible"
-      :mask-closable="false"
-      :width="500"
-    >
+    <Modal :title="dictModalTitle" v-model="dictModalVisible" :mask-closable="false" :width="500">
       <Form ref="dictForm" :model="dictForm" :label-width="85" :rules="dictFormValidate">
         <FormItem label="字典名称" prop="title">
           <Input v-model="dictForm.title" />
@@ -142,12 +139,7 @@
       </div>
     </Modal>
 
-    <Modal
-      :title="modalTitle"
-      v-model="modalVisible"
-      :mask-closable="false"
-      :width="500"
-    >
+    <Modal :title="modalTitle" v-model="modalVisible" :mask-closable="false" :width="500">
       <Form ref="form" :model="form" :label-width="80" :rules="formValidate">
         <FormItem label="名称" prop="title">
           <Input v-model="form.title" />
@@ -194,6 +186,8 @@ export default {
   name: "dic-manage",
   data() {
     return {
+      openSearch: true,
+      openTip: true,
       treeLoading: false, // 树加载状态
       maxHeight: "500px",
       loading: false, // 表格加载状态

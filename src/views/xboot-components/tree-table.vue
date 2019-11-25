@@ -11,12 +11,14 @@
     <div class="href-text">
       <b>修复与优化：</b>
       <br>
+      <br>· 字体和样式与iView 4.x保持一致
       <br>· 避免引入组件导致的不兼容IE浏览器问题
       <br>· 修复Expand插槽不显示BUG
       <br>· 修复单击行事件、双击行事件、tree-icon-click点击事件、expand-cell-click点击事件不响应BUG
       <br>· Index索引与多选列样式居中
       <br>· 新增Loading加载中状态属性
       <br>· 新增PrimaryKey属性，避免刷新数据后是否折叠状态丢失
+      <br>· 新增Size属性，可控制表格大小
       <br>
       <br>
     </div>
@@ -31,6 +33,7 @@
     </Alert>
     <tree-table
       ref="treeTable"
+      size="default"
       :loading="loading"
       :data="tableData"
       :columns="columns"
@@ -99,7 +102,7 @@ export default {
           key: "sex",
           align: "center",
           headerAlign: "center",
-          minWidth: "50px"
+          minWidth: "80px"
         },
         {
           title: "创建时间",
@@ -285,6 +288,12 @@ export default {
           desc: "是否加载状态",
           type: "Boolean",
           value: "false"
+        },
+        {
+          name: "size",
+          desc: "表格尺寸，可选值为 large、small、default 或者不填",
+          type: "String",
+          value: "-"
         },
         {
           name: "primary-key",

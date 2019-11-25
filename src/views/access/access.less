@@ -33,15 +33,24 @@
         }
     }
 
-    .example {
-        color: #2d8cf0;
-        font-family: "Helvetica Neue"
-    }
-
     &-change-access-con {
         &-row {
             height: 200px;
         }
+    }
+
+    .content-table {
+        height: 240px;
+        overflow: hidden;
+    }
+
+    .content-role {
+        height: 240px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
     }
 }
 
@@ -62,7 +71,6 @@ code {
     justify-content: center;
     flex-direction: column;
     align-items: center;
-    overflow: hidden;
 
     p {
         display: block;
@@ -70,7 +78,6 @@ code {
     }
 
     b {
-        margin: 0 10px;
         color: #2d8cf0;
     }
 }
@@ -79,7 +86,7 @@ code {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 23px 0;
+    padding: 15px 0;
 }
 
 .role-demo {

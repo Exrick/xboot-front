@@ -3,49 +3,39 @@
 
 <template>
   <div>
-    <Row>
-      <Col>
-        <Card>
-          <Row>
-            <Form
-              ref="searchForm"
-              inline
-              :label-width="70"
-              class="search-form"
-              @keydown.enter.native="handleGo"
-            >
-              <Form-item label="链接地址" prop="url">
-                <Input
-                  type="text"
-                  v-model="url"
-                  placeholder="http://"
-                  clearable
-                  style="width: 350px"
-                />
-              </Form-item>
-              <Form-item style="margin-left:-50px;">
-                <Button @click="handleGo" type="primary" icon="ios-send" style="margin-right:5px">前往</Button>
-                <Button @click="handleOpen" icon="md-open">新窗口中打开</Button>
-              </Form-item>
-            </Form>
-          </Row>
-          <Divider style="margin-top:-10px;margin-bottom:0px;"/>
-          <Row>
-            <div style="position:relative;">
-              <iframe
-                id="iframe"
-                :src="go"
-                frameborder="0"
-                width="100%"
-                :height="height"
-                scrolling="auto"
-              ></iframe>
-              <Spin fix size="large" v-if="loading"></Spin>
-            </div>
-          </Row>
-        </Card>
-      </Col>
-    </Row>
+    <Card>
+      <Row>
+        <Form
+          ref="searchForm"
+          inline
+          :label-width="70"
+         
+          @keydown.enter.native="handleGo"
+        >
+          <Form-item label="链接地址" prop="url">
+            <Input type="text" v-model="url" placeholder="http://" clearable style="width: 350px" />
+          </Form-item>
+          <Form-item style="margin-left:-50px;">
+            <Button @click="handleGo" type="primary" icon="ios-send" style="margin-right:5px">前往</Button>
+            <Button @click="handleOpen" icon="md-open">新窗口中打开</Button>
+          </Form-item>
+        </Form>
+      </Row>
+      <Divider style="margin-top:-10px;margin-bottom:0px;" />
+      <Row>
+        <div style="position:relative;">
+          <iframe
+            id="iframe"
+            :src="go"
+            frameborder="0"
+            width="100%"
+            :height="height"
+            scrolling="auto"
+          ></iframe>
+          <Spin fix size="large" v-if="loading"></Spin>
+        </div>
+      </Row>
+    </Card>
   </div>
 </template>
 
@@ -92,7 +82,7 @@ export default {
     }
   },
   watch: {
-    currNav(v, oldV){
+    currNav(v, oldV) {
       this.initUrl();
     }
   },

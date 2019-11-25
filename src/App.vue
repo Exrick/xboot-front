@@ -40,4 +40,8 @@ body {
 .ivu-btn-text:focus {
   box-shadow: none !important;
 }
+
+.ivu-tag {
+  cursor: pointer;
+}
 </style>

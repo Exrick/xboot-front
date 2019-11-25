@@ -150,6 +150,7 @@ export default {
       if (this.multiple) {
         this.departmentId = ids;
       } else {
+        this.departmentId = [];
         this.departmentId.push(ids);
       }
       this.$emit("on-change", this.departmentId);

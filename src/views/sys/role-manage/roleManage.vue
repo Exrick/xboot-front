@@ -9,8 +9,9 @@
         <Button @click="addRole" type="primary" icon="md-add">添加角色</Button>
         <Button @click="delAll" icon="md-trash">批量删除</Button>
         <Button @click="init" icon="md-refresh">刷新</Button>
+        <Button type="dashed" @click="openTip=!openTip">{{openTip ? "关闭提示" : "开启提示"}}</Button>
       </Row>
-      <Row>
+      <Row v-show="openTip">
         <Alert show-icon>
           已选择
           <span class="select-count">{{selectCount}}</span> 项
@@ -102,19 +103,20 @@
       v-model="depModalVisible"
       :mask-closable="false"
       :width="500"
-      :styles="{top: '30px'}"
       class="depModal"
     >
+      <Alert show-icon>默认可查看全部数据，自定义数据范围时请勾选下方数据</Alert>
       <Form :label-width="85">
         <FormItem label="数据范围">
-          <Select v-model="dataType">
+          <Select v-model="dataType" transfer>
             <Option :value="0">全部数据权限</Option>
             <Option :value="1">自定义数据权限</Option>
+            <Option :value="2">本部门及以下数据权限</Option>
+            <Option :value="3">本部门数据权限</Option>
           </Select>
         </FormItem>
       </Form>
-      <Alert show-icon>默认可查看全部数据，自定义数据范围请点击选择下方数据</Alert>
-      <div v-if="dataType!=0" style="margin-top:15px">
+      <div v-show="dataType==1" style="margin-top:15px">
         <div style="position:relative">
           <Tree
             ref="depTree"
@@ -155,6 +157,7 @@ export default {
   name: "role-manage",
   data() {
     return {
+      openTip: true,
       openLevel: "0",
       loading: true,
       treeLoading: true,
@@ -770,12 +773,8 @@ export default {
     },
     submitDepEdit() {
       let depIds = "";
-      if (this.dataType != 0) {
+      if (this.dataType == 1) {
         let selectedNodes = this.$refs.depTree.getCheckedNodes();
-        if (selectedNodes.length < 1) {
-          this.$Message.error("请至少选择一条数据");
-          return;
-        }
         selectedNodes.forEach(function(e) {
           depIds += e.id + ",";
         });

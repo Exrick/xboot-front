@@ -6,7 +6,7 @@
     <Card>
       <div slot="title">
         <a @click="close" class="back-title">
-          <Icon type="ios-arrow-back" style="margin: 0 0 2px 0" />返回
+          <Icon type="ios-arrow-back" />返回
         </a>
       </div>
       <Form

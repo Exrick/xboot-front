@@ -185,11 +185,15 @@
                   <icon name="brands/weixin" scale="2.5" style="margin: 0 16px 0 2px;color:#60c126"></icon>
                   <div>
                     <div class="title">微信</div>
-                    <div class="desc">当前未绑定微信账号</div>
+                    <div class="desc">
+                      <span v-if="wechat.related">已绑定微信账号：{{wechat.username}}</span>
+                      <span v-else>当前未绑定微信账号</span>
+                    </div>
                   </div>
                 </div>
                 <div>
-                  <a>暂不支持</a>
+                  <a v-if="!wechat.related" @click="toRelateWechat()">立即绑定</a>
+                  <a v-else @click="unRelateWechat()">解除绑定</a>
                 </div>
               </div>
               <Spin fix v-if="jumping">跳转中...</Spin>
@@ -228,7 +232,7 @@
       <Form
         ref="mobileEditForm"
         :model="mobileEditForm"
-        :label-width="60"
+        :label-width="70"
         :rules="mobileEditValidate"
       >
         <FormItem label="手机号" prop="mobile">
@@ -236,7 +240,7 @@
         </FormItem>
         <FormItem label="验证码" prop="code" :error="codeError">
           <Row type="flex" justify="space-between">
-            <Input v-model="mobileEditForm.code" placeholder="请输入您收到的短信验证码" style="width:300px;" />
+            <Input v-model="mobileEditForm.code" placeholder="请输入您收到的短信验证码" style="width:280px;" />
             <CountDownButton
               ref="countDownMobile"
               @on-click="sendEditMobileCode"
@@ -261,13 +265,13 @@
       :mask-closable="false"
       :width="500"
     >
-      <Form ref="emailEditForm" :model="emailEditForm" :label-width="90" :rules="emailEditValidate">
+      <Form ref="emailEditForm" :model="emailEditForm" :label-width="100" :rules="emailEditValidate">
         <FormItem label="新邮箱地址" prop="email">
           <Input v-model="emailEditForm.email" @on-change="hasChangeEmail" placeholder="请输入新邮箱地址"></Input>
         </FormItem>
         <FormItem label="验证码" prop="code" :error="codeError">
           <Row type="flex" justify="space-between">
-            <Input v-model="emailEditForm.code" placeholder="请输入您收到的邮件中的验证码" style="width:275px;" />
+            <Input v-model="emailEditForm.code" placeholder="请输入您收到的邮件中的验证码" style="width:250px;" />
             <CountDownButton
               ref="countDownEmail"
               @on-click="sendVerifyEmail"
@@ -379,6 +383,11 @@ export default {
         id: "",
         username: ""
       },
+      wechat: {
+        related: false,
+        id: "",
+        username: ""
+      },
       jumping: false,
       currMenu: "基本信息",
       dictSex: this.$store.state.dict.sex
@@ -443,6 +452,12 @@ export default {
       });
     },
     toRelateWeibo() {
+      this.$Modal.info({
+        title: "抱歉，请获取完整版",
+        content: "支付链接: http://xpay.exrick.cn/pay?xboot"
+      });
+    },
+    toRelateWechat() {
       this.$Modal.info({
         title: "抱歉，请获取完整版",
         content: "支付链接: http://xpay.exrick.cn/pay?xboot"
