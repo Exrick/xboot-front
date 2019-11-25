@@ -53,7 +53,7 @@ https://www.kancloud.cn/exrick/xboot/content
 
 ### 主要所用技术
 
-<img src=https://i.loli.net/2019/11/25/gUiynavBAHd6hY8.jpg width=600/>
+<img src=https://i.loli.net/2019/11/25/gUiynavBAHd6hY8.jpg width=1000/>
 
 - [Vue 2.6.x](https://cn.vuejs.org/)
 - [Vue Cli 4.0.x](https://github.com/vuejs/vue-cli)：[官方中文文档](https://github.com/vuejs/vue-cli/tree/dev/docs/zh/config)
