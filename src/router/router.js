@@ -28,6 +28,15 @@ export const registResult = {
     component: () => import('@/views/regist-result.vue')
 };
 
+export const authorizeRouter = {
+    path: '/authorize',
+    name: 'authorize',
+    meta: {
+        title: 'XBoot统一认证平台 - XBoot前后端分离开发平台 '
+    },
+    component: () => import('@/views/authorize.vue')
+};
+
 // export const page404 = {
 //     path: '/*',
 //     name: 'error-404',
@@ -85,6 +94,7 @@ export const routers = [
     loginRouter,
     registRouter,
     registResult,
+    authorizeRouter,
     otherRouter,
     locking,
     ...appRouter,

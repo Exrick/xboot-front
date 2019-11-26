@@ -11,6 +11,7 @@
 ### 在线Demo
 - 在线Demo：http://xboot.exrick.cn
 - 单点登录测试页：http://sso.exrick.cn
+- 统一认证平台访问地址：http://xboot.exrick.cn/authorize
 ### 最新最全面在线文档
 https://www.kancloud.cn/exrick/xboot/content
 ### 后台项目地址：[X-Boot](https://github.com/Exrick/x-boot)

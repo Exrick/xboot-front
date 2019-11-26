@@ -2,6 +2,21 @@
 import { getRequest, postRequest, putRequest, deleteRequest, importRequest, uploadFileRequest } from '@/libs/axios';
 
 
+// 认证
+export const authorize = (params) => {
+    return getRequest('/oauth2/authorize', params)
+}
+// 获取token
+export const token = (params) => {
+    return getRequest('/oauth2/token', params)
+}
+// 获取user信息
+export const user = (params) => {
+    return getRequest('/oauth2/user', params)
+}
+
+
+
 
 // 获取随机secretKey
 export const getSecretKey = (params) => {
