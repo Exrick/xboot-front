@@ -88,9 +88,9 @@
         <FormItem label="网站名称" prop="name">
           <Input v-model="form.name" clearable style="width:100%" />
         </FormItem>
-        <FormItem label="secretKey" prop="secretKey">
+        <FormItem label="clientSecret" prop="clientSecret">
           <Row type="flex" justify="space-between">
-            <Input v-model="form.secretKey" clearable style="width:74%" />
+            <Input v-model="form.clientSecret" clearable style="width:74%" />
             <Button @click="generateSecret">生成秘钥</Button>
           </Row>
         </FormItem>
@@ -141,14 +141,14 @@ export default {
       form: {
         // 添加或编辑表单对象初始化数据
         name: "",
-        secretKey: "",
+        clientSecret: "",
         homeUri: "",
         redirectUri: ""
       },
       // 表单验证规则
       formValidate: {
         name: [{ required: true, message: "不能为空", trigger: "blur" }],
-        secretKey: [{ required: true, message: "不能为空", trigger: "blur" }],
+        clientSecret: [{ required: true, message: "不能为空", trigger: "blur" }],
         homeUri: [{ required: true, message: "不能为空", trigger: "blur" }],
         redirectUri: [{ required: true, message: "不能为空", trigger: "blur" }]
       },
@@ -180,8 +180,8 @@ export default {
           sortable: false
         },
         {
-          title: "secretKey",
-          key: "secretKey",
+          title: "clientSecret",
+          key: "clientSecret",
           minWidth: 120,
           sortable: false
         },
@@ -307,7 +307,7 @@ export default {
     generateSecret() {
       getSecretKey().then(res => {
         if (res.success) {
-          this.form.secretKey = res.result;
+          this.form.clientSecret = res.result;
         }
       });
     },
