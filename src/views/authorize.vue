@@ -187,9 +187,6 @@ export default {
           authorize(this.form).then(res => {
             if (res.success) {
               // 存储认证信息 避免下次认证
-              Cookies.set("oauthClientId", this.form.client_id, {
-                expires: 30
-              });
               Cookies.set("oauthUsername", this.form.username, {
                 expires: 30
               });
@@ -212,11 +209,9 @@ export default {
   mounted() {
     this.judgeUrl();
     // 判断是否认证过
-    let client_id = Cookies.get("oauthClientId");
     let username = Cookies.get("oauthUsername");
-    if (client_id && username) {
+    if (username) {
       this.authLoading = true;
-      this.form.client_id = client_id;
       this.form.username = username;
       authorized(this.form).then(res => {
         if (res.success) {
