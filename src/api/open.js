@@ -6,6 +6,10 @@ import { getRequest, postRequest, putRequest, deleteRequest, importRequest, uplo
 export const authorize = (params) => {
     return getRequest('/oauth2/authorize', params)
 }
+// 认证过
+export const authorized = (params) => {
+    return getRequest('/oauth2/authorized', params)
+}
 // 获取token
 export const token = (params) => {
     return getRequest('/oauth2/token', params)

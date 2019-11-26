@@ -3,7 +3,7 @@
     <Row type="flex" justify="center" align="middle" @keydown.enter.native="submit">
       <Col style="width: 368px;">
         <Header />
-        <Row v-if="!error">
+        <Row v-if="!error&&!authLoading">
           <Tabs value="1">
             <TabPane label="XBoot统一认证平台" name="1" icon="md-people">
               <Form ref="loginForm" :model="form" :rules="rules" class="form">
@@ -75,6 +75,9 @@
             <span slot="desc">{{msg}}</span>
           </Alert>
         </div>
+        <div v-if="authLoading">
+          <RectLoading />
+        </div>
         <Footer />
       </Col>
       <LangSwitch />
@@ -83,19 +86,23 @@
 </template>
 
 <script>
+import Cookies from "js-cookie";
 import { initCaptcha, drawCodeImage } from "@/api/index";
-import { authorize } from "@/api/open";
+import { authorize, authorized } from "@/api/open";
 import Header from "@/views/main-components/header";
 import Footer from "@/views/main-components/footer";
 import LangSwitch from "@/views/main-components/lang-switch";
+import RectLoading from "@/views/my-components/xboot/rect-loading";
 export default {
   components: {
     LangSwitch,
     Header,
-    Footer
+    Footer,
+    RectLoading
   },
   data() {
     return {
+      authLoading: false,
       title: "",
       msg: "",
       error: false,
@@ -179,8 +186,19 @@ export default {
           this.loading = true;
           authorize(this.form).then(res => {
             if (res.success) {
+              // 存储认证信息 避免下次认证
+              Cookies.set("oauthClientId", this.form.client_id, {
+                expires: 30
+              });
+              Cookies.set("oauthUsername", this.form.username, {
+                expires: 30
+              });
               let url =
-                res.result.redirect_uri + "?code=" + res.result.code + "&state=" + res.result.state;
+                res.result.redirect_uri +
+                "?code=" +
+                res.result.code +
+                "&state=" +
+                res.result.state;
               window.location.href = url;
             } else {
               this.loading = false;
@@ -192,8 +210,29 @@ export default {
     }
   },
   mounted() {
-    this.getCaptchaImg();
     this.judgeUrl();
+    // 判断是否认证过
+    let client_id = Cookies.get("oauthClientId");
+    let username = Cookies.get("oauthUsername");
+    if (client_id && username) {
+      this.authLoading = true;
+      this.form.client_id = client_id;
+      this.form.username = username;
+      authorized(this.form).then(res => {
+        if (res.success) {
+          let url =
+            res.result.redirect_uri +
+            "?code=" +
+            res.result.code +
+            "&state=" +
+            res.result.state;
+          window.location.href = url;
+        } else {
+          this.authLoading = false;
+        }
+      });
+    }
+    this.getCaptchaImg();
   }
 };
 </script>
