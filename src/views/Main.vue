@@ -46,7 +46,7 @@
               <Submenu name="sub" v-if="navList.length>sliceNum">
                 <template slot="title">更多</template>
                 <MenuItem
-                  v-for="(item, i) in navList.slice(3, navList.length)"
+                  v-for="(item, i) in navList.slice(sliceNum, navList.length)"
                   :key="i"
                   :name="item.name"
                 >
