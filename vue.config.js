@@ -26,7 +26,6 @@ module.exports = {
         //     'vue-router': 'VueRouter',
         //     vuex: 'Vuex',
         //     'view-design': 'iview',
-        //     'iview-area': 'iviewArea',
         //     echarts: 'echarts',
         //     apexcharts: 'ApexCharts',
         //     'vue-apexcharts': 'VueApexCharts',
