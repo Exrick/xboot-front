@@ -84,7 +84,7 @@
       </Col>
     </Row>
     <Modal :title="modalTitle" v-model="modalVisible" :mask-closable="false" :width="500">
-      <Form ref="form" :model="form" :label-width="90" :rules="formValidate">
+      <Form ref="form" :model="form" :label-width="100" :rules="formValidate">
         <FormItem label="网站名称" prop="name">
           <Input v-model="form.name" clearable style="width:100%" />
         </FormItem>
