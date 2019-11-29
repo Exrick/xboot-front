@@ -232,9 +232,11 @@ export default {
       this.setStore("currNav", name);
       // 清空所有已打开标签
       // this.$store.commit("clearAllTags");
-      this.$router.push({
-        name: "home_index"
-      });
+      if (this.$route.name != "home_index") {
+        this.$router.push({
+          name: "home_index"
+        });
+      }
       util.initRouter(this);
     },
     toggleClick() {

@@ -40,9 +40,6 @@
 </template>
 
 <script>
-import Vue from "vue";
-import VueI18n from "vue-i18n";
-Vue.use(VueI18n);
 export default {
   name: "tagsPageOpened",
   data() {
@@ -106,6 +103,9 @@ export default {
       }
     },
     linkTo(item) {
+      if (this.$route.name == item.name) {
+        return;
+      }
       let routerObj = {};
       routerObj.name = item.name;
       if (item.argu) {

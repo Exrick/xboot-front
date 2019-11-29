@@ -74,7 +74,6 @@
         <Tree
           ref="tree"
           :data="permData"
-          multiple
           show-checkbox
           :render="renderContent"
           :check-strictly="true"
@@ -122,11 +121,9 @@
             ref="depTree"
             :data="depData"
             :load-data="loadData"
-            show-checkbox
             @on-toggle-expand="expandCheckDep"
-            :check-strictly="true"
+            multiple
             style="margin-top:15px"
-            @on-select-change="$event[0].checked=!$event[0].checked"
           ></Tree>
           <Spin size="large" fix v-if="depTreeLoading"></Spin>
         </div>
@@ -738,9 +735,9 @@ export default {
           this.depData = res.result;
           // 判断子节点
           this.checkDepTree(this.depData, roleDepIds);
-          this.depModalVisible = true;
         }
       });
+      this.depModalVisible = true;
     },
     expandCheckDep(v) {
       // 判断展开子节点
@@ -751,9 +748,9 @@ export default {
       let that = this;
       depData.forEach(function(p) {
         if (that.hasDepPerm(p, roleDepIds)) {
-          p.checked = true;
+          p.selected = true;
         } else {
-          p.checked = false;
+          p.selected = false;
         }
       });
     },
@@ -774,7 +771,7 @@ export default {
     submitDepEdit() {
       let depIds = "";
       if (this.dataType == 1) {
-        let selectedNodes = this.$refs.depTree.getCheckedNodes();
+        let selectedNodes = this.$refs.depTree.getSelectedNodes();
         selectedNodes.forEach(function(e) {
           depIds += e.id + ",";
         });
