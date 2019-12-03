@@ -17,7 +17,7 @@ https://www.kancloud.cn/exrick/xboot/content
 ### 后台项目地址：[X-Boot](https://github.com/Exrick/x-boot)
 > 涉及技术：Spring Boot 2.x/Spring Security/JWT/Spring Data JPA+Mybatis-Plus/Redis/Elasticsearch 分布式限流/同步锁/验证码/SnowFlake雪花算法ID生成 动态权限管理 数据权限 代码生成 日志记录 定时任务 第三方账号、短信登录
 ### 项目简介
-- 项目基于 Vue-Cli 4.0.x 创建
+- 项目基于 Vue-Cli 4.x 创建
 - 主要Main组件框架基于iView-admin 1.0版本 修复其部分BUG
 - UI组件库升级至iView/View UI 4.x
 - 后台加载动态权限菜单 多方式轻松权限控制至按钮显示
@@ -57,7 +57,7 @@ https://www.kancloud.cn/exrick/xboot/content
 <img src=https://i.loli.net/2019/11/25/gUiynavBAHd6hY8.jpg width=1000/>
 
 - [Vue 2.6.x](https://cn.vuejs.org/)
-- [Vue Cli 4.0.x](https://github.com/vuejs/vue-cli)：[官方中文文档](https://github.com/vuejs/vue-cli/tree/dev/docs/zh/config)
+- [Vue Cli 4.x](https://github.com/vuejs/vue-cli)：[官方中文文档](https://github.com/vuejs/vue-cli/tree/dev/docs/zh/config)
 - Vue Router
 - [Vuex](https://vuex.vuejs.org/zh-cn/)
 - [vue-i18n](https://github.com/kazupon/vue-i18n)：国际化多语言插件 使用5.0.x版本
