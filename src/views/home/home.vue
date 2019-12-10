@@ -157,7 +157,7 @@
                   <div class="flex">
                     商用授权价格：
                     <span class="rmb">￥</span>
-                    <span class="price">7998</span>
+                    <span class="price">?998</span>
                     <span class="origin">￥</span>
                     <s class="origin">9998</s>
                     <span class="origin" style="font-size: 8px">起</span>
@@ -187,7 +187,7 @@
                 <p slot="title">
                   <Icon type="md-bookmark" style="margin-right:5px"></Icon>ISSUE/评论/更新日志
                 </p>
-                <div id="comments" style="height:365px;overflow:auto;" class="inner-container"></div>
+                <div id="comments" class="comment-container"></div>
               </Card>
             </Col>
           </Row>
