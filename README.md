@@ -14,7 +14,7 @@
 - 统一认证平台访问地址：http://xboot.exrick.cn/authorize
 ### 最新最全面在线文档
 https://www.kancloud.cn/exrick/xboot/content
-### 后台项目地址：[X-Boot](https://github.com/Exrick/x-boot)
+### 后台项目地址：[XBoot](https://github.com/Exrick/xboot)
 > 涉及技术：Spring Boot 2.x/Spring Security/JWT/Spring Data JPA+Mybatis-Plus/Redis/Elasticsearch 分布式限流/同步锁/验证码/SnowFlake雪花算法ID生成 动态权限管理 数据权限 代码生成 日志记录 定时任务 第三方账号、短信登录
 ### 项目简介
 - 项目基于 Vue-Cli 4.x 创建

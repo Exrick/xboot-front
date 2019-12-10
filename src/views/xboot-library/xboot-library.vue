@@ -15,7 +15,7 @@
           </Menu>
         </Sider>
         <Content :style="{padding: '0 24px 24px 24px', minHeight: '280px', background: '#fff'}">
-          <div v-show="currName=='1-1'">
+          <div v-show="currName=='1-1'" id="printjs">
             <Divider orientation="left">打印 - Print.js</Divider>
             <span class="href-text">Github：</span>
             <a
