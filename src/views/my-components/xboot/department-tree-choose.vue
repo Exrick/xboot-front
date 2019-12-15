@@ -11,7 +11,7 @@
       />
       <Poptip transfer trigger="click" placement="right" title="选择部门" width="250">
         <Button icon="md-list">选择部门</Button>
-        <div slot="content" class="dep-tree-bar">
+        <div slot="content">
           <Input
             v-model="searchKey"
             suffix="ios-search"
@@ -19,13 +19,15 @@
             placeholder="输入部门名搜索"
             clearable
           />
-          <Tree
-            :data="dataDep"
-            :load-data="loadData"
-            @on-select-change="selectTree"
-            :multiple="multiple"
-          ></Tree>
-          <Spin size="large" fix v-if="depLoading"></Spin>
+          <div class="dep-tree-bar">
+            <Tree
+              :data="dataDep"
+              :load-data="loadData"
+              @on-select-change="selectTree"
+              :multiple="multiple"
+            ></Tree>
+            <Spin size="large" fix v-if="depLoading"></Spin>
+          </div>
         </div>
       </Poptip>
     </div>
@@ -164,6 +166,8 @@ export default {
 
 <style lang="less">
 .dep-tree-bar {
+  position: relative;
+  min-height: 80px;
   max-height: 500px;
   overflow: auto;
   margin-top: 5px;

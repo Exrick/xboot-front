@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="user-choose">
     <Button @click="userModalVisible=true" :icon="icon">{{text}}</Button>
     <span @click="clearSelectData" class="clear">清空已选</span>
     <Collapse simple class="collapse">
@@ -19,13 +19,7 @@
       </Panel>
     </Collapse>
     <Drawer title="选择用户" closable v-model="userModalVisible" width="800" draggable>
-      <Form
-        ref="searchUserForm"
-        :model="searchUserForm"
-        inline
-        :label-width="55"
-       
-      >
+      <Form ref="searchUserForm" :model="searchUserForm" inline :label-width="55">
         <Form-item label="用户名" prop="username">
           <Input
             type="text"
@@ -43,8 +37,15 @@
           <Button @click="handleResetUser">重置</Button>
         </Form-item>
       </Form>
-      <Table :loading="userLoading" border :columns="userColumns" :data="userData" :height="height" ref="userTable"></Table>
-      <Row type="flex" justify="end" class="code-row-bg page" style="margin: 10px 0;">
+      <Table
+        :loading="userLoading"
+        border
+        :columns="userColumns"
+        :data="userData"
+        :height="height"
+        ref="userTable"
+      ></Table>
+      <Row type="flex" justify="end" style="margin: 10px 0;">
         <Page
           :current="searchUserForm.pageNumber"
           :total="totalUser"
@@ -172,27 +173,21 @@ export default {
           render: (h, params) => {
             if (params.row.status == 0) {
               return h("div", [
-                h(
-                  "Badge",
-                  {
-                    props: {
-                      status: "success",
-                      text: "正常启用"
-                    }
+                h("Badge", {
+                  props: {
+                    status: "success",
+                    text: "正常启用"
                   }
-                )
+                })
               ]);
             } else if (params.row.status == -1) {
               return h("div", [
-                h(
-                  "Badge",
-                  {
-                    props: {
-                      status: "error",
-                      text: "禁用"
-                    }
+                h("Badge", {
+                  props: {
+                    status: "error",
+                    text: "禁用"
                   }
-                )
+                })
               ]);
             }
           }
@@ -321,16 +316,22 @@ export default {
 </script>
 
 <style lang="less">
-.clear {
-  font-size: 12px;
-  margin-left: 15px;
-  color: #40a9ff;
-  cursor: pointer;
-}
-.collapse {
-  font-size: 12px;
-  margin-top: 15px;
-  width: 500px;
+.user-choose {
+  .clear {
+    font-size: 12px;
+    margin-left: 15px;
+    color: #40a9ff;
+    cursor: pointer;
+  }
+  .collapse {
+    font-size: 12px;
+    margin-top: 15px;
+    width: 500px;
+  }
+  .select-count {
+    font-weight: 600;
+    color: #40a9ff;
+  }
 }
 .my-drawer-footer {
   z-index: 10;
@@ -342,11 +343,6 @@ export default {
   padding: 10px 16px;
   text-align: right;
   background: #fff;
-}
-.select-count {
-  font-size: 13px;
-  font-weight: 600;
-  color: #40a9ff;
 }
 </style>
 

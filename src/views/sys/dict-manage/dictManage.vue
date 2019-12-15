@@ -5,7 +5,7 @@
 <template>
   <div class="search">
     <Card>
-      <Row type="flex" justify="space-between" class="code-row-bg">
+      <Row type="flex" justify="space-between">
         <Col v-if="expand" span="5">
           <Row class="operation">
             <Button @click="addDcit" type="primary" icon="md-add">添加字典</Button>
@@ -35,8 +35,8 @@
           />
           <div class="tree-bar" :style="{maxHeight: maxHeight}">
             <Tree ref="tree" :data="treeData" @on-select-change="selectTree"></Tree>
+            <Spin size="large" fix v-if="treeLoading"></Spin>
           </div>
-          <Spin size="large" fix v-if="treeLoading"></Spin>
         </Col>
         <div class="expand">
           <Icon :type="expandIcon" size="16" class="icon" @click="changeExpand" />

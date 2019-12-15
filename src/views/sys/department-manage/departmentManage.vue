@@ -15,7 +15,7 @@
           <span slot="close">单选</span>
         </i-switch>
       </Row>
-      <Row type="flex" justify="start" class="code-row-bg">
+      <Row type="flex" justify="start">
         <Col :md="8" :lg="8" :xl="6">
           <Alert show-icon>
             当前选择编辑：
@@ -39,8 +39,8 @@
               @on-select-change="selectTree"
               :check-strictly="!strict"
             ></Tree>
+            <Spin size="large" fix v-if="loading"></Spin>
           </div>
-          <Spin size="large" fix v-if="loading"></Spin>
         </Col>
         <Col :md="15" :lg="13" :xl="9" style="margin-left:10px;">
           <Form ref="form" :model="form" :label-width="100" :rules="formValidate">
