@@ -18,7 +18,7 @@
     "echarts": "^4.4.0",
     "gitalk": "^1.5.0",
     "html2canvas": "^1.0.0-rc.5",
-    "view-design": "^4.0.2",
+    "view-design": "^4.1.1",
     "iview-area": "^1.6.0",
     "js-cookie": "^2.2.1",
     "print-js": "^1.0.63",
