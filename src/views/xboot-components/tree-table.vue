@@ -1,14 +1,15 @@
 <template>
   <div>
-    <Alert type="warning" show-icon>
+    <Alert type="info" show-icon>
+      iView自4.1.0版本起，Table组件已支持 树形数据 用法，建议使用该新用法。 以下为自行维护的表格树组件【即将移除】
+    </Alert>
+    <div class="href-text">
       说明：因原作者已长时间未维护，现自行引入至项目中维护！原项目Github地址：
       <a
         href="https://github.com/lison16/tree-table-vue"
         target="_blank"
         class="href-text"
-      >https://github.com/lison16/tree-table-vue</a>
-    </Alert>
-    <div class="href-text">
+      >https://github.com/lison16/tree-table-vue</a><br><br>
       <b>修复与优化：</b>
       <br>
       <br>· 字体和样式与iView 4.x保持一致

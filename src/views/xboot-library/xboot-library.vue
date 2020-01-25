@@ -99,6 +99,28 @@
 
             <span class="href-text">示例：{{time}}</span>
 
+            <Divider orientation="left">拖动组件 - Vue.Draggable</Divider>
+            <span class="href-text">Github：</span>
+            <a
+              href="https://github.com/SortableJS/Vue.Draggable"
+              target="_blank"
+              class="href-text"
+            >https://github.com/SortableJS/Vue.Draggable</a>
+            <br />
+            <span class="href-text">官网：</span>
+            <a
+              class="href-text"
+              href="https://sortablejs.github.io/Vue.Draggable/"
+              target="_blank"
+            >https://sortablejs.github.io/Vue.Draggable/</a>
+            <br />
+
+            <draggable v-model="list" :animation="200" ghost-class="ghost" class="draggable-container">
+              <transition-group type="transition" name="flip-list">
+                <li class="list-group-item" v-for="item in list" :key="item.id">{{ item.name }}</li>
+              </transition-group>
+            </draggable>
+
             <Divider orientation="left">图片懒加载 - vue-lazyload</Divider>
             <span class="href-text">Github：</span>
             <a
@@ -222,10 +244,12 @@ import { format } from "date-fns";
 import "dplayer/dist/DPlayer.min.css";
 import DPlayer from "dplayer";
 import { base64Upload } from "@/api/index.js";
+import draggable from "vuedraggable";
 export default {
   name: "xboot-library",
   components: {
-    VueCropper
+    VueCropper,
+    draggable
   },
   data() {
     return {
@@ -257,7 +281,12 @@ export default {
       },
       previews: "",
       previewStyle: {},
-      uploadLoading: false
+      uploadLoading: false,
+      list: [
+        { name: "A", id: 0 },
+        { name: "B", id: 1 },
+        { name: "C", id: 2 }
+      ]
     };
   },
   methods: {
@@ -382,5 +411,25 @@ export default {
 .example-btn {
   margin: 10px 0;
   display: block;
+}
+.flip-list-move {
+  transition: transform 0.5s;
+}
+.draggable-container {
+  margin: 10px 0;
+  width: 50%;
+}
+.list-group-item {
+  cursor: move;
+  position: relative;
+  display: block;
+  padding: 10px 20px;
+  margin-bottom: -1px;
+  background-color: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+}
+.ghost {
+  opacity: 0.5;
+  background: #c8ebfb;
 }
 </style>

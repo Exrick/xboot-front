@@ -21,9 +21,8 @@
               <Form ref="userForm" :model="userForm" :label-width="90" label-position="left">
                 <FormItem label="用户头像：">
                   <upload-pic-thumb
-                    @on-change="userForm.avatar=$event"
+                    v-model="userForm.avatar"
                     :multiple="false"
-                    ref="uploadThumb"
                   ></upload-pic-thumb>
                 </FormItem>
                 <FormItem label="昵称：" prop="nickName">
@@ -410,7 +409,6 @@ export default {
       this.mobileEditForm.mobile = userInfo.mobile;
       this.initEmail = userInfo.email;
       this.emailEditForm.email = userInfo.email;
-      this.$refs.uploadThumb.setData(userInfo.avatar);
       if (userInfo.address) {
         this.userForm.address = userInfo.address;
         this.userForm.addressArray = JSON.parse(userInfo.address);

@@ -137,8 +137,11 @@
           </div>
           <div v-show="currName=='1-7'">
             <Divider class="blue" orientation="left">图片上传缩略图</Divider>
-            <upload-pic-thumb @on-change="picUrls=$event" ref="uploadThumb"></upload-pic-thumb>
+            <upload-pic-thumb v-model="picUrls"></upload-pic-thumb>
             {{picUrls}}
+            <h3 class="article">提示</h3>可拖拽实现交换图片顺序。
+            <h3 class="article">基础用法</h3>基本用法，使用
+            <code>v-model</code> 实现数据的双向绑定。
             <h3 class="article">props</h3>
             <Table :columns="props" :data="data23" border size="small" width="1000"></Table>
             <h3 class="article">events</h3>
@@ -220,7 +223,10 @@ export default {
       selectDeps: [],
       selectUsers: [],
       picUrl: "",
-      picUrls: [],
+      picUrls: [
+        "https://s1.ax1x.com/2018/05/19/CcdVQP.png",
+        "https://i.loli.net/2018/10/14/5bc2ccaa3149c.png"
+      ],
       checkPass: false,
       processLoading: false,
       events: [
@@ -424,6 +430,12 @@ export default {
           value: "空"
         },
         {
+          name: "maxSize",
+          desc: "单个文件最大限制大小（单位Mb）",
+          type: "Number",
+          value: "5"
+        },
+        {
           name: "size",
           desc: "输入框尺寸，可选值为large、small、default或者不设置",
           type: "String",
@@ -568,6 +580,18 @@ export default {
           desc: "限制上传数量，开启多张上传multiple设为true时生效，默认限制10张",
           type: "Number",
           value: "10"
+        },
+        {
+          name: "maxSize",
+          desc: "单个文件最大限制大小（单位Mb）",
+          type: "Number",
+          value: "5"
+        },
+        {
+          name: "draggable",
+          desc: "是否开启拖拽交换图片顺序（仅开启多张上传时有效）",
+          type: "Boolean",
+          value: "true"
         }
       ],
       data24: [

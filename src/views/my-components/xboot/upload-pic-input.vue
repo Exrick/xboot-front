@@ -26,7 +26,7 @@
         :on-error="handleError"
         :format="['jpg','jpeg','png','gif','bmp']"
         accept=".jpg, .jpeg, .png, .gif, .bmp"
-        :max-size="5120"
+        :max-size="maxSize*1024"
         :on-format-error="handleFormatError"
         :on-exceeded-size="handleMaxSize"
         :before-upload="beforeUpload"
@@ -66,6 +66,10 @@ export default {
       type: Boolean,
       default: false
     },
+    maxSize: {
+      type: Number,
+      default: 5
+    },
     maxlength: Number,
     icon: {
       type: String,
@@ -101,7 +105,7 @@ export default {
       this.loading = false;
       this.$Notice.warning({
         title: "文件大小过大",
-        desc: "所选文件‘ " + file.name + " ’大小过大, 不得超过 5M."
+        desc: "所选文件‘ " + file.name + " ’大小过大, 不得超过 " + this.maxSize + "M."
       });
     },
     beforeUpload() {
@@ -111,7 +115,6 @@ export default {
     handleSuccess(res, file) {
       this.loading = false;
       if (res.success) {
-        file.url = res.result;
         this.currentValue = res.result;
         this.$emit("input", this.currentValue);
         this.$emit("on-change", this.currentValue);

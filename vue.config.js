@@ -34,7 +34,8 @@ module.exports = {
         //     html2canvas: 'html2canvas',
         //     'vue-lazyload': 'VueLazyload',
         //     gitalk: 'Gitalk',
-        //     'js-cookie': 'Cookies'
+        //     'js-cookie': 'Cookies',
+        //     vuedraggable: 'vuedraggable'
         // },
         // GZIP压缩
         plugins: [

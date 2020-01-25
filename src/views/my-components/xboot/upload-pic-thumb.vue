@@ -1,17 +1,26 @@
 <template>
   <div>
-    <div class="upload-list" v-for="(item,index) in uploadList" :key="index">
-      <div v-if="item.status == 'finished'">
-        <img :src="item.url">
-        <div class="upload-list-cover">
-          <Icon type="ios-eye-outline" @click="handleView(item.url)"></Icon>
-          <Icon type="ios-trash-outline" @click="handleRemove(item)"></Icon>
+    <vuedraggable
+      :list="uploadList"
+      :disabled="!draggable||!multiple"
+      :animation="200"
+      class="list-group"
+      ghost-class="thumb-ghost"
+      @end="onEnd"
+    >
+      <div class="upload-list" v-for="(item, index) in uploadList" :key="index">
+        <div v-if="item.status == 'finished'">
+          <img :src="item.url" />
+          <div class="upload-list-cover">
+            <Icon type="ios-eye-outline" @click="handleView(item.url)"></Icon>
+            <Icon type="ios-trash-outline" @click="handleRemove(item)"></Icon>
+          </div>
+        </div>
+        <div v-else>
+          <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
         </div>
       </div>
-      <div v-else>
-        <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
-      </div>
-    </div>
+    </vuedraggable>
     <Upload
       ref="upload"
       :multiple="multiple"
@@ -19,7 +28,7 @@
       :on-success="handleSuccess"
       :on-error="handleError"
       :format="['jpg','jpeg','png','gif']"
-      :max-size="5120"
+      :max-size="maxSize*1024"
       :on-format-error="handleFormatError"
       :on-exceeded-size="handleMaxSize"
       :before-upload="handleBeforeUpload"
@@ -34,7 +43,7 @@
     </Upload>
 
     <Modal title="图片预览" v-model="viewImage" :styles="{top: '30px'}" draggable>
-      <img :src="imgUrl" alt="无效的图片链接" style="width: 100%;margin: 0 auto;display: block;">
+      <img :src="imgUrl" alt="无效的图片链接" style="width: 100%;margin: 0 auto;display: block;" />
       <div slot="footer">
         <Button @click="viewImage=false">关闭</Button>
       </div>
@@ -44,13 +53,27 @@
 
 <script>
 import { uploadFile } from "@/api/index";
+import vuedraggable from "vuedraggable";
 export default {
   name: "uploadPicThumb",
+  components: {
+    vuedraggable
+  },
   props: {
-    value: Object,
+    value: {
+      type: Object
+    },
+    draggable: {
+      type: Boolean,
+      default: true
+    },
     multiple: {
       type: Boolean,
       default: true
+    },
+    maxSize: {
+      type: Number,
+      default: 5
     },
     limit: {
       type: Number,
@@ -67,7 +90,11 @@ export default {
     };
   },
   methods: {
+    onEnd() {
+      this.returnValue();
+    },
     init() {
+      this.setData(this.value, true);
       this.accessToken = {
         accessToken: this.getStore("accessToken")
       };
@@ -111,12 +138,17 @@ export default {
     handleMaxSize(file) {
       this.$Notice.warning({
         title: "文件大小过大",
-        desc: "所选文件‘ " + file.name + " ’大小过大, 不得超过 5M."
+        desc:
+          "所选文件‘ " +
+          file.name +
+          " ’大小过大, 不得超过 " +
+          this.maxSize +
+          "M."
       });
     },
     handleBeforeUpload() {
-      if(this.multiple&&this.uploadList.length>=this.limit){
-        this.$Message.warning("最多只能上传"+this.limit+"张图片");
+      if (this.multiple && this.uploadList.length >= this.limit) {
+        this.$Message.warning("最多只能上传" + this.limit + "张图片");
         return false;
       }
       return true;
@@ -124,8 +156,10 @@ export default {
     returnValue() {
       if (!this.uploadList || this.uploadList.length < 1) {
         if (!this.multiple) {
+          this.$emit("input", "");
           this.$emit("on-change", "");
         } else {
+          this.$emit("input", []);
           this.$emit("on-change", []);
         }
         return;
@@ -133,38 +167,70 @@ export default {
       if (!this.multiple) {
         // 单张
         let v = this.uploadList[0].url;
+        this.$emit("input", v);
         this.$emit("on-change", v);
       } else {
         let v = [];
         this.uploadList.forEach(e => {
           v.push(e.url);
         });
+        this.$emit("input", v);
         this.$emit("on-change", v);
       }
     },
-    setData(v) {
-      if(this.multiple&&v.length>this.limit){
-        this.$Message.warning("设置图片数据失败，最多只能设置"+this.limit+"张图片");
-        return;
-      }
+    setData(v, init) {
       if (typeof v == "string") {
+        // 单张
+        if (this.multiple) {
+          this.$Message.warning("多张上传仅支持数组数据类型");
+          return;
+        }
+        if (!v) {
+          return;
+        }
         this.uploadList = [];
         let item = {
           url: v,
           status: "finished"
         };
         this.uploadList.push(item);
+        this.$emit("on-change", v);
       } else if (typeof v == "object") {
+        // 多张
+        if (!this.multiple) {
+          this.$Message.warning("单张上传仅支持字符串数据类型");
+          return;
+        }
         this.uploadList = [];
-        v.forEach(e => {
-          let item = {
-            url: e,
-            status: "finished"
-          };
-          this.uploadList.push(item);
-        });
+        if (v.length > this.limit) {
+          for (let i = 0; i < this.limit; i++) {
+            let item = {
+              url: v[i],
+              status: "finished"
+            };
+            this.uploadList.push(item);
+          }
+          this.$emit("on-change", v.slice(0, this.limit));
+          if (init) {
+            this.$emit("input", v.slice(0, this.limit));
+          }
+          this.$Message.warning("最多只能上传" + this.limit + "张图片");
+        } else {
+          v.forEach(e => {
+            let item = {
+              url: e,
+              status: "finished"
+            };
+            this.uploadList.push(item);
+          });
+          this.$emit("on-change", v);
+        }
       }
-      this.returnValue();
+    }
+  },
+  watch: {
+    value(val) {
+      this.setData(val);
     }
   },
   mounted() {
@@ -209,6 +275,13 @@ export default {
   font-size: 20px;
   cursor: pointer;
   margin: 0 2px;
+}
+.list-group {
+  display: inline-block;
+}
+.thumb-ghost {
+  opacity: 0.5;
+  background: #c8ebfb;
 }
 </style>
 

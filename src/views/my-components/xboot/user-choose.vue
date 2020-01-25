@@ -111,7 +111,7 @@ export default {
         {
           title: "用户名",
           key: "username",
-          width: 145,
+          minWidth: 140,
           sortable: true
         },
         {
@@ -135,7 +135,7 @@ export default {
         {
           title: "手机",
           key: "mobile",
-          width: 115,
+          width: 125,
           sortable: true
         },
         {
@@ -197,7 +197,7 @@ export default {
           key: "createTime",
           sortable: true,
           sortType: "desc",
-          width: 150
+          width: 170
         },
         {
           title: "操作",
@@ -345,4 +345,3 @@ export default {
   background: #fff;
 }
 </style>
-
