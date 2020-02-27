@@ -1,0 +1,43 @@
+.edit-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+
+    .back-title {
+        color: #515a6e;
+        display: flex;
+        align-items: center;
+    }
+
+    .head-name {
+        display: inline-block;
+        height: 20px;
+        line-height: 20px;
+        font-size: 16px;
+        color: #17233d;
+        font-weight: 500;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .window-close {
+        z-index: 1;
+        font-size: 12px;
+        position: absolute;
+        right: 0px;
+        top: -5px;
+        overflow: hidden;
+        cursor: pointer;
+
+        .ivu-icon-ios-close {
+            color: #999;
+            transition: color .2s ease;
+        }
+    }
+
+    .window-close .ivu-icon-ios-close:hover {
+        color: #444;
+    }
+}

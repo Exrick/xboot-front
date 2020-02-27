@@ -85,7 +85,7 @@
                 placement="right"
                 :max-width="230"
                 transfer
-                content="填写后台请求URL，后台将作权限拦截，若无可填写'无'或其他"
+                content="填写后端请求URL，后端将作权限拦截，若无可填写'无'或其他"
               >
                 <Input v-model="form.path" />
               </Tooltip>
@@ -213,7 +213,7 @@
             placement="right"
             :max-width="230"
             transfer
-            content="填写后台请求URL，后台将作权限拦截，若无可填写'无'或其他"
+            content="填写后端请求URL，后端将作权限拦截，若无可填写'无'或其他"
           >
             <Input v-model="formAdd.path"/>
           </Tooltip>
@@ -450,7 +450,7 @@ export default {
       this.getRequest("/permission/getAllList").then(res => {
         this.loading = false;
         if (res.success) {
-          // 仅展开指定级数 默认后台已展开所有
+          // 仅展开指定级数 默认后端已展开所有
           let expandLevel = this.expandLevel;
           res.result.forEach(function(e) {
             if (expandLevel == 1) {

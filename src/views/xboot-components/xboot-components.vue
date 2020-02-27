@@ -12,17 +12,21 @@
           >
             <Submenu name="1">
               <template slot="title">
-                <Icon type="md-ionic"/>XBoot通用组件
+                <Icon type="md-ionic" />XBoot通用组件
               </template>
               <MenuItem name="1-0">全局Loading加载动画</MenuItem>
-              <MenuItem name="0-0"><Badge dot :offset="[5,-3]">树表格组件</Badge></MenuItem>
+              <MenuItem name="0-0">
+                <Badge dot :offset="[5,-3]">树表格组件</Badge>
+              </MenuItem>
               <MenuItem name="1-1">倒计时按钮</MenuItem>
               <MenuItem name="1-2">图标选择输入框</MenuItem>
               <MenuItem name="1-3">部门级联选择</MenuItem>
               <MenuItem name="1-4">部门树选择</MenuItem>
               <MenuItem name="1-5">用户抽屉选择</MenuItem>
               <MenuItem name="1-6">图片上传输入框</MenuItem>
-              <MenuItem name="1-7">图片上传缩略图</MenuItem>
+              <MenuItem name="1-7">
+                <Badge dot :offset="[5,-3]">图片上传缩略图</Badge>
+              </MenuItem>
               <MenuItem name="1-8">身份验证全屏弹框</MenuItem>
               <MenuItem name="1-9">密码强度输入框</MenuItem>
             </Submenu>
@@ -36,7 +40,7 @@
             </Submenu>
             <Submenu name="2">
               <template slot="title">
-                <Icon type="md-git-compare"/>工作流组件(付费)
+                <Icon type="md-git-compare" />工作流组件(付费)
               </template>
               <MenuItem name="2-1">工作流程选择发起</MenuItem>
               <MenuItem name="2-2">通过流程key直接发起</MenuItem>
@@ -46,7 +50,7 @@
         </Sider>
         <Content :style="{padding: '0 24px 24px 24px', minHeight: '280px', background: '#fff'}">
           <div v-show="currName=='0-0'">
-            <tree-table/>
+            <tree-table />
           </div>
           <div v-show="currName=='1-0'">
             <Alert type="warning" show-icon>说明：大部分组件为包含真实数据接口的简单封装，方便大家的直接复用！</Alert>
@@ -68,7 +72,7 @@
           </div>
           <div v-show="currName=='1-1'">
             <Divider class="blue" orientation="left">倒计时按钮</Divider>
-            <count-down-button countTime="10"/>
+            <count-down-button countTime="10" />
             <h3 class="article">提示</h3>你可以将
             <code>autoCountDown</code> 属性设置为
             <code>false</code>，即可手动调用开始倒计时方法
@@ -138,8 +142,9 @@
           <div v-show="currName=='1-7'">
             <Divider class="blue" orientation="left">图片上传缩略图</Divider>
             <upload-pic-thumb v-model="picUrls"></upload-pic-thumb>
+            <upload-pic-thumb v-model="picUrls" height="100px" width="100px"></upload-pic-thumb>
             {{picUrls}}
-            <h3 class="article">提示</h3>可拖拽实现交换图片顺序。
+            <h3 class="article">提示</h3>可拖拽实现交换图片顺序。可自定义图片框长和宽。
             <h3 class="article">基础用法</h3>基本用法，使用
             <code>v-model</code> 实现数据的双向绑定。
             <h3 class="article">props</h3>
@@ -159,7 +164,7 @@
           </div>
           <div v-show="currName=='1-9'">
             <Divider class="blue" orientation="left">密码强度输入框</Divider>
-            <setPassword v-model="password" style="width:300px"/>
+            <setPassword v-model="password" style="width:300px" />
             <h3 class="article">基础用法</h3>基本用法，使用
             <code>v-model</code> 实现数据的双向绑定。
             <h3 class="article">props</h3>
@@ -168,9 +173,11 @@
             <Table :columns="events" :data="data29" border size="small" width="1000"></Table>
           </div>
 
-          <div v-show="currName=='2-1'||currName=='2-2'||currName=='2-3'||currName=='3-1'||currName=='3-2'">
+          <div
+            v-show="currName=='2-1'||currName=='2-2'||currName=='2-3'||currName=='3-1'||currName=='3-2'"
+          >
             <div class="sorry">
-              <img src="@/assets/sorry.png">
+              <img src="@/assets/sorry.png" />
               <span class="text">抱歉，请获取完整版</span>
               <Button
                 to="http://xpay.exrick.cn/pay?xboot"
@@ -184,8 +191,7 @@
       </Layout>
     </Card>
 
-    <check-password ref="checkPass" @on-success="checkSuccess"/>
-    
+    <check-password ref="checkPass" @on-success="checkSuccess" />
   </div>
 </template>
 
@@ -577,7 +583,8 @@ export default {
         },
         {
           name: "limit",
-          desc: "限制上传数量，开启多张上传multiple设为true时生效，默认限制10张",
+          desc:
+            "限制上传数量，开启多张上传multiple设为true时生效，默认限制10张",
           type: "Number",
           value: "10"
         },
@@ -592,6 +599,18 @@ export default {
           desc: "是否开启拖拽交换图片顺序（仅开启多张上传时有效）",
           type: "Boolean",
           value: "true"
+        },
+        {
+          name: "width",
+          desc: "每个图片框的长度，需带单位如60px",
+          type: "String",
+          value: "60px"
+        },
+        {
+          name: "height",
+          desc: "每个图片框的高度，需带单位如60px",
+          type: "String",
+          value: "60px"
         }
       ],
       data24: [
@@ -665,8 +684,10 @@ export default {
       data29: [
         {
           name: "on-change",
-          type: "强度等级得分0-5，包含数字、小写字母、大写字母、特殊字符、长度≥10各累加1分，≤1分强度为弱、2-4分强度为中、5分强度为强",
-          value: "第一个参数为返回用户输入的内容，第二个参数为强度等级得分0-5，第三个参数为强度汉字"
+          type:
+            "强度等级得分0-5，包含数字、小写字母、大写字母、特殊字符、长度≥10各累加1分，≤1分强度为弱、2-4分强度为中、5分强度为强",
+          value:
+            "第一个参数为返回用户输入的内容，第二个参数为强度等级得分0-5，第三个参数为强度汉字"
         }
       ]
     };

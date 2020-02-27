@@ -136,7 +136,7 @@
                       <a
                         href="https://v.qq.com/x/page/f0627kf4x1e.html"
                         target="_blank"
-                      >XMall小程序(不含后台)</a> +
+                      >XMall小程序(不含后端)</a> +
                       <a href="https://github.com/Exrick/xpay" target="_blank">最新XPay个人收款支付系统</a>
                     </div>
                   </div>

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="upload-thumb">
     <vuedraggable
       :list="uploadList"
       :disabled="!draggable||!multiple"
@@ -8,9 +8,14 @@
       ghost-class="thumb-ghost"
       @end="onEnd"
     >
-      <div class="upload-list" v-for="(item, index) in uploadList" :key="index">
+      <div
+        class="upload-list"
+        :style="{width: width, height: height, lineHeight: height}"
+        v-for="(item, index) in uploadList"
+        :key="index"
+      >
         <div v-if="item.status == 'finished'">
-          <img :src="item.url" />
+          <img :src="item.url" :style="{height: height}" />
           <div class="upload-list-cover">
             <Icon type="ios-eye-outline" @click="handleView(item.url)"></Icon>
             <Icon type="ios-trash-outline" @click="handleRemove(item)"></Icon>
@@ -35,9 +40,10 @@
       type="drag"
       :action="uploadFileUrl"
       :headers="accessToken"
-      style="display: inline-block;width:58px;"
+      class="upload-btn"
+      :style="{width: width}"
     >
-      <div style="width: 58px;height:58px;line-height: 58px;">
+      <div class="upload-camera" :style="{width: width, height: height, lineHeight: height}">
         <Icon type="md-camera" size="20"></Icon>
       </div>
     </Upload>
@@ -78,6 +84,14 @@ export default {
     limit: {
       type: Number,
       default: 10
+    },
+    width: {
+      type: String,
+      default: "60px"
+    },
+    height: {
+      type: String,
+      default: "60px"
     }
   },
   data() {
@@ -240,48 +254,49 @@ export default {
 </script>
 
 <style lang="less">
-.upload-list {
-  display: inline-block;
-  width: 60px;
-  height: 60px;
-  text-align: center;
-  line-height: 60px;
-  border: 1px solid transparent;
-  border-radius: 4px;
-  overflow: hidden;
-  background: #fff;
-  position: relative;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
-  margin-right: 5px;
-}
-.upload-list img {
-  width: 100%;
-  height: 100%;
-}
-.upload-list-cover {
-  display: none;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: rgba(0, 0, 0, 0.6);
-}
-.upload-list:hover .upload-list-cover {
-  display: block;
-}
-.upload-list-cover i {
-  color: #fff;
-  font-size: 20px;
-  cursor: pointer;
-  margin: 0 2px;
-}
-.list-group {
-  display: inline-block;
-}
-.thumb-ghost {
-  opacity: 0.5;
-  background: #c8ebfb;
+.upload-thumb {
+  .upload-list {
+    display: inline-block;
+    text-align: center;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    overflow: hidden;
+    background: #fff;
+    position: relative;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+    margin-right: 5px;
+  }
+  .upload-list img {
+    object-fit: cover;
+  }
+  .upload-btn {
+    display: inline-block;
+  }
+  .upload-list-cover {
+    display: none;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.6);
+  }
+  .upload-list:hover .upload-list-cover {
+    display: block;
+  }
+  .upload-list-cover i {
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+    margin: 0 2px;
+  }
+  .list-group {
+    display: inline-block;
+  }
+  .thumb-ghost {
+    opacity: 0.5;
+    background: #c8ebfb;
+  }
 }
 </style>
 

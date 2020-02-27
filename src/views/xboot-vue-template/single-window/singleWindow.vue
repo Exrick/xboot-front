@@ -1,11 +1,10 @@
 <style lang="less">
 @import "../../../styles/table-common.less";
-@import "./singleWindow.less";
 </style>
 <template>
   <div class="search">
     <add v-if="currView=='add'" @close="currView='index'" @submited="submited" />
-    <edit v-if="currView=='edit'" @close="currView='index'" @submited="submited" :id="id" />
+    <edit v-if="currView=='edit'" @close="currView='index'" @submited="submited" :data="formData" />
     <Card v-show="currView=='index'">
       <Row class="operation">
         <Button @click="add" type="primary" icon="md-add">动态组件添加</Button>
@@ -34,9 +33,9 @@
       </Row>
       <Row type="flex" justify="end" class="page">
         <Page
-          :current="pageNumber"
+          :current="searchForm.pageNumber"
           :total="total"
-          :page-size="pageSize"
+          :page-size="searchForm.pageSize"
           @on-change="changePage"
           @on-page-size-change="changePageSize"
           :page-size-opts="[10,20,50]"
@@ -62,12 +61,16 @@ export default {
   data() {
     return {
       openTip: true, // 显示提示
-      id: "",
+      formData: {},
       currView: "index",
       loading: true, // 表单加载状态
-      sortColumn: "createTime", // 排序字段
-      sortType: "desc", // 排序方式
-      submitLoading: false, // 添加或编辑提交状态
+      searchForm: {
+        // 搜索框对应data对象
+        pageNumber: 1, // 当前页数
+        pageSize: 10, // 页面大小
+        sort: "createTime", // 默认排序字段
+        order: "desc" // 默认排序方式
+      },
       selectList: [], // 多选数据
       selectCount: 0, // 多选计数
       columns: [
@@ -145,8 +148,6 @@ export default {
         }
       ],
       data: [], // 表单数据
-      pageNumber: 1, // 当前页数
-      pageSize: 10, // 页面大小
       total: 0 // 表单数据总数
     };
   },
@@ -159,32 +160,33 @@ export default {
       this.getDataList();
     },
     changePage(v) {
-      this.pageNumber = v;
+      this.searchForm.pageNumber = v;
       this.getDataList();
       this.clearSelectAll();
     },
     changePageSize(v) {
-      this.pageSize = v;
+      this.searchForm.pageSize = v;
       this.getDataList();
     },
     changeSort(e) {
-      this.sortColumn = e.key;
-      this.sortType = e.order;
+      this.searchForm.sort = e.key;
+      this.searchForm.order = e.order;
       if (e.order == "normal") {
-        this.sortType = "";
+        this.searchForm.order = "";
       }
       this.getDataList();
     },
+    clearSelectAll() {
+      this.$refs.table.selectAll(false);
+    },
+    changeSelect(e) {
+      this.selectList = e;
+      this.selectCount = e.length;
+    },
     getDataList() {
       this.loading = true;
-      let params = {
-        pageNumber: this.pageNumber,
-        pageSize: this.pageSize,
-        sort: this.sortColumn,
-        order: this.sortType
-      };
       // 请求后端获取表单数据 请自行修改接口
-      // this.getRequest("请求路径", params).then(res => {
+      // this.getRequest("请求路径", this.searchForm).then(res => {
       //   this.loading = false;
       //   if (res.success) {
       //     this.data = res.result.content;
@@ -209,19 +211,20 @@ export default {
       this.total = this.data.length;
       this.loading = false;
     },
-    handleCancel() {
-      this.modalVisible = false;
-    },
     add() {
       this.currView = "add";
     },
     edit(v) {
-      if (!v.id) {
-        this.$Message.error("id不能为空");
-        return;
+      // 转换null为""
+      for (let attr in v) {
+        if (v[attr] == null) {
+          v[attr] = "";
+        }
       }
+      let str = JSON.stringify(v);
+      let data = JSON.parse(str);
+      this.formData = data;
       this.currView = "edit";
-      this.id = v.id;
     },
     remove(v) {
       this.$Modal.confirm({
@@ -244,13 +247,6 @@ export default {
           this.getDataList();
         }
       });
-    },
-    clearSelectAll() {
-      this.$refs.table.selectAll(false);
-    },
-    changeSelect(e) {
-      this.selectList = e;
-      this.selectCount = e.length;
     },
     delAll() {
       if (this.selectCount <= 0) {

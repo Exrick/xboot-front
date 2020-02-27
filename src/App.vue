@@ -1,7 +1,7 @@
 <template>
-    <div id="main" class="app-main">
-        <router-view></router-view>
-    </div>
+  <div id="main" class="app-main">
+    <router-view></router-view>
+  </div>
 </template>
 
 <script>
@@ -43,5 +43,15 @@ body {
 
 .ivu-tag {
   cursor: pointer;
+}
+
+.block-tool .ivu-tooltip,
+.block-tool .ivu-tooltip-rel {
+  display: block;
+}
+
+.block-pop .ivu-poptip,
+.block-pop .ivu-poptip-rel {
+  display: block;
 }
 </style>

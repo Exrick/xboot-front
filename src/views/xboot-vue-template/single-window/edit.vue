@@ -1,13 +1,20 @@
 <style lang="less">
-@import "./singleWindow.less";
+@import "../../../styles/single-common.less";
 </style>
 <template>
   <div>
     <Card>
       <div slot="title">
-        <a @click="close" class="back-title">
-          <Icon type="ios-arrow-back" />返回
-        </a>
+        <div class="edit-head">
+          <a @click="close" class="back-title">
+            <Icon type="ios-arrow-back" />返回
+          </a>
+          <div class="head-name">编辑</div>
+          <span></span>
+          <a @click="close" class="window-close">
+            <Icon type="ios-close" size="31" class="ivu-icon-ios-close" />
+          </a>
+        </div>
       </div>
       <Form
         ref="form"
@@ -26,7 +33,8 @@
             type="primary"
             style="margin-right:5px"
           >提交并保存</Button>
-          <Button @click="handleReset">重置</Button>
+          <Button @click="handleReset" style="margin-right:5px">重置</Button>
+          <Button type="dashed" @click="close">关闭</Button>
         </Form-item>
         <Spin size="large" fix v-if="loading"></Spin>
       </Form>
@@ -38,11 +46,11 @@
 export default {
   name: "edit",
   props: {
-    id: String
+    data: Object
   },
   data() {
     return {
-      loading: true, // 表单加载状态
+      loading: false, // 表单加载状态
       submitLoading: false, // 表单提交状态
       form: {
         id: "",
@@ -57,36 +65,10 @@ export default {
   methods: {
     init() {
       this.handleReset();
-      this.form.id = this.id;
-      this.getData();
+      this.form = this.data;
     },
     handleReset() {
       this.$refs.form.resetFields();
-    },
-    getData() {
-      this.loading = true;
-      // this.getRequest("请求地址，如/getById/" + this.form.id).then(res => {
-      //   this.loading = false;
-      //   if (res.success) {
-      //     // 转换null为""
-      //     let v = res.result
-      //     for (let attr in v) {
-      //       if (v[attr] == null) {
-      //         v[attr] = "";
-      //       }
-      //     }
-      //     let str = JSON.stringify(v);
-      //     let data = JSON.parse(str);
-      //     this.form = data;
-      //   }
-      // });
-      // 模拟获取数据成功
-      this.loading = false;
-      if (this.form.id == "1") {
-        this.form.name = "XBoot";
-      } else {
-        this.form.name = "Exrick";
-      }
     },
     handleSubmit() {
       this.$refs.form.validate(valid => {

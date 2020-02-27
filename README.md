@@ -1,6 +1,6 @@
 # xboot-front
 
-> 作者主要为后台开发 能力经验有限 如有错误欢迎指正！
+> 作者主要为后端开发 能力经验有限 如有错误欢迎指正！
 
 ### 宣传视频
 - [作者亲自制作XBoot文字快闪宣传视频](http://www.bilibili.com/av30284667)
@@ -14,17 +14,17 @@
 - 统一认证平台访问地址：http://xboot.exrick.cn/authorize
 ### 最新最全面在线文档
 https://www.kancloud.cn/exrick/xboot/content
-### 后台项目地址：[XBoot](https://github.com/Exrick/xboot)
+### 后端项目地址：[XBoot](https://github.com/Exrick/xboot)
 > 涉及技术：Spring Boot 2.x/Spring Security/JWT/Spring Data JPA+Mybatis-Plus/Redis/Elasticsearch 分布式限流/同步锁/验证码/SnowFlake雪花算法ID生成 动态权限管理 数据权限 代码生成 日志记录 定时任务 第三方账号、短信登录
 ### 项目简介
 - 项目基于 Vue-Cli 4.x 创建
 - 主要Main组件框架基于iView-admin 1.0版本 修复其部分BUG
 - UI组件库升级至iView/View UI 4.x
-- 后台加载动态权限菜单 多方式轻松权限控制至按钮显示
-- 提供Vue空白模版，只需修改后台请求和对应实体字段即可完成页面开发
+- 后端加载动态权限菜单 多方式轻松权限控制至按钮显示
+- 提供Vue空白模版，只需修改后端请求和对应实体字段即可完成页面开发
 - 多语言切换、消息管理、第三方社交账号或短信登录
 - iView使用图标库 [ionicons](http://ionicons.com/) 额外图标库 [vue-awesome](https://github.com/Justineo/vue-awesome)
-- 现已提供封装的带后台真实接口数据的组件，详见XBoot业务组件菜单
+- 现已提供封装的带后端真实接口数据的组件，详见XBoot业务组件菜单
 
 ![](https://i.loli.net/2019/04/29/5cc70cac4b7a4.png)
 

@@ -69,12 +69,17 @@
     </Card>
 
     <Modal :title="modalTitle" v-model="modalVisible" :mask-closable="false" :width="500">
-      <Form ref="form" :model="form" :label-width="70" :rules="formValidate">
+      <Form ref="form" :model="form" :label-width="80" :rules="formValidate">
         <FormItem label="Key" prop="key">
           <Input v-model="form.key" style="width:100%" />
         </FormItem>
         <FormItem label="Value" prop="value">
           <Input v-model="form.value" type="textarea" :rows="5" style="width:100%" />
+        </FormItem>
+        <FormItem label="过期时间" prop="expireTime">
+          <Tooltip trigger="hover" placement="right" content="永久不过期设为-1">
+            <InputNumber :min="-1" v-model="form.expireTime"></InputNumber>
+          </Tooltip> 秒
         </FormItem>
       </Form>
       <div slot="footer">
@@ -91,7 +96,8 @@ import {
   saveRedis,
   deleteRedis,
   deleteAllRedis,
-  getRedisByKey
+  getRedisByKey,
+  getRedisKeySize
 } from "@/api/index";
 import redisMonitor from "./redisMonitor.vue";
 export default {
@@ -117,12 +123,21 @@ export default {
       form: {
         // 添加或编辑表单对象初始化数据
         key: "",
-        value: ""
+        value: "",
+        expireTime: null
       },
       // 表单验证规则
       formValidate: {
         key: [{ required: true, message: "不能为空", trigger: "blur" }],
-        value: [{ required: true, message: "不能为空", trigger: "blur" }]
+        value: [{ required: true, message: "不能为空", trigger: "blur" }],
+        expireTime: [
+          {
+            required: true,
+            type: "number",
+            message: "不能为空",
+            trigger: "blur"
+          }
+        ]
       },
       submitLoading: false, // 添加或编辑提交状态
       selectList: [], // 多选数据
@@ -142,14 +157,19 @@ export default {
         {
           title: "Key",
           key: "key",
-          minWidth: 100,
+          minWidth: 200,
           sortable: true
         },
         {
           title: "Value",
           key: "value",
-          minWidth: 300,
+          minWidth: 400,
           ellipsis: true
+        },
+        {
+          title: "过期时间(秒)",
+          key: "expireTime",
+          width: 130
         },
         {
           title: "操作",
@@ -205,6 +225,17 @@ export default {
   },
   methods: {
     init() {
+      // 键值
+      getRedisKeySize().then(res => {
+        let size = res.result.keySize;
+        if (size > 100000) {
+          this.$Notice.info({
+            title: "提示",
+            desc:
+              "检测到存储的数据已超过10万条，为避免加载过多数据当前仅显示前10万条数据"
+          });
+        }
+      });
       this.getDataList();
     },
     handleClickTab(name) {
@@ -294,10 +325,12 @@ export default {
       let str = JSON.stringify(v);
       let data = JSON.parse(str);
       this.form.value = "读取中...";
+      this.form.expireTime = null;
       getRedisByKey(data.key).then(res => {
         this.form.value = "";
         if (res.success) {
-          data.value = res.result;
+          data.value = res.result.value;
+          data.expireTime = res.result.expireTime;
           this.form = data;
         }
       });

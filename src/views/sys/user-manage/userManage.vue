@@ -584,12 +584,12 @@ export default {
     getUserList() {
       // 多条件搜索用户列表
       this.loading = true;
-      // 避免后台默认值
+      // 避免后端默认值
       if (!this.searchForm.type) {
-        this.searchForm.type = "";
+        this.searchForm.type = " ";
       }
       if (!this.searchForm.status) {
-        this.searchForm.status = "";
+        this.searchForm.status = " ";
       }
       getUserListData(this.searchForm).then(res => {
         this.loading = false;

@@ -1,13 +1,20 @@
 <style lang="less">
-@import "./singleWindow.less";
+@import "../../../styles/single-common.less";
 </style>
 <template>
   <div>
     <Card>
       <div slot="title">
-        <a @click="close" class="back-title">
-          <Icon type="ios-arrow-back" />返回
-        </a>
+        <div class="edit-head">
+          <a @click="close" class="back-title">
+            <Icon type="ios-arrow-back" />返回
+          </a>
+          <div class="head-name">添加</div>
+          <span></span>
+          <a @click="close" class="window-close">
+            <Icon type="ios-close" size="31" class="ivu-icon-ios-close" />
+          </a>
+        </div>
       </div>
       <Form ref="form" :model="form" :label-width="90" :rules="formValidate">
         <FormItem label="名称" prop="name">
@@ -20,7 +27,8 @@
             type="primary"
             style="margin-right:5px"
           >提交并保存</Button>
-          <Button @click="handleReset">重置</Button>
+          <Button @click="handleReset" style="margin-right:5px">重置</Button>
+          <Button type="dashed" @click="close">关闭</Button>
         </Form-item>
       </Form>
     </Card>
@@ -32,7 +40,6 @@ export default {
   name: "add",
   data() {
     return {
-      loading: true, // 表单加载状态
       submitLoading: false, // 表单提交状态
       form: {
         id: "",
@@ -45,7 +52,8 @@ export default {
     };
   },
   methods: {
-    init() {},
+    init() {
+    },
     handleReset() {
       this.$refs.form.resetFields();
     },
