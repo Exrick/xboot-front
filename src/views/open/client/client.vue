@@ -1,88 +1,85 @@
 <template>
   <div class="search">
-    <Row>
-      <Col>
-        <Card>
-          <Row v-show="openSearch" @keydown.enter.native="handleSearch">
-            <Form ref="searchForm" :model="searchForm" inline :label-width="70">
-              <Form-item label="网站名称" prop="name">
-                <Input
-                  type="text"
-                  v-model="searchForm.name"
-                  placeholder="请输入网站名称"
-                  clearable
-                  style="width: 200px"
-                />
-              </Form-item>
-              <Form-item label="网站主页" prop="homeUri">
-                <Input
-                  type="text"
-                  v-model="searchForm.homeUri"
-                  placeholder="请输入网站主页"
-                  clearable
-                  style="width: 200px"
-                />
-              </Form-item>
-              <Form-item label="创建时间" prop="createTime">
-                <DatePicker
-                  v-model="selectDate"
-                  type="daterange"
-                  format="yyyy-MM-dd"
-                  clearable
-                  @on-change="selectDateRange"
-                  placeholder="选择起始时间"
-                  style="width: 200px"
-                ></DatePicker>
-              </Form-item>
-              <Form-item style="margin-left:-35px;" class="br">
-                <Button @click="handleSearch" type="primary" icon="ios-search">搜索</Button>
-                <Button @click="handleReset">重置</Button>
-              </Form-item>
-            </Form>
-          </Row>
-          <Row class="operation">
-            <Button @click="add" type="primary" icon="md-add">添加</Button>
-            <Button @click="delAll" icon="md-trash">批量删除</Button>
-            <Button @click="getDataList" icon="md-refresh">刷新</Button>
-            <Button type="dashed" @click="openSearch=!openSearch">{{openSearch ? "关闭搜索" : "开启搜索"}}</Button>
-            <Button type="dashed" @click="openTip=!openTip">{{openTip ? "关闭提示" : "开启提示"}}</Button>
-          </Row>
-          <Row v-show="openTip">
-            <Alert show-icon>
-              已选择
-              <span class="select-count">{{selectCount}}</span> 项
-              <a class="select-clear" @click="clearSelectAll">清空</a>
-            </Alert>
-          </Row>
-          <Row>
-            <Table
-              :loading="loading"
-              border
-              :columns="columns"
-              :data="data"
-              ref="table"
-              sortable="custom"
-              @on-sort-change="changeSort"
-              @on-selection-change="changeSelect"
-            ></Table>
-          </Row>
-          <Row type="flex" justify="end" class="page">
-            <Page
-              :current="searchForm.pageNumber"
-              :total="total"
-              :page-size="searchForm.pageSize"
-              @on-change="changePage"
-              @on-page-size-change="changePageSize"
-              :page-size-opts="[10,20,50]"
-              size="small"
-              show-total
-              show-elevator
-              show-sizer
-            ></Page>
-          </Row>
-        </Card>
-      </Col>
-    </Row>
+    <Card>
+      <Row v-show="openSearch" @keydown.enter.native="handleSearch">
+        <Form ref="searchForm" :model="searchForm" inline :label-width="70">
+          <Form-item label="网站名称" prop="name">
+            <Input
+              type="text"
+              v-model="searchForm.name"
+              placeholder="请输入网站名称"
+              clearable
+              style="width: 200px"
+            />
+          </Form-item>
+          <Form-item label="网站主页" prop="homeUri">
+            <Input
+              type="text"
+              v-model="searchForm.homeUri"
+              placeholder="请输入网站主页"
+              clearable
+              style="width: 200px"
+            />
+          </Form-item>
+          <Form-item label="创建时间" prop="createTime">
+            <DatePicker
+              v-model="selectDate"
+              type="daterange"
+              format="yyyy-MM-dd"
+              clearable
+              @on-change="selectDateRange"
+              placeholder="选择起始时间"
+              style="width: 200px"
+            ></DatePicker>
+          </Form-item>
+          <Form-item style="margin-left:-35px;" class="br">
+            <Button @click="handleSearch" type="primary" icon="ios-search">搜索</Button>
+            <Button @click="handleReset">重置</Button>
+          </Form-item>
+        </Form>
+      </Row>
+      <Row class="operation">
+        <Button @click="add" type="primary" icon="md-add">添加</Button>
+        <Button @click="delAll" icon="md-trash">批量删除</Button>
+        <Button @click="getDataList" icon="md-refresh">刷新</Button>
+        <Button type="dashed" @click="openSearch=!openSearch">{{openSearch ? "关闭搜索" : "开启搜索"}}</Button>
+        <Button type="dashed" @click="openTip=!openTip">{{openTip ? "关闭提示" : "开启提示"}}</Button>
+      </Row>
+      <Row v-show="openTip">
+        <Alert show-icon>
+          已选择
+          <span class="select-count">{{selectCount}}</span> 项
+          <a class="select-clear" @click="clearSelectAll">清空</a>
+        </Alert>
+      </Row>
+      <Row>
+        <Table
+          :loading="loading"
+          border
+          :columns="columns"
+          :data="data"
+          ref="table"
+          sortable="custom"
+          @on-sort-change="changeSort"
+          @on-selection-change="changeSelect"
+        ></Table>
+      </Row>
+      <Row type="flex" justify="end" class="page">
+        <Page
+          :current="searchForm.pageNumber"
+          :total="total"
+          :page-size="searchForm.pageSize"
+          @on-change="changePage"
+          @on-page-size-change="changePageSize"
+          :page-size-opts="[10,20,50]"
+          size="small"
+          show-total
+          show-elevator
+          show-sizer
+        ></Page>
+      </Row>
+    </Card>
+
     <Modal :title="modalTitle" v-model="modalVisible" :mask-closable="false" :width="500">
       <Form ref="form" :model="form" :label-width="100" :rules="formValidate">
         <FormItem label="网站名称" prop="name">
@@ -148,7 +145,9 @@ export default {
       // 表单验证规则
       formValidate: {
         name: [{ required: true, message: "不能为空", trigger: "blur" }],
-        clientSecret: [{ required: true, message: "不能为空", trigger: "blur" }],
+        clientSecret: [
+          { required: true, message: "不能为空", trigger: "blur" }
+        ],
         homeUri: [{ required: true, message: "不能为空", trigger: "blur" }],
         redirectUri: [{ required: true, message: "不能为空", trigger: "blur" }]
       },
@@ -189,7 +188,21 @@ export default {
           title: "网站主页",
           key: "homeUri",
           minWidth: 120,
-          sortable: false
+          sortable: false,
+          render: (h, params) => {
+            return h("div", [
+              h(
+                "a",
+                {
+                  attrs: {
+                    href: params.row.homeUri,
+                    target: "_blank"
+                  }
+                },
+                params.row.homeUri
+              )
+            ]);
+          }
         },
         {
           title: "回调地址",
