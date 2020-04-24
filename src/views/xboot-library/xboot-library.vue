@@ -241,7 +241,6 @@ import { VueCropper } from "vue-cropper";
 import printJS from "print-js";
 import html2canvas from "html2canvas";
 import { format } from "date-fns";
-import "dplayer/dist/DPlayer.min.css";
 import DPlayer from "dplayer";
 import { base64Upload } from "@/api/index.js";
 import draggable from "vuedraggable";
