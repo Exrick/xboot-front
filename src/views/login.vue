@@ -48,7 +48,7 @@
                       :maxlength="10"
                       class="input-verify"
                     />
-                    <div style="position:relative;font-size:12px">
+                    <div class="code-image"  style="position:relative;font-size:12px">
                       <Spin v-if="loadingCaptcha" fix></Spin>
                       <img
                         :src="captchaImg"
@@ -183,7 +183,7 @@ export default {
       sending: false,
       errorCode: "",
       form: {
-        username: "初始账户admin、test、test2",
+        username: "admin、test、test2（支持邮箱/手机登录）",
         password: "123456",
         mobile: "",
         code: ""

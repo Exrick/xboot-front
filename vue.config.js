@@ -35,7 +35,8 @@ module.exports = {
         //     'vue-lazyload': 'VueLazyload',
         //     gitalk: 'Gitalk',
         //     'js-cookie': 'Cookies',
-        //     vuedraggable: 'vuedraggable'
+        //     vuedraggable: 'vuedraggable',
+        //     viewerjs: 'Viewer'
         // },
         // GZIP压缩
         plugins: [

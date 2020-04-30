@@ -15,9 +15,6 @@
                 <Icon type="md-ionic" />XBoot通用组件
               </template>
               <MenuItem name="1-0">全局Loading加载动画</MenuItem>
-              <MenuItem name="0-0">
-                <Badge dot :offset="[5,-3]">树表格组件</Badge>
-              </MenuItem>
               <MenuItem name="1-1">倒计时按钮</MenuItem>
               <MenuItem name="1-2">图标选择输入框</MenuItem>
               <MenuItem name="1-3">部门级联选择</MenuItem>
@@ -27,8 +24,9 @@
               <MenuItem name="1-7">
                 <Badge dot :offset="[5,-3]">图片上传缩略图</Badge>
               </MenuItem>
+              <MenuItem name="1-10">文件上传/下载</MenuItem>
               <MenuItem name="1-8">身份验证全屏弹框</MenuItem>
-              <MenuItem name="1-9">密码强度输入框</MenuItem>
+              <MenuItem name="1-9">密码强度提示输入框</MenuItem>
             </Submenu>
             <Submenu name="3">
               <template slot="title">
@@ -49,9 +47,6 @@
           </Menu>
         </Sider>
         <Content :style="{padding: '0 24px 24px 24px', minHeight: '280px', background: '#fff'}">
-          <div v-show="currName=='0-0'">
-            <tree-table />
-          </div>
           <div v-show="currName=='1-0'">
             <Alert type="warning" show-icon>说明：大部分组件为包含真实数据接口的简单封装，方便大家的直接复用！</Alert>
             <Divider class="blue" orientation="left">全局Loading加载动画</Divider>
@@ -131,7 +126,7 @@
           </div>
           <div v-show="currName=='1-6'">
             <Divider class="blue" orientation="left">图片上传文本框</Divider>
-            <upload-pic-input v-model="picUrl" style="width:400px" ref="upload"></upload-pic-input>
+            <upload-pic-input v-model="picUrl" style="width:400px"></upload-pic-input>
             <h3 class="article">基础用法</h3>基本用法，使用
             <code>v-model</code> 实现数据的双向绑定。
             <h3 class="article">props</h3>
@@ -154,6 +149,17 @@
             <h3 class="article">methods</h3>
             <Table :columns="methods" :data="data25" border size="small" width="1000"></Table>
           </div>
+          <div v-show="currName=='1-10'">
+            <Divider class="blue" orientation="left">文件上传/下载</Divider>
+            <file-upload v-model="fileInfo"></file-upload>
+            <h3 class="article">基础用法</h3>基本用法，使用
+            <code>v-model</code>
+            实现数据的双向绑定。绑定值对象：{url: 完整下载链接, name: 文件名, size: 文件大小(单位字节，非必须)}
+            <h3 class="article">props</h3>
+            <Table :columns="props" :data="data36" border size="small" width="1000"></Table>
+            <h3 class="article">events</h3>
+            <Table :columns="events" :data="data37" border size="small" width="1000"></Table>
+          </div>
           <div v-show="currName=='1-8'">
             <Divider class="blue" orientation="left">身份验证全屏弹框</Divider>
             <Button @click="showCheckPass">开始验证</Button>
@@ -163,7 +169,7 @@
             <Table :columns="methods" :data="data27" border size="small" width="1000"></Table>
           </div>
           <div v-show="currName=='1-9'">
-            <Divider class="blue" orientation="left">密码强度输入框</Divider>
+            <Divider class="blue" orientation="left">密码强度提示输入框</Divider>
             <setPassword v-model="password" style="width:300px" />
             <h3 class="article">基础用法</h3>基本用法，使用
             <code>v-model</code> 实现数据的双向绑定。
@@ -196,7 +202,6 @@
 </template>
 
 <script>
-import TreeTable from "./tree-table";
 import iconChoose from "@/views/my-components/xboot/icon-choose";
 import countDownButton from "@/views/my-components/xboot/count-down-button";
 import departmentChoose from "@/views/my-components/xboot/department-choose";
@@ -204,12 +209,12 @@ import departmentTreeChoose from "@/views/my-components/xboot/department-tree-ch
 import userChoose from "@/views/my-components/xboot/user-choose";
 import uploadPicInput from "@/views/my-components/xboot/upload-pic-input";
 import uploadPicThumb from "@/views/my-components/xboot/upload-pic-thumb";
+import fileUpload from "@/views/my-components/xboot/file-upload";
 import checkPassword from "@/views/my-components/xboot/check-password";
 import setPassword from "@/views/my-components/xboot/set-password";
 export default {
   name: "xboot-components",
   components: {
-    TreeTable,
     iconChoose,
     countDownButton,
     departmentChoose,
@@ -217,6 +222,7 @@ export default {
     departmentTreeChoose,
     uploadPicInput,
     uploadPicThumb,
+    fileUpload,
     checkPassword,
     setPassword
   },
@@ -233,6 +239,7 @@ export default {
         "https://s1.ax1x.com/2018/05/19/CcdVQP.png",
         "https://i.loli.net/2018/10/14/5bc2ccaa3149c.png"
       ],
+      fileInfo: {},
       checkPass: false,
       processLoading: false,
       events: [
@@ -436,6 +443,12 @@ export default {
           value: "空"
         },
         {
+          name: "accept",
+          desc: "接受上传的文件类型，等同<input>标签的accept属性",
+          type: "String",
+          value: ".jpg, .jpeg, .png, .gif"
+        },
+        {
           name: "maxSize",
           desc: "单个文件最大限制大小（单位Mb）",
           type: "Number",
@@ -576,6 +589,12 @@ export default {
       ],
       data23: [
         {
+          name: "value",
+          desc: "绑定的值，可使用 v-model 双向绑定",
+          type: "String",
+          value: "空"
+        },
+        {
           name: "multiple",
           desc: "是否选开启多张上传，默认true开启，设为false仅限制一张",
           type: "Boolean",
@@ -587,6 +606,12 @@ export default {
             "限制上传数量，开启多张上传multiple设为true时生效，默认限制10张",
           type: "Number",
           value: "10"
+        },
+        {
+          name: "accept",
+          desc: "接受上传的文件类型，等同<input>标签的accept属性",
+          type: "String",
+          value: ".jpg, .jpeg, .png, .gif"
         },
         {
           name: "maxSize",
@@ -688,6 +713,72 @@ export default {
             "强度等级得分0-5，包含数字、小写字母、大写字母、特殊字符、长度≥10各累加1分，≤1分强度为弱、2-4分强度为中、5分强度为强",
           value:
             "第一个参数为返回用户输入的内容，第二个参数为强度等级得分0-5，第三个参数为强度汉字"
+        }
+      ],
+      data36: [
+        {
+          name: "value",
+          desc:
+            "绑定的对象Object，可使用 v-model 双向绑定：{url: 完整下载链接, name: 文件名, size: 文件大小(单位字节，非必须)}",
+          type: "Object",
+          value: "{}"
+        },
+        {
+          name: "accept",
+          desc: "接受上传的文件类型，等同<input>标签的accept属性",
+          type: "String",
+          value: "空"
+        },
+        {
+          name: "maxSize",
+          desc: "单个文件最大限制大小（单位Mb）",
+          type: "Number",
+          value: "5"
+        },
+        {
+          name: "type",
+          desc:
+            "按钮类型，可选值为 default、primary、dashed、text、info、success、warning、error或者不设置",
+          type: "String",
+          value: "default"
+        },
+        {
+          name: "ghost",
+          desc: "幽灵属性，使按钮背景透明",
+          type: "Boolean",
+          value: "false"
+        },
+        {
+          name: "size",
+          desc: "按钮大小，可选值为large、small、default或者不设置",
+          type: "String",
+          value: "default"
+        },
+        {
+          name: "shape",
+          desc: "按钮形状，可选值为circle或者不设置",
+          type: "String",
+          value: "-"
+        },
+        {
+          name: "disabled",
+          desc: "设置输入框和上传按钮为禁用状态",
+          type: "Boolean",
+          value: "false"
+        },
+        {
+          name: "icon",
+          desc: "设置上传按钮图标",
+          type: "String",
+          value: "ios-cloud-upload-outline"
+        }
+      ],
+      data37: [
+        {
+          name: "on-change",
+          type: "返回上传成功文件对象信息",
+          value:
+            "Object：{url: 完整下载链接, name: 文件名, size: 文件大小(单位字节)}"
         }
       ]
     };

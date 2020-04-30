@@ -3,13 +3,7 @@
     <Card id="html2canvas">
       <Layout>
         <Sider hide-trigger style="background: #fff;max-width: 220px;flex: 0 0 220px;">
-          <Menu
-            active-name="1-1"
-            theme="light"
-            width="auto"
-            :open-names="['1','2','3']"
-            @on-select="currName=$event"
-          >
+          <Menu active-name="1-1" theme="light" width="auto" @on-select="currName=$event">
             <MenuItem name="1-1">工具类</MenuItem>
             <MenuItem name="1-2">组件类</MenuItem>
           </Menu>
@@ -96,7 +90,7 @@
             <span class="href-text">官方文档：</span>
             <a class="href-text" href="https://date-fns.org" target="_blank">https://date-fns.org</a>
             <br />
-
+            <b class="href-text">已全局挂载</b><br />
             <span class="href-text">示例：{{time}}</span>
 
             <Divider orientation="left">拖动组件 - Vue.Draggable</Divider>
@@ -115,7 +109,12 @@
             >https://sortablejs.github.io/Vue.Draggable/</a>
             <br />
 
-            <draggable v-model="list" :animation="200" ghost-class="ghost" class="draggable-container">
+            <draggable
+              v-model="list"
+              :animation="200"
+              ghost-class="ghost"
+              class="draggable-container"
+            >
               <transition-group type="transition" name="flip-list">
                 <li class="list-group-item" v-for="item in list" :key="item.id">{{ item.name }}</li>
               </transition-group>
@@ -152,11 +151,18 @@
               href="https://iview.github.io/iview-area"
               target="_blank"
             >https://iview.github.io/iview-area</a>
-            <br />
-
-            <al-selector v-model="resArr" class="example-btn" style="width: 800px" />
+            <div class="href-text">
+              <br />说明：因原项目已长时间未维护，现已自行引入至项目中维护，保持数据最新，已全局挂载
+              <br />
+              <b>修复与优化：</b>
+              <br />· 更新省市县数据包，减少1.3MB体积，不再支持街道数据
+              <br />· 修复清空数据设为空数组"[]"无效BUG
+              <br />
+              <br />
+            </div>
+            <al-selector v-model="resArr" level="2" style="width: 500px" />
             {{resArr}}
-            <al-cascader v-model="resArr2" class="example-btn" style="width: 400px" />
+            <al-cascader v-model="resArr2" style="width: 500px" />
             {{resArr2}}
             <Divider orientation="left">图片裁剪 - vue-cropper</Divider>
             <span class="href-text">Github：</span>
@@ -199,6 +205,36 @@
               icon="ios-cloud-upload-outline"
             >上传裁剪后的图片</Button>
 
+            <Divider orientation="left">图片预览 - viewerjs</Divider>
+            <span class="href-text">Github：</span>
+            <a
+              href="https://github.com/fengyuanchen/viewerjs"
+              target="_blank"
+              class="href-text"
+            >https://github.com/fengyuanchen/viewerjs</a>
+            <br />
+            <span class="href-text">官方文档：</span>
+            <a
+              class="href-text"
+              href="https://fengyuanchen.github.io/viewerjs/"
+              target="_blank"
+            >https://fengyuanchen.github.io/viewerjs</a>
+            <br />
+            <br />
+
+            <div id="image">
+              <img
+                src="https://gw.alipayobjects.com/zos/rmsportal/iXjVmWVHbCJAyqvDxdtx.png"
+                width="200px"
+                style="cursor: zoom-in;margin-right: 10px"
+              />
+              <img
+                src="https://gw.alipayobjects.com/zos/rmsportal/iZBVOIhGJiAnhplqjvZW.png"
+                width="200px"
+                style="cursor: zoom-in"
+              />
+            </div>
+
             <Divider orientation="left">弹幕视频播放器 - DPlayer</Divider>
             <span class="href-text">Github：</span>
             <a
@@ -237,10 +273,11 @@
 
 <script>
 // 组件内使用
+import "viewerjs/dist/viewer.css";
+import Viewer from "viewerjs";
 import { VueCropper } from "vue-cropper";
 import printJS from "print-js";
 import html2canvas from "html2canvas";
-import { format } from "date-fns";
 import DPlayer from "dplayer";
 import { base64Upload } from "@/api/index.js";
 import draggable from "vuedraggable";
@@ -290,8 +327,9 @@ export default {
   },
   methods: {
     init() {
-      this.time = format(new Date(), "YYYY-MM-DD");
+      this.time = this.format(new Date(), "yyyy-MM-dd");
       this.initVideo();
+      new Viewer(document.getElementById("image"));
     },
     printHtml() {
       printJS("printjs", "html");

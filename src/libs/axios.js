@@ -25,7 +25,14 @@ axios.interceptors.response.use(response => {
             // 未登录 清除已登录状态
             Cookies.set('userInfo', '');
             setStore('accessToken', '');
-            router.push('/login');
+            if (router.history.current.name != "login") {
+                if (data.message !== null) {
+                    Message.error(data.message);
+                } else {
+                    Message.error("未知错误，请重新登录");
+                }
+                router.push('/login');
+            }
             break;
         case 403:
             // 没有权限
@@ -108,24 +115,12 @@ export const putRequest = (url, params) => {
     });
 };
 
-export const deleteRequest = (url, params) => {
-    let accessToken = getStore('accessToken');
-    return axios({
-        method: 'delete',
-        url: `${base}${url}`,
-        params: params,
-        headers: {
-            'accessToken': accessToken
-        }
-    });
-};
-
-export const uploadFileRequest = (url, params) => {
+export const postBodyRequest = (url, params) => {
     let accessToken = getStore('accessToken');
     return axios({
         method: 'post',
         url: `${base}${url}`,
-        params: params,
+        data: params,
         headers: {
             'accessToken': accessToken
         }
@@ -133,14 +128,33 @@ export const uploadFileRequest = (url, params) => {
 };
 
 /**
- * 无需token验证的请求 避免旧token过期导致请求失败
+ * 无需token验证的GET请求 避免旧token过期导致请求失败
  * @param {*} url 
  * @param {*} params 
  */
-export const getRequestWithNoToken = (url, params) => {
+export const getNoAuthRequest = (url, params) => {
     return axios({
         method: 'get',
         url: `${base}${url}`,
         params: params
+    });
+};
+
+export const postNoAuthRequest = (url, params) => {
+    return axios({
+        method: 'post',
+        url: `${base}${url}`,
+        data: params,
+        transformRequest: [function (data) {
+            let ret = '';
+            for (let it in data) {
+                ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&';
+            }
+            ret = ret.substring(0, ret.length - 1);
+            return ret;
+        }],
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        }
     });
 };

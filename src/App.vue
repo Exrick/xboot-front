@@ -30,11 +30,11 @@ body {
 }
 
 .br button {
-  margin-right: 5px;
+  margin-right: 8px;
 }
 
 .operation button {
-  margin-right: 5px;
+  margin-right: 8px;
 }
 
 .ivu-btn-text:focus {

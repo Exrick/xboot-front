@@ -42,7 +42,7 @@
                       :maxlength="10"
                       style="width: 67%;"
                     />
-                    <div style="position:relative;font-size:12px">
+                    <div class="code-image" style="position:relative;font-size:12px">
                       <Spin v-if="loadingCaptcha" fix></Spin>
                       <img
                         :src="captchaImg"

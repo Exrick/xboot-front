@@ -1,13 +1,4 @@
 <style lang="less">
-.f-title {
-  font-size: 20px;
-  font-weight: 400;
-  margin: 12px 0;
-}
-.f-p {
-  margin: 5px;
-  font-size: 14px;
-}
 .weapp {
   display: flex;
   height: 60px;
@@ -28,7 +19,10 @@
 <template>
   <div>
     <Card>
-      <Alert type="warning" show-icon>说明：全新重构设计微信小程序，现已开源！后端即将在XBoot中开发</Alert>
+      <Alert type="warning" show-icon>
+        说明：全新重构设计微信小程序，现已开源！后即正在XBoot中开发
+        <a href="http://xpay.exrick.cn/pay?xboot" target="_blank">立即获取完整版</a>
+      </Alert>
       <div class="weapp">
         <Poptip trigger="hover" title="打开微信扫一扫">
           <div slot="content">
@@ -70,7 +64,7 @@
 
 <script>
 export default {
-  name: "flutter",
+  name: "weapp",
   data() {
     return {};
   },

@@ -5,12 +5,12 @@
 <template>
   <div class="search">
     <Card>
-      <Row>
-        <Form v-show="openSearch" ref="searchForm" :model="searchForm" inline :label-width="70">
-          <Form-item label="用户名称" prop="username">
+      <Row v-show="openSearch" @keydown.enter.native="handleSearch">
+        <Form ref="searchForm" :model="searchForm" inline :label-width="70">
+          <Form-item label="用户名" prop="nickname">
             <Input
               type="text"
-              v-model="searchForm.username"
+              v-model="searchForm.nickname"
               clearable
               placeholder="请输入用户名"
               style="width: 200px"
@@ -43,17 +43,23 @@
                 <Option v-for="(item, i) in dictSex" :key="i" :value="item.value">{{item.title}}</Option>
               </Select>
             </Form-item>
-            <Form-item label="用户类型" prop="type">
-              <Select v-model="searchForm.type" placeholder="请选择" clearable style="width: 200px">
-                <Option value="0">普通用户</Option>
-                <Option value="1">管理员</Option>
-              </Select>
+            <Form-item label="登录账号" prop="username">
+              <Input
+                type="text"
+                v-model="searchForm.username"
+                clearable
+                placeholder="请输入登录账号"
+                style="width: 200px"
+              />
             </Form-item>
-            <Form-item label="用户状态" prop="status">
-              <Select v-model="searchForm.status" placeholder="请选择" clearable style="width: 200px">
-                <Option value="0">正常</Option>
-                <Option value="-1">禁用</Option>
-              </Select>
+            <Form-item label="用户ID" prop="id">
+              <Input
+                type="text"
+                v-model="searchForm.id"
+                clearable
+                placeholder="请输入用户ID"
+                style="width: 200px"
+              />
             </Form-item>
             <Form-item label="创建时间">
               <DatePicker
@@ -132,94 +138,41 @@
       </Row>
     </Card>
 
-    <Modal
-      :title="modalTitle"
-      v-model="userModalVisible"
-      :mask-closable="false"
-      :width="500"
-      :styles="{top: '30px'}"
-    >
-      <Form ref="form" :model="form" :label-width="70" :rules="userFormValidate">
-        <FormItem label="用户名" prop="username">
-          <Input v-model="form.username" autocomplete="off" />
-        </FormItem>
-        <FormItem label="密码" prop="password" v-if="modalType==0" :error="errorPass">
-          <Input type="password" password v-model="form.password" autocomplete="off" />
-        </FormItem>
-        <FormItem label="邮箱" prop="email">
-          <Input v-model="form.email" />
-        </FormItem>
-        <FormItem label="手机号" prop="mobile">
-          <Input v-model="form.mobile" />
-        </FormItem>
-        <FormItem label="性别" prop="sex">
-          <RadioGroup v-model="form.sex">
-            <Radio v-for="(item, i) in dictSex" :key="i" :label="item.value">{{item.title}}</Radio>
-          </RadioGroup>
-        </FormItem>
-        <Form-item label="头像" prop="avatar">
-          <upload-pic-input v-model="form.avatar"></upload-pic-input>
-        </Form-item>
-        <Form-item label="所属部门">
-          <department-tree-choose @on-change="handleSelectDepTree" ref="depTree"></department-tree-choose>
-        </Form-item>
-        <FormItem label="用户类型" prop="type">
-          <Select v-model="form.type" placeholder="请选择">
-            <Option :value="0">普通用户</Option>
-            <Option :value="1">管理员</Option>
-          </Select>
-        </FormItem>
-        <FormItem label="角色分配" prop="roles">
-          <Select v-model="form.roles" multiple>
-            <Option v-for="item in roleList" :value="item.id" :key="item.id" :label="item.name">
-              <span style="margin-right:10px;">{{ item.name }}</span>
-              <span style="color:#ccc;">{{ item.description }}</span>
-            </Option>
-          </Select>
-        </FormItem>
-      </Form>
-      <div slot="footer">
-        <Button type="text" @click="userModalVisible = false">取消</Button>
-        <Button type="primary" :loading="submitLoading" @click="submitUser">提交</Button>
-      </div>
-    </Modal>
     <Modal v-model="modalExportAll" title="确认导出" :loading="loadingExport" @on-ok="exportAll">
       <p>您确认要导出全部 {{total}} 条数据？</p>
     </Modal>
 
     <check-password ref="checkPass" @on-success="resetPass" />
+
+    <addEdit :data="form" :type="showType" v-model="showUser" @on-submit="getUserList" />
   </div>
 </template>
 
 <script>
 import {
   getUserListData,
-  getAllRoleList,
-  addUser,
-  editUser,
   enableUser,
   disableUser,
   deleteUser,
   getAllUserData,
   resetUserPass
 } from "@/api/index";
-import expandRow from "./expand.vue";
-import { validateMobile, validatePassword } from "@/libs/validate";
+import { validateMobile } from "@/libs/validate";
 import departmentChoose from "../../my-components/xboot/department-choose";
-import departmentTreeChoose from "../../my-components/xboot/department-tree-choose";
-import uploadPicInput from "../../my-components/xboot/upload-pic-input";
 import checkPassword from "@/views/my-components/xboot/check-password";
+import addEdit from "./addEdit.vue";
 export default {
   name: "user-manage",
   components: {
-    expandRow,
     departmentChoose,
-    departmentTreeChoose,
-    uploadPicInput,
-    checkPassword
+    checkPassword,
+    addEdit
   },
   data() {
     return {
+      height: 510,
+      showUser: false,
+      showType: "0",
       loading: true,
       openSearch: true,
       openTip: true,
@@ -234,6 +187,8 @@ export default {
       dataDep: [],
       searchKey: "",
       searchForm: {
+        id: "",
+        nickname: "",
         username: "",
         departmentId: "",
         mobile: "",
@@ -248,38 +203,7 @@ export default {
         startDate: "",
         endDate: ""
       },
-      selectDate: null,
-      modalType: 0,
-      userModalVisible: false,
-      modalTitle: "",
-      form: {
-        username: "",
-        mobile: "",
-        email: "",
-        sex: 1,
-        type: 0,
-        avatar: "",
-        roles: [],
-        departmentId: "",
-        departmentTitle: ""
-      },
-      userRoles: [],
-      roleList: [],
-      errorPass: "",
-      userFormValidate: {
-        username: [
-          { required: true, message: "账号不能为空", trigger: "blur" }
-        ],
-        mobile: [
-          { required: true, message: "手机号不能为空", trigger: "blur" },
-          { validator: validateMobile, trigger: "blur" }
-        ],
-        email: [
-          { required: true, message: "请输入邮箱地址" },
-          { type: "email", message: "邮箱格式不正确" }
-        ]
-      },
-      submitLoading: false,
+      form: {},
       columns: [
         {
           type: "selection",
@@ -288,29 +212,37 @@ export default {
           fixed: "left"
         },
         {
-          type: "expand",
-          width: 50,
-          fixed: "left",
-          render: (h, params) => {
-            return h(expandRow, {
-              props: {
-                row: params.row
-              }
-            });
-          }
-        },
-        {
           type: "index",
           width: 60,
           align: "center",
           fixed: "left"
         },
         {
-          title: "用户名",
+          title: "登录账号",
           key: "username",
-          minWidth: 145,
+          minWidth: 125,
           sortable: true,
           fixed: "left"
+        },
+        {
+          title: "用户名",
+          key: "nickname",
+          minWidth: 125,
+          sortable: true,
+          fixed: "left",
+          render: (h, params) => {
+            return h(
+              "a",
+              {
+                on: {
+                  click: () => {
+                    this.showDetail(params.row);
+                  }
+                }
+              },
+              params.row.nickname
+            );
+          }
         },
         {
           title: "头像",
@@ -328,18 +260,18 @@ export default {
         {
           title: "所属部门",
           key: "departmentTitle",
-          width: 120
+          minWidth: 120
         },
         {
           title: "手机",
           key: "mobile",
-          width: 125,
+          minWidth: 125,
           sortable: true
         },
         {
           title: "邮箱",
           key: "email",
-          width: 180,
+          minWidth: 180,
           sortable: true
         },
         {
@@ -349,7 +281,7 @@ export default {
           align: "center"
         },
         {
-          title: "用户类型",
+          title: "类型",
           key: "type",
           align: "center",
           width: 100,
@@ -361,6 +293,25 @@ export default {
               re = "普通用户";
             }
             return h("div", re);
+          },
+          filters: [
+            {
+              label: "普通用户",
+              value: 0
+            },
+            {
+              label: "管理员",
+              value: 1
+            }
+          ],
+          filterMultiple: false,
+          filterRemote: e => {
+            let v = "";
+            if (e.length > 0) {
+              v = e[0];
+            }
+            this.searchForm.type = v;
+            this.getUserList();
           }
         },
         {
@@ -400,12 +351,13 @@ export default {
             }
           ],
           filterMultiple: false,
-          filterMethod(value, row) {
-            if (value == 0) {
-              return row.status == 0;
-            } else if (value == -1) {
-              return row.status == -1;
+          filterRemote: e => {
+            let v = "";
+            if (e.length > 0) {
+              v = e[0];
             }
+            this.searchForm.status = v;
+            this.getUserList();
           }
         },
         {
@@ -584,13 +536,6 @@ export default {
     getUserList() {
       // 多条件搜索用户列表
       this.loading = true;
-      // 避免后端默认值
-      if (!this.searchForm.type) {
-        this.searchForm.type = " ";
-      }
-      if (!this.searchForm.status) {
-        this.searchForm.status = " ";
-      }
       getUserListData(this.searchForm).then(res => {
         this.loading = false;
         if (res.success) {
@@ -701,56 +646,7 @@ export default {
         }
       });
     },
-    submitUser() {
-      this.$refs.form.validate(valid => {
-        if (valid) {
-          if (this.modalType == 0) {
-            // 添加用户 避免编辑后传入id
-            delete this.form.id;
-            delete this.form.status;
-            if (this.form.password == "" || this.form.password == undefined) {
-              this.errorPass = "密码不能为空";
-              return;
-            }
-            if (this.form.password.length < 6) {
-              this.errorPass = "密码长度不得少于6位";
-              return;
-            }
-            this.submitLoading = true;
-            addUser(this.form).then(res => {
-              this.submitLoading = false;
-              if (res.success) {
-                this.$Message.success("操作成功");
-                this.getUserList();
-                this.userModalVisible = false;
-              }
-            });
-          } else {
-            // 编辑
-            this.submitLoading = true;
-            editUser(this.form).then(res => {
-              this.submitLoading = false;
-              if (res.success) {
-                this.$Message.success("操作成功");
-                this.getUserList();
-                this.userModalVisible = false;
-              }
-            });
-          }
-        }
-      });
-    },
-    add() {
-      this.modalType = 0;
-      this.modalTitle = "添加用户";
-      this.$refs.form.resetFields();
-      this.$refs.depTree.setData("", "");
-      this.userModalVisible = true;
-    },
-    edit(v) {
-      this.modalType = 1;
-      this.modalTitle = "编辑用户";
-      this.$refs.form.resetFields();
+    showDetail(v) {
       // 转换null为""
       for (let attr in v) {
         if (v[attr] == null) {
@@ -760,13 +656,25 @@ export default {
       let str = JSON.stringify(v);
       let data = JSON.parse(str);
       this.form = data;
-      this.$refs.depTree.setData(data.departmentId, data.departmentTitle);
-      let selectRolesId = [];
-      this.form.roles.forEach(function(e) {
-        selectRolesId.push(e.id);
-      });
-      this.form.roles = selectRolesId;
-      this.userModalVisible = true;
+      this.showType = "0";
+      this.showUser = true;
+    },
+    add() {
+      this.showType = "2";
+      this.showUser = true;
+    },
+    edit(v) {
+      // 转换null为""
+      for (let attr in v) {
+        if (v[attr] == null) {
+          v[attr] = "";
+        }
+      }
+      let str = JSON.stringify(v);
+      let data = JSON.parse(str);
+      this.form = data;
+      this.showType = "1";
+      this.showUser = true;
     },
     enable(v) {
       this.$Modal.confirm({
@@ -806,7 +714,7 @@ export default {
         content: "您确认要删除用户 " + v.username + " ?",
         loading: true,
         onOk: () => {
-          deleteUser(v.id).then(res => {
+          deleteUser({ ids: v.id }).then(res => {
             this.$Modal.remove();
             if (res.success) {
               this.$Message.success("删除成功");
@@ -849,7 +757,7 @@ export default {
             ids += e.id + ",";
           });
           ids = ids.substring(0, ids.length - 1);
-          deleteUser(ids).then(res => {
+          deleteUser({ ids: ids }).then(res => {
             this.$Modal.remove();
             if (res.success) {
               this.$Message.success("删除成功");
@@ -862,8 +770,9 @@ export default {
     }
   },
   mounted() {
+    // 计算高度
+    this.height = Number(document.documentElement.clientHeight - 230);
     this.init();
-    this.getRoleList();
   }
 };
 </script>

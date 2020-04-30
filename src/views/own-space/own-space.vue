@@ -19,33 +19,25 @@
           <div>
             <div v-show="currMenu=='基本信息'">
               <Form ref="userForm" :model="userForm" :label-width="90" label-position="left">
+                <FormItem label="登录账号：" prop="username">{{userForm.username}}</FormItem>
                 <FormItem label="用户头像：">
-                  <upload-pic-thumb
-                    v-model="userForm.avatar"
-                    :multiple="false"
-                  ></upload-pic-thumb>
+                  <upload-pic-thumb v-model="userForm.avatar" :multiple="false"></upload-pic-thumb>
                 </FormItem>
-                <FormItem label="昵称：" prop="nickName">
-                  <Input v-model="userForm.nickName" style="width: 250px" />
+                <FormItem label="用户名：" prop="nickname">
+                  <Input v-model="userForm.nickname" style="width: 300px" />
                 </FormItem>
                 <FormItem label="性别：">
                   <RadioGroup v-model="userForm.sex">
                     <Radio v-for="(item, i) in dictSex" :key="i" :label="item.value">{{item.title}}</Radio>
                   </RadioGroup>
                 </FormItem>
-                <FormItem label="个人简介：" prop="description">
-                  <Input
-                    v-model="userForm.description"
-                    type="textarea"
-                    style="width: 250px"
-                    :autosize="{minRows: 3,maxRows: 5}"
-                    placeholder="个人简介"
-                  ></Input>
-                </FormItem>
-                <FormItem label="国家/地区：">
-                  <Select v-model="area" style="width: 250px">
-                    <Option :value="86">中国</Option>
-                  </Select>
+                <FormItem label="生日：">
+                  <DatePicker
+                    v-model="userForm.birth"
+                    @on-change="changeBirth"
+                    style="width: 300px"
+                    type="date"
+                  ></DatePicker>
                 </FormItem>
                 <FormItem label="所在省市：">
                   <al-cascader
@@ -53,20 +45,26 @@
                     @on-change="changeAddress"
                     data-type="code"
                     level="2"
-                    style="width:250px"
+                    style="width: 300px"
                   />
                 </FormItem>
                 <FormItem label="街道地址：" prop="street">
-                  <Input v-model="userForm.street" style="width: 250px" />
+                  <Input v-model="userForm.street" style="width: 300px" />
+                </FormItem>
+                <FormItem label="个人简介：" prop="description">
+                  <Input
+                    v-model="userForm.description"
+                    type="textarea"
+                    style="width: 300px"
+                    :autosize="{minRows: 3,maxRows: 5}"
+                    placeholder="个人简介"
+                  ></Input>
                 </FormItem>
                 <FormItem label="所属部门：">
                   <span>{{ userForm.departmentTitle }}</span>
                 </FormItem>
                 <FormItem label="用户类型：">
                   <span>{{ userForm.typeTxt }}</span>
-                </FormItem>
-                <FormItem label="注册时间：">
-                  <span>{{ userForm.createTime }}</span>
                 </FormItem>
                 <FormItem>
                   <Button
@@ -137,46 +135,30 @@
                   <div>
                     <div class="title">Github</div>
                     <div class="desc">
-                      <span v-if="github.related">已绑定Github账号：{{github.username}}</span>
+                      <span v-if="relate.github">已绑定Github账号：{{relate.githubUsername}}</span>
                       <span v-else>当前未绑定Github账号</span>
                     </div>
                   </div>
                 </div>
                 <div>
-                  <a v-if="!github.related" @click="toRelateGithub()">立即绑定</a>
+                  <a v-if="!relate.github" @click="toRelateGithub()">立即绑定</a>
                   <a v-else @click="unRelateGithub()">解除绑定</a>
                 </div>
               </div>
               <div class="item">
                 <div style="display:flex;align-items:center">
-                  <icon name="brands/qq" scale="2.5" style="margin: 0 16px 0 6px;color:#2eabff"></icon>
+                  <img src="@/assets/QQ.png" width="42px" style="margin-right: 16px" />
                   <div>
                     <div class="title">QQ</div>
                     <div class="desc">
-                      <span v-if="qq.related">已绑定QQ账号：{{qq.username}}</span>
+                      <span v-if="relate.qq">已绑定QQ账号：{{relate.qqUsername}}</span>
                       <span v-else>当前未绑定QQ账号</span>
                     </div>
                   </div>
                 </div>
                 <div>
-                  <a v-if="!qq.related" @click="toRelateQQ()">立即绑定</a>
+                  <a v-if="!relate.qq" @click="toRelateQQ()">立即绑定</a>
                   <a v-else @click="unRelateQQ()">解除绑定</a>
-                </div>
-              </div>
-              <div class="item">
-                <div style="display:flex;align-items:center">
-                  <icon name="brands/weibo" scale="2.5" style="margin: 0 16px 0 2px;color:#e22429"></icon>
-                  <div>
-                    <div class="title">微博</div>
-                    <div class="desc">
-                      <span v-if="weibo.related">已绑定微博账号：{{weibo.username}}</span>
-                      <span v-else>当前未绑定微博账号</span>
-                    </div>
-                  </div>
-                </div>
-                <div>
-                  <a v-if="!weibo.related" @click="toRelateWeibo()">立即绑定</a>
-                  <a v-else @click="unRelateWeibo()">解除绑定</a>
                 </div>
               </div>
               <div class="item">
@@ -185,14 +167,30 @@
                   <div>
                     <div class="title">微信</div>
                     <div class="desc">
-                      <span v-if="wechat.related">已绑定微信账号：{{wechat.username}}</span>
+                      <span v-if="relate.wechat">已绑定微信账号：{{relate.wechatUsername}}</span>
                       <span v-else>当前未绑定微信账号</span>
                     </div>
                   </div>
                 </div>
                 <div>
-                  <a v-if="!wechat.related" @click="toRelateWechat()">立即绑定</a>
+                  <a v-if="!relate.wechat" @click="toRelateWechat()">立即绑定</a>
                   <a v-else @click="unRelateWechat()">解除绑定</a>
+                </div>
+              </div>
+              <div class="item">
+                <div style="display:flex;align-items:center">
+                  <img src="@/assets/weibo.png" width="41px" style="margin-right: 16px" />
+                  <div>
+                    <div class="title">微博</div>
+                    <div class="desc">
+                      <span v-if="relate.weibo">已绑定微博账号：{{relate.weiboUsername}}</span>
+                      <span v-else>当前未绑定微博账号</span>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <a v-if="!relate.weibo" @click="toRelateWeibo()">立即绑定</a>
+                  <a v-else @click="unRelateWeibo()">解除绑定</a>
                 </div>
               </div>
               <Spin fix v-if="jumping">跳转中...</Spin>
@@ -264,7 +262,12 @@
       :mask-closable="false"
       :width="500"
     >
-      <Form ref="emailEditForm" :model="emailEditForm" :label-width="100" :rules="emailEditValidate">
+      <Form
+        ref="emailEditForm"
+        :model="emailEditForm"
+        :label-width="100"
+        :rules="emailEditValidate"
+      >
         <FormItem label="新邮箱地址" prop="email">
           <Input v-model="emailEditForm.email" @on-change="hasChangeEmail" placeholder="请输入新邮箱地址"></Input>
         </FormItem>
@@ -295,15 +298,7 @@
 </template>
 
 <script>
-import {
-  userInfo,
-  userInfoEdit,
-  relatedInfo,
-  sendEditEmail,
-  editEmail,
-  sendEditMobileSms,
-  changeMobile
-} from "@/api/index";
+import { userInfo, userInfoEdit } from "@/api/index";
 import { validateMobile } from "@/libs/validate";
 import CountDownButton from "@/views/my-components/xboot/count-down-button";
 import uploadPicThumb from "@/views/my-components/xboot/upload-pic-thumb";
@@ -348,7 +343,7 @@ export default {
       saveLoading: false,
       sending: false,
       getSms: "获取验证码",
-      canSendMobileCode: false, // 是否可点获取验证码
+      canSendMobileCode: true, // 是否可点获取验证码
       checkCodeLoading: false,
       checkPassLoading: false,
       editEmailLoading: false,
@@ -366,27 +361,8 @@ export default {
       },
       editMobileVisible: false, // 显示填写验证码box
       editEmailVisible: false,
-      canSendEditEmail: false,
-      github: {
-        related: false,
-        id: "",
-        username: ""
-      },
-      qq: {
-        related: false,
-        id: "",
-        username: ""
-      },
-      weibo: {
-        related: false,
-        id: "",
-        username: ""
-      },
-      wechat: {
-        related: false,
-        id: "",
-        username: ""
-      },
+      canSendEditEmail: true,
+      relate: {},
       jumping: false,
       currMenu: "基本信息",
       dictSex: this.$store.state.dict.sex
@@ -475,8 +451,10 @@ export default {
     },
     saveEdit() {
       this.saveLoading = true;
-      let params = this.userForm;
-      userInfoEdit(params).then(res => {
+      if (typeof this.userForm.birth == "object") {
+        this.userForm.birth = this.format(this.userForm.birth, "yyyy-MM-dd");
+      }
+      userInfoEdit(this.userForm).then(res => {
         this.saveLoading = false;
         if (res.success) {
           this.$Message.success("保存成功");
@@ -489,6 +467,9 @@ export default {
     },
     changeAddress() {
       this.userForm.address = JSON.stringify(this.userForm.addressArray);
+    },
+    changeBirth(v) {
+      this.userForm.birth = v;
     },
     cancelInputCodeBox() {
       this.editMobileVisible = false;

@@ -20,14 +20,13 @@
         <FormItem label="名称" prop="name">
           <Input v-model="form.name" style="width: 400px" />
         </FormItem>
-        <Form-item>
+        <Form-item class="br">
           <Button
             @click="handleSubmit"
             :loading="submitLoading"
             type="primary"
-            style="margin-right:5px"
           >提交并保存</Button>
-          <Button @click="handleReset" style="margin-right:5px">重置</Button>
+          <Button @click="handleReset">重置</Button>
           <Button type="dashed" @click="close">关闭</Button>
         </Form-item>
       </Form>

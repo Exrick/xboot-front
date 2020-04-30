@@ -14,16 +14,18 @@
             color="default"
             closable
             @on-close="handleCancelUser"
-          >{{item.username}}</Tag>
+          >
+            <Tooltip placement="top" :content="item.username">{{item.nickname}}</Tooltip>
+          </Tag>
         </p>
       </Panel>
     </Collapse>
     <Drawer title="选择用户" closable v-model="userModalVisible" width="800" draggable>
       <Form ref="searchUserForm" :model="searchUserForm" inline :label-width="55">
-        <Form-item label="用户名" prop="username">
+        <Form-item label="用户名" prop="nickname">
           <Input
             type="text"
-            v-model="searchUserForm.username"
+            v-model="searchUserForm.nickname"
             clearable
             placeholder="请输入用户名"
             style="width: 200px"
@@ -63,7 +65,7 @@
         已选择
         <span class="select-count">{{selectUsers.length}}</span> 人
         <Button @click="clearSelectData" style="margin-left:10px">清空已选</Button>
-        <Button @click="userModalVisible=false" type="primary" style="margin-left:10px">关闭</Button>
+        <Button @click="userModalVisible=false" style="margin-left:10px">关闭</Button>
       </div>
     </Drawer>
   </div>
@@ -94,7 +96,8 @@ export default {
       userModalVisible: false,
       selectUsers: [],
       searchUserForm: {
-        username: "",
+        id: "",
+        nickname: "",
         type: "",
         status: "",
         pageNumber: 1, // 当前页数
@@ -110,8 +113,14 @@ export default {
         },
         {
           title: "用户名",
+          key: "nickname",
+          minWidth: 130,
+          sortable: true
+        },
+        {
+          title: "登录账号",
           key: "username",
-          minWidth: 140,
+          minWidth: 120,
           sortable: true
         },
         {
@@ -149,48 +158,6 @@ export default {
           key: "sex",
           width: 70,
           align: "center"
-        },
-        {
-          title: "用户类型",
-          key: "type",
-          align: "center",
-          width: 100,
-          render: (h, params) => {
-            let re = "";
-            if (params.row.type == 1) {
-              re = "管理员";
-            } else if (params.row.type == 0) {
-              re = "普通用户";
-            }
-            return h("div", re);
-          }
-        },
-        {
-          title: "状态",
-          key: "status",
-          align: "center",
-          width: 120,
-          render: (h, params) => {
-            if (params.row.status == 0) {
-              return h("div", [
-                h("Badge", {
-                  props: {
-                    status: "success",
-                    text: "正常启用"
-                  }
-                })
-              ]);
-            } else if (params.row.status == -1) {
-              return h("div", [
-                h("Badge", {
-                  props: {
-                    status: "error",
-                    text: "禁用"
-                  }
-                })
-              ]);
-            }
-          }
         },
         {
           title: "创建时间",
@@ -254,13 +221,13 @@ export default {
     },
     handleSearchUser() {
       this.searchUserForm.pageNumber = 1;
-      this.searchUserForm.pageSize = 9;
+      this.searchUserForm.pageSize = 10;
       this.getUserDataList();
     },
     handleResetUser() {
       this.$refs.searchUserForm.resetFields();
       this.searchUserForm.pageNumber = 1;
-      this.searchUserForm.pageSize = 9;
+      this.searchUserForm.pageSize = 10;
       this.$refs.dep.clearSelect();
       this.searchUserForm.departmentId = "";
       // 重新加载数据
@@ -283,11 +250,12 @@ export default {
       if (flag) {
         let u = {
           id: v.id,
-          username: v.username
+          username: v.username,
+          nickname: v.nickname
         };
         this.selectUsers.push(u);
         this.$emit("on-change", this.selectUsers);
-        this.$Message.success(`添加用户 ${v.username} 成功`);
+        this.$Message.success(`添加用户 ${v.nickname} 成功`);
       }
     },
     clearSelectData() {
@@ -296,18 +264,14 @@ export default {
     },
     handleCancelUser(e, id) {
       // 删除所选用户
-      let newArray = [];
-      this.selectUsers.forEach(e => {
-        if (id != e.id) {
-          newArray.push(e);
-        }
+      this.selectUsers = this.selectUsers.filter(e => {
+        return e.id != id;
       });
-      this.selectUsers = newArray;
       this.$emit("on-change", this.selectUsers);
       this.$Message.success("删除所选用户成功");
     }
   },
-  created() {
+  mounted() {
     // 计算高度
     this.height = Number(document.documentElement.clientHeight - 230);
     this.getUserDataList();

@@ -10,14 +10,14 @@
     >
       <div
         class="upload-list"
-        :style="{width: width, height: height, lineHeight: height}"
+        :style="{width: `calc(${width} + 2px)`, height: `calc(${height} + 2px)`, lineHeight: height}"
         v-for="(item, index) in uploadList"
         :key="index"
       >
         <div v-if="item.status == 'finished'">
           <img :src="item.url" :style="{height: height}" />
           <div class="upload-list-cover">
-            <Icon type="ios-eye-outline" @click="handleView(item.url)"></Icon>
+            <Icon type="ios-eye-outline" @click="handleView(item.url, index)"></Icon>
             <Icon type="ios-trash-outline" @click="handleRemove(item)"></Icon>
           </div>
         </div>
@@ -32,7 +32,8 @@
       :show-upload-list="false"
       :on-success="handleSuccess"
       :on-error="handleError"
-      :format="['jpg','jpeg','png','gif']"
+      :format="format"
+      :accept="accept"
       :max-size="maxSize*1024"
       :on-format-error="handleFormatError"
       :on-exceeded-size="handleMaxSize"
@@ -47,17 +48,12 @@
         <Icon type="md-camera" size="20"></Icon>
       </div>
     </Upload>
-
-    <Modal title="图片预览" v-model="viewImage" :styles="{top: '30px'}" draggable>
-      <img :src="imgUrl" alt="无效的图片链接" style="width: 100%;margin: 0 auto;display: block;" />
-      <div slot="footer">
-        <Button @click="viewImage=false">关闭</Button>
-      </div>
-    </Modal>
   </div>
 </template>
 
 <script>
+import "viewerjs/dist/viewer.css";
+import Viewer from "viewerjs";
 import { uploadFile } from "@/api/index";
 import vuedraggable from "vuedraggable";
 export default {
@@ -67,7 +63,7 @@ export default {
   },
   props: {
     value: {
-      type: Object
+      type: null
     },
     draggable: {
       type: Boolean,
@@ -92,15 +88,30 @@ export default {
     height: {
       type: String,
       default: "60px"
+    },
+    accept: {
+      type: String,
+      default: ".jpg, .jpeg, .png, .gif"
+    }
+  },
+  computed: {
+    format() {
+      if (this.accept) {
+        let format = [];
+        this.accept.split(",").forEach(e => {
+          format.push(e.replace(".", "").replace(" ", ""));
+        });
+        return format;
+      } else {
+        return [];
+      }
     }
   },
   data() {
     return {
       accessToken: {},
       uploadFileUrl: uploadFile,
-      uploadList: [],
-      viewImage: false,
-      imgUrl: ""
+      uploadList: []
     };
   },
   methods: {
@@ -113,9 +124,15 @@ export default {
         accessToken: this.getStore("accessToken")
       };
     },
-    handleView(imgUrl) {
-      this.imgUrl = imgUrl;
-      this.viewImage = true;
+    handleView(v, i) {
+      let image = new Image();
+      image.src = v;
+      let viewer = new Viewer(image, {
+        hidden: function() {
+          viewer.destroy();
+        }
+      });
+      viewer.show();
     },
     handleRemove(file) {
       const uploadList = this.uploadList;
@@ -146,7 +163,7 @@ export default {
         desc:
           "所选文件‘ " +
           file.name +
-          " ’格式不正确, 请选择 .jpg .jpeg .png .gif图片格式文件"
+          " ’格式不正确, 请选择 "+this.accept+" 图片格式文件"
       });
     },
     handleMaxSize(file) {
@@ -264,7 +281,7 @@ export default {
     background: #fff;
     position: relative;
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
-    margin-right: 5px;
+    margin-right: 8px;
   }
   .upload-list img {
     object-fit: cover;

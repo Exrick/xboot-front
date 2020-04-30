@@ -6,40 +6,35 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <link rel="icon" href="<%= BASE_URL %>logo.png">
-  <title>XBoot 前后端分离开发平台 Spring Boot、Vue、iView、iView-admin By Exrick</title>
-  <meta name="keywords" content="X-Boot,XBoot,前后端分离,开发平台,Spring Boot,Vue,iview,Exrick">
+  <title>XBoot前后端分离一站式开发平台springboot 2.x iview 前后端分离_vue_集成activiti工作流 iview admin 动态数据权限 权限按钮显示 spring security
+    elasticsearch 分布式限流_同步锁</title>
+  <meta name="keywords"
+    content="前后端分离,xboot,iview,iview admin,前后端分离工作流,vue集成activiti工作流,elasticsearch,security,动态数据权限,springboot,分布式限流_同步锁">
   <meta name="description"
-    content="基于Spring Boot 2.x的前后端分离开发平台XBoot前台：Vue+iView 后端：Spring Boot 2.x/Spring Security/JWT/Spring Data JPA+Mybatis-Plus/Redis/Elasticsearch 分布式限流/同步锁/验证码/SnowFlake雪花算法ID生成 动态权限管理 代码生成 日志记录 定时任务 第三方社交账号、短信登录">
+    content="xboot前后端分离开发平台springboot 2.x iview 前后端分离_vue_集成activiti工作流 iview admin 动态数据权限 权限按钮显示 spring security elasticsearch 分布式限流_同步锁">
   <!-- 部署CDN优化 -->
   <!-- <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vuex@3.1.2/dist/vuex.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vue-i18n@8.15.1/dist/vue-i18n.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vue-router@3.1.3/dist/vue-router.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/axios@0.19.0/dist/axios.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/view-design@4.1.3/dist/styles/iview.css">
-  <script src="https://cdn.jsdelivr.net/npm/view-design@4.1.3/dist/iview.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios@0.19.2/dist/axios.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/view-design@4.2.0/dist/styles/iview.css">
+  <script src="https://cdn.jsdelivr.net/npm/view-design@4.2.0/dist/iview.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vue-lazyload@1.3.3/vue-lazyload.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.10.1/dist/apexcharts.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vue-apexcharts@1.5.1/dist/vue-apexcharts.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/echarts@4.7.0/dist/echarts.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.19.0/dist/apexcharts.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue-apexcharts@1.5.3/dist/vue-apexcharts.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/dplayer@1.25.1/dist/DPlayer.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/print-js@1.0.63/dist/print.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.0.0-rc.5/dist/html2canvas.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/print-js@1.0.63/dist/print.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.6.0/dist/gitalk.css">
-  <script src="https://cdn.jsdelivr.net/npm/gitalk@1.6.0/dist/gitalk.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.6.2/dist/gitalk.css">
+  <script src="https://cdn.jsdelivr.net/npm/gitalk@1.6.2/dist/gitalk.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.8.4/Sortable.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vuedraggable@2.23.2/dist/vuedraggable.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/viewerjs@1.5.0/dist/viewer.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/viewerjs@1.5.0/dist/viewer.min.css">
   <script src="https://cdn.jsdelivr.net/npm/js-cookie@2.2.1/src/js.cookie.min.js"></script> -->
   <script>
-    (function (h, o, t, j, a, r) {
-      h.hj = h.hj || function () { (h.hj.q = h.hj.q || []).push(arguments) };
-      h._hjSettings = { hjid: 878627, hjsv: 6 };
-      a = o.getElementsByTagName('head')[0];
-      r = o.createElement('script'); r.async = 1;
-      r.src = t + h._hjSettings.hjid + j + h._hjSettings.hjsv;
-      a.appendChild(r);
-    })(window, document, 'https://static.hotjar.com/c/hotjar-', '.js?sv=');
     var _hmt = _hmt || [];
     (function () {
       var hm = document.createElement("script");
@@ -57,45 +52,67 @@
       flex-direction: column;
     }
 
-    .half-circle-spinner,
-    .half-circle-spinner * {
-      box-sizing: border-box;
+    .spinner {
+      width: 50px;
+      height: 40px;
+      text-align: center;
+      font-size: 10px;
     }
 
-    .half-circle-spinner {
-      width: 35px;
-      height: 35px;
-      border-radius: 100%;
-      position: relative;
-    }
-
-    .half-circle-spinner .circle {
-      content: "";
-      position: absolute;
-      width: 100%;
+    .spinner>div {
+      background-color: #5cadff;
       height: 100%;
-      border-radius: 100%;
-      border: calc(35px / 10) solid transparent;
+      width: 6px;
+      display: inline-block;
+      -webkit-animation: sk-stretchdelay 1.2s infinite ease-in-out;
+      animation: sk-stretchdelay 1.2s infinite ease-in-out;
     }
 
-    .half-circle-spinner .circle.circle-1 {
-      border-top-color: #5cadff;
-      animation: half-circle-spinner-animation 1s infinite;
+    .spinner .rect2 {
+      -webkit-animation-delay: -1.1s;
+      animation-delay: -1.1s;
     }
 
-    .half-circle-spinner .circle.circle-2 {
-      border-bottom-color: #5cadff;
-      animation: half-circle-spinner-animation 1s infinite alternate;
+    .spinner .rect3 {
+      -webkit-animation-delay: -1.0s;
+      animation-delay: -1.0s;
     }
 
-    @keyframes half-circle-spinner-animation {
-      0% {
-        transform: rotate(0deg);
+    .spinner .rect4 {
+      -webkit-animation-delay: -0.9s;
+      animation-delay: -0.9s;
+    }
 
+    .spinner .rect5 {
+      -webkit-animation-delay: -0.8s;
+      animation-delay: -0.8s;
+    }
+
+    @-webkit-keyframes sk-stretchdelay {
+
+      0%,
+      40%,
+      100% {
+        -webkit-transform: scaleY(0.4)
       }
 
+      20% {
+        -webkit-transform: scaleY(1.0)
+      }
+    }
+
+    @keyframes sk-stretchdelay {
+
+      0%,
+      40%,
       100% {
-        transform: rotate(360deg);
+        transform: scaleY(0.4);
+        -webkit-transform: scaleY(0.4);
+      }
+
+      20% {
+        transform: scaleY(1.0);
+        -webkit-transform: scaleY(1.0);
       }
     }
   </style>
@@ -108,11 +125,14 @@
   </noscript>
   <div id="app">
     <div class="page-loading-wrap">
-      <div class="half-circle-spinner">
-        <div class="circle circle-1"></div>
-        <div class="circle circle-2"></div>
+      <div class="spinner">
+        <div class="rect1"></div>
+        <div class="rect2"></div>
+        <div class="rect3"></div>
+        <div class="rect4"></div>
+        <div class="rect5"></div>
       </div>
-      <h4 style="margin-top:20px;">正在加载资源...</h4>
+      <h4 style="margin-top:20px;font-size:14px;font-weight:400;color: #515a6e;">正在加载资源...</h4>
     </div>
   </div>
   <!-- built files will be auto injected -->

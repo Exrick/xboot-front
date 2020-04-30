@@ -547,7 +547,7 @@ export default {
         content: "您确认要删除 " + this.selectNode.title + " ?",
         onOk: () => {
           // 删除
-          deleteDict(this.selectNode.id).then(res => {
+          deleteDict({ids: this.selectNode.id}).then(res => {
             this.$Modal.remove();
             if (res.success) {
               this.$Message.success("操作成功");
@@ -648,7 +648,7 @@ export default {
         loading: true,
         onOk: () => {
           // 删除
-          deleteData(v.id).then(res => {
+          deleteData({ids: v.id}).then(res => {
             this.$Modal.remove();
             if (res.success) {
               this.$Message.success("操作成功");
@@ -674,7 +674,7 @@ export default {
           });
           ids = ids.substring(0, ids.length - 1);
           // 批量删除
-          deleteData(ids).then(res => {
+          deleteData({ids: ids}).then(res => {
             this.$Modal.remove();
             if (res.success) {
               this.$Message.success("操作成功");

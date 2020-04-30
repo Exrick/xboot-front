@@ -1,5 +1,5 @@
 // 统一请求路径前缀在libs/axios.js中修改
-import { getRequest, postRequest, putRequest, deleteRequest, getRequestWithNoToken } from '@/libs/axios';
+import { getRequest, postRequest, putRequest, getNoAuthRequest, postNoAuthRequest } from '@/libs/axios';
 
 
 
@@ -16,7 +16,7 @@ export const getDictData = "/xboot/dictData/getByType/"
 
 // 登陆
 export const login = (params) => {
-    return postRequest('/login', params)
+    return postNoAuthRequest('/login', params)
 }
 // 获取用户登录信息
 export const userInfo = (params) => {
@@ -24,19 +24,11 @@ export const userInfo = (params) => {
 }
 // 注册
 export const regist = (params) => {
-    return postRequest('/user/regist', params)
+    return postNoAuthRequest('/user/regist', params)
 }
 // 初始化验证码
 export const initCaptcha = (params) => {
-    return getRequestWithNoToken('/common/captcha/init', params)
-}
-// 发送短信验证码
-export const sendSms = (mobile, params) => {
-    return getRequest(`/common/captcha/sendSms/${mobile}`, params)
-}
-// 短信验证码登录
-export const smsLogin = (params) => {
-    return postRequest('/user/smsLogin', params)
+    return getNoAuthRequest('/common/captcha/init', params)
 }
 // IP天气信息
 export const ipInfo = (params) => {
@@ -57,51 +49,22 @@ export const unlock = (params) => {
 
 
 
-// github登录
-export const githubLogin = (params) => {
-    return getRequest('/social/github/login', params)
-}
-// qq登录
-export const qqLogin = (params) => {
-    return getRequest('/social/qq/login', params)
-}
-// 微博登录
-export const weiboLogin = (params) => {
-    return getRequest('/social/weibo/login', params)
-}
-// 绑定账号
-export const relate = (params) => {
-    return postRequest('/social/relate', params)
-}
-// 获取JWT
-export const getJWT = (params) => {
-    return getRequest('/social/getJWT', params)
-}
-
-
-
-// 获取绑定账号信息
-export const relatedInfo = (username, params) => {
-    return getRequest(`/relate/getRelatedInfo/${username}`, params)
-}
-// 解绑账号
-export const unRelate = (params) => {
-    return postRequest('/relate/delByIds', params)
-}
-// 分页获取绑定账号信息
-export const getRelatedListData = (params) => {
-    return getRequest('/relate/findByCondition', params)
-}
-
-
 
 // 获取用户数据 多条件
 export const getUserListData = (params) => {
     return getRequest('/user/getByCondition', params)
 }
+// 通过用户名搜索
+export const searchUserByName = (username, params) => {
+    return getRequest('/user/searchByName/'+username, params)
+}
 // 获取全部用户数据
 export const getAllUserData = (params) => {
     return getRequest('/user/getAll', params)
+}
+// 通过部门获取全部用户数据
+export const getUserByDepartmentId = (id, params) => {
+    return getRequest(`/user/getByDepartmentId/${id}`, params)
 }
 // 添加用户
 export const addUser = (params) => {
@@ -120,8 +83,8 @@ export const disableUser = (id, params) => {
     return postRequest(`/user/admin/disable/${id}`, params)
 }
 // 删除用户
-export const deleteUser = (ids, params) => {
-    return deleteRequest(`/user/delByIds/${ids}`, params)
+export const deleteUser = (params) => {
+    return postRequest('/user/delByIds', params)
 }
 // 重置用户密码
 export const resetUserPass = (params) => {
@@ -138,10 +101,6 @@ export const initDepartment = (params) => {
 export const loadDepartment = (id, params) => {
     return getRequest(`/department/getByParentId/${id}`, params)
 }
-// 通过部门获取全部用户数据
-export const getUserByDepartmentId = (id, params) => {
-    return getRequest(`/user/getByDepartmentId/${id}`, params)
-}
 // 添加部门
 export const addDepartment = (params) => {
     return postRequest('/department/add', params)
@@ -151,8 +110,8 @@ export const editDepartment = (params) => {
     return postRequest('/department/edit', params)
 }
 // 删除部门
-export const deleteDepartment = (ids, params) => {
-    return deleteRequest(`/department/delByIds/${ids}`, params)
+export const deleteDepartment = (params) => {
+    return postRequest('/department/delByIds', params)
 }
 // 搜索部门
 export const searchDepartment = (params) => {
@@ -190,8 +149,31 @@ export const editRoleDep = (params) => {
     return postRequest('/role/editRoleDep', params)
 }
 // 删除角色
-export const deleteRole = (ids, params) => {
-    return deleteRequest(`/role/delAllByIds/${ids}`, params)
+export const deleteRole = (params) => {
+    return postRequest('/role/delByIds', params)
+}
+
+
+
+// 获取全部权限数据
+export const getAllPermissionList = (params) => {
+    return getRequest('/permission/getAllList', params)
+}
+// 添加权限
+export const addPermission = (params) => {
+    return postRequest('/permission/add', params)
+}
+// 编辑权限
+export const editPermission = (params) => {
+    return postRequest('/permission/edit', params)
+}
+// 删除权限
+export const deletePermission = (params) => {
+    return postRequest('/permission/delByIds', params)
+}
+// 搜索权限
+export const searchPermission = (params) => {
+    return getRequest('/permission/search', params)
 }
 
 
@@ -209,8 +191,8 @@ export const editDict = (params) => {
     return postRequest('/dict/edit', params)
 }
 // 删除字典
-export const deleteDict = (ids, params) => {
-    return deleteRequest(`/dict/delByIds/${ids}`, params)
+export const deleteDict = (params) => {
+    return postRequest('/dict/delByIds', params)
 }
 // 搜索字典
 export const searchDict = (params) => {
@@ -229,8 +211,8 @@ export const editDictData = (params) => {
     return postRequest('/dictData/edit', params)
 }
 // 删除字典数据
-export const deleteData = (ids, params) => {
-    return deleteRequest(`/dictData/delByIds/${ids}`, params)
+export const deleteData = (params) => {
+    return postRequest('/dictData/delByIds', params)
 }
 // 通过类型获取字典数据
 export const getDictDataByType = (type, params) => {
@@ -239,41 +221,18 @@ export const getDictDataByType = (type, params) => {
 
 
 
-// 获取全部权限数据
-export const getAllPermissionList = (params) => {
-    return getRequest('/permission/getAllList', params)
-}
-// 添加权限
-export const addPermission = (params) => {
-    return postRequest('/permission/add', params)
-}
-// 编辑权限
-export const editPermission = (params) => {
-    return postRequest('/permission/edit', params)
-}
-// 删除权限
-export const deletePermission = (ids, params) => {
-    return deleteRequest(`/permission/delByIds/${ids}`, params)
-}
-// 搜索权限
-export const searchPermission = (params) => {
-    return getRequest('/permission/search', params)
-}
-
-
 // 分页获取日志数据
 export const getLogListData = (params) => {
     return getRequest('/log/getAllByPage', params)
 }
 // 删除日志
-export const deleteLog = (ids, params) => {
-    return deleteRequest(`/log/delByIds/${ids}`, params)
+export const deleteLog = (params) => {
+    return postRequest('/log/delByIds', params)
 }
 // 清空日志
 export const deleteAllLog = (params) => {
-    return deleteRequest('/log/delAll', params)
+    return postRequest('/log/delAll', params)
 }
-
 
 
 // 分页获取Redis数据
@@ -302,11 +261,11 @@ export const saveRedis = (params) => {
 }
 // 删除Redis
 export const deleteRedis = (params) => {
-    return deleteRequest('/redis/delByKeys', params)
+    return postRequest('/redis/delByKeys', params)
 }
 // 清空Redis
 export const deleteAllRedis = (params) => {
-    return deleteRequest('/redis/delAll', params)
+    return postRequest('/redis/delAll', params)
 }
 
 
@@ -332,39 +291,8 @@ export const resumeQuartz = (params) => {
     return postRequest('/quartzJob/resume', params)
 }
 // 删除定时任务
-export const deleteQuartz = (ids, params) => {
-    return deleteRequest(`/quartzJob/delByIds/${ids}`, params)
-}
-
-
-
-// 分页获取消息数据
-export const getMessageData = (params) => {
-    return getRequest('/message/getByCondition', params)
-}
-// 添加消息
-export const addMessage = (params) => {
-    return postRequest('/message/add', params)
-}
-// 编辑消息
-export const editMessage = (params) => {
-    return postRequest('/message/edit', params)
-}
-// 删除消息
-export const deleteMessage = (ids, params) => {
-    return deleteRequest(`/message/delByIds/${ids}`, params)
-}
-// 分页获取消息推送数据
-export const getMessageSendData = (params) => {
-    return getRequest('/messageSend/getByCondition', params)
-}
-// 编辑发送消息
-export const editMessageSend = (params) => {
-    return putRequest('/messageSend/update', params)
-}
-// 删除发送消息
-export const deleteMessageSend = (ids, params) => {
-    return deleteRequest(`/messageSend/delByIds/${ids}`, params)
+export const deleteQuartz = (params) => {
+    return postRequest('/quartzJob/delByIds', params)
 }
 
 

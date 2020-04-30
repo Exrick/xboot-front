@@ -47,6 +47,7 @@
               :data="data"
               show-checkbox
               :render="renderContent"
+              @on-select-change="selectTree"
               @on-check-change="changeSelect"
               :check-strictly="!strict"
             ></Tree>
@@ -115,14 +116,19 @@
             <FormItem label="前端组件" prop="component" v-if="form.type==0">
               <Input v-model="form.component" />
             </FormItem>
-            <FormItem label="第三方链接" prop="url" v-if="form.type==0&&form.level==2" class="block-tool">
+            <FormItem
+              label="第三方链接"
+              prop="url"
+              v-if="form.type==0&&form.level==2"
+              class="block-tool"
+            >
               <Tooltip
                 placement="right"
                 content="前端组件需为 sys/monitor/monitor 时生效"
                 max-width="300"
                 transfer
               >
-                <Input v-model="form.url" placeholder="http://" @on-change="changeEditUrl"/>
+                <Input v-model="form.url" placeholder="http://" @on-change="changeEditUrl" />
               </Tooltip>
             </FormItem>
             <FormItem label="排序值" prop="sortOrder">
@@ -202,7 +208,7 @@
         </FormItem>
         <FormItem label="名称" prop="title" v-if="formAdd.type==1" class="block-tool">
           <Tooltip placement="right" content="操作按钮名称不得重复">
-            <Input v-model="formAdd.title"/>
+            <Input v-model="formAdd.title" />
           </Tooltip>
         </FormItem>
         <FormItem label="路径" prop="path" v-if="formAdd.type==0">
@@ -215,7 +221,7 @@
             transfer
             content="填写后端请求URL，后端将作权限拦截，若无可填写'无'或其他"
           >
-            <Input v-model="formAdd.path"/>
+            <Input v-model="formAdd.path" />
           </Tooltip>
         </FormItem>
         <FormItem label="按钮权限类型" prop="buttonType" v-if="formAdd.type==1">
@@ -230,7 +236,7 @@
         </FormItem>
         <FormItem label="路由英文名" prop="name" v-if="formAdd.type==0" class="block-tool">
           <Tooltip placement="right" content="需唯一">
-            <Input v-model="formAdd.name"/>
+            <Input v-model="formAdd.name" />
           </Tooltip>
         </FormItem>
         <FormItem label="图标" prop="icon" v-if="formAdd.type==-1||formAdd.type==0">
@@ -239,14 +245,19 @@
         <FormItem label="前端组件" prop="component" v-if="formAdd.type==0">
           <Input v-model="formAdd.component" />
         </FormItem>
-        <FormItem label="第三方链接" prop="url" v-if="formAdd.type==0&&formAdd.level==2" class="block-tool">
+        <FormItem
+          label="第三方链接"
+          prop="url"
+          v-if="formAdd.type==0&&formAdd.level==2"
+          class="block-tool"
+        >
           <Tooltip
             placement="right"
             content="前端组件需为 sys/monitor/monitor 时生效"
             max-width="300"
             transfer
           >
-            <Input v-model="formAdd.url" placeholder="http://" @on-change="changeAddUrl"/>
+            <Input v-model="formAdd.url" placeholder="http://" @on-change="changeAddUrl" />
           </Tooltip>
         </FormItem>
         <FormItem label="排序值" prop="sortOrder">
@@ -388,44 +399,21 @@ export default {
       } else {
         icon = "md-radio-button-off";
       }
-      return h(
-        "span",
-        {
-          style: {
-            display: "inline-block",
-            cursor: "pointer"
-          },
-          on: {
-            click: () => {
-              this.selectTree(data);
+      return h("span", [
+        h("span", [
+          h("Icon", {
+            props: {
+              type: icon,
+              size: "16"
+            },
+            style: {
+              "margin-right": "8px",
+              "margin-bottom": "3px"
             }
-          }
-        },
-        [
-          h("span", [
-            h("Icon", {
-              props: {
-                type: icon,
-                size: "16"
-              },
-              style: {
-                "margin-right": "8px",
-                "margin-bottom": "3px"
-              }
-            }),
-            h(
-              "span",
-              {
-                class: {
-                  "ivu-tree-title": true,
-                  "ivu-tree-title-selected": data.id == this.form.id
-                }
-              },
-              data.title
-            )
-          ])
-        ]
-      );
+          }),
+          h("span", data.title)
+        ])
+      ]);
     },
     handleDropdown(name) {
       if (name == "expandOne") {
@@ -527,14 +515,14 @@ export default {
       }
     },
     selectTree(v) {
-      if (v && v.id != this.form.id) {
+      if (v.length > 0) {
         // 转换null为""
-        for (let attr in v) {
-          if (v[attr] == null) {
-            v[attr] = "";
+        for (let attr in v[0]) {
+          if (v[0][attr] == null) {
+            v[0][attr] = "";
           }
         }
-        let str = JSON.stringify(v);
+        let str = JSON.stringify(v[0]);
         let menu = JSON.parse(str);
         this.form = menu;
         this.editTitle = menu.title;
@@ -614,15 +602,15 @@ export default {
         }
       });
     },
-    changeEditUrl(e){
+    changeEditUrl(e) {
       let v = e.target.value;
-      if(v.indexOf("http")>-1){
+      if (v.indexOf("http") > -1) {
         this.form.component = "sys/monitor/monitor";
       }
     },
-    changeAddUrl(e){
+    changeAddUrl(e) {
       let v = e.target.value;
-      if(v.indexOf("http")>-1){
+      if (v.indexOf("http") > -1) {
         this.formAdd.component = "sys/monitor/monitor";
       }
     },
@@ -695,7 +683,7 @@ export default {
             ids += e.id + ",";
           });
           ids = ids.substring(0, ids.length - 1);
-          deletePermission(ids).then(res => {
+          deletePermission({ ids: ids }).then(res => {
             this.$Modal.remove();
             if (res.success) {
               this.$Message.success("删除成功");

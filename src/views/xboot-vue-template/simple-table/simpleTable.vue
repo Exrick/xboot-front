@@ -9,19 +9,35 @@
         <Button @click="delAll" icon="md-trash">批量删除</Button>
         <Button @click="getDataList" icon="md-refresh">刷新</Button>
         <Button type="dashed" @click="openTip=!openTip">{{openTip ? "关闭提示" : "开启提示"}}</Button>
+        <!-- 动态列按钮 -->
+        <Poptip placement="bottom-end" width="360" style="float:right;">
+          <Button shape="circle" icon="md-apps"></Button>
+          <div slot="content">
+            <CheckboxGroup v-model="columnSettings" @on-change="changeColumns">
+              <div v-for="(column, i) in columns" :key="i">
+                <Col span="8" v-if="column.key&&column.key.indexOf(whiteColumns)<=-1">
+                  <Checkbox :label="column.key" :disabled="column.disabled">
+                    <span>{{column.title}}</span>
+                  </Checkbox>
+                </Col>
+              </div>
+            </CheckboxGroup>
+          </div>
+        </Poptip>
       </Row>
       <Row v-show="openTip">
         <Alert show-icon>
           已选择
           <span class="select-count">{{selectCount}}</span> 项
           <a class="select-clear" @click="clearSelectAll">清空</a> 这里还可以做一些数据统计显示
+          <span style="float:right;">点击右上角按钮配置动态列↑</span>
         </Alert>
       </Row>
       <Row>
         <Table
           :loading="loading"
           border
-          :columns="columns"
+          :columns="dynamicColums"
           :data="data"
           ref="table"
           sortable="custom"
@@ -87,6 +103,10 @@ export default {
       submitLoading: false, // 添加或编辑提交状态
       selectList: [], // 多选数据
       selectCount: 0, // 多选计数
+      // 表格动态列 默认勾选显示的列的key 
+      columnSettings: ["name", "sex", "createTime", "updateTime"],
+      // 不能配置的列（不显示）
+      whiteColumns: ["action"],
       columns: [
         // 表头
         {
@@ -105,6 +125,11 @@ export default {
           sortable: true
         },
         {
+          title: "性别",
+          key: "sex",
+          sortable: true
+        },
+        {
           title: "创建时间",
           key: "createTime",
           sortable: true,
@@ -113,7 +138,9 @@ export default {
         {
           title: "更新时间",
           key: "updateTime",
-          sortable: true
+          sortable: true,
+          // 禁止配置的列
+          disabled: true
         },
         {
           title: "操作",
@@ -160,13 +187,40 @@ export default {
           }
         }
       ],
+      columnChange: false,
       data: [], // 表单数据
       total: 0 // 表单数据总数
     };
   },
+  // 表格动态列 计算属性
+  computed: {
+    dynamicColums: function() {
+      this.columnChange;
+      return this.columns.filter(item => item.hide != true);
+    }
+  },
   methods: {
     init() {
       this.getDataList();
+    },
+    changeColumns(v) {
+      this.columns.map(item => {
+        let hide = true;
+        for (let i = 0; i < v.length; i++) {
+          if (!item.key) {
+            hide = false;
+            break;
+          }
+          if (item.key == v[i] || item.key.indexOf(this.whiteColumns)>-1) {
+            hide = false;
+            break;
+          }
+        }
+        item.hide = hide;
+        return item;
+      });
+      // 触发计算方法
+      this.columnChange = !this.columnChange;
     },
     changePage(v) {
       this.searchForm.pageNumber = v;
@@ -200,12 +254,14 @@ export default {
         {
           id: "1",
           name: "XBoot",
+          sex: "男",
           createTime: "2018-08-08 00:08:00",
           updateTime: "2018-08-08 00:08:00"
         },
         {
           id: "2",
           name: "Exrick",
+          sex: "女",
           createTime: "2018-08-08 00:08:00",
           updateTime: "2018-08-08 00:08:00"
         }

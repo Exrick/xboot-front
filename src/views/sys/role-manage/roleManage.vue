@@ -402,7 +402,7 @@ export default {
                 "margin-bottom": "3px"
               }
             }),
-            h("span", { class: "ivu-tree-title" }, data.title)
+            h("span", data.title)
           ])
         ]
       );
@@ -523,7 +523,7 @@ export default {
         content: "您确认要删除角色 " + v.name + " ?",
         loading: true,
         onOk: () => {
-          deleteRole(v.id).then(res => {
+          deleteRole({ids: v.id}).then(res => {
             this.$Modal.remove();
             if (res.success) {
               this.$Message.success("删除成功");
@@ -595,7 +595,7 @@ export default {
             ids += e.id + ",";
           });
           ids = ids.substring(0, ids.length - 1);
-          deleteRole(ids).then(res => {
+          deleteRole({ids: ids}).then(res => {
             this.$Modal.remove();
             if (res.success) {
               this.$Message.success("删除成功");
