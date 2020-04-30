@@ -41,7 +41,7 @@ export default {
       this.series = [45, 18, 27, 15, 13];
     }
   },
-  created() {
+  mounted() {
     this.init();
   }
 };
