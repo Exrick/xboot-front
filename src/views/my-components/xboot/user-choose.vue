@@ -39,15 +39,19 @@
           <Button @click="handleResetUser">重置</Button>
         </Form-item>
       </Form>
+      <Alert show-icon>
+        已选择
+        <span class="select-count">{{selectUsers.length}}</span> 项
+        <a style="margin-left: 10px;" @click="clearSelectData">清空已选</a>
+      </Alert>
       <Table
         :loading="userLoading"
         border
         :columns="userColumns"
         :data="userData"
-        :height="height"
-        ref="userTable"
+        style="margin: 2vh 0;"
       ></Table>
-      <Row type="flex" justify="end" style="margin: 10px 0;">
+      <Row type="flex" justify="end">
         <Page
           :current="searchUserForm.pageNumber"
           :total="totalUser"
@@ -59,14 +63,9 @@
           show-total
           show-elevator
           show-sizer
+          transfer
         ></Page>
       </Row>
-      <div class="my-drawer-footer">
-        已选择
-        <span class="select-count">{{selectUsers.length}}</span> 人
-        <Button @click="clearSelectData" style="margin-left:10px">清空已选</Button>
-        <Button @click="userModalVisible=false" style="margin-left:10px">关闭</Button>
-      </div>
     </Drawer>
   </div>
 </template>
@@ -91,7 +90,6 @@ export default {
   },
   data() {
     return {
-      height: 500,
       userLoading: true,
       userModalVisible: false,
       selectUsers: [],
@@ -120,7 +118,7 @@ export default {
         {
           title: "登录账号",
           key: "username",
-          minWidth: 120,
+          minWidth: 130,
           sortable: true
         },
         {
@@ -272,8 +270,6 @@ export default {
     }
   },
   mounted() {
-    // 计算高度
-    this.height = Number(document.documentElement.clientHeight - 230);
     this.getUserDataList();
   }
 };
@@ -296,16 +292,5 @@ export default {
     font-weight: 600;
     color: #40a9ff;
   }
-}
-.my-drawer-footer {
-  z-index: 10;
-  width: 100%;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  border-top: 1px solid #e8e8e8;
-  padding: 10px 16px;
-  text-align: right;
-  background: #fff;
 }
 </style>
