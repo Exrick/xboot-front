@@ -90,7 +90,8 @@
             <span class="href-text">官方文档：</span>
             <a class="href-text" href="https://date-fns.org" target="_blank">https://date-fns.org</a>
             <br />
-            <b class="href-text">已全局挂载</b><br />
+            <b class="href-text">已全局挂载 format 方法</b>
+            <br />
             <span class="href-text">示例：{{time}}</span>
 
             <Divider orientation="left">拖动组件 - Vue.Draggable</Divider>
@@ -161,8 +162,12 @@
               <br />
             </div>
             <al-selector v-model="resArr" level="2" style="width: 500px" />
+            <br />
             {{resArr}}
+            <br />
+            <br />
             <al-cascader v-model="resArr2" style="width: 500px" />
+            <br />
             {{resArr2}}
             <Divider orientation="left">图片裁剪 - vue-cropper</Divider>
             <span class="href-text">Github：</span>

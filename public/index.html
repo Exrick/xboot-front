@@ -53,19 +53,19 @@
     }
 
     .spinner-loading {
-      width: 50px;
       height: 40px;
       text-align: center;
       font-size: 10px;
     }
 
-    .spinner-loading>div {
-      background-color: #5cadff;
+    .spinner-loading div {
+      margin-right: 4px;
+      background-color: #4e9ff5;
       height: 100%;
       width: 6px;
       display: inline-block;
-      -webkit-animation: sk-stretchdelay 1.2s infinite ease-in-out;
-      animation: sk-stretchdelay 1.2s infinite ease-in-out;
+      -webkit-animation: stretchdelay 1.2s infinite ease-in-out;
+      animation: stretchdelay 1.2s infinite ease-in-out;
     }
 
     .spinner-loading .rect2 {
@@ -88,20 +88,20 @@
       animation-delay: -0.8s;
     }
 
-    @-webkit-keyframes sk-stretchdelay {
+    @-webkit-keyframes stretchdelay {
 
       0%,
       40%,
       100% {
-        -webkit-transform: scaleY(0.4)
+        -webkit-transform: scaleY(0.4);
       }
 
       20% {
-        -webkit-transform: scaleY(1.0)
+        -webkit-transform: scaleY(1);
       }
     }
 
-    @keyframes sk-stretchdelay {
+    @keyframes stretchdelay {
 
       0%,
       40%,
@@ -111,8 +111,8 @@
       }
 
       20% {
-        transform: scaleY(1.0);
-        -webkit-transform: scaleY(1.0);
+        transform: scaleY(1);
+        -webkit-transform: scaleY(1);
       }
     }
   </style>
