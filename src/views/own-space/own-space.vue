@@ -454,6 +454,7 @@ export default {
       if (typeof this.userForm.birth == "object") {
         this.userForm.birth = this.format(this.userForm.birth, "yyyy-MM-dd");
       }
+      delete this.userForm.roles;
       userInfoEdit(this.userForm).then(res => {
         this.saveLoading = false;
         if (res.success) {

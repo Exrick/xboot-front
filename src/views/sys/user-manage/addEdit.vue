@@ -103,8 +103,8 @@
               </FormItem>
             </Col>
             <Col span="12">
-              <FormItem label="角色分配" prop="roles">
-                <Select v-model="form.roles" multiple>
+              <FormItem label="角色分配" prop="roleIds">
+                <Select v-model="form.roleIds" multiple>
                   <Option
                     v-for="item in roleList"
                     :value="item.id"
@@ -258,6 +258,7 @@ export default {
           if (typeof this.form.birth == "object") {
             this.form.birth = this.format(this.form.birth, "yyyy-MM-dd");
           }
+
           if (this.type == "1") {
             // 编辑
             this.submitLoading = true;
@@ -316,7 +317,9 @@ export default {
         data.roles.forEach(function(e) {
           selectRolesId.push(e.id);
         });
-        data.roles = selectRolesId;
+        data.roleIds = selectRolesId;
+        delete data.roles;
+        delete data.permissions;
         // 密码强度
         if (data.passStrength == "弱") {
           this.passColor = "#ed3f14";
@@ -332,6 +335,7 @@ export default {
         this.$refs.depTree.setData("", "");
         this.form = {
           type: 0,
+          sex: "",
           addressArray: []
         };
       }
