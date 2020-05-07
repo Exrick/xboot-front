@@ -311,6 +311,7 @@ export default {
               v = e[0];
             }
             this.searchForm.type = v;
+            this.searchForm.pageNumber = 1;
             this.getUserList();
           }
         },
@@ -357,6 +358,7 @@ export default {
               v = e[0];
             }
             this.searchForm.status = v;
+            this.searchForm.pageNumber = 1;
             this.getUserList();
           }
         },
