@@ -1,82 +1,84 @@
 <template>
   <div class="authorize">
     <Row type="flex" justify="center" align="middle" @keydown.enter.native="submit">
-      <Col style="width: 368px;">
-        <Header />
-        <Row v-if="!error&&!authLoading">
-          <Tabs value="1">
-            <TabPane label="XBoot统一认证平台" name="1" icon="md-people">
-              <Form ref="loginForm" :model="form" :rules="rules" class="form">
-                <FormItem prop="username">
-                  <Input
-                    v-model="form.username"
-                    prefix="ios-contact"
-                    size="large"
-                    clearable
-                    placeholder="请输入用户名"
-                    autocomplete="off"
-                  />
-                </FormItem>
-                <FormItem prop="password">
-                  <Input
-                    type="password"
-                    v-model="form.password"
-                    prefix="ios-lock"
-                    size="large"
-                    clearable
-                    placeholder="请输入密码"
-                    autocomplete="off"
-                  />
-                </FormItem>
-                <FormItem prop="code">
-                  <Row
-                    type="flex"
-                    justify="space-between"
-                    style="align-items: center;overflow: hidden;"
-                  >
+      <Col style="width: 368px;" class="layout">
+        <div>
+          <Header />
+          <Row v-if="!error&&!authLoading">
+            <Tabs value="1">
+              <TabPane label="XBoot统一认证平台" name="1" icon="md-people">
+                <Form ref="loginForm" :model="form" :rules="rules" class="form">
+                  <FormItem prop="username">
                     <Input
-                      v-model="form.code"
+                      v-model="form.username"
+                      prefix="ios-contact"
                       size="large"
                       clearable
-                      placeholder="请输入图片验证码"
-                      :maxlength="10"
-                      style="width: 67%;"
+                      placeholder="请输入用户名"
+                      autocomplete="off"
                     />
-                    <div class="code-image" style="position:relative;font-size:12px">
-                      <Spin v-if="loadingCaptcha" fix></Spin>
-                      <img
-                        :src="captchaImg"
-                        @click="getCaptchaImg"
-                        alt="加载验证码失败"
-                        style="width:110px;cursor:pointer;display:block"
+                  </FormItem>
+                  <FormItem prop="password">
+                    <Input
+                      type="password"
+                      v-model="form.password"
+                      prefix="ios-lock"
+                      size="large"
+                      clearable
+                      placeholder="请输入密码"
+                      autocomplete="off"
+                    />
+                  </FormItem>
+                  <FormItem prop="code">
+                    <Row
+                      type="flex"
+                      justify="space-between"
+                      style="align-items: center;overflow: hidden;"
+                    >
+                      <Input
+                        v-model="form.code"
+                        size="large"
+                        clearable
+                        placeholder="请输入图片验证码"
+                        :maxlength="10"
+                        style="width: 67%;"
                       />
-                    </div>
-                  </Row>
-                </FormItem>
-              </Form>
-            </TabPane>
-          </Tabs>
-          <Row>
-            <Button type="primary" size="large" :loading="loading" @click="submit" long>
-              <span v-if="!loading">授权并登录</span>
-              <span v-else>授权中...</span>
-            </Button>
+                      <div class="code-image" style="position:relative;font-size:12px">
+                        <Spin v-if="loadingCaptcha" fix></Spin>
+                        <img
+                          :src="captchaImg"
+                          @click="getCaptchaImg"
+                          alt="加载验证码失败"
+                          style="width:110px;cursor:pointer;display:block"
+                        />
+                      </div>
+                    </Row>
+                  </FormItem>
+                </Form>
+              </TabPane>
+            </Tabs>
+            <Row>
+              <Button type="primary" size="large" :loading="loading" @click="submit" long>
+                <span v-if="!loading">授权并登录</span>
+                <span v-else>授权中...</span>
+              </Button>
+            </Row>
+            <Row type="flex" justify="space-between" class="other-thing">
+              <router-link to="/reset" class="back">忘记密码</router-link>
+              <router-link to="/regist">
+                <a class="back">还没有账号？立即注册</a>
+              </router-link>
+            </Row>
           </Row>
-          <Row type="flex" justify="space-between" class="other-thing">
-            <router-link to="/reset" class="back">忘记密码</router-link>
-            <router-link to="/regist">
-              <a class="back">还没有账号？立即注册</a>
-            </router-link>
-          </Row>
-        </Row>
-        <div v-if="error" style="margin-top: 15vh">
-          <Alert type="error" show-icon>
-            {{title}}
-            <span slot="desc">{{msg}}</span>
-          </Alert>
-        </div>
-        <div v-if="authLoading">
-          <RectLoading />
+          <div v-if="error" style="margin-top: 15vh">
+            <Alert type="error" show-icon>
+              {{title}}
+              <span slot="desc">{{msg}}</span>
+            </Alert>
+          </div>
+          <div v-if="authLoading">
+            <RectLoading />
+          </div>
         </div>
         <Footer />
       </Col>

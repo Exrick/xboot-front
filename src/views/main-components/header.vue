@@ -15,8 +15,8 @@ export default {
 
 <style lang="less">
 .header {
-  margin-top: 10vh;
-  margin-bottom: 6vh;
+  margin-top: 8vh;
+  margin-bottom: 5vh;
   text-align: center;
 
   .description {

@@ -1,86 +1,84 @@
 <template>
   <div class="regist">
     <Row type="flex" justify="center" align="middle" @keydown.enter.native="submitRegist">
-      <Col style="width: 368px;">
-        <Header />
-        <Row>
-          <Form ref="registForm" :model="form" :rules="rules" class="form">
-            <span class="regist-title">注册</span>
-            <FormItem prop="username">
-              <Input
-                v-model="form.username"
-                :maxlength="16"
-                size="large"
-                clearable
-                placeholder="请输入注册登录账号"
-              />
-            </FormItem>
-            <FormItem prop="nickname">
-              <Input
-                v-model="form.nickname"
-                :maxlength="20"
-                size="large"
-                clearable
-                placeholder="请输入用户名（昵称）"
-              />
-            </FormItem>
-            <FormItem prop="email">
-              <Input
-                v-model="form.email"
-                size="large"
-                clearable
-                placeholder="请输入邮箱"
-              />
-            </FormItem>
-            <FormItem prop="password">
-              <SetPassword size="large" v-model="form.password" @on-change="changeInputPass" />
-            </FormItem>
-            <FormItem prop="mobile">
-              <Input v-model="form.mobile" size="large" clearable placeholder="请输入手机号">
-                <Select v-model="select" slot="prepend" style="width: 70px">
-                  <Option value="86">+86</Option>
-                </Select>
-              </Input>
-            </FormItem>
-            <FormItem prop="code" :error="errorCode">
-              <Row type="flex" justify="space-between">
+      <Col style="width: 368px;" class="layout">
+        <div>
+          <Header />
+          <Row>
+            <Form ref="registForm" :model="form" :rules="rules" class="form">
+              <span class="regist-title">注册</span>
+              <FormItem prop="username">
                 <Input
-                  v-model="form.code"
+                  v-model="form.username"
+                  :maxlength="16"
                   size="large"
                   clearable
-                  placeholder="请输入短信验证码"
-                  :maxlength="10"
-                  class="input-verify"
+                  placeholder="请输入注册登录账号"
                 />
-                <CountDownButton
-                  ref="countDown"
-                  @on-click="sendSmsCode"
-                  :autoCountDown="false"
+              </FormItem>
+              <FormItem prop="nickname">
+                <Input
+                  v-model="form.nickname"
+                  :maxlength="20"
                   size="large"
-                  :loading="sending"
-                  :text="getSms"
+                  clearable
+                  placeholder="请输入用户名（昵称）"
                 />
-              </Row>
-            </FormItem>
-          </Form>
-          <Row type="flex" justify="space-between">
-            <Button
-              class="regist-btn"
-              type="primary"
-              size="large"
-              :loading="loading"
-              @click="submitRegist"
-            >
-              <span v-if="!loading">注册</span>
-              <span v-else>注册中...</span>
-            </Button>
-            <router-link to="/login">
-              <a class="to-login">使用已有账号登录</a>
-            </router-link>
+              </FormItem>
+              <FormItem prop="email">
+                <Input v-model="form.email" size="large" clearable placeholder="请输入邮箱" />
+              </FormItem>
+              <FormItem prop="password">
+                <SetPassword size="large" v-model="form.password" @on-change="changeInputPass" />
+              </FormItem>
+              <FormItem prop="mobile">
+                <Input v-model="form.mobile" size="large" clearable placeholder="请输入手机号">
+                  <Select v-model="select" slot="prepend" style="width: 70px">
+                    <Option value="86">+86</Option>
+                  </Select>
+                </Input>
+              </FormItem>
+              <FormItem prop="code" :error="errorCode">
+                <Row type="flex" justify="space-between">
+                  <Input
+                    v-model="form.code"
+                    size="large"
+                    clearable
+                    placeholder="请输入短信验证码"
+                    :maxlength="10"
+                    class="input-verify"
+                  />
+                  <CountDownButton
+                    ref="countDown"
+                    @on-click="sendSmsCode"
+                    :autoCountDown="false"
+                    size="large"
+                    :loading="sending"
+                    :text="getSms"
+                  />
+                </Row>
+              </FormItem>
+            </Form>
+            <Row type="flex" justify="space-between">
+              <Button
+                class="regist-btn"
+                type="primary"
+                size="large"
+                :loading="loading"
+                @click="submitRegist"
+              >
+                <span v-if="!loading">注册</span>
+                <span v-else>注册中...</span>
+              </Button>
+              <router-link to="/login">
+                <a class="to-login">使用已有账号登录</a>
+              </router-link>
+            </Row>
           </Row>
-        </Row>
+        </div>
         <Footer />
       </Col>
+
       <LangSwitch />
     </Row>
   </div>
@@ -88,7 +86,7 @@
 
 <script>
 import { regist } from "@/api/index";
-import { validateMobile, validatePassword } from "@/libs/validate";
+import { validateUsername, validateMobile, validatePassword } from "@/libs/validate";
 import Header from "@/views/main-components/header";
 import Footer from "@/views/main-components/footer";
 import LangSwitch from "@/views/main-components/lang-switch";

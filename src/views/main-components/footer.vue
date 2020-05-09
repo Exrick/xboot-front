@@ -11,7 +11,8 @@
         href="http://exrick.cn"
         target="_blank"
         style="margin:0 5px;"
-      >Exrick</a> {{ $t('rights') }}
+      >Exrick</a>
+      {{ $t('rights') }}
     </Row>
   </div>
 </template>
@@ -24,9 +25,9 @@ export default {
 
 <style lang="less">
 .foot {
-  position: fixed;
-  bottom: 4vh;
-  width: 368px;
+  width: 100%;
+  margin-top: 10vh;
+  margin-bottom: 3vh;
   color: rgba(0, 0, 0, 0.45);
   font-size: 14px;
   .help {

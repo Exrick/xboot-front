@@ -129,10 +129,9 @@
                 </p>
                 <div style="height:368px;overflow:auto">
                   <div class="qr">
-                    <img src="@/assets/qr.png" width="120" />
-                    <div>
-                      手机扫一扫支付，限时优惠！
-                    </div>
+                    <Tooltip trigger="hover" placement="top" content="手机扫一扫支付，限时优惠！">
+                      <img src="@/assets/qr.png" width="120" />
+                    </Tooltip>
                   </div>
                   <Alert type="warning" show-icon style="padding: 8px 8px 8px 36px;font-size:12px">
                     价格上调提示：APP模块开发中，价格即将上涨，请尽快获取！永久更新！

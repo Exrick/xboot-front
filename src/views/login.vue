@@ -1,152 +1,154 @@
 <template>
   <div class="login">
     <Row type="flex" justify="center" align="middle" @keydown.enter.native="submitLogin">
-      <Col style="width: 368px;">
-        <Header />
-        <Row>
-          <Tabs v-model="tabName">
-            <TabPane :label="$t('usernameLogin')" name="username" icon="md-person">
-              <Form
-                ref="usernameLoginForm"
-                :model="form"
-                :rules="rules"
-                class="form"
-                v-if="tabName=='username'"
-              >
-                <FormItem prop="username">
-                  <Input
-                    v-model="form.username"
-                    prefix="ios-contact"
-                    size="large"
-                    clearable
-                    placeholder="请输入用户名"
-                    autocomplete="off"
-                  />
-                </FormItem>
-                <FormItem prop="password">
-                  <Input
-                    type="password"
-                    v-model="form.password"
-                    prefix="ios-lock"
-                    size="large"
-                    password
-                    placeholder="请输入密码"
-                    autocomplete="off"
-                  />
-                </FormItem>
-                <FormItem prop="imgCode">
-                  <Row
-                    type="flex"
-                    justify="space-between"
-                    style="align-items: center;overflow: hidden;"
-                  >
-                    <Input
-                      v-model="form.imgCode"
-                      size="large"
-                      clearable
-                      placeholder="请输入图片验证码"
-                      :maxlength="10"
-                      class="input-verify"
-                    />
-                    <div class="code-image"  style="position:relative;font-size:12px">
-                      <Spin v-if="loadingCaptcha" fix></Spin>
-                      <img
-                        :src="captchaImg"
-                        @click="getCaptchaImg"
-                        alt="加载验证码失败"
-                        style="width:110px;cursor:pointer;display:block"
-                      />
-                    </div>
-                  </Row>
-                </FormItem>
-              </Form>
-            </TabPane>
-            <TabPane :label="$t('mobileLogin')" name="mobile" icon="ios-phone-portrait">
-              <Form
-                ref="mobileLoginForm"
-                :model="form"
-                :rules="rules"
-                class="form"
-                v-if="tabName=='mobile'"
-              >
-                <FormItem prop="mobile">
-                  <Input
-                    v-model="form.mobile"
-                    prefix="ios-phone-portrait"
-                    size="large"
-                    clearable
-                    placeholder="请输入手机号"
-                  />
-                </FormItem>
-                <FormItem prop="code" :error="errorCode">
-                  <Row type="flex" justify="space-between">
-                    <Input
-                      v-model="form.code"
-                      prefix="ios-mail-outline"
-                      size="large"
-                      clearable
-                      placeholder="请输入短信验证码"
-                      :maxlength="6"
-                      class="input-verify"
-                    />
-                    <CountDownButton
-                      ref="countDown"
-                      @on-click="sendSmsCode"
-                      :autoCountDown="false"
-                      size="large"
-                      :loading="sending"
-                      :text="getSms"
-                    />
-                  </Row>
-                </FormItem>
-              </Form>
-            </TabPane>
-          </Tabs>
-
-          <Row type="flex" justify="space-between" align="middle">
-            <Checkbox v-model="saveLogin" size="large">{{ $t('autoLogin') }}</Checkbox>
-            <Dropdown trigger="click" @on-click="handleDropDown">
-              <a class="forget-pass">{{ $t('forgetPass') }}</a>
-              <DropdownMenu slot="list">
-                <DropdownItem name="resetByMobile">使用手机号重置密码(付费)</DropdownItem>
-                <DropdownItem name="resetByEmail">使用邮箱重置密码(付费)</DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
-          </Row>
+      <Col style="width: 368px;" class="layout">
+        <div>
+          <Header />
           <Row>
-            <Button
-              class="login-btn"
-              type="primary"
-              size="large"
-              :loading="loading"
-              @click="submitLogin"
-              long
-            >
-              <span v-if="!loading">{{ $t('login') }}</span>
-              <span v-else>{{ $t('logining') }}</span>
-            </Button>
+            <Tabs v-model="tabName">
+              <TabPane :label="$t('usernameLogin')" name="username" icon="md-person">
+                <Form
+                  ref="usernameLoginForm"
+                  :model="form"
+                  :rules="rules"
+                  class="form"
+                  v-if="tabName=='username'"
+                >
+                  <FormItem prop="username">
+                    <Input
+                      v-model="form.username"
+                      prefix="ios-contact"
+                      size="large"
+                      clearable
+                      placeholder="请输入用户名"
+                      autocomplete="off"
+                    />
+                  </FormItem>
+                  <FormItem prop="password">
+                    <Input
+                      type="password"
+                      v-model="form.password"
+                      prefix="ios-lock"
+                      size="large"
+                      password
+                      placeholder="请输入密码"
+                      autocomplete="off"
+                    />
+                  </FormItem>
+                  <FormItem prop="imgCode">
+                    <Row
+                      type="flex"
+                      justify="space-between"
+                      style="align-items: center;overflow: hidden;"
+                    >
+                      <Input
+                        v-model="form.imgCode"
+                        size="large"
+                        clearable
+                        placeholder="请输入图片验证码"
+                        :maxlength="10"
+                        class="input-verify"
+                      />
+                      <div class="code-image" style="position:relative;font-size:12px">
+                        <Spin v-if="loadingCaptcha" fix></Spin>
+                        <img
+                          :src="captchaImg"
+                          @click="getCaptchaImg"
+                          alt="加载验证码失败"
+                          style="width:110px;cursor:pointer;display:block"
+                        />
+                      </div>
+                    </Row>
+                  </FormItem>
+                </Form>
+              </TabPane>
+              <TabPane :label="$t('mobileLogin')" name="mobile" icon="ios-phone-portrait">
+                <Form
+                  ref="mobileLoginForm"
+                  :model="form"
+                  :rules="rules"
+                  class="form"
+                  v-if="tabName=='mobile'"
+                >
+                  <FormItem prop="mobile">
+                    <Input
+                      v-model="form.mobile"
+                      prefix="ios-phone-portrait"
+                      size="large"
+                      clearable
+                      placeholder="请输入手机号"
+                    />
+                  </FormItem>
+                  <FormItem prop="code" :error="errorCode">
+                    <Row type="flex" justify="space-between">
+                      <Input
+                        v-model="form.code"
+                        prefix="ios-mail-outline"
+                        size="large"
+                        clearable
+                        placeholder="请输入短信验证码"
+                        :maxlength="6"
+                        class="input-verify"
+                      />
+                      <CountDownButton
+                        ref="countDown"
+                        @on-click="sendSmsCode"
+                        :autoCountDown="false"
+                        size="large"
+                        :loading="sending"
+                        :text="getSms"
+                      />
+                    </Row>
+                  </FormItem>
+                </Form>
+              </TabPane>
+            </Tabs>
+
+            <Row type="flex" justify="space-between" align="middle">
+              <Checkbox v-model="saveLogin" size="large">{{ $t('autoLogin') }}</Checkbox>
+              <Dropdown trigger="click" @on-click="handleDropDown">
+                <a class="forget-pass">{{ $t('forgetPass') }}</a>
+                <DropdownMenu slot="list">
+                  <DropdownItem name="resetByMobile">使用手机号重置密码(付费)</DropdownItem>
+                  <DropdownItem name="resetByEmail">使用邮箱重置密码(付费)</DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+            </Row>
+            <Row>
+              <Button
+                class="login-btn"
+                type="primary"
+                size="large"
+                :loading="loading"
+                @click="submitLogin"
+                long
+              >
+                <span v-if="!loading">{{ $t('login') }}</span>
+                <span v-else>{{ $t('logining') }}</span>
+              </Button>
+            </Row>
+            <Row type="flex" justify="space-between" class="other-login">
+              <div class="other-way icons">
+                {{ $t('otherLogin') }}
+                <div class="other-icon" @click="toGithubLogin">
+                  <icon scale="1.3" name="brands/github"></icon>
+                </div>
+                <div class="other-icon" @click="toQQLogin">
+                  <icon scale="1.2" name="brands/qq"></icon>
+                </div>
+                <div class="other-icon" @click="toWeixinLogin">
+                  <icon scale="1.3" name="brands/weixin"></icon>
+                </div>
+                <div class="other-icon" @click="toWeiboLogin">
+                  <icon scale="1.3" name="brands/weibo"></icon>
+                </div>
+              </div>
+              <router-link to="/regist">
+                <a class="forget-pass">{{ $t('regist') }}</a>
+              </router-link>
+            </Row>
           </Row>
-          <Row type="flex" justify="space-between" class="other-login">
-            <div class="other-way icons">
-              {{ $t('otherLogin') }}
-              <div class="other-icon" @click="toGithubLogin">
-                <icon scale="1.3" name="brands/github"></icon>
-              </div>
-              <div class="other-icon" @click="toQQLogin">
-                <icon scale="1.2" name="brands/qq"></icon>
-              </div>
-              <div class="other-icon" @click="toWeixinLogin">
-                <icon scale="1.3" name="brands/weixin"></icon>
-              </div>
-              <div class="other-icon" @click="toWeiboLogin">
-                <icon scale="1.3" name="brands/weibo"></icon>
-              </div>
-            </div>
-            <router-link to="/regist">
-              <a class="forget-pass">{{ $t('regist') }}</a>
-            </router-link>
-          </Row>
-        </Row>
+        </div>
         <Footer />
       </Col>
       <LangSwitch />
