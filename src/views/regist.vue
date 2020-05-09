@@ -1,7 +1,13 @@
 <template>
   <div class="regist">
-    <Row type="flex" justify="center" align="middle" @keydown.enter.native="submitRegist">
-      <Col style="width: 368px;" class="layout">
+    <Row
+      type="flex"
+      justify="center"
+      align="middle"
+      @keydown.enter.native="submitRegist"
+      style="height:100%"
+    >
+      <Col class="layout">
         <div>
           <Header />
           <Row>
@@ -86,7 +92,11 @@
 
 <script>
 import { regist } from "@/api/index";
-import { validateUsername, validateMobile, validatePassword } from "@/libs/validate";
+import {
+  validateUsername,
+  validateMobile,
+  validatePassword
+} from "@/libs/validate";
 import Header from "@/views/main-components/header";
 import Footer from "@/views/main-components/footer";
 import LangSwitch from "@/views/main-components/lang-switch";

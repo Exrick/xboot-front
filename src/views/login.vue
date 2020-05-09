@@ -1,7 +1,13 @@
 <template>
   <div class="login">
-    <Row type="flex" justify="center" align="middle" @keydown.enter.native="submitLogin">
-      <Col style="width: 368px;" class="layout">
+    <Row
+      type="flex"
+      justify="center"
+      align="middle"
+      @keydown.enter.native="submitLogin"
+      style="height:100%"
+    >
+      <Col class="layout">
         <div>
           <Header />
           <Row>

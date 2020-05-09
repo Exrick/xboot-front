@@ -1,7 +1,13 @@
 <template>
   <div class="regist-result">
-    <Row type="flex" justify="center" align="middle" @keydown.enter="submitRegist">
-      <Col style="width: 368px;" class="layout">
+    <Row
+      type="flex"
+      justify="center"
+      align="middle"
+      @keydown.enter="submitRegist"
+      style="height:100%"
+    >
+      <Col class="layout">
         <div>
           <Header />
           <Row class="success">

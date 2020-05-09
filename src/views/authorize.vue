@@ -1,7 +1,13 @@
 <template>
   <div class="authorize">
-    <Row type="flex" justify="center" align="middle" @keydown.enter.native="submit">
-      <Col style="width: 368px;" class="layout">
+    <Row
+      type="flex"
+      justify="center"
+      align="middle"
+      @keydown.enter.native="submit"
+      style="height:100%"
+    >
+      <Col class="layout">
         <div>
           <Header />
           <Row v-if="!error&&!authLoading">
