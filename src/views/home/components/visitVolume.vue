@@ -16,6 +16,7 @@
 
 <script>
 import echarts from "echarts";
+import { addDays, subDays } from "date-fns";
 var zh = require("../../../libs/zh.json");
 export default {
   name: "visitVolume",
@@ -55,22 +56,7 @@ export default {
               day: "MMMdd日"
             }
           },
-          categories: [
-            "2019-11-01",
-            "2019-11-02",
-            "2019-11-03",
-            "2019-11-04",
-            "2019-11-05",
-            "2019-11-06",
-            "2019-11-07",
-            "2019-11-08",
-            "2019-11-09",
-            "2019-11-10",
-            "2019-11-11",
-            "2019-11-12",
-            "2019-11-13",
-            "2019-11-14"
-          ]
+          categories: []
         },
         legend: {
           show: false
@@ -104,9 +90,16 @@ export default {
           data: [11, 17, 15, 15, 21, 14, 17, 15, 15, 21, 14, 21, 14, 35]
         }
       ];
+      let categories = [];
+      let num = 14;
+      let start = subDays(new Date(), num);
+      for (let i = 0; i < num; i++) {
+        categories.push(addDays(start, i).getTime());
+      }
+      this.chartOptions.xaxis.categories = categories;
     }
   },
-  mounted() {
+  created() {
     this.init();
   }
 };

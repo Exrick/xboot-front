@@ -57,7 +57,7 @@
         </FormItem>
         <FormItem label="cron表达式" prop="cronExpression" style="margin-bottom: 5px;">
           <Input v-model="form.cronExpression" clearable />
-          <a target="_blank" href="http://cron.qqe2.com/">
+          <a target="_blank" href="https://www.pppet.net/">
             <Icon type="md-arrow-dropright-circle" size="16" style="margin:0 3px 3px 0;" />在线cron表达式生成
           </a>
         </FormItem>
@@ -129,19 +129,19 @@ export default {
           title: "任务类",
           key: "jobClassName",
           sortable: true,
-          width: 200
+          minWidth: 200
         },
         {
           title: "cron表达式",
           key: "cronExpression",
           sortable: true,
-          width: 200
+          minWidth: 200
         },
         {
           title: "参数",
           key: "parameter",
           sortable: true,
-          width: 180
+          minWidth: 180
         },
         {
           title: "备注",
@@ -419,7 +419,7 @@ export default {
         content: "您确认要删除任务 " + v.jobClassName + " ?",
         loading: true,
         onOk: () => {
-          deleteQuartz(v.id).then(res => {
+          deleteQuartz({ids: v.id}).then(res => {
             this.$Modal.remove();
             if (res.success) {
               this.$Message.success("操作成功");
@@ -451,7 +451,7 @@ export default {
             ids += e.id + ",";
           });
           ids = ids.substring(0, ids.length - 1);
-          deleteQuartz(ids).then(res => {
+          deleteQuartz({ids: ids}).then(res => {
             this.$Modal.remove();
             if (res.success) {
               this.$Message.success("删除成功");

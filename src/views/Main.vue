@@ -223,7 +223,7 @@ export default {
         this.$store.commit("addOpenSubmenu", pathArr[1].name);
       }
       let userInfo = JSON.parse(Cookies.get("userInfo"));
-      this.username = userInfo.username;
+      this.username = userInfo.nickname;
       this.userId = userInfo.id;
       this.checkTag(this.$route.name);
     },

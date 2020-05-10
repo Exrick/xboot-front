@@ -6,40 +6,35 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <link rel="icon" href="<%= BASE_URL %>logo.png">
-  <title>XBoot 前后端分离开发平台 Spring Boot、Vue、iView、iView-admin By Exrick</title>
-  <meta name="keywords" content="X-Boot,XBoot,前后端分离,开发平台,Spring Boot,Vue,iview,Exrick">
+  <title>XBoot前后端分离一站式开发平台springboot 2.x iview 前后端分离_vue_集成activiti工作流 iview admin 动态数据权限 权限按钮显示 spring security
+    elasticsearch 分布式限流_同步锁</title>
+  <meta name="keywords"
+    content="前后端分离,xboot,iview,iview admin,前后端分离工作流,vue集成activiti工作流,elasticsearch,security,动态数据权限,springboot,分布式限流_同步锁">
   <meta name="description"
-    content="基于Spring Boot 2.x的前后端分离开发平台XBoot前台：Vue+iView 后端：Spring Boot 2.x/Spring Security/JWT/Spring Data JPA+Mybatis-Plus/Redis/Elasticsearch 分布式限流/同步锁/验证码/SnowFlake雪花算法ID生成 动态权限管理 代码生成 日志记录 定时任务 第三方社交账号、短信登录">
+    content="xboot前后端分离开发平台springboot 2.x iview 前后端分离_vue_集成activiti工作流 iview admin 动态数据权限 权限按钮显示 spring security elasticsearch 分布式限流_同步锁">
   <!-- 部署CDN优化 -->
   <!-- <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vuex@3.1.2/dist/vuex.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vue-i18n@8.15.1/dist/vue-i18n.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vue-router@3.1.3/dist/vue-router.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/axios@0.19.0/dist/axios.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/view-design@4.1.3/dist/styles/iview.css">
-  <script src="https://cdn.jsdelivr.net/npm/view-design@4.1.3/dist/iview.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios@0.19.2/dist/axios.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/view-design@4.2.0/dist/styles/iview.css">
+  <script src="https://cdn.jsdelivr.net/npm/view-design@4.2.0/dist/iview.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vue-lazyload@1.3.3/vue-lazyload.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.10.1/dist/apexcharts.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vue-apexcharts@1.5.1/dist/vue-apexcharts.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/dplayer@1.25.0/dist/DPlayer.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/echarts@4.7.0/dist/echarts.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.19.0/dist/apexcharts.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue-apexcharts@1.5.3/dist/vue-apexcharts.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dplayer@1.25.1/dist/DPlayer.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/print-js@1.0.63/dist/print.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.0.0-rc.5/dist/html2canvas.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/print-js@1.0.63/dist/print.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.6.0/dist/gitalk.css">
-  <script src="https://cdn.jsdelivr.net/npm/gitalk@1.6.0/dist/gitalk.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.6.2/dist/gitalk.css">
+  <script src="https://cdn.jsdelivr.net/npm/gitalk@1.6.2/dist/gitalk.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.8.4/Sortable.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vuedraggable@2.23.2/dist/vuedraggable.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/viewerjs@1.5.0/dist/viewer.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/viewerjs@1.5.0/dist/viewer.min.css">
   <script src="https://cdn.jsdelivr.net/npm/js-cookie@2.2.1/src/js.cookie.min.js"></script> -->
   <script>
-    (function (h, o, t, j, a, r) {
-      h.hj = h.hj || function () { (h.hj.q = h.hj.q || []).push(arguments) };
-      h._hjSettings = { hjid: 878627, hjsv: 6 };
-      a = o.getElementsByTagName('head')[0];
-      r = o.createElement('script'); r.async = 1;
-      r.src = t + h._hjSettings.hjid + j + h._hjSettings.hjsv;
-      a.appendChild(r);
-    })(window, document, 'https://static.hotjar.com/c/hotjar-', '.js?sv=');
     var _hmt = _hmt || [];
     (function () {
       var hm = document.createElement("script");
@@ -57,44 +52,135 @@
       flex-direction: column;
     }
 
-    .half-circle-spinner,
-    .half-circle-spinner * {
+    .la-timer,
+    .la-timer>div {
+      position: relative;
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
       box-sizing: border-box;
     }
 
-    .half-circle-spinner {
-      width: 35px;
-      height: 35px;
-      border-radius: 100%;
-      position: relative;
+    .la-timer {
+      display: block;
+      font-size: 0;
+      color: #fff;
     }
 
-    .half-circle-spinner .circle {
-      content: "";
+    .la-timer.la-dark {
+      color: #333;
+    }
+
+    .la-timer>div {
+      display: inline-block;
+      float: none;
+      background-color: currentColor;
+      border: 0 solid currentColor;
+    }
+
+    .la-timer {
+      width: 32px;
+      height: 32px;
+    }
+
+    .la-timer>div {
+      width: 32px;
+      height: 32px;
+      background: transparent;
+      border-width: 2px;
+      border-radius: 100%;
+    }
+
+    .la-timer>div:before,
+    .la-timer>div:after {
       position: absolute;
-      width: 100%;
-      height: 100%;
-      border-radius: 100%;
-      border: calc(35px / 10) solid transparent;
+      top: 14px;
+      left: 14px;
+      display: block;
+      width: 2px;
+      margin-top: -1px;
+      margin-left: -1px;
+      content: "";
+      background: currentColor;
+      border-radius: 2px;
+      -webkit-transform-origin: 1px 1px 0;
+      -moz-transform-origin: 1px 1px 0;
+      -ms-transform-origin: 1px 1px 0;
+      -o-transform-origin: 1px 1px 0;
+      transform-origin: 1px 1px 0;
+      -webkit-animation: timer-loader 1250ms infinite linear;
+      -moz-animation: timer-loader 1250ms infinite linear;
+      -o-animation: timer-loader 1250ms infinite linear;
+      animation: timer-loader 1250ms infinite linear;
+      -webkit-animation-delay: -625ms;
+      -moz-animation-delay: -625ms;
+      -o-animation-delay: -625ms;
+      animation-delay: -625ms;
     }
 
-    .half-circle-spinner .circle.circle-1 {
-      border-top-color: #5cadff;
-      animation: half-circle-spinner-animation 1s infinite;
+    .la-timer>div:before {
+      height: 12px;
     }
 
-    .half-circle-spinner .circle.circle-2 {
-      border-bottom-color: #5cadff;
-      animation: half-circle-spinner-animation 1s infinite alternate;
+    .la-timer>div:after {
+      height: 8px;
+      -webkit-animation-duration: 15s;
+      -moz-animation-duration: 15s;
+      -o-animation-duration: 15s;
+      animation-duration: 15s;
+      -webkit-animation-delay: -7.5s;
+      -moz-animation-delay: -7.5s;
+      -o-animation-delay: -7.5s;
+      animation-delay: -7.5s;
     }
 
-    @keyframes half-circle-spinner-animation {
+    @-webkit-keyframes timer-loader {
       0% {
+        -webkit-transform: rotate(0deg);
         transform: rotate(0deg);
-
       }
 
       100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+      }
+    }
+
+    @-moz-keyframes timer-loader {
+      0% {
+        -moz-transform: rotate(0deg);
+        transform: rotate(0deg);
+      }
+
+      100% {
+        -moz-transform: rotate(360deg);
+        transform: rotate(360deg);
+      }
+    }
+
+    @-o-keyframes timer-loader {
+      0% {
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+      }
+
+      100% {
+        -o-transform: rotate(360deg);
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes timer-loader {
+      0% {
+        -webkit-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+      }
+
+      100% {
+        -webkit-transform: rotate(360deg);
+        -moz-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
         transform: rotate(360deg);
       }
     }
@@ -108,11 +194,10 @@
   </noscript>
   <div id="app">
     <div class="page-loading-wrap">
-      <div class="half-circle-spinner">
-        <div class="circle circle-1"></div>
-        <div class="circle circle-2"></div>
+      <div style="color: #4e9ff5" class="la-timer">
+        <div></div>
       </div>
-      <h4 style="margin-top:20px;">正在加载资源...</h4>
+      <h4 style="margin-top:20px;font-size:14px;font-weight:400;color: #515a6e;">正在加载资源...</h4>
     </div>
   </div>
   <!-- built files will be auto injected -->

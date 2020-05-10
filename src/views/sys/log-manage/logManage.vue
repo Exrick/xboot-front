@@ -5,9 +5,13 @@
 <template>
   <div class="search">
     <Card>
-      <Tabs :animated="false" @on-click="changeTab">
-        <TabPane label="登陆日志" name="1"></TabPane>
+      <Tabs v-model="tabName" :animated="false" @on-click="changeTab" v-if="!member">
+        <TabPane label="登录日志" name="1"></TabPane>
         <TabPane label="操作日志" name="0"></TabPane>
+      </Tabs>
+      <Tabs v-model="tabName" :animated="false" @on-click="changeTab" v-if="member">
+        <TabPane label="登录日志" name="3"></TabPane>
+        <TabPane label="操作日志" name="2"></TabPane>
       </Tabs>
       <Row v-show="openSearch" @keydown.enter.native="handleSearch">
         <Form ref="searchForm" :model="searchForm" inline :label-width="70">
@@ -87,6 +91,8 @@ export default {
   name: "log-manage",
   data() {
     return {
+      tabName: "",
+      member: false,
       openSearch: true,
       openTip: true,
       loading: true,
@@ -95,7 +101,7 @@ export default {
       selectDate: null,
       searchKey: "",
       searchForm: {
-        type: 1,
+        type: "",
         pageNumber: 1,
         pageSize: 10,
         startDate: "",
@@ -119,14 +125,15 @@ export default {
         {
           title: "操作名称",
           key: "name",
-          width: 115,
+          width: 120,
           sortable: true,
-          fixed: "left"
+          fixed: "left",
+          tooltip: true
         },
         {
           title: "请求类型",
           key: "requestType",
-          width: 130,
+          width: 140,
           align: "center",
           sortable: true,
           filters: [
@@ -163,7 +170,8 @@ export default {
         {
           title: "请求路径",
           width: 150,
-          key: "requestUrl"
+          key: "requestUrl",
+          tooltip: true
         },
         {
           title: "请求参数",
@@ -172,16 +180,18 @@ export default {
           tooltip: true
         },
         {
-          title: "登录用户",
+          title: "登录账号",
           key: "username",
           minWidth: 120,
-          sortable: true
+          sortable: true,
+          tooltip: true
         },
         {
           title: "IP",
           key: "ip",
           width: 150,
-          sortable: true
+          sortable: true,
+          tooltip: true
         },
         {
           title: "IP信息",
@@ -192,7 +202,7 @@ export default {
         {
           title: "耗时(毫秒)",
           key: "costTime",
-          width: 140,
+          width: 150,
           sortable: true,
           align: "center",
           filters: [
@@ -286,9 +296,7 @@ export default {
     };
   },
   methods: {
-    init() {
-      this.getLogList();
-    },
+    init() {},
     changeTab(v) {
       this.searchForm.type = v;
       this.getLogList();
@@ -337,11 +345,11 @@ export default {
         content: "您确认要删除该条数据?",
         loading: true,
         onOk: () => {
-          deleteLog(v.id).then(res => {
+          deleteLog({ ids: v.id }).then(res => {
             this.$Modal.remove();
             if (res.success) {
               this.$Message.success("删除成功");
-              this.init();
+              this.getLogList();
             }
           });
         }
@@ -377,12 +385,12 @@ export default {
             ids += e.id + ",";
           });
           ids = ids.substring(0, ids.length - 1);
-          deleteLog(ids).then(res => {
+          deleteLog({ ids: ids }).then(res => {
             this.$Modal.remove();
             if (res.success) {
               this.$Message.success("删除成功");
               this.clearSelectAll();
-              this.init();
+              this.getLogList();
             }
           });
         }
@@ -404,15 +412,34 @@ export default {
             if (res.success) {
               this.$Message.success("清空日志成功");
               this.clearSelectAll();
-              this.init();
+              this.getLogList();
             }
           });
         }
       });
+    },
+    changeLog(name) {
+      if (name.indexOf("member") > -1) {
+        this.member = true;
+        this.tabName = "3";
+        this.searchForm.type = "3";
+      } else {
+        this.member = false;
+        this.tabName = "1";
+        this.searchForm.type = "1";
+      }
+      this.searchForm.pageNumber = 1;
+      this.getLogList();
+    }
+  },
+  watch: {
+    // 监听路由变化
+    $route(to, from) {
+      this.changeLog(to.name);
     }
   },
   mounted() {
-    this.init();
+    this.changeLog(this.$route.name);
   }
 };
 </script>

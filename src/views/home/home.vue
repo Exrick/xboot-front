@@ -21,7 +21,7 @@
                     <Row class-name="made-child-con-middle" type="flex" align="middle">
                       <div>
                         <b class="card-user-info-name">{{ username }}</b>
-                        <p>XBoot 欢迎您的使用</p>
+                        <p>您好，XBoot 欢迎您的使用</p>
                       </div>
                     </Row>
                   </Col>
@@ -129,17 +129,13 @@
                 </p>
                 <div style="height:368px;overflow:auto">
                   <div class="qr">
-                    <img src="@/assets/qr.png" width="120" />
-                    <div>
-                      支持手机扫码支付，限时优惠！
-                      <br />赠送
-                      <a
-                        href="https://v.qq.com/x/page/f0627kf4x1e.html"
-                        target="_blank"
-                      >XMall小程序(不含后端)</a> +
-                      <a href="https://github.com/Exrick/xpay" target="_blank">最新XPay个人收款支付系统</a>
-                    </div>
+                    <Tooltip trigger="hover" placement="top" content="手机扫一扫支付，限时优惠！">
+                      <img src="@/assets/qr.png" width="120" />
+                    </Tooltip>
                   </div>
+                  <Alert type="warning" show-icon style="padding: 8px 8px 8px 36px;font-size:12px">
+                    价格上调提示：APP模块开发中，价格即将上涨，请尽快获取！永久更新！
+                  </Alert>
                   <div class="flex">
                     完整版(仅供学习)：
                     <span class="rmb">￥</span>
@@ -195,10 +191,10 @@
       </Row>
       <Row :gutter="10">
         <Col :lg="24" :xl="16" :style="{marginBottom: '10px'}">
-          <visit-volume/>
+          <visit-volume />
         </Col>
         <Col :lg="24" :xl="8" :style="{marginBottom: '10px'}">
-          <visit-separation/>
+          <visit-separation />
         </Col>
       </Row>
     </div>
@@ -206,7 +202,7 @@
       <show />
     </div>
     <div v-show="currNav=='app'">
-      <h1>⬅️ 我是小程序与Flutter App的首页，点击左侧菜单查看详情</h1>
+      <dashboard2 />
     </div>
 
     <Modal
@@ -235,6 +231,7 @@ import visitVolume from "./components/visitVolume.vue";
 import visitSeparation from "./components/visitSeparation.vue";
 import infoCard from "./components/infoCard.vue";
 import show from "./show.vue";
+import dashboard2 from "../xboot-charts/dashboard2/dashboard2.vue";
 import Cookies from "js-cookie";
 import "gitalk/dist/gitalk.css";
 import Gitalk from "gitalk";
@@ -245,7 +242,8 @@ export default {
     visitVolume,
     visitSeparation,
     infoCard,
-    show
+    show,
+    dashboard2
   },
   data() {
     return {
@@ -271,16 +269,38 @@ export default {
   methods: {
     init() {
       let userInfo = JSON.parse(Cookies.get("userInfo"));
-      this.username = userInfo.username;
+      this.username = userInfo.nickname;
       ipInfo().then(res => {
         if (res.success) {
           this.city = res.result;
+        }
+      });
+    },
+    showNotice() {
+      getNotice().then(res => {
+        if (res.success) {
+          if (!res.result) {
+            return;
+          }
+          let data = res.result;
+          if (
+            data.open &&
+            (data.title || data.content) &&
+            data.position == "HOME"
+          ) {
+            this.$Notice.info({
+              title: data.title,
+              desc: data.content,
+              duration: data.duration
+            });
+          }
         }
       });
     }
   },
   mounted() {
     this.init();
+    // Gitalk
     var gitalk = new Gitalk({
       clientID: "a128de2dd7383614273a",
       clientSecret: "a77691ecb662a8303a6c686ae651ae035868da6e",
@@ -291,10 +311,11 @@ export default {
     });
     gitalk.render("comments");
     // 宣传视频
-    let xbootVideo = Boolean(Cookies.get("xbootVideo"));
-    if (!xbootVideo) {
+    let videoFlag = "videoShowed";
+    let xbootVideo = Cookies.get(videoFlag);
+    if (xbootVideo != videoFlag) {
       this.showVideo = true;
-      Cookies.set("xbootVideo", true);
+      Cookies.set(videoFlag, videoFlag);
     }
   }
 };

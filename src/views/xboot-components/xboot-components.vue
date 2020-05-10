@@ -15,11 +15,11 @@
                 <Icon type="md-ionic" />XBoot通用组件
               </template>
               <MenuItem name="1-0">全局Loading加载动画</MenuItem>
-              <MenuItem name="0-0">
-                <Badge dot :offset="[5,-3]">树表格组件</Badge>
-              </MenuItem>
               <MenuItem name="1-1">倒计时按钮</MenuItem>
               <MenuItem name="1-2">图标选择输入框</MenuItem>
+              <MenuItem name="1-11">
+                <Badge dot :offset="[5,-3]">数据字典组件</Badge>
+              </MenuItem>
               <MenuItem name="1-3">部门级联选择</MenuItem>
               <MenuItem name="1-4">部门树选择</MenuItem>
               <MenuItem name="1-5">用户抽屉选择</MenuItem>
@@ -27,8 +27,11 @@
               <MenuItem name="1-7">
                 <Badge dot :offset="[5,-3]">图片上传缩略图</Badge>
               </MenuItem>
+              <MenuItem name="1-10">
+                <Badge dot :offset="[5,-3]">文件上传/下载</Badge>
+              </MenuItem>
               <MenuItem name="1-8">身份验证全屏弹框</MenuItem>
-              <MenuItem name="1-9">密码强度输入框</MenuItem>
+              <MenuItem name="1-9">密码强度提示输入框</MenuItem>
             </Submenu>
             <Submenu name="3">
               <template slot="title">
@@ -49,9 +52,6 @@
           </Menu>
         </Sider>
         <Content :style="{padding: '0 24px 24px 24px', minHeight: '280px', background: '#fff'}">
-          <div v-show="currName=='0-0'">
-            <tree-table />
-          </div>
           <div v-show="currName=='1-0'">
             <Alert type="warning" show-icon>说明：大部分组件为包含真实数据接口的简单封装，方便大家的直接复用！</Alert>
             <Divider class="blue" orientation="left">全局Loading加载动画</Divider>
@@ -94,6 +94,19 @@
             <h3 class="article">events</h3>
             <Table :columns="events" :data="data1" border size="small" width="1000"></Table>
           </div>
+          <div v-show="currName=='1-11'">
+            <Divider class="blue" orientation="left">数组字典组件</Divider>
+            <dict dict="sex" style="width:300px" />
+            <br />
+            <dict dict="permission_type" style="width:300px" />
+            <h3 class="article">基础用法</h3>基本用法，传入
+            <code>dict</code>属性获取指定的数据字典类型， 使用
+            <code>v-model</code> 实现数据的双向绑定。
+            <h3 class="article">props</h3>
+            <Table :columns="props" :data="data38" border size="small" width="1000"></Table>
+            <h3 class="article">events</h3>
+            <Table :columns="events" :data="data39" border size="small" width="1000"></Table>
+          </div>
           <div v-show="currName=='1-3'">
             <Divider class="blue" orientation="left">部门级联选择</Divider>
             <department-choose style="width:300px" @on-change="handleSelectDep" ref="dep"></department-choose>
@@ -110,7 +123,8 @@
               @on-change="handleSelectDepTree"
               ref="depTree"
             ></department-tree-choose>
-            <div style="margin-top:10px;">{{selectDeps}}</div>
+            <br />
+            {{selectDeps}}
             <h3 class="article">props</h3>
             <Table :columns="props" :data="data5" border size="small" width="1000"></Table>
             <h3 class="article">events</h3>
@@ -121,7 +135,8 @@
           <div v-show="currName=='1-5'">
             <Divider class="blue" orientation="left">用户抽屉选择</Divider>
             <user-choose text="点我选择用户" @on-change="handleSelectUser" ref="user"></user-choose>
-            <div style="margin-top:10px;">{{selectUsers}}</div>
+            <br />
+            {{selectUsers}}
             <h3 class="article">props</h3>
             <Table :columns="props" :data="data8" border size="small" width="1000"></Table>
             <h3 class="article">events</h3>
@@ -130,8 +145,8 @@
             <Table :columns="methods" :data="data10" border size="small" width="1000"></Table>
           </div>
           <div v-show="currName=='1-6'">
-            <Divider class="blue" orientation="left">图片上传文本框</Divider>
-            <upload-pic-input v-model="picUrl" style="width:400px" ref="upload"></upload-pic-input>
+            <Divider class="blue" orientation="left">图片上传输入框</Divider>
+            <upload-pic-input v-model="picUrl" style="width:400px"></upload-pic-input>
             <h3 class="article">基础用法</h3>基本用法，使用
             <code>v-model</code> 实现数据的双向绑定。
             <h3 class="article">props</h3>
@@ -143,6 +158,7 @@
             <Divider class="blue" orientation="left">图片上传缩略图</Divider>
             <upload-pic-thumb v-model="picUrls"></upload-pic-thumb>
             <upload-pic-thumb v-model="picUrls" height="100px" width="100px"></upload-pic-thumb>
+            <br />
             {{picUrls}}
             <h3 class="article">提示</h3>可拖拽实现交换图片顺序。可自定义图片框长和宽。
             <h3 class="article">基础用法</h3>基本用法，使用
@@ -151,8 +167,19 @@
             <Table :columns="props" :data="data23" border size="small" width="1000"></Table>
             <h3 class="article">events</h3>
             <Table :columns="events" :data="data24" border size="small" width="1000"></Table>
-            <h3 class="article">methods</h3>
-            <Table :columns="methods" :data="data25" border size="small" width="1000"></Table>
+          </div>
+          <div v-show="currName=='1-10'">
+            <Divider class="blue" orientation="left">文件上传/下载</Divider>
+            <file-upload v-model="fileInfo"></file-upload>
+            <br />
+            {{fileInfo}}
+            <h3 class="article">基础用法</h3>基本用法，使用
+            <code>v-model</code>
+            实现数据的双向绑定。绑定值对象：{url: 完整下载链接, name: 文件名, size: 文件大小(单位字节，非必须)}
+            <h3 class="article">props</h3>
+            <Table :columns="props" :data="data36" border size="small" width="1000"></Table>
+            <h3 class="article">events</h3>
+            <Table :columns="events" :data="data37" border size="small" width="1000"></Table>
           </div>
           <div v-show="currName=='1-8'">
             <Divider class="blue" orientation="left">身份验证全屏弹框</Divider>
@@ -163,7 +190,7 @@
             <Table :columns="methods" :data="data27" border size="small" width="1000"></Table>
           </div>
           <div v-show="currName=='1-9'">
-            <Divider class="blue" orientation="left">密码强度输入框</Divider>
+            <Divider class="blue" orientation="left">密码强度提示输入框</Divider>
             <setPassword v-model="password" style="width:300px" />
             <h3 class="article">基础用法</h3>基本用法，使用
             <code>v-model</code> 实现数据的双向绑定。
@@ -196,27 +223,29 @@
 </template>
 
 <script>
-import TreeTable from "./tree-table";
 import iconChoose from "@/views/my-components/xboot/icon-choose";
 import countDownButton from "@/views/my-components/xboot/count-down-button";
+import dict from "@/views/my-components/xboot/dict";
 import departmentChoose from "@/views/my-components/xboot/department-choose";
 import departmentTreeChoose from "@/views/my-components/xboot/department-tree-choose";
 import userChoose from "@/views/my-components/xboot/user-choose";
 import uploadPicInput from "@/views/my-components/xboot/upload-pic-input";
 import uploadPicThumb from "@/views/my-components/xboot/upload-pic-thumb";
+import fileUpload from "@/views/my-components/xboot/file-upload";
 import checkPassword from "@/views/my-components/xboot/check-password";
 import setPassword from "@/views/my-components/xboot/set-password";
 export default {
   name: "xboot-components",
   components: {
-    TreeTable,
     iconChoose,
     countDownButton,
+    dict,
     departmentChoose,
     userChoose,
     departmentTreeChoose,
     uploadPicInput,
     uploadPicThumb,
+    fileUpload,
     checkPassword,
     setPassword
   },
@@ -233,6 +262,7 @@ export default {
         "https://s1.ax1x.com/2018/05/19/CcdVQP.png",
         "https://i.loli.net/2018/10/14/5bc2ccaa3149c.png"
       ],
+      fileInfo: {},
       checkPass: false,
       processLoading: false,
       events: [
@@ -436,6 +466,12 @@ export default {
           value: "空"
         },
         {
+          name: "accept",
+          desc: "接受上传的文件类型，等同<input>标签的accept属性",
+          type: "String",
+          value: ".jpg, .jpeg, .png, .gif"
+        },
+        {
           name: "maxSize",
           desc: "单个文件最大限制大小（单位Mb）",
           type: "Number",
@@ -576,6 +612,13 @@ export default {
       ],
       data23: [
         {
+          name: "value",
+          desc:
+            "绑定的值，可使用 v-model 双向绑定。单张时只接受String，多张时只接受 Array",
+          type: "String | Array",
+          value: "空"
+        },
+        {
           name: "multiple",
           desc: "是否选开启多张上传，默认true开启，设为false仅限制一张",
           type: "Boolean",
@@ -587,6 +630,12 @@ export default {
             "限制上传数量，开启多张上传multiple设为true时生效，默认限制10张",
           type: "Number",
           value: "10"
+        },
+        {
+          name: "accept",
+          desc: "接受上传的文件类型，等同<input>标签的accept属性",
+          type: "String",
+          value: ".jpg, .jpeg, .png, .gif"
         },
         {
           name: "maxSize",
@@ -619,14 +668,6 @@ export default {
           type: "返回上传成功图片链接",
           value:
             "当开启多张上传时，返回图片链接数组，如['http://1.png','http://2.png']；限制单张时返回单个图片链接，如'http://3.png'"
-        }
-      ],
-      data25: [
-        {
-          name: "setData",
-          type: "设置图片链接值（回显使用）",
-          value:
-            "根据多张上传配置，传入多张图片链接数组或单张图片链接，如['http://1.png','http://2.png']或'http://3.png'"
         }
       ],
       data26: [
@@ -688,6 +729,188 @@ export default {
             "强度等级得分0-5，包含数字、小写字母、大写字母、特殊字符、长度≥10各累加1分，≤1分强度为弱、2-4分强度为中、5分强度为强",
           value:
             "第一个参数为返回用户输入的内容，第二个参数为强度等级得分0-5，第三个参数为强度汉字"
+        }
+      ],
+      data36: [
+        {
+          name: "value",
+          desc:
+            "绑定的对象Object，可使用 v-model 双向绑定：{url: 完整下载链接, name: 文件名, size: 文件大小(单位字节，非必须)}",
+          type: "Object",
+          value: "{}"
+        },
+        {
+          name: "accept",
+          desc: "接受上传的文件类型，等同<input>标签的accept属性",
+          type: "String",
+          value: "空"
+        },
+        {
+          name: "maxSize",
+          desc: "单个文件最大限制大小（单位Mb）",
+          type: "Number",
+          value: "5"
+        },
+        {
+          name: "type",
+          desc:
+            "按钮类型，可选值为 default、primary、dashed、text、info、success、warning、error或者不设置",
+          type: "String",
+          value: "default"
+        },
+        {
+          name: "ghost",
+          desc: "幽灵属性，使按钮背景透明",
+          type: "Boolean",
+          value: "false"
+        },
+        {
+          name: "size",
+          desc: "按钮大小，可选值为large、small、default或者不设置",
+          type: "String",
+          value: "default"
+        },
+        {
+          name: "shape",
+          desc: "按钮形状，可选值为circle或者不设置",
+          type: "String",
+          value: "-"
+        },
+        {
+          name: "disabled",
+          desc: "设置输入框和上传按钮为禁用状态",
+          type: "Boolean",
+          value: "false"
+        },
+        {
+          name: "icon",
+          desc: "设置上传按钮图标",
+          type: "String",
+          value: "ios-cloud-upload-outline"
+        }
+      ],
+      data37: [
+        {
+          name: "on-change",
+          type: "返回上传成功文件对象信息",
+          value:
+            "Object：{url: 完整下载链接, name: 文件名, size: 文件大小(单位字节)}"
+        }
+      ],
+      data38: [
+        {
+          name: "dict",
+          desc: "获取指定类型的数据字典【必须填入】",
+          type: "String",
+          value: "空"
+        },
+        {
+          name: "value",
+          desc:
+            "绑定的值，可使用 v-model 双向绑定。单选时只接受 String 或 Number，多选时只接受 Array",
+          type: "String | Number | Array",
+          value: "空"
+        },
+        {
+          name: "multiple",
+          desc: "是否支持多选",
+          type: "Boolean",
+          value: "false"
+        },
+        {
+          name: "disabled",
+          desc: "是否禁用",
+          type: "Boolean",
+          value: "false"
+        },
+        {
+          name: "clearable",
+          desc: "是否可以清空选项，只在单选时有效",
+          type: "Boolean",
+          value: "false"
+        },
+        {
+          name: "filterable",
+          desc: "是否支持搜索",
+          type: "Boolean",
+          value: "false"
+        },
+        {
+          name: "size",
+          desc: "选择框大小，可选值为large、small、default或者不填",
+          type: "String",
+          value: "-"
+        },
+        {
+          name: "placeholder",
+          desc: "选择框默认文字",
+          type: "String",
+          value: "请选择"
+        },
+        {
+          name: "placement",
+          desc:
+            "弹窗的展开方向，可选值为 top、bottom、top-start、bottom-start、top-end、bottom-end",
+          type: "String",
+          value: "bottom-start"
+        },
+        {
+          name: "transfer",
+          desc:
+            "是否将弹层放置于 body 内，在 Tabs、带有 fixed 的 Table 列内使用时，建议添加此属性，它将不受父级样式影响，从而达到更好的效果",
+          type: "Boolean",
+          value: "false"
+        },
+        {
+          name: "transfer-class-name",
+          desc: "开启 transfer 时，给浮层添加额外的 class 名称",
+          type: "String",
+          value: "-"
+        },
+        {
+          name: "prefix",
+          desc: "在 Select 内显示图标",
+          type: "String",
+          value: "-"
+        },
+        {
+          name: "max-tag-count",
+          desc: "多选时最多显示多少个 tag",
+          type: "Number",
+          value: "-"
+        },
+        {
+          name: "max-tag-placeholder",
+          desc: "隐藏 tag 时显示的内容，参数是剩余项数量",
+          type: "Function",
+          value: "-"
+        }
+      ],
+      data39: [
+        {
+          name: "on-change",
+          type: "选中的Option变化时触发，默认返回 value",
+          value: "当前选中项"
+        },
+        {
+          name: "on-query-change",
+          type: "搜索词改变时触发",
+          value: "query"
+        },
+        {
+          name: "on-clear",
+          type: "点击清空按钮时触发",
+          value: "无"
+        },
+        {
+          name: "on-open-change",
+          type: "下拉框展开或收起时触发",
+          value: "true / false"
+        },
+        {
+          name: "on-select",
+          type: "选择项目时触发",
+          value: "当前选中项"
         }
       ]
     };

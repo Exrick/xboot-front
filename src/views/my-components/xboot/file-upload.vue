@@ -1,43 +1,6 @@
 <template>
   <div>
-    <div style="display:flex;">
-      <Input
-        v-model="currentValue"
-        @on-change="handleChange"
-        :placeholder="placeholder"
-        :size="size"
-        :disabled="disabled"
-        :readonly="readonly"
-        :maxlength="maxlength"
-        icon="md-eye"
-        style="margin-right:10px;"
-      >
-        <Poptip
-          transfer
-          trigger="hover"
-          title="图片预览"
-          placement="right"
-          width="350"
-          style="width: 17px;cursor:pointer"
-          slot="append"
-        >
-          <Button type="primary" icon="md-eye"></Button>
-          <div slot="content">
-            <img
-              v-show="currentValue"
-              :src="currentValue"
-              style="width: 100%;margin: 0 auto;display: block;cursor:zoom-in"
-              @click="viewImage"
-            />
-            <span v-show="!currentValue">无效的图片链接</span>
-            <a
-              v-show="currentValue"
-              @click="viewImage"
-              style="margin-top:5px;text-align:right;display:block"
-            >查看大图</a>
-          </div>
-        </Poptip>
-      </Input>
+    <div class="file-upload-wrap">
       <Upload
         :action="uploadFileUrl"
         :headers="accessToken"
@@ -50,47 +13,55 @@
         :on-exceeded-size="handleMaxSize"
         :before-upload="beforeUpload"
         :show-upload-list="false"
+        class="file-upload"
       >
-        <Button :loading="loading" :size="size" :disabled="disabled" :icon="icon">上传图片</Button>
+        <Button
+          :loading="loading"
+          :type="type"
+          :ghost="ghost"
+          :shape="shape"
+          :size="size"
+          :disabled="disabled"
+          :icon="icon"
+        >{{text}}</Button>
       </Upload>
+      <Tooltip transfer :content="title" placement="top">
+        <a @click="download">{{currentValue.name}}</a>
+      </Tooltip>
     </div>
   </div>
 </template>
 
 <script>
-import "viewerjs/dist/viewer.css";
-import Viewer from "viewerjs";
 import { uploadFile } from "@/api/index";
 export default {
-  name: "uploadPicInput",
+  name: "fileUpload",
   props: {
-    value: String,
+    value: Object,
     size: String,
-    placeholder: {
-      type: String,
-      default: "可输入图片链接"
+    type: String,
+    ghost: {
+      type: Boolean,
+      default: false
     },
     disabled: {
       type: Boolean,
       default: false
     },
-    readonly: {
-      type: Boolean,
-      default: false
-    },
-    maxlength: Number,
+    shape: String,
     icon: {
       type: String,
       default: "ios-cloud-upload-outline"
+    },
+    text: {
+      type: String,
+      default: "上传文件"
     },
     maxSize: {
       type: Number,
       default: 5
     },
-    accept: {
-      type: String,
-      default: ".jpg, .jpeg, .png, .gif"
-    }
+    accept: String
   },
   computed: {
     format() {
@@ -108,6 +79,7 @@ export default {
   data() {
     return {
       accessToken: {},
+      title: "点击下载",
       currentValue: this.value,
       loading: false,
       uploadFileUrl: uploadFile
@@ -119,15 +91,16 @@ export default {
         accessToken: this.getStore("accessToken")
       };
     },
-    viewImage() {
-      let image = new Image();
-      image.src = this.currentValue;
-      let viewer = new Viewer(image, {
-        hidden: function() {
-          viewer.destroy();
-        }
-      });
-      viewer.show();
+    download() {
+      if (!this.currentValue.url) {
+        this.$Message.error("无效的链接");
+        return;
+      }
+      window.open(
+        this.currentValue.url +
+          "?attname=&response-content-type=application/octet-stream&filename=" +
+          this.currentValue.name
+      );
     },
     handleFormatError(file) {
       this.loading = false;
@@ -136,7 +109,9 @@ export default {
         desc:
           "所选文件‘ " +
           file.name +
-          " ’格式不正确, 请选择 "+this.accept+" 格式文件"
+          " ’格式不正确, 请选择 " +
+          this.accept +
+          " 格式文件"
       });
     },
     handleMaxSize(file) {
@@ -158,7 +133,15 @@ export default {
     handleSuccess(res, file) {
       this.loading = false;
       if (res.success) {
-        this.currentValue = res.result;
+        this.currentValue = {
+          url: res.result,
+          name: file.name,
+          size: file.size
+        };
+        this.title =
+          "点击下载(" +
+          ((file.size * 1.0) / (1024 * 1024)).toFixed(2) +
+          " MB)";
         this.$emit("input", this.currentValue);
         this.$emit("on-change", this.currentValue);
       } else {
@@ -178,6 +161,14 @@ export default {
         return;
       }
       this.currentValue = value;
+      if (this.currentValue.size) {
+        this.title =
+          "点击下载(" +
+          ((this.currentValue.size * 1.0) / (1024 * 1024)).toFixed(2) +
+          " MB)";
+      } else {
+        this.title = "点击下载";
+      }
       this.$emit("on-change", this.currentValue);
     }
   },
@@ -191,4 +182,15 @@ export default {
   }
 };
 </script>
+
+<style lang="less" scoped>
+.file-upload-wrap {
+  display: flex;
+  align-items: center;
+  .file-upload {
+    display: inline-block;
+    margin-right: 10px;
+  }
+}
+</style>
 

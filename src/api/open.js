@@ -1,5 +1,5 @@
 // 统一请求路径前缀在libs/axios.js中修改
-import { getRequest, postRequest, putRequest, deleteRequest, importRequest, uploadFileRequest } from '@/libs/axios';
+import { getRequest, postRequest, putRequest } from '@/libs/axios';
 
 
 // 认证
@@ -39,8 +39,8 @@ export const updateClient = (params) => {
     return putRequest('/client/update', params)
 }
 // 删除客户端
-export const deleteClient = (ids, params) => {
-    return deleteRequest(`/client/delByIds/${ids}`, params)
+export const deleteClient = (params) => {
+    return postRequest('/client/delByIds', params)
 }
 
 

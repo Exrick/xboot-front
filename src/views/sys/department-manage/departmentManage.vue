@@ -6,16 +6,35 @@
   <div class="search">
     <Card>
       <Row class="operation">
-        <Button @click="add" type="primary" icon="md-add">添加子部门</Button>
+        <Button @click="add" type="primary" icon="md-add" v-show="showType=='tree'">添加子部门</Button>
         <Button @click="addRoot" icon="md-add">添加一级部门</Button>
         <Button @click="delAll" icon="md-trash">批量删除</Button>
         <Button @click="getParentList" icon="md-refresh">刷新</Button>
-        <i-switch v-model="strict" size="large" style="margin-left:5px">
+        <Input
+          v-model="searchKey"
+          suffix="ios-search"
+          @on-change="search"
+          placeholder="输入部门名搜索"
+          clearable
+          style="width: 250px"
+          v-show="showType=='list'"
+        />
+        <i-switch v-model="strict" size="large" v-show="showType=='tree'" style="margin-left:5px">
           <span slot="open">级联</span>
           <span slot="close">单选</span>
         </i-switch>
+        <div style="float: right">
+          <RadioGroup v-model="showType" type="button">
+            <Radio title="树结构" label="tree">
+              <Icon type="md-list"></Icon>
+            </Radio>
+            <Radio title="列表" label="list">
+              <Icon type="ios-apps"></Icon>
+            </Radio>
+          </RadioGroup>
+        </div>
       </Row>
-      <Row type="flex" justify="start">
+      <Row type="flex" justify="start" v-show="showType=='tree'">
         <Col :md="8" :lg="8" :xl="6">
           <Alert show-icon>
             当前选择编辑：
@@ -65,8 +84,18 @@
                 not-found-text="该部门暂无用户数据"
                 v-model="form.mainHeader"
                 multiple
+                filterable
+                placeholder="请选择或输入搜索用户"
               >
-                <Option v-for="item in users" :value="item.id" :key="item.id">{{ item.username }}</Option>
+                <Option
+                  v-for="item in users"
+                  :value="item.id"
+                  :key="item.id"
+                  :label="item.nickname"
+                >
+                  <span style="margin-right:10px;">{{ item.nickname }}</span>
+                  <span style="color:#ccc;">{{ item.username }}</span>
+                </Option>
               </Select>
             </FormItem>
             <FormItem label="副负责人" prop="viceHeader">
@@ -75,8 +104,18 @@
                 not-found-text="该部门暂无用户数据"
                 v-model="form.viceHeader"
                 multiple
+                filterable
+                placeholder="请选择或输入搜索用户"
               >
-                <Option v-for="item in users" :value="item.id" :key="item.id">{{ item.username }}</Option>
+                <Option
+                  v-for="item in users"
+                  :value="item.id"
+                  :key="item.id"
+                  :label="item.nickname"
+                >
+                  <span style="margin-right:10px;">{{ item.nickname }}</span>
+                  <span style="color:#ccc;">{{ item.username }}</span>
+                </Option>
               </Select>
             </FormItem>
             <FormItem label="排序值" prop="sortOrder">
@@ -90,9 +129,8 @@
                 <span slot="close">禁用</span>
               </i-switch>
             </FormItem>
-            <Form-item>
+            <Form-item class="br">
               <Button
-                style="margin-right:5px"
                 @click="submitEdit"
                 :loading="submitLoading"
                 type="primary"
@@ -103,6 +141,22 @@
           </Form>
         </Col>
       </Row>
+      <Alert show-icon v-show="showType=='list'">
+        已选择
+        <span class="select-count">{{selectCount}}</span> 项
+        <a class="select-clear" @click="clearSelectAll">清空</a>
+      </Alert>
+      <Table
+        row-key="title"
+        :load-data="loadData"
+        :columns="columns"
+        :data="data"
+        :loading="loading"
+        border
+        ref="table"
+        @on-selection-change="showSelect"
+        v-if="showType=='list'"
+      ></Table>
     </Card>
 
     <Modal :title="modalTitle" v-model="modalVisible" :mask-closable="false" :width="500">
@@ -147,6 +201,7 @@ export default {
   name: "department-manage",
   data() {
     return {
+      showType: "tree",
       loading: true,
       maxHeight: "500px",
       strict: true,
@@ -182,7 +237,84 @@ export default {
       submitLoading: false,
       data: [],
       dataEdit: [],
-      users: []
+      users: [],
+      columns: [
+        {
+          type: "selection",
+          width: 60,
+          align: "center"
+        },
+        {
+          type: "index",
+          width: 60,
+          align: "center"
+        },
+        {
+          title: "部门名称",
+          key: "title",
+          minWidth: 120,
+          sortable: true,
+          tree: true
+        },
+        {
+          title: "排序",
+          key: "sortOrder",
+          width: 150,
+          sortable: true,
+          align: "center",
+          sortType: "asc"
+        },
+        {
+          title: "创建时间",
+          key: "createTime",
+          sortable: true,
+          width: 200
+        },
+        {
+          title: "操作",
+          key: "action",
+          width: 300,
+          align: "center",
+          render: (h, params) => {
+            return h("div", [
+              h(
+                "Button",
+                {
+                  props: {
+                    type: "primary",
+                    size: "small",
+                    icon: "md-add"
+                  },
+                  style: {
+                    marginRight: "5px"
+                  },
+                  on: {
+                    click: () => {
+                      this.tableAdd(params.row);
+                    }
+                  }
+                },
+                " 添加子部门"
+              ),
+              h(
+                "Button",
+                {
+                  props: {
+                    type: "error",
+                    size: "small"
+                  },
+                  on: {
+                    click: () => {
+                      this.remove(params.row);
+                    }
+                  }
+                },
+                "删除"
+              )
+            ]);
+          }
+        }
+      ]
     };
   },
   methods: {
@@ -199,6 +331,7 @@ export default {
             if (e.isParent) {
               e.loading = false;
               e.children = [];
+              e._loading = false;
             }
           });
           this.data = res.result;
@@ -233,6 +366,7 @@ export default {
             if (e.isParent) {
               e.loading = false;
               e.children = [];
+              e._loading = false;
             }
           });
           callback(res.result);
@@ -307,6 +441,13 @@ export default {
       this.$refs.form.resetFields();
       this.form.status = 0;
     },
+    showSelect(e) {
+      this.selectList = e;
+      this.selectCount = e.length;
+    },
+    clearSelectAll() {
+      this.$refs.table.selectAll(false);
+    },
     submitEdit() {
       this.$refs.form.validate(valid => {
         if (valid) {
@@ -341,6 +482,10 @@ export default {
         }
       });
     },
+    tableAdd(v) {
+      this.form = v;
+      this.add();
+    },
     add() {
       if (this.form.id == "" || this.form.id == null) {
         this.$Message.warning("请先点击选择一个部门");
@@ -369,6 +514,11 @@ export default {
       this.selectCount = v.length;
       this.selectList = v;
     },
+    remove(v) {
+      this.selectCount = 1;
+      this.selectList.push(v);
+      this.delAll();
+    },
     delAll() {
       if (this.selectCount <= 0) {
         this.$Message.warning("您还未勾选要删除的数据");
@@ -385,7 +535,7 @@ export default {
             ids += e.id + ",";
           });
           ids = ids.substring(0, ids.length - 1);
-          deleteDepartment(ids).then(res => {
+          deleteDepartment({ids: ids}).then(res => {
             this.$Modal.remove();
             if (res.success) {
               this.$Message.success("删除成功");

@@ -2,8 +2,8 @@ import Vue from 'vue';
 import VueI18n from 'vue-i18n';
 import zhLocale from './lang/zh-CN';
 import enLocale from './lang/en-US';
-import zhCnLocale from 'iview/src/locale/lang/zh-CN';
-import enUsLocale from 'iview/src/locale/lang/en-US';
+import zhCnLocale from 'view-design/src/locale/lang/zh-CN';
+import enUsLocale from 'view-design/src/locale/lang/en-US';
 
 Vue.use(VueI18n);
 

@@ -1,7 +1,7 @@
 export default {
-    xboot: 'XBoot 是很不错的Web前后端分离架构开发平台',
+    xboot: 'XBoot 是很不错的一站式前后端分离快速开发平台',
     usernameLogin: '账户密码登录',
-    mobileLogin: '手机号登录',
+    mobileLogin: '手机短信登录',
     autoLogin: '自动登录',
     forgetPass: '忘记密码',
     otherLogin: '其他方式登录',

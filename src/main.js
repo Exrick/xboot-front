@@ -3,7 +3,6 @@
 import Vue from 'vue'
 import ViewUI from 'view-design'
 import 'view-design/dist/styles/iview.css';
-import iviewArea from 'iview-area'
 import App from './App'
 import { router } from './router/index'
 import store from './store'
@@ -14,12 +13,14 @@ import 'vue-awesome/icons/brands/qq'
 import 'vue-awesome/icons/brands/weixin'
 import 'vue-awesome/icons/brands/weibo'
 import 'vue-awesome/icons/brands/github'
-import { getRequest, postRequest, putRequest, deleteRequest, uploadFileRequest } from '@/libs/axios'
+import { getRequest, postRequest, putRequest, postBodyRequest, getNoAuthRequest, postNoAuthRequest } from '@/libs/axios'
 import { setStore, getStore, removeStore } from '@/libs/storage'
+import { format } from "date-fns";
 import util from '@/libs/util'
 import dictUtil from '@/libs/dictUtil'
 import hasPermission from '@/libs/hasPermission'
 import hasRole from '@/libs/hasRole'
+import iviewArea from '@/views/my-components/iview-area';
 import VueLazyload from 'vue-lazyload'
 import VueClipboard from 'vue-clipboard2'
 import VueApexCharts from 'vue-apexcharts'
@@ -38,17 +39,20 @@ Vue.use(VueClipboard);
 Vue.component('icon', Icon);
 Vue.use(hasPermission);
 Vue.use(hasRole);
+Vue.use(iviewArea);
 Vue.use(VueApexCharts)
 Vue.component('apexchart', VueApexCharts)
 // 挂载全局使用的方法
 Vue.prototype.getRequest = getRequest;
 Vue.prototype.postRequest = postRequest;
 Vue.prototype.putRequest = putRequest;
-Vue.prototype.deleteRequest = deleteRequest;
-Vue.prototype.uploadFileRequest = uploadFileRequest;
+Vue.prototype.postBodyRequest = postBodyRequest;
+Vue.prototype.getNoAuthRequest = getNoAuthRequest;
+Vue.prototype.postNoAuthRequest = postNoAuthRequest;
 Vue.prototype.setStore = setStore;
 Vue.prototype.getStore = getStore;
 Vue.prototype.removeStore = removeStore;
+Vue.prototype.format = format;
 
 /* eslint-disable no-new */
 new Vue({
