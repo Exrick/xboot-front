@@ -9,6 +9,8 @@
         :disabled="disabled"
         :readonly="readonly"
         :maxlength="maxlength"
+        icon="md-eye"
+        style="margin-right:10px;"
       >
         <Poptip
           transfer
@@ -19,7 +21,7 @@
           style="width: 17px;cursor:pointer"
           slot="append"
         >
-          <Icon type="md-eye" size="16" />
+          <Button type="primary" icon="md-eye"></Button>
           <div slot="content">
             <img
               v-show="currentValue"
@@ -48,7 +50,6 @@
         :on-exceeded-size="handleMaxSize"
         :before-upload="beforeUpload"
         :show-upload-list="false"
-        class="upload"
       >
         <Button :loading="loading" :size="size" :disabled="disabled" :icon="icon">上传图片</Button>
       </Upload>
@@ -190,11 +191,4 @@ export default {
   }
 };
 </script>
-
-<style lang="less">
-.upload {
-  display: inline-block;
-  margin-left: 10px;
-}
-</style>
 

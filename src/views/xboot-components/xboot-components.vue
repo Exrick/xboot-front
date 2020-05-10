@@ -145,7 +145,7 @@
             <Table :columns="methods" :data="data10" border size="small" width="1000"></Table>
           </div>
           <div v-show="currName=='1-6'">
-            <Divider class="blue" orientation="left">图片上传文本框</Divider>
+            <Divider class="blue" orientation="left">图片上传输入框</Divider>
             <upload-pic-input v-model="picUrl" style="width:400px"></upload-pic-input>
             <h3 class="article">基础用法</h3>基本用法，使用
             <code>v-model</code> 实现数据的双向绑定。

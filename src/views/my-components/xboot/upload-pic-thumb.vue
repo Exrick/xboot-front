@@ -163,7 +163,9 @@ export default {
         desc:
           "所选文件‘ " +
           file.name +
-          " ’格式不正确, 请选择 "+this.accept+" 图片格式文件"
+          " ’格式不正确, 请选择 " +
+          this.accept +
+          " 图片格式文件"
       });
     },
     handleMaxSize(file) {
@@ -272,6 +274,9 @@ export default {
 
 <style lang="less">
 .upload-thumb {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
   .upload-list {
     display: inline-block;
     text-align: center;
