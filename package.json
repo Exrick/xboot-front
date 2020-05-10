@@ -1,6 +1,6 @@
 {
   "name": "xboot-front",
-  "version": "1.2.0",
+  "version": "2.0.0",
   "description": "XBoot前后端分离开发平台",
   "author": "Exrick <1012139570@qq.com>",
   "private": true,
