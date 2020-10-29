@@ -20,5 +20,13 @@ export default {
     help: '帮助',
     privacy: '隐私',
     terms: '条款',
-    rights: '版权所有'
+    rights: '版权所有',
+    authorize: '授权',
+    authorizeAndSignin: "授权并登录",
+    authorizing: "授权中...",
+    wants: "想要获取您的账户",
+    wants2: "的权限",
+    authAquire: "授权后，将获得以下用户数据",
+    aquireInfo: "获得您的昵称、头像、性别",
+    afterAuth: "授权后将会跳转至"
 };

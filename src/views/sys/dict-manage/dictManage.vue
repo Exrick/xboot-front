@@ -8,7 +8,9 @@
       <Row type="flex" justify="space-between">
         <Col v-if="expand" span="5">
           <Row class="operation">
-            <Button @click="addDcit" type="primary" icon="md-add">添加字典</Button>
+            <Button @click="addDcit" type="primary" icon="md-add"
+              >添加字典</Button
+            >
             <Dropdown @on-click="handleDropdown">
               <Button>
                 更多操作
@@ -23,8 +25,10 @@
           </Row>
           <Alert show-icon>
             当前选择：
-            <span class="select-title">{{editTitle}}</span>
-            <a class="select-clear" v-if="editTitle" @click="cancelEdit">取消选择</a>
+            <span class="select-title">{{ editTitle }}</span>
+            <a class="select-clear" v-if="editTitle" @click="cancelEdit"
+              >取消选择</a
+            >
           </Alert>
           <Input
             v-model="searchKey"
@@ -33,18 +37,27 @@
             placeholder="输入搜索字典"
             clearable
           />
-          <div class="tree-bar" :style="{maxHeight: maxHeight}">
-            <Tree ref="tree" :data="treeData" @on-select-change="selectTree"></Tree>
+          <div class="tree-bar" :style="{ maxHeight: maxHeight }">
+            <Tree
+              ref="tree"
+              :data="treeData"
+              @on-select-change="selectTree"
+            ></Tree>
             <Spin size="large" fix v-if="treeLoading"></Spin>
           </div>
         </Col>
         <div class="expand">
-          <Icon :type="expandIcon" size="16" class="icon" @click="changeExpand" />
+          <Icon
+            :type="expandIcon"
+            size="16"
+            class="icon"
+            @click="changeExpand"
+          />
         </div>
         <Col :span="span">
           <Row v-show="openSearch" @keydown.enter.native="handleSearch">
             <Form ref="searchForm" :model="searchForm" inline :label-width="70">
-              <Form-item label="数据名称" prop="title">
+              <FormItem label="数据名称" prop="title">
                 <Input
                   type="text"
                   v-model="searchForm.title"
@@ -52,8 +65,8 @@
                   clearable
                   style="width: 200px"
                 />
-              </Form-item>
-              <Form-item label="状态" prop="status">
+              </FormItem>
+              <FormItem label="状态" prop="status">
                 <Select
                   v-model="searchForm.status"
                   placeholder="请选择"
@@ -63,24 +76,30 @@
                   <Option value="0">正常</Option>
                   <Option value="-1">禁用</Option>
                 </Select>
-              </Form-item>
-              <Form-item style="margin-left:-35px;" class="br">
-                <Button @click="handleSearch" type="primary" icon="ios-search">搜索</Button>
+              </FormItem>
+              <FormItem style="margin-left: -35px" class="br">
+                <Button @click="handleSearch" type="primary" icon="ios-search"
+                  >搜索</Button
+                >
                 <Button @click="handleReset">重置</Button>
-              </Form-item>
+              </FormItem>
             </Form>
           </Row>
           <Row class="operation">
             <Button @click="add" type="primary" icon="md-add">添加数据</Button>
             <Button @click="delAll" icon="md-trash">批量删除</Button>
             <Button @click="getDataList" icon="md-refresh">刷新数据</Button>
-            <Button type="dashed" @click="openSearch=!openSearch">{{openSearch ? "关闭搜索" : "开启搜索"}}</Button>
-            <Button type="dashed" @click="openTip=!openTip">{{openTip ? "关闭提示" : "开启提示"}}</Button>
+            <Button type="dashed" @click="openSearch = !openSearch">{{
+              openSearch ? "关闭搜索" : "开启搜索"
+            }}</Button>
+            <Button type="dashed" @click="openTip = !openTip">{{
+              openTip ? "关闭提示" : "开启提示"
+            }}</Button>
           </Row>
           <Row v-show="openTip">
             <Alert show-icon>
               已选择
-              <span class="select-count">{{selectCount}}</span> 项
+              <span class="select-count">{{ selectList.length }}</span> 项
               <a class="select-clear" @click="clearSelectAll">清空</a>
             </Alert>
           </Row>
@@ -103,7 +122,7 @@
               :page-size="searchForm.pageSize"
               @on-change="changePage"
               @on-page-size-change="changePageSize"
-              :page-size-opts="[10,20,50]"
+              :page-size-opts="[10, 20, 50]"
               size="small"
               show-total
               show-elevator
@@ -114,13 +133,28 @@
       </Row>
     </Card>
 
-    <Modal :title="dictModalTitle" v-model="dictModalVisible" :mask-closable="false" :width="500">
-      <Form ref="dictForm" :model="dictForm" :label-width="85" :rules="dictFormValidate">
+    <Modal
+      :title="dictModalTitle"
+      v-model="dictModalVisible"
+      :mask-closable="false"
+      :width="500"
+    >
+      <Form
+        ref="dictForm"
+        :model="dictForm"
+        :label-width="85"
+        :rules="dictFormValidate"
+      >
         <FormItem label="字典名称" prop="title">
           <Input v-model="dictForm.title" />
         </FormItem>
         <FormItem label="字典类型" prop="type" class="block-tool">
-          <Tooltip placement="right" :max-width="220" transfer content="建议英文名且需唯一 非开发人员谨慎修改">
+          <Tooltip
+            placement="right"
+            :max-width="220"
+            transfer
+            content="建议英文名且需唯一 非开发人员谨慎修改"
+          >
             <Input v-model="dictForm.type" />
           </Tooltip>
         </FormItem>
@@ -128,18 +162,36 @@
           <Input v-model="dictForm.description" />
         </FormItem>
         <FormItem label="排序值" prop="sortOrder">
-          <Tooltip trigger="hover" placement="right" content="值越小越靠前，支持小数">
-            <InputNumber :max="1000" :min="0" v-model="dictForm.sortOrder"></InputNumber>
+          <Tooltip
+            trigger="hover"
+            placement="right"
+            content="值越小越靠前，支持小数"
+          >
+            <InputNumber
+              :max="1000"
+              :min="0"
+              v-model="dictForm.sortOrder"
+            ></InputNumber>
           </Tooltip>
         </FormItem>
       </Form>
       <div slot="footer">
-        <Button type="text" @click="dictModalVisible=false">取消</Button>
-        <Button type="primary" :loading="submitLoading" @click="handelSubmitDict">提交</Button>
+        <Button type="text" @click="dictModalVisible = false">取消</Button>
+        <Button
+          type="primary"
+          :loading="submitLoading"
+          @click="handelSubmitDict"
+          >提交</Button
+        >
       </div>
     </Modal>
 
-    <Modal :title="modalTitle" v-model="modalVisible" :mask-closable="false" :width="500">
+    <Modal
+      :title="modalTitle"
+      v-model="modalVisible"
+      :mask-closable="false"
+      :width="500"
+    >
       <Form ref="form" :model="form" :label-width="80" :rules="formValidate">
         <FormItem label="名称" prop="title">
           <Input v-model="form.title" />
@@ -151,20 +203,35 @@
           <Input v-model="form.description" />
         </FormItem>
         <FormItem label="排序值" prop="sortOrder">
-          <Tooltip trigger="hover" placement="right" content="值越小越靠前，支持小数">
-            <InputNumber :max="1000" :min="0" v-model="form.sortOrder"></InputNumber>
+          <Tooltip
+            trigger="hover"
+            placement="right"
+            content="值越小越靠前，支持小数"
+          >
+            <InputNumber
+              :max="1000"
+              :min="0"
+              v-model="form.sortOrder"
+            ></InputNumber>
           </Tooltip>
         </FormItem>
         <FormItem label="是否启用" prop="status">
-          <i-switch size="large" v-model="form.status" :true-value="0" :false-value="-1">
+          <i-switch
+            size="large"
+            v-model="form.status"
+            :true-value="0"
+            :false-value="-1"
+          >
             <span slot="open">启用</span>
             <span slot="close">禁用</span>
           </i-switch>
         </FormItem>
       </Form>
       <div slot="footer">
-        <Button type="text" @click="modalVisible=false">取消</Button>
-        <Button type="primary" :loading="submitLoading" @click="handelSubmit">提交</Button>
+        <Button type="text" @click="modalVisible = false">取消</Button>
+        <Button type="primary" :loading="submitLoading" @click="handelSubmit"
+          >提交</Button
+        >
       </div>
     </Modal>
   </div>
@@ -180,7 +247,7 @@ import {
   getAllDictDataList,
   addDictData,
   editDictData,
-  deleteData
+  deleteData,
 } from "@/api/index";
 export default {
   name: "dic-manage",
@@ -198,7 +265,6 @@ export default {
       expandIcon: "ios-arrow-back",
       selectNode: {},
       treeData: [], // 树数据
-      selectCount: 0, // 多选计数
       selectList: [], // 多选数据
       searchForm: {
         // 搜索框对应data对象
@@ -207,7 +273,7 @@ export default {
         pageNumber: 1, // 当前页数
         pageSize: 10, // 页面大小
         sort: "sortOrder", // 默认排序字段
-        order: "asc" // 默认排序方式
+        order: "asc", // 默认排序方式
       },
       modalType: 0, // 添加或编辑标识
       modalVisible: false, // 添加或编辑显示
@@ -218,7 +284,7 @@ export default {
         title: "",
         type: "",
         description: "",
-        sortOrder: 0
+        sortOrder: 0,
       },
       form: {
         // 添加或编辑表单对象初始化数据
@@ -226,7 +292,7 @@ export default {
         value: "",
         status: 0,
         description: "",
-        sortOrder: 0
+        sortOrder: 0,
       },
       dictFormValidate: {
         // 表单验证规则
@@ -237,9 +303,9 @@ export default {
             required: true,
             type: "number",
             message: "排序值不能为空",
-            trigger: "blur"
-          }
-        ]
+            trigger: "blur",
+          },
+        ],
       },
       formValidate: {
         // 表单验证规则
@@ -250,52 +316,53 @@ export default {
             required: true,
             type: "number",
             message: "排序值不能为空",
-            trigger: "blur"
-          }
-        ]
+            trigger: "blur",
+          },
+        ],
       },
       columns: [
         // 表头
         {
           type: "selection",
           width: 60,
-          align: "center"
+          align: "center",
         },
         {
           type: "index",
           width: 60,
-          align: "center"
+          align: "center",
         },
         {
           title: "名称",
           key: "title",
-          minWidth: 150,
-          sortable: true
+          minWidth: 160,
+          sortable: true,
         },
         {
           title: "数据值",
           key: "value",
-          width: 150,
-          sortable: true
+          minWidth: 160,
+          sortable: true,
         },
         {
           title: "备注",
           key: "description",
           width: 150,
-          sortable: true
+          sortable: true,
         },
         {
           title: "排序值",
           key: "sortOrder",
           width: 100,
+          align: "center",
           sortable: true,
-          sortType: "asc"
+          sortType: "asc",
         },
         {
           title: "状态",
           key: "status",
           align: "center",
-          width: 130,
+          width: 120,
           render: (h, params) => {
             let re = "";
             if (params.row.status == 0) {
@@ -303,76 +370,70 @@ export default {
                 h("Badge", {
                   props: {
                     status: "success",
-                    text: "正常启用"
-                  }
-                })
+                    text: "启用",
+                  },
+                }),
               ]);
             } else if (params.row.status == -1) {
               return h("div", [
                 h("Badge", {
                   props: {
                     status: "error",
-                    text: "禁用"
-                  }
-                })
+                    text: "禁用",
+                  },
+                }),
               ]);
             }
-          }
+          },
         },
         {
           title: "创建时间",
           key: "createTime",
-          width: 250,
-          sortable: true
+          width: 200,
+          sortable: true,
         },
         {
           title: "操作",
           key: "action",
-          width: 160,
+          width: 150,
           align: "center",
           fixed: "right",
           render: (h, params) => {
             return h("div", [
               h(
-                "Button",
+                "a",
                 {
-                  props: {
-                    type: "primary",
-                    size: "small"
-                  },
-                  style: {
-                    marginRight: "5px"
-                  },
                   on: {
                     click: () => {
                       this.edit(params.row);
-                    }
-                  }
+                    },
+                  },
                 },
                 "编辑"
               ),
+              h("Divider", {
+                props: {
+                  type: "vertical",
+                },
+              }),
               h(
-                "Button",
+                "a",
                 {
-                  props: {
-                    type: "error",
-                    size: "small"
-                  },
                   on: {
                     click: () => {
                       this.remove(params.row);
-                    }
-                  }
+                    },
+                  },
                 },
                 "删除"
-              )
+              ),
             ]);
-          }
-        }
+          },
+        },
       ],
       submitLoading: false, // 添加或编辑提交状态
       data: [], //表单数据
-      total: 0 // 表单数据总数
+      total: 0, // 表单数据总数
     };
   },
   methods: {
@@ -384,7 +445,7 @@ export default {
     },
     getAllDict() {
       this.treeLoading = true;
-      getAllDictList().then(res => {
+      getAllDictList().then((res) => {
         this.treeLoading = false;
         if (res.success) {
           this.treeData = res.result;
@@ -395,7 +456,7 @@ export default {
       // 搜索树
       if (this.searchKey) {
         this.treeLoading = true;
-        searchDict({ key: this.searchKey }).then(res => {
+        searchDict({ key: this.searchKey }).then((res) => {
           this.treeLoading = false;
           if (res.success) {
             this.treeData = res.result;
@@ -439,7 +500,6 @@ export default {
       this.getDataList();
     },
     changeSelect(v) {
-      this.selectCount = v.length;
       this.selectList = v;
     },
     changeExpand() {
@@ -471,11 +531,15 @@ export default {
       if (!this.searchForm.status) {
         this.searchForm.status = "";
       }
-      getAllDictDataList(this.searchForm).then(res => {
+      getAllDictDataList(this.searchForm).then((res) => {
         this.loading = false;
         if (res.success) {
           this.data = res.result.content;
           this.total = res.result.totalElements;
+          if (this.data.length == 0 && this.searchForm.pageNumber > 1) {
+            this.searchForm.pageNumber -= 1;
+            this.getDataList();
+          }
         }
       });
     },
@@ -501,7 +565,6 @@ export default {
     },
     showSelect(e) {
       this.selectList = e;
-      this.selectCount = e.length;
     },
     clearSelectAll() {
       this.$refs.table.selectAll(false);
@@ -529,6 +592,8 @@ export default {
       this.modalType = 0;
       this.dictModalTitle = "添加字典";
       this.$refs.dictForm.resetFields();
+      this.dictForm.sortOrder = this.treeData.length + 1;
+      this.cancelEdit();
       this.dictModalVisible = true;
     },
     editDcit() {
@@ -547,14 +612,14 @@ export default {
         content: "您确认要删除 " + this.selectNode.title + " ?",
         onOk: () => {
           // 删除
-          deleteDict({ids: this.selectNode.id}).then(res => {
+          deleteDict({ ids: this.selectNode.id }).then((res) => {
             this.$Modal.remove();
             if (res.success) {
               this.$Message.success("操作成功");
               this.refreshDict();
             }
           });
-        }
+        },
       });
     },
     add() {
@@ -565,11 +630,16 @@ export default {
       this.modalType = 0;
       this.modalTitle = "添加字典 " + this.editTitle + " 的数据";
       this.$refs.form.resetFields();
+      this.form.sortOrder = this.data.length + 1;
       this.modalVisible = true;
     },
     edit(v) {
       this.modalType = 1;
-      this.modalTitle = "编辑字典 " + this.editTitle + " 的数据";
+      if (this.editTitle) {
+        this.modalTitle = "编辑字典 " + this.editTitle + " 的数据";
+      } else {
+        this.modalTitle = "编辑字典数据";
+      }
       this.$refs.form.resetFields();
       // 转换null为""
       for (let attr in v) {
@@ -583,13 +653,13 @@ export default {
       this.modalVisible = true;
     },
     handelSubmitDict() {
-      this.$refs.dictForm.validate(valid => {
+      this.$refs.dictForm.validate((valid) => {
         if (valid) {
           this.submitLoading = true;
           if (this.modalType == 0) {
             // 添加 避免编辑后传入id等数据 记得删除
             delete this.dictForm.id;
-            addDict(this.dictForm).then(res => {
+            addDict(this.dictForm).then((res) => {
               this.submitLoading = false;
               if (res.success) {
                 this.$Message.success("操作成功");
@@ -599,7 +669,7 @@ export default {
             });
           } else if (this.modalType == 1) {
             // 编辑
-            editDict(this.dictForm).then(res => {
+            editDict(this.dictForm).then((res) => {
               this.submitLoading = false;
               if (res.success) {
                 this.$Message.success("操作成功");
@@ -612,14 +682,14 @@ export default {
       });
     },
     handelSubmit() {
-      this.$refs.form.validate(valid => {
+      this.$refs.form.validate((valid) => {
         if (valid) {
           this.submitLoading = true;
           if (this.modalType == 0) {
             // 添加 避免编辑后传入id等数据 记得删除
             delete this.form.id;
             this.form.dictId = this.selectNode.id;
-            addDictData(this.form).then(res => {
+            addDictData(this.form).then((res) => {
               this.submitLoading = false;
               if (res.success) {
                 this.$Message.success("操作成功");
@@ -629,7 +699,7 @@ export default {
             });
           } else if (this.modalType == 1) {
             // 编辑
-            editDictData(this.form).then(res => {
+            editDictData(this.form).then((res) => {
               this.submitLoading = false;
               if (res.success) {
                 this.$Message.success("操作成功");
@@ -648,33 +718,34 @@ export default {
         loading: true,
         onOk: () => {
           // 删除
-          deleteData({ids: v.id}).then(res => {
+          deleteData({ ids: v.id }).then((res) => {
             this.$Modal.remove();
             if (res.success) {
+              this.clearSelectAll();
               this.$Message.success("操作成功");
               this.getDataList();
             }
           });
-        }
+        },
       });
     },
     delAll() {
-      if (this.selectCount <= 0) {
+      if (this.selectList.length <= 0) {
         this.$Message.warning("您还未选择要删除的数据");
         return;
       }
       this.$Modal.confirm({
         title: "确认删除",
-        content: "您确认要删除所选的 " + this.selectCount + " 条数据?",
+        content: "您确认要删除所选的 " + this.selectList.length + " 条数据?",
         loading: true,
         onOk: () => {
           let ids = "";
-          this.selectList.forEach(function(e) {
+          this.selectList.forEach(function (e) {
             ids += e.id + ",";
           });
           ids = ids.substring(0, ids.length - 1);
           // 批量删除
-          deleteData({ids: ids}).then(res => {
+          deleteData({ ids: ids }).then((res) => {
             this.$Modal.remove();
             if (res.success) {
               this.$Message.success("操作成功");
@@ -682,15 +753,15 @@ export default {
               this.getDataList();
             }
           });
-        }
+        },
       });
-    }
+    },
   },
   mounted() {
     // 计算高度
     let height = document.documentElement.clientHeight;
     this.maxHeight = Number(height - 287) + "px";
     this.init();
-  }
+  },
 };
 </script>

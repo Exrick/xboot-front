@@ -1,48 +1,67 @@
 <template>
   <div class="user-edit">
     <!-- Drawer抽屉 -->
-    <Drawer :title="title" v-model="visible" width="720" draggable :mask-closable="type=='0'">
-      <div :style="{maxHeight: maxHeight}" class="drawer-content">
-        <div class="user-title">
-          <div class="info-title">基本信息</div>
-          <Avatar :src="form.avatar" size="large" v-show="type!='2'" />
+    <Drawer
+      :title="title"
+      v-model="visible"
+      width="720"
+      draggable
+      :mask-closable="type == '0'"
+    >
+      <div :style="{ maxHeight: maxHeight }" class="drawer-content">
+        <div class="drawer-header">
+          <div style="margin-right: 16px">基本信息</div>
+          <Avatar :src="form.avatar" size="large" v-show="type != '2'" />
         </div>
-        <Form label-colon v-show="type!='2'">
+        <Form label-colon v-show="type != '2'">
           <Row :gutter="32">
             <Col span="12">
               <FormItem label="用户ID">
-                {{form.id}}
+                {{ form.id }}
                 <Tooltip trigger="hover" placement="right" content="账户已禁用">
                   <Icon
-                    v-show="form.status==-1"
+                    v-show="form.status == -1"
                     type="md-lock"
                     size="18"
-                    style="margin-left:10px;cursor:pointer"
+                    style="margin-left: 10px; cursor: pointer"
                   />
                 </Tooltip>
               </FormItem>
             </Col>
             <Col span="12">
               <FormItem label="登录账号">
-                {{form.username}}
-                <Tooltip trigger="hover" placement="right" :content="`密码强度：${form.passStrength}`">
+                {{ form.username }}
+                <Tooltip
+                  trigger="hover"
+                  placement="right"
+                  :content="`密码强度：${form.passStrength}`"
+                >
                   <Icon
                     v-show="form.passStrength"
                     type="md-key"
                     :color="passColor"
                     size="18"
-                    style="margin-left:10px;cursor:pointer"
+                    style="margin-left: 10px; cursor: pointer"
                   />
                 </Tooltip>
               </FormItem>
             </Col>
           </Row>
         </Form>
-        <Form ref="form" :model="form" :rules="formValidate" label-position="top">
-          <Row :gutter="32" v-if="type=='2'">
+        <Form
+          ref="form"
+          :model="form"
+          :rules="formValidate"
+          label-position="top"
+        >
+          <Row :gutter="32" v-if="type == '2'">
             <Col span="12">
               <FormItem label="登录账号" prop="username">
-                <Input v-model="form.username" autocomplete="off" :maxlength="16" />
+                <Input
+                  v-model="form.username"
+                  autocomplete="off"
+                  :maxlength="16"
+                />
               </FormItem>
             </Col>
             <Col span="12">
@@ -71,12 +90,13 @@
             </Col>
             <Col span="12">
               <FormItem label="性别">
-                <Select v-model="form.sex">
+                <Select v-model="form.sex" transfer>
                   <Option
                     v-for="(item, i) in this.$store.state.dict.sex"
                     :key="i"
                     :value="item.value"
-                  >{{item.title}}</Option>
+                    >{{ item.title }}</Option
+                  >
                 </Select>
               </FormItem>
             </Col>
@@ -84,12 +104,15 @@
           <Row :gutter="32">
             <Col span="12">
               <FormItem label="所属部门">
-                <department-tree-choose @on-change="handleSelectDepTree" ref="depTree"></department-tree-choose>
+                <department-tree-choose
+                  @on-change="handleSelectDepTree"
+                  ref="depTree"
+                ></department-tree-choose>
               </FormItem>
             </Col>
             <Col span="12">
               <FormItem label="用户类型">
-                <Select v-model="form.type" placeholder="请选择">
+                <Select v-model="form.type" transfer placeholder="请选择">
                   <Option :value="0">普通用户</Option>
                   <Option :value="1">管理员</Option>
                 </Select>
@@ -104,30 +127,30 @@
             </Col>
             <Col span="12">
               <FormItem label="角色分配" prop="roleIds">
-                <Select v-model="form.roleIds" multiple>
+                <Select v-model="form.roleIds" multiple transfer>
                   <Option
                     v-for="item in roleList"
                     :value="item.id"
                     :key="item.id"
                     :label="item.name"
                   >
-                    <span style="margin-right:10px;">{{ item.name }}</span>
-                    <span style="color:#ccc;">{{ item.description }}</span>
+                    <span style="margin-right: 10px">{{ item.name }}</span>
+                    <span style="color: #ccc">{{ item.description }}</span>
                   </Option>
                 </Select>
               </FormItem>
             </Col>
           </Row>
           <Divider />
-          <p class="info-header">个人资料</p>
+          <p class="drawer-title">个人资料</p>
           <Row :gutter="32">
             <Col span="12">
-              <FormItem label="所在地区" prop="addressArray">
+              <FormItem label="所在地区" prop="address">
                 <al-cascader
-                  v-model="form.addressArray"
-                  @on-change="changeAddress"
-                  data-type="code"
+                  v-model="form.address"
+                  data-type="name"
                   level="2"
+                  transfer
                 />
               </FormItem>
             </Col>
@@ -139,12 +162,12 @@
           </Row>
           <Row :gutter="32">
             <Col span="12">
-              <FormItem label="生日">
+              <FormItem label="生日" prop="birth">
                 <DatePicker
                   v-model="form.birth"
-                  @on-change="changeBirth"
                   style="display: block"
                   type="date"
+                  transfer
                 ></DatePicker>
               </FormItem>
             </Col>
@@ -156,8 +179,10 @@
           </Row>
         </Form>
       </div>
-      <div class="drawer-footer br" v-show="type!='0'">
-        <Button type="primary" :loading="submitLoading" @click="submit">提交</Button>
+      <div class="drawer-footer br" v-show="type != '0'">
+        <Button type="primary" :loading="submitLoading" @click="submit"
+          >提交</Button
+        >
         <Button @click="visible = false">取消</Button>
       </div>
     </Drawer>
@@ -169,7 +194,7 @@ import { getAllRoleList, addUser, editUser } from "@/api/index";
 import {
   validateUsername,
   validateMobile,
-  validatePassword
+  validatePassword,
 } from "@/libs/validate";
 import departmentTreeChoose from "@/views/my-components/xboot/department-tree-choose";
 import uploadPicInput from "@/views/my-components/xboot/upload-pic-input";
@@ -179,54 +204,54 @@ export default {
   components: {
     departmentTreeChoose,
     uploadPicInput,
-    SetPassword
+    SetPassword,
   },
   props: {
     value: {
       type: Boolean,
-      default: false
+      default: false,
     },
     data: {
-      type: Object
+      type: Object,
     },
     type: {
       type: String,
-      default: "0"
-    }
+      default: "0",
+    },
   },
   data() {
     return {
+      roleList: [],
       visible: this.value,
       title: "",
       passColor: "",
       submitLoading: false,
       maxHeight: 510,
       form: {
-        addressArray: []
+        address: [],
       },
       formValidate: {
         // 表单验证规则
         username: [
           { required: true, message: "请输入登录账号", trigger: "blur" },
-          { validator: validateUsername, trigger: "blur" }
+          { validator: validateUsername, trigger: "blur" },
         ],
         nickname: [
-          { required: true, message: "请输入用户名", trigger: "blur" }
+          { required: true, message: "请输入用户名", trigger: "blur" },
         ],
         mobile: [
           { required: true, message: "请输入手机号", trigger: "blur" },
-          { validator: validateMobile, trigger: "blur" }
+          { validator: validateMobile, trigger: "blur" },
         ],
         password: [
           { required: true, message: "请输入密码", trigger: "blur" },
-          { validator: validatePassword, trigger: "blur" }
+          { validator: validatePassword, trigger: "blur" },
         ],
         email: [
           { required: true, message: "请输入邮箱地址" },
-          { type: "email", message: "邮箱格式不正确" }
+          { type: "email", message: "邮箱格式不正确" },
         ]
       },
-      roleList: []
     };
   },
   methods: {
@@ -234,7 +259,7 @@ export default {
       this.getRoleList();
     },
     getRoleList() {
-      getAllRoleList().then(res => {
+      getAllRoleList().then((res) => {
         if (res.success) {
           this.roleList = res.result;
         }
@@ -243,26 +268,19 @@ export default {
     handleSelectDepTree(v) {
       this.form.departmentId = v;
     },
-    changeAddress(v) {
-      this.form.address = JSON.stringify(this.form.addressArray);
-    },
     changePass(v, grade, strength) {
       this.form.passStrength = strength;
     },
-    changeBirth(v, d) {
-      this.form.birth = v;
-    },
     submit() {
-      this.$refs.form.validate(valid => {
+      this.$refs.form.validate((valid) => {
         if (valid) {
           if (typeof this.form.birth == "object") {
             this.form.birth = this.format(this.form.birth, "yyyy-MM-dd");
           }
-
           if (this.type == "1") {
             // 编辑
             this.submitLoading = true;
-            editUser(this.form).then(res => {
+            editUser(this.form).then((res) => {
               this.submitLoading = false;
               if (res.success) {
                 this.$Message.success("操作成功");
@@ -273,7 +291,7 @@ export default {
           } else {
             // 添加
             this.submitLoading = true;
-            addUser(this.form).then(res => {
+            addUser(this.form).then((res) => {
               this.submitLoading = false;
               if (res.success) {
                 this.$Message.success("操作成功");
@@ -291,10 +309,12 @@ export default {
       }
       if (this.type == "1") {
         this.title = "编辑用户";
-        this.maxHeight = Number(document.documentElement.clientHeight - 121) + "px";
+        this.maxHeight =
+          Number(document.documentElement.clientHeight - 121) + "px";
       } else if (this.type == "2") {
         this.title = "添加用户";
-        this.maxHeight = Number(document.documentElement.clientHeight - 121) + "px";
+        this.maxHeight =
+          Number(document.documentElement.clientHeight - 121) + "px";
       } else {
         this.title = "用户详情";
         this.maxHeight = "100%";
@@ -306,15 +326,15 @@ export default {
         let data = this.data;
         // 地址
         if (data.address) {
-          data.addressArray = JSON.parse(data.address);
+          data.address = data.address.split(",");
         } else {
-          data.addressArray = [];
+          data.address = [];
         }
         // 部门
         this.$refs.depTree.setData(data.departmentId, data.departmentTitle);
         // 角色
         let selectRolesId = [];
-        data.roles.forEach(function(e) {
+        data.roles.forEach(function (e) {
           selectRolesId.push(e.id);
         });
         data.roleIds = selectRolesId;
@@ -336,11 +356,11 @@ export default {
         this.form = {
           type: 0,
           sex: "",
-          addressArray: []
+          address: []
         };
       }
       this.visible = value;
-    }
+    },
   },
   watch: {
     value(val) {
@@ -348,38 +368,14 @@ export default {
     },
     visible(value) {
       this.$emit("input", value);
-    }
+    },
   },
   mounted() {
     this.init();
-  }
+  },
 };
 </script>
 
 <style lang="less">
-@import "../../../styles/table-common.less";
-.drawer-content {
-  overflow: auto;
-}
-.drawer-content::-webkit-scrollbar {
-  display: none;
-}
-.user-title {
-  display: flex;
-  align-items: center;
-  margin-bottom: 16px;
-  .info-title {
-    font-size: 16px;
-    color: rgba(0, 0, 0, 0.85);
-    display: block;
-    margin-right: 16px;
-  }
-}
-.info-header {
-  font-size: 16px;
-  color: rgba(0, 0, 0, 0.85);
-  display: block;
-  margin-bottom: 16px;
-}
+@import "../../../styles/drawer-common.less";
 </style>
-

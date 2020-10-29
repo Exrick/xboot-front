@@ -78,14 +78,15 @@ export default {
           render: (h, params) => {
             if (
               !params.row.needPerm ||
-              this.$route.meta.permTypes.includes("view")
+              (this.$route.meta.permTypes &&
+                this.$route.meta.permTypes.includes("view"))
             ) {
               return h("div", [
                 h(
                   "Button",
                   {
                     props: {
-                      type: "primary",
+                      // type: "primary",
                       size: "small",
                       icon: "md-eye"
                     },

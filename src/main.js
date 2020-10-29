@@ -7,12 +7,6 @@ import App from './App'
 import { router } from './router/index'
 import store from './store'
 import i18n from '@/locale'
-import Icon from 'vue-awesome/components/Icon'
-// 按需引入awesome图标
-import 'vue-awesome/icons/brands/qq'
-import 'vue-awesome/icons/brands/weixin'
-import 'vue-awesome/icons/brands/weibo'
-import 'vue-awesome/icons/brands/github'
 import { getRequest, postRequest, putRequest, postBodyRequest, getNoAuthRequest, postNoAuthRequest } from '@/libs/axios'
 import { setStore, getStore, removeStore } from '@/libs/storage'
 import { format } from "date-fns";
@@ -24,6 +18,7 @@ import iviewArea from '@/views/my-components/iview-area';
 import VueLazyload from 'vue-lazyload'
 import VueClipboard from 'vue-clipboard2'
 import VueApexCharts from 'vue-apexcharts'
+import './assets/iconfont/iconfont.css'
 import '@babel/polyfill'
 
 Vue.config.productionTip = false
@@ -34,9 +29,7 @@ Vue.use(VueLazyload, {
 Vue.use(ViewUI, {
     i18n: (key, value) => i18n.t(key, value)
 });
-Vue.use(iviewArea);
 Vue.use(VueClipboard);
-Vue.component('icon', Icon);
 Vue.use(hasPermission);
 Vue.use(hasRole);
 Vue.use(iviewArea);

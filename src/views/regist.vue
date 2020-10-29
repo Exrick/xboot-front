@@ -5,7 +5,7 @@
       justify="center"
       align="middle"
       @keydown.enter.native="submitRegist"
-      style="height:100%"
+      style="height: 100%"
     >
       <Col class="layout">
         <div>
@@ -32,13 +32,27 @@
                 />
               </FormItem>
               <FormItem prop="email">
-                <Input v-model="form.email" size="large" clearable placeholder="请输入邮箱" />
+                <Input
+                  v-model="form.email"
+                  size="large"
+                  clearable
+                  placeholder="请输入邮箱"
+                />
               </FormItem>
               <FormItem prop="password">
-                <SetPassword size="large" v-model="form.password" @on-change="changeInputPass" />
+                <SetPassword
+                  size="large"
+                  v-model="form.password"
+                  @on-change="changeInputPass"
+                />
               </FormItem>
               <FormItem prop="mobile">
-                <Input v-model="form.mobile" size="large" clearable placeholder="请输入手机号">
+                <Input
+                  v-model="form.mobile"
+                  size="large"
+                  clearable
+                  placeholder="请输入手机号"
+                >
                   <Select v-model="select" slot="prepend" style="width: 70px">
                     <Option value="86">+86</Option>
                   </Select>
@@ -95,7 +109,7 @@ import { regist } from "@/api/index";
 import {
   validateUsername,
   validateMobile,
-  validatePassword
+  validatePassword,
 } from "@/libs/validate";
 import Header from "@/views/main-components/header";
 import Footer from "@/views/main-components/footer";
@@ -108,7 +122,7 @@ export default {
     LangSwitch,
     SetPassword,
     Header,
-    Footer
+    Footer,
   },
   data() {
     return {
@@ -123,51 +137,51 @@ export default {
         password: "",
         confirmPass: "",
         mobile: "",
-        code: ""
+        code: "",
       },
       rules: {
         username: [
           {
             required: true,
             message: "请输入注册登录账号",
-            trigger: "blur"
+            trigger: "blur",
           },
-          { validator: validateUsername, trigger: "blur" }
+          { validator: validateUsername, trigger: "blur" },
         ],
         nickname: [
           {
             required: true,
             message: "请输入用户名（昵称）",
-            trigger: "blur"
-          }
+            trigger: "blur",
+          },
         ],
         password: [
           {
             required: true,
             message: "请输入密码",
-            trigger: "blur"
+            trigger: "blur",
           },
           {
             validator: validatePassword,
-            trigger: "blur"
-          }
+            trigger: "blur",
+          },
         ],
         email: [
           { required: true, message: "请输入邮箱地址" },
-          { type: "email", message: "邮箱格式不正确" }
+          { type: "email", message: "邮箱格式不正确" },
         ],
         mobile: [
           {
             required: true,
             message: "请输入手机号",
-            trigger: "blur"
+            trigger: "blur",
           },
           {
             validator: validateMobile,
-            trigger: "blur"
-          }
-        ]
-      }
+            trigger: "blur",
+          },
+        ],
+      },
     };
   },
   methods: {
@@ -175,14 +189,14 @@ export default {
     sendSmsCode() {
       this.$Modal.info({
         title: "抱歉，请获取完整版",
-        content: "支付链接: http://xpay.exrick.cn/pay?xboot"
+        content: "支付链接: http://xpay.exrick.cn/pay?xboot",
       });
     },
     changeInputPass(v, grade, strength) {
       this.form.passStrength = strength;
     },
     submitRegist() {
-      this.$refs.registForm.validate(valid => {
+      this.$refs.registForm.validate((valid) => {
         if (valid) {
           if (!this.form.code) {
             this.errorCode = "验证码不能为空";
@@ -191,25 +205,25 @@ export default {
             this.errorCode = "";
           }
           this.loading = true;
-          regist(this.form).then(res => {
+          regist(this.form).then((res) => {
             this.loading = false;
             if (res.success) {
               let query = {
-                username: this.form.username
+                username: this.form.username,
               };
               this.$router.push({
                 name: "regist-result",
-                query: query
+                query: query,
               });
             }
           });
         }
       });
-    }
+    },
   },
   mounted() {
     this.initVaptcha();
-  }
+  },
 };
 </script>
 

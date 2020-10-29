@@ -22,7 +22,7 @@
     </Collapse>
     <Drawer title="选择用户" closable v-model="userModalVisible" width="800" draggable>
       <Form ref="searchUserForm" :model="searchUserForm" inline :label-width="55">
-        <Form-item label="用户名" prop="nickname">
+        <FormItem label="用户名" prop="nickname">
           <Input
             type="text"
             v-model="searchUserForm.nickname"
@@ -30,14 +30,14 @@
             placeholder="请输入用户名"
             style="width: 200px"
           />
-        </Form-item>
-        <Form-item label="部门" prop="department">
+        </FormItem>
+        <FormItem label="部门" prop="department">
           <department-choose @on-change="handleSelectDep" style="width: 200px" ref="dep"></department-choose>
-        </Form-item>
-        <Form-item style="margin-left:-35px;" class="br">
+        </FormItem>
+        <FormItem style="margin-left:-35px;" class="br">
           <Button @click="handleSearchUser" type="primary" icon="ios-search">搜索</Button>
           <Button @click="handleResetUser">重置</Button>
-        </Form-item>
+        </FormItem>
       </Form>
       <Alert show-icon>
         已选择

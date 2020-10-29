@@ -3,10 +3,13 @@
 </style>
 
 <template>
-  <div class="main" :class="{'main-hide-text': shrink}">
+  <div class="main" :class="{ 'main-hide-text': shrink }">
     <div
       class="sidebar-menu-con menu-bar"
-      :style="{width: shrink?'60px':'220px', overflow: shrink ? 'visible' : 'auto'}"
+      :style="{
+        width: shrink ? '60px' : '220px',
+        overflow: shrink ? 'visible' : 'auto',
+      }"
     >
       <shrinkable-menu
         :shrink="shrink"
@@ -22,11 +25,17 @@
         </div>
       </shrinkable-menu>
     </div>
-    <div class="main-header-con" :style="{paddingLeft: shrink?'60px':'220px'}">
+    <div
+      class="main-header-con"
+      :style="{ paddingLeft: shrink ? '60px' : '220px' }"
+    >
       <div class="main-header">
         <div class="navicon-con">
           <Button
-            :style="{transform: 'rotateZ(' + (this.shrink ? '-90' : '0') + 'deg)', height: '48px'}"
+            :style="{
+              transform: 'rotateZ(' + (this.shrink ? '-90' : '0') + 'deg)',
+              height: '48px',
+            }"
             type="text"
             @click="toggleClick"
           >
@@ -34,32 +43,40 @@
           </Button>
         </div>
         <div class="header-middle-con">
-          <div class="main-breadcrumb" v-if="navType==4">
+          <div class="main-breadcrumb" v-if="navType == 4">
             <breadcrumb-nav :currentPath="currentPath"></breadcrumb-nav>
           </div>
-          <div class="main-nav-menu" v-if="navType==1||navType==2">
-            <Menu mode="horizontal" :active-name="currNav" @on-select="selectNav">
-              <MenuItem v-for="(item, i) in navList.slice(0, sliceNum)" :key="i" :name="item.name">
-                <Icon :type="item.icon" v-if="navType==1" />
-                {{item.title}}
+          <div class="main-nav-menu" v-if="navType == 1 || navType == 2">
+            <Menu
+              mode="horizontal"
+              :active-name="currNav"
+              @on-select="selectNav"
+            >
+              <MenuItem
+                v-for="(item, i) in navList.slice(0, sliceNum)"
+                :key="i"
+                :name="item.name"
+              >
+                <Icon :type="item.icon" v-if="navType == 1" />
+                {{ item.title }}
               </MenuItem>
-              <Submenu name="sub" v-if="navList.length>sliceNum">
+              <Submenu name="sub" v-if="navList.length > sliceNum">
                 <template slot="title">更多</template>
                 <MenuItem
                   v-for="(item, i) in navList.slice(sliceNum, navList.length)"
                   :key="i"
                   :name="item.name"
                 >
-                  <Icon :type="item.icon" v-if="navType==1" />
-                  {{item.title}}
+                  <Icon :type="item.icon" v-if="navType == 1" />
+                  {{ item.title }}
                 </MenuItem>
               </Submenu>
             </Menu>
           </div>
-          <div class="main-nav" v-if="navType==3">
+          <div class="main-nav" v-if="navType == 3">
             <Dropdown transfer @on-click="selectNav">
               <div style="cursor: pointer">
-                {{currNavTitle}}
+                {{ currNavTitle }}
                 <Icon type="ios-arrow-down"></Icon>
               </div>
               <DropdownMenu slot="list">
@@ -67,35 +84,51 @@
                   v-for="(item, i) in navList"
                   :key="i"
                   :name="item.name"
-                  :selected="currNav==item.name"
+                  :selected="currNav == item.name"
                 >
                   <div class="nav-item">
-                    <Icon :type="item.icon" :size="16" style="margin: 0 10px 3px 0"></Icon>
-                    {{item.title}}
+                    <Icon
+                      :type="item.icon"
+                      :size="16"
+                      style="margin: 0 10px 3px 0"
+                    ></Icon>
+                    {{ item.title }}
                   </div>
                 </DropdownItem>
               </DropdownMenu>
             </Dropdown>
           </div>
         </div>
-        <div :class="{'header-avator-con':navType!=4, 'header-avator-con nav4':navType==4}">
-          <Dropdown @on-click="selectNav" class="options" v-if="navType==4">
+        <div
+          :class="{
+            'header-avator-con': navType != 4,
+            'header-avator-con nav4': navType == 4,
+          }"
+        >
+          <Dropdown @on-click="selectNav" class="options" v-if="navType == 4">
             <Icon type="ios-apps" :size="24" class="language"></Icon>
             <DropdownMenu slot="list">
               <DropdownItem
                 v-for="(item, i) in navList"
                 :key="i"
                 :name="item.name"
-                :selected="currNav==item.name"
+                :selected="currNav == item.name"
               >
                 <div>
-                  <Icon :type="item.icon" :size="14" style="margin: 0 10px 2px 0"></Icon>
-                  {{item.title}}
+                  <Icon
+                    :type="item.icon"
+                    :size="14"
+                    style="margin: 0 10px 2px 0"
+                  ></Icon>
+                  {{ item.title }}
                 </div>
               </DropdownItem>
             </DropdownMenu>
           </Dropdown>
-          <full-screen v-model="isFullScreen" @on-change="fullscreenChange"></full-screen>
+          <full-screen
+            v-model="isFullScreen"
+            @on-change="fullscreenChange"
+          ></full-screen>
           <Dropdown @on-click="handleLanDropdown" class="options">
             <Icon type="md-globe" :size="24" class="language"></Icon>
             <DropdownMenu slot="list">
@@ -106,17 +139,35 @@
           <lock-screen></lock-screen>
           <message-tip v-model="mesCount"></message-tip>
           <div class="user-dropdown-menu-con">
-            <Row type="flex" justify="end" align="middle" class="user-dropdown-innercon">
-              <Dropdown transfer trigger="hover" @on-click="handleClickUserDropdown">
+            <Row
+              type="flex"
+              justify="end"
+              align="middle"
+              class="user-dropdown-innercon"
+            >
+              <Dropdown
+                transfer
+                trigger="hover"
+                @on-click="handleClickUserDropdown"
+              >
                 <a href="javascript:void(0)">
                   <span class="main-user-name">{{ username }}</span>
                   <Icon type="md-arrow-dropdown" />
-                  <Avatar :src="avatarPath" style="background: #619fe7;margin-left: 10px;"></Avatar>
+                  <Avatar
+                    :src="avatarPath"
+                    style="background: #619fe7; margin-left: 10px"
+                  ></Avatar>
                 </a>
                 <DropdownMenu slot="list">
-                  <DropdownItem name="ownSpace">{{ $t('userCenter') }}</DropdownItem>
-                  <DropdownItem name="changePass">{{ $t('changePass') }}</DropdownItem>
-                  <DropdownItem name="loginout" divided>{{ $t('logout') }}</DropdownItem>
+                  <DropdownItem name="ownSpace">{{
+                    $t("userCenter")
+                  }}</DropdownItem>
+                  <DropdownItem name="changePass">{{
+                    $t("changePass")
+                  }}</DropdownItem>
+                  <DropdownItem name="loginout" divided>{{
+                    $t("logout")
+                  }}</DropdownItem>
                 </DropdownMenu>
               </Dropdown>
             </Row>
@@ -127,7 +178,7 @@
         <tags-page-opened :pageTagsList="pageTagsList"></tags-page-opened>
       </div>
     </div>
-    <div class="single-page-con" :style="{left: shrink?'60px':'220px'}">
+    <div class="single-page-con" :style="{ left: shrink ? '60px' : '220px' }">
       <div class="single-page">
         <keep-alive :include="cachePage">
           <router-view></router-view>
@@ -157,7 +208,7 @@ export default {
     fullScreen,
     lockScreen,
     messageTip,
-    circleLoading
+    circleLoading,
   },
   data() {
     return {
@@ -169,7 +220,7 @@ export default {
       openedSubmenuArr: this.$store.state.app.openedSubmenuArr,
       firstThreeNav: [],
       lastNav: [],
-      navType: 1
+      navType: 1,
     };
   },
   computed: {
@@ -208,12 +259,12 @@ export default {
     },
     mesCount() {
       return this.$store.state.app.messageCount;
-    }
+    },
   },
   stompClient: {
     monitorIntervalTime: 100,
     stompReconnect: true,
-    timeout(orgCmd) {}
+    timeout(orgCmd) {},
   },
   methods: {
     init() {
@@ -228,13 +279,32 @@ export default {
       this.checkTag(this.$route.name);
     },
     selectNav(name) {
-      this.$store.commit("setCurrNav", name);
+      let flag = false;
+      this.navList.forEach((e) => {
+        if (e.name == name && e.isMenu == false) {
+          flag = true;
+          if (e.description == "direct") {
+            window.location.href = e.url;
+          } else if (e.description == "window") {
+            window.open(e.url);
+          } else if (e.description == "route") {
+            this.$router.push({
+              name: e.url,
+            });
+          }
+        }
+      });
+      if (flag) {
+        // 第三方站外链接 不作其他操作
+        return;
+      }
       this.setStore("currNav", name);
+      this.$store.commit("setCurrNav", name);
       // 清空所有已打开标签
       // this.$store.commit("clearAllTags");
       if (this.$route.name != "home_index") {
         this.$router.push({
-          name: "home_index"
+          name: "home_index",
         });
       }
       util.initRouter(this);
@@ -250,17 +320,17 @@ export default {
       if (name == "ownSpace") {
         util.openNewPage(this, "ownspace_index");
         this.$router.push({
-          name: "ownspace_index"
+          name: "ownspace_index",
         });
       } else if (name == "ownSpaceOld") {
         util.openNewPage(this, "ownspace_old");
         this.$router.push({
-          name: "ownspace_old"
+          name: "ownspace_old",
         });
       } else if (name == "changePass") {
         util.openNewPage(this, "change_pass");
         this.$router.push({
-          name: "change_pass"
+          name: "change_pass",
         });
       } else if (name == "loginout") {
         // 退出登录
@@ -272,7 +342,7 @@ export default {
       }
     },
     checkTag(name) {
-      let openpageHasTag = this.pageTagsList.some(item => {
+      let openpageHasTag = this.pageTagsList.some((item) => {
         if (item.name == name) {
           return true;
         }
@@ -309,7 +379,7 @@ export default {
         this.sliceNum = 3;
         this.shrink = false;
       }
-    }
+    },
   },
   watch: {
     $route(to) {
@@ -323,19 +393,19 @@ export default {
     },
     lang() {
       util.setCurrentPath(this, this.$route.name); // 在切换语言时用于刷新面包屑
-    }
+    },
   },
   mounted() {
     this.init();
     let that = this;
     this.resize();
-    window.addEventListener("resize", function() {
+    window.addEventListener("resize", function () {
       that.resize();
     });
   },
   created() {
     // 显示打开的页面的列表
     this.$store.commit("setOpenedList");
-  }
+  },
 };
 </script>

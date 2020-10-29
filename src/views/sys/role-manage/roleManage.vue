@@ -9,12 +9,22 @@
         <Button @click="addRole" type="primary" icon="md-add">添加角色</Button>
         <Button @click="delAll" icon="md-trash">批量删除</Button>
         <Button @click="init" icon="md-refresh">刷新</Button>
-        <Button type="dashed" @click="openTip=!openTip">{{openTip ? "关闭提示" : "开启提示"}}</Button>
+        <Button type="dashed" @click="openTip = !openTip">{{
+          openTip ? "关闭提示" : "开启提示"
+        }}</Button>
+        <Input
+          v-model="searchForm.key"
+          suffix="ios-search"
+          @on-change="getDataList"
+          placeholder="输入关键词搜索"
+          clearable
+          style="width: 250px"
+        />
       </Row>
       <Row v-show="openTip">
         <Alert show-icon>
           已选择
-          <span class="select-count">{{selectCount}}</span> 项
+          <span class="select-count">{{ selectList.length }}</span> 项
           <a class="select-clear" @click="clearSelectAll">清空</a>
         </Alert>
       </Row>
@@ -32,12 +42,12 @@
       </Row>
       <Row type="flex" justify="end" class="page">
         <Page
-          :current="pageNumber"
+          :current="searchForm.pageNumber"
           :total="total"
-          :page-size="pageSize"
+          :page-size="searchForm.pageSize"
           @on-change="changePage"
           @on-page-size-change="changePageSize"
-          :page-size-opts="[10,20,50]"
+          :page-size-opts="[10, 20, 50]"
           size="small"
           show-total
           show-elevator
@@ -47,10 +57,23 @@
     </Card>
 
     <!-- 编辑 -->
-    <Modal :title="modalTitle" v-model="roleModalVisible" :mask-closable="false" :width="500">
-      <Form ref="roleForm" :model="roleForm" :label-width="80" :rules="roleFormValidate">
+    <Modal
+      :title="modalTitle"
+      v-model="roleModalVisible"
+      :mask-closable="false"
+      :width="500"
+    >
+      <Form
+        ref="roleForm"
+        :model="roleForm"
+        :label-width="80"
+        :rules="roleFormValidate"
+      >
         <FormItem label="角色名称" prop="name">
-          <Input v-model="roleForm.name" placeholder="按照Spring Security约定建议以‘ROLE_’开头" />
+          <Input
+            v-model="roleForm.name"
+            placeholder="按照Spring Security约定建议以‘ROLE_’开头"
+          />
         </FormItem>
         <FormItem label="备注" prop="description">
           <Input v-model="roleForm.description" />
@@ -58,7 +81,9 @@
       </Form>
       <div slot="footer">
         <Button type="text" @click="cancelRole">取消</Button>
-        <Button type="primary" :loading="submitLoading" @click="submitRole">提交</Button>
+        <Button type="primary" :loading="submitLoading" @click="submitRole"
+          >提交</Button
+        >
       </div>
     </Modal>
     <!-- 菜单权限 -->
@@ -67,10 +92,10 @@
       v-model="permModalVisible"
       :mask-closable="false"
       :width="500"
-      :styles="{top: '30px'}"
+      :styles="{ top: '30px' }"
       class="permModal"
     >
-      <div style="position:relative">
+      <div style="position: relative">
         <Tree
           ref="tree"
           :data="permData"
@@ -85,7 +110,7 @@
         <Select
           v-model="openLevel"
           @on-change="changeOpen"
-          style="width:110px;text-align:left;margin-right:10px"
+          style="width: 110px; text-align: left; margin-right: 10px"
         >
           <Option value="0">展开所有</Option>
           <Option value="1">收合所有</Option>
@@ -93,7 +118,12 @@
           <Option value="3">仅展开两级</Option>
         </Select>
         <Button @click="selectTreeAll">全选/反选</Button>
-        <Button type="primary" :loading="submitPermLoading" @click="submitPermEdit">提交</Button>
+        <Button
+          type="primary"
+          :loading="submitPermLoading"
+          @click="submitPermEdit"
+          >提交</Button
+        >
       </div>
     </Modal>
     <!-- 数据权限 -->
@@ -104,7 +134,9 @@
       :width="500"
       class="depModal"
     >
-      <Alert show-icon>默认可查看全部数据，自定义数据范围时请勾选下方数据</Alert>
+      <Alert show-icon
+        >默认可查看全部数据，自定义数据范围时请勾选下方数据</Alert
+      >
       <Form :label-width="85">
         <FormItem label="数据范围">
           <Select v-model="dataType" transfer>
@@ -115,22 +147,27 @@
           </Select>
         </FormItem>
       </Form>
-      <div v-show="dataType==1" style="margin-top:15px">
-        <div style="position:relative">
+      <div v-show="dataType == 1" style="margin-top: 15px">
+        <div style="position: relative">
           <Tree
             ref="depTree"
             :data="depData"
             :load-data="loadData"
             @on-toggle-expand="expandCheckDep"
             multiple
-            style="margin-top:15px"
+            style="margin-top: 15px"
           ></Tree>
           <Spin size="large" fix v-if="depTreeLoading"></Spin>
         </div>
       </div>
       <div slot="footer">
-        <Button type="text" @click="depModalVisible=false">取消</Button>
-        <Button type="primary" :loading="submitDepLoading" @click="submitDepEdit">提交</Button>
+        <Button type="text" @click="depModalVisible = false">取消</Button>
+        <Button
+          type="primary"
+          :loading="submitDepLoading"
+          @click="submitDepEdit"
+          >提交</Button
+        >
       </div>
     </Modal>
   </div>
@@ -147,7 +184,7 @@ import {
   editRolePerm,
   initDepartment,
   loadDepartment,
-  editRoleDep
+  editRoleDep,
 } from "@/api/index";
 import util from "@/libs/util.js";
 export default {
@@ -169,198 +206,180 @@ export default {
       permModalVisible: false,
       depModalVisible: false,
       modalTitle: "",
+      searchForm: {
+        // 搜索框初始化对象
+        pageNumber: 1, // 当前页数
+        pageSize: 10, // 页面大小
+        sort: "createTime", // 默认排序字段
+        order: "desc", // 默认排序方式
+        key: "",
+      },
       roleForm: {
         name: "",
-        description: ""
+        description: "",
       },
       roleFormValidate: {
-        name: [{ required: true, message: "角色名称不能为空", trigger: "blur" }]
+        name: [
+          { required: true, message: "角色名称不能为空", trigger: "blur" },
+        ],
       },
       submitLoading: false,
       selectList: [],
-      selectCount: 0,
       columns: [
         {
           type: "selection",
           width: 60,
-          align: "center"
+          align: "center",
         },
         {
           type: "index",
           width: 60,
-          align: "center"
+          align: "center",
         },
         {
           title: "角色名称",
           key: "name",
           width: 150,
-          sortable: true
+          sortable: true,
         },
         {
           title: "备注",
           key: "description",
           minWidth: 150,
-          sortable: true
+          sortable: true,
         },
         {
           title: "创建时间",
           key: "createTime",
           width: 170,
           sortable: true,
-          sortType: "desc"
+          sortType: "desc",
         },
         {
           title: "更新时间",
           key: "updateTime",
           width: 170,
-          sortable: true
+          sortable: true,
         },
         {
-          title: "是否设置为注册用户默认角色",
+          title: "设置为注册用户默认角色",
           key: "defaultRole",
           align: "center",
-          width: 220,
+          width: 200,
           render: (h, params) => {
             if (params.row.defaultRole) {
               return h("div", [
-                h(
-                  "Button",
-                  {
-                    props: {
-                      type: "success",
-                      size: "small"
-                    },
-                    style: {
-                      marginRight: "5px"
-                    },
-                    on: {
-                      click: () => {
-                        this.cancelDefault(params.row);
-                      }
-                    }
+                h("Checkbox", {
+                  props: {
+                    value: true,
                   },
-                  "取消默认"
-                )
+                  on: {
+                    "on-change": () => {
+                      this.cancelDefault(params.row);
+                    },
+                  },
+                }),
               ]);
             } else {
               return h("div", [
-                h(
-                  "Button",
-                  {
-                    props: {
-                      type: "info",
-                      size: "small"
-                    },
-                    style: {
-                      marginRight: "5px"
-                    },
-                    on: {
-                      click: () => {
-                        this.setDefault(params.row);
-                      }
-                    }
+                h("Checkbox", {
+                  props: {
+                    value: false,
                   },
-                  "设为默认"
-                )
+                  on: {
+                    "on-change": () => {
+                      this.setDefault(params.row);
+                    },
+                  },
+                }),
               ]);
             }
-          }
+          },
         },
         {
           title: "操作",
           key: "action",
           align: "center",
           fixed: "right",
-          width: 300,
+          width: 280,
           render: (h, params) => {
             return h("div", [
               h(
-                "Button",
+                "a",
                 {
-                  props: {
-                    type: "warning",
-                    size: "small"
-                  },
-                  style: {
-                    marginRight: "5px"
-                  },
                   on: {
                     click: () => {
                       this.editPerm(params.row);
-                    }
-                  }
+                    },
+                  },
                 },
                 "菜单权限"
               ),
+              h("Divider", {
+                props: {
+                  type: "vertical",
+                },
+              }),
               h(
-                "Button",
+                "a",
                 {
-                  props: {
-                    type: "primary",
-                    size: "small"
-                  },
-                  style: {
-                    marginRight: "5px"
-                  },
                   on: {
                     click: () => {
                       this.editDep(params.row);
-                    }
-                  }
+                    },
+                  },
                 },
                 "数据权限"
               ),
+              h("Divider", {
+                props: {
+                  type: "vertical",
+                },
+              }),
               h(
-                "Button",
+                "a",
                 {
-                  props: {
-                    size: "small"
-                  },
-                  style: {
-                    marginRight: "5px"
-                  },
                   on: {
                     click: () => {
                       this.edit(params.row);
-                    }
-                  }
+                    },
+                  },
                 },
                 "编辑"
               ),
+              h("Divider", {
+                props: {
+                  type: "vertical",
+                },
+              }),
               h(
-                "Button",
+                "a",
                 {
-                  props: {
-                    type: "error",
-                    size: "small"
-                  },
                   on: {
                     click: () => {
                       this.remove(params.row);
-                    }
-                  }
+                    },
+                  },
                 },
                 "删除"
-              )
+              ),
             ]);
-          }
-        }
+          },
+        },
       ],
       data: [],
-      pageNumber: 1,
-      pageSize: 10,
       total: 0,
       permData: [],
       editRolePermId: "",
       selectAllFlag: false,
       depData: [],
       dataType: 0,
-      editDepartments: []
+      editDepartments: [],
     };
   },
   methods: {
     init() {
-      this.getRoleList();
+      this.getDataList();
       // 获取所有菜单权限树
       this.getPermList();
     },
@@ -382,67 +401,65 @@ export default {
         {
           style: {
             display: "inline-block",
-            cursor: "pointer"
+            cursor: "pointer",
           },
           on: {
             click: () => {
               data.checked = !data.checked;
-            }
-          }
+            },
+          },
         },
         [
           h("span", [
             h("Icon", {
               props: {
                 type: icon,
-                size: "16"
+                size: "16",
               },
               style: {
                 "margin-right": "8px",
-                "margin-bottom": "3px"
-              }
+                "margin-bottom": "3px",
+              },
             }),
-            h("span", data.title)
-          ])
+            h("span", data.title),
+          ]),
         ]
       );
     },
     changePage(v) {
-      this.pageNumber = v;
-      this.getRoleList();
+      this.searchForm.pageNumber = v;
+      this.getDataList();
       this.clearSelectAll();
     },
     changePageSize(v) {
-      this.pageSize = v;
-      this.getRoleList();
+      this.searchForm.pageSize = v;
+      this.getDataList();
     },
     changeSort(e) {
-      this.sortColumn = e.key;
-      this.sortType = e.order;
+      this.searchForm.sort = e.key;
+      this.searchForm.order = e.order;
       if (e.order == "normal") {
-        this.sortType = "";
+        this.searchForm.order = "";
       }
-      this.getRoleList();
+      this.getDataList();
     },
-    getRoleList() {
+    getDataList() {
       this.loading = true;
-      let params = {
-        pageNumber: this.pageNumber,
-        pageSize: this.pageSize,
-        sort: this.sortColumn,
-        order: this.sort
-      };
-      getRoleList(params).then(res => {
+      getRoleList(this.searchForm).then((res) => {
         this.loading = false;
         if (res.success) {
           this.data = res.result.content;
           this.total = res.result.totalElements;
+          if (this.data.length == 0 && this.searchForm.pageNumber > 1) {
+            this.searchForm.pageNumber -= 1;
+            this.getDataList();
+          }
         }
       });
     },
     getPermList() {
       this.treeLoading = true;
-      getAllPermissionList().then(res => {
+      getAllPermissionList().then((res) => {
         if (res.success) {
           this.deleteDisableNode(res.result);
           this.permData = res.result;
@@ -454,7 +471,7 @@ export default {
     // 递归标记禁用节点
     deleteDisableNode(permData) {
       let that = this;
-      permData.forEach(function(e) {
+      permData.forEach(function (e) {
         if (e.status == -1) {
           e.title = "[已禁用] " + e.title;
           e.disabled = true;
@@ -468,26 +485,26 @@ export default {
       this.roleModalVisible = false;
     },
     submitRole() {
-      this.$refs.roleForm.validate(valid => {
+      this.$refs.roleForm.validate((valid) => {
         if (valid) {
           if (this.modalType == 0) {
             // 添加
             this.submitLoading = true;
-            addRole(this.roleForm).then(res => {
+            addRole(this.roleForm).then((res) => {
               this.submitLoading = false;
               if (res.success) {
                 this.$Message.success("操作成功");
-                this.getRoleList();
+                this.getDataList();
                 this.roleModalVisible = false;
               }
             });
           } else {
             this.submitLoading = true;
-            editRole(this.roleForm).then(res => {
+            editRole(this.roleForm).then((res) => {
               this.submitLoading = false;
               if (res.success) {
                 this.$Message.success("操作成功");
-                this.getRoleList();
+                this.getDataList();
                 this.roleModalVisible = false;
               }
             });
@@ -523,53 +540,42 @@ export default {
         content: "您确认要删除角色 " + v.name + " ?",
         loading: true,
         onOk: () => {
-          deleteRole({ids: v.id}).then(res => {
+          deleteRole({ ids: v.id }).then((res) => {
             this.$Modal.remove();
             if (res.success) {
+              this.clearSelectAll();
               this.$Message.success("删除成功");
-              this.getRoleList();
+              this.getDataList();
             }
           });
-        }
+        },
       });
     },
     setDefault(v) {
-      this.$Modal.confirm({
-        title: "确认设置",
-        content: "您确认要设置所选的 " + v.name + " 为注册用户默认角色?",
-        loading: true,
-        onOk: () => {
-          let params = {
-            id: v.id,
-            isDefault: true
-          };
-          setDefaultRole(params).then(res => {
-            this.$Modal.remove();
-            if (res.success) {
-              this.$Message.success("操作成功");
-              this.getRoleList();
-            }
-          });
+      this.loading = true;
+      let params = {
+        id: v.id,
+        isDefault: true,
+      };
+      setDefaultRole(params).then((res) => {
+        this.loading = false;
+        if (res.success) {
+          this.$Message.success("操作成功");
+          this.getDataList();
         }
       });
     },
     cancelDefault(v) {
-      this.$Modal.confirm({
-        title: "确认取消",
-        content: "您确认要取消所选的 " + v.name + " 角色为默认?",
-        loading: true,
-        onOk: () => {
-          let params = {
-            id: v.id,
-            isDefault: false
-          };
-          setDefaultRole(params).then(res => {
-            this.$Modal.remove();
-            if (res.success) {
-              this.$Message.success("操作成功");
-              this.getRoleList();
-            }
-          });
+      this.loading = true;
+      let params = {
+        id: v.id,
+        isDefault: false,
+      };
+      setDefaultRole(params).then((res) => {
+        this.loading = false;
+        if (res.success) {
+          this.$Message.success("操作成功");
+          this.getDataList();
         }
       });
     },
@@ -578,32 +584,31 @@ export default {
     },
     changeSelect(e) {
       this.selectList = e;
-      this.selectCount = e.length;
     },
     delAll() {
-      if (this.selectCount <= 0) {
+      if (this.selectList.length <= 0) {
         this.$Message.warning("您还未选择要删除的数据");
         return;
       }
       this.$Modal.confirm({
         title: "确认删除",
-        content: "您确认要删除所选的 " + this.selectCount + " 条数据?",
+        content: "您确认要删除所选的 " + this.selectList.length + " 条数据?",
         loading: true,
         onOk: () => {
           let ids = "";
-          this.selectList.forEach(function(e) {
+          this.selectList.forEach(function (e) {
             ids += e.id + ",";
           });
           ids = ids.substring(0, ids.length - 1);
-          deleteRole({ids: ids}).then(res => {
+          deleteRole({ ids: ids }).then((res) => {
             this.$Modal.remove();
             if (res.success) {
               this.$Message.success("删除成功");
               this.clearSelectAll();
-              this.getRoleList();
+              this.getDataList();
             }
           });
-        }
+        },
       });
     },
     editPerm(v) {
@@ -622,7 +627,7 @@ export default {
     // 递归判断子节点
     checkPermTree(permData, rolePerms) {
       let that = this;
-      permData.forEach(function(p) {
+      permData.forEach(function (p) {
         if (that.hasPerm(p, rolePerms) && p.status != -1) {
           p.checked = true;
         } else {
@@ -656,7 +661,7 @@ export default {
     // 递归全选节点
     selectedTreeAll(permData, select) {
       let that = this;
-      permData.forEach(function(e) {
+      permData.forEach(function (e) {
         e.checked = select;
         if (e.children && e.children.length > 0) {
           that.selectedTreeAll(e.children, select);
@@ -667,21 +672,21 @@ export default {
       this.submitPermLoading = true;
       let permIds = "";
       let selectedNodes = this.$refs.tree.getCheckedNodes();
-      selectedNodes.forEach(function(e) {
+      selectedNodes.forEach(function (e) {
         permIds += e.id + ",";
       });
       permIds = permIds.substring(0, permIds.length - 1);
       editRolePerm({
         roleId: this.editRolePermId,
-        permIds: permIds
-      }).then(res => {
+        permIds: permIds,
+      }).then((res) => {
         this.submitPermLoading = false;
         if (res.success) {
           this.$Message.success("操作成功");
           // 标记重新获取菜单数据
           this.$store.commit("setAdded", false);
           util.initRouter(this);
-          this.getRoleList();
+          this.getDataList();
           this.permModalVisible = false;
         }
       });
@@ -690,9 +695,9 @@ export default {
       this.permModalVisible = false;
     },
     loadData(item, callback) {
-      loadDepartment(item.id, { openDataFilter: false }).then(res => {
+      loadDepartment(item.id, { openDataFilter: false }).then((res) => {
         if (res.success) {
-          res.result.forEach(function(e) {
+          res.result.forEach(function (e) {
             e.selected = false;
             if (e.isParent) {
               e.loading = false;
@@ -718,10 +723,10 @@ export default {
       let roleDepIds = v.departments;
       this.editDepartments = roleDepIds;
       this.depTreeLoading = true;
-      initDepartment({ openDataFilter: false }).then(res => {
+      initDepartment({ openDataFilter: false }).then((res) => {
         this.depTreeLoading = false;
         if (res.success) {
-          res.result.forEach(function(e) {
+          res.result.forEach(function (e) {
             e.selected = false;
             if (e.isParent) {
               e.loading = false;
@@ -746,7 +751,7 @@ export default {
     // 判断子节点
     checkDepTree(depData, roleDepIds) {
       let that = this;
-      depData.forEach(function(p) {
+      depData.forEach(function (p) {
         if (that.hasDepPerm(p, roleDepIds)) {
           p.selected = true;
         } else {
@@ -772,7 +777,7 @@ export default {
       let depIds = "";
       if (this.dataType == 1) {
         let selectedNodes = this.$refs.depTree.getSelectedNodes();
-        selectedNodes.forEach(function(e) {
+        selectedNodes.forEach(function (e) {
           depIds += e.id + ",";
         });
         depIds = depIds.substring(0, depIds.length - 1);
@@ -781,25 +786,25 @@ export default {
       editRoleDep({
         roleId: this.editRolePermId,
         dataType: this.dataType,
-        depIds: depIds
-      }).then(res => {
+        depIds: depIds,
+      }).then((res) => {
         this.submitDepLoading = false;
         if (res.success) {
           this.$Message.success("操作成功");
-          this.getRoleList();
+          this.getDataList();
           this.depModalVisible = false;
         }
       });
     },
     changeOpen(v) {
       if (v == "0") {
-        this.permData.forEach(e => {
+        this.permData.forEach((e) => {
           e.expand = true;
           if (e.children && e.children.length > 0) {
-            e.children.forEach(c => {
+            e.children.forEach((c) => {
               c.expand = true;
               if (c.children && c.children.length > 0) {
-                c.children.forEach(function(b) {
+                c.children.forEach(function (b) {
                   b.expand = true;
                 });
               }
@@ -807,13 +812,13 @@ export default {
           }
         });
       } else if (v == "1") {
-        this.permData.forEach(e => {
+        this.permData.forEach((e) => {
           e.expand = false;
           if (e.children && e.children.length > 0) {
-            e.children.forEach(c => {
+            e.children.forEach((c) => {
               c.expand = false;
               if (c.children && c.children.length > 0) {
-                c.children.forEach(function(b) {
+                c.children.forEach(function (b) {
                   b.expand = false;
                 });
               }
@@ -821,13 +826,13 @@ export default {
           }
         });
       } else if (v == "2") {
-        this.permData.forEach(e => {
+        this.permData.forEach((e) => {
           e.expand = true;
           if (e.children && e.children.length > 0) {
-            e.children.forEach(c => {
+            e.children.forEach((c) => {
               c.expand = false;
               if (c.children && c.children.length > 0) {
-                c.children.forEach(function(b) {
+                c.children.forEach(function (b) {
                   b.expand = false;
                 });
               }
@@ -835,13 +840,13 @@ export default {
           }
         });
       } else if (v == "3") {
-        this.permData.forEach(e => {
+        this.permData.forEach((e) => {
           e.expand = true;
           if (e.children && e.children.length > 0) {
-            e.children.forEach(c => {
+            e.children.forEach((c) => {
               c.expand = true;
               if (c.children && c.children.length > 0) {
-                c.children.forEach(function(b) {
+                c.children.forEach(function (b) {
                   b.expand = false;
                 });
               }
@@ -849,10 +854,10 @@ export default {
           }
         });
       }
-    }
+    },
   },
   mounted() {
     this.init();
-  }
+  },
 };
 </script>

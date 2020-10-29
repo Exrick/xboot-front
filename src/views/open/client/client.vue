@@ -3,7 +3,7 @@
     <Card>
       <Row v-show="openSearch" @keydown.enter.native="handleSearch">
         <Form ref="searchForm" :model="searchForm" inline :label-width="70">
-          <Form-item label="网站名称" prop="name">
+          <FormItem label="网站名称" prop="name">
             <Input
               type="text"
               v-model="searchForm.name"
@@ -11,8 +11,8 @@
               clearable
               style="width: 200px"
             />
-          </Form-item>
-          <Form-item label="网站主页" prop="homeUri">
+          </FormItem>
+          <FormItem label="网站主页" prop="homeUri">
             <Input
               type="text"
               v-model="searchForm.homeUri"
@@ -20,9 +20,10 @@
               clearable
               style="width: 200px"
             />
-          </Form-item>
-          <Form-item label="创建时间" prop="createTime">
+          </FormItem>
+          <FormItem label="创建时间" prop="createTime">
             <DatePicker
+              :options="options"
               v-model="selectDate"
               type="daterange"
               format="yyyy-MM-dd"
@@ -31,24 +32,30 @@
               placeholder="选择起始时间"
               style="width: 200px"
             ></DatePicker>
-          </Form-item>
-          <Form-item style="margin-left:-35px;" class="br">
-            <Button @click="handleSearch" type="primary" icon="ios-search">搜索</Button>
+          </FormItem>
+          <FormItem style="margin-left: -35px" class="br">
+            <Button @click="handleSearch" type="primary" icon="ios-search"
+              >搜索</Button
+            >
             <Button @click="handleReset">重置</Button>
-          </Form-item>
+          </FormItem>
         </Form>
       </Row>
       <Row class="operation">
         <Button @click="add" type="primary" icon="md-add">添加</Button>
         <Button @click="delAll" icon="md-trash">批量删除</Button>
         <Button @click="getDataList" icon="md-refresh">刷新</Button>
-        <Button type="dashed" @click="openSearch=!openSearch">{{openSearch ? "关闭搜索" : "开启搜索"}}</Button>
-        <Button type="dashed" @click="openTip=!openTip">{{openTip ? "关闭提示" : "开启提示"}}</Button>
+        <Button type="dashed" @click="openSearch = !openSearch">{{
+          openSearch ? "关闭搜索" : "开启搜索"
+        }}</Button>
+        <Button type="dashed" @click="openTip = !openTip">{{
+          openTip ? "关闭提示" : "开启提示"
+        }}</Button>
       </Row>
       <Row v-show="openTip">
         <Alert show-icon>
           已选择
-          <span class="select-count">{{selectCount}}</span> 项
+          <span class="select-count">{{ selectList.length }}</span> 项
           <a class="select-clear" @click="clearSelectAll">清空</a>
         </Alert>
       </Row>
@@ -71,7 +78,7 @@
           :page-size="searchForm.pageSize"
           @on-change="changePage"
           @on-page-size-change="changePageSize"
-          :page-size-opts="[10,20,50]"
+          :page-size-opts="[10, 20, 50]"
           size="small"
           show-total
           show-elevator
@@ -80,27 +87,60 @@
       </Row>
     </Card>
 
-    <Modal :title="modalTitle" v-model="modalVisible" :mask-closable="false" :width="500">
+    <Modal
+      :title="modalTitle"
+      v-model="modalVisible"
+      :mask-closable="false"
+      :width="500"
+    >
       <Form ref="form" :model="form" :label-width="100" :rules="formValidate">
+        <FormItem label="clientId" v-if="modalType != 0">{{
+          form.id
+        }}</FormItem>
         <FormItem label="网站名称" prop="name">
-          <Input v-model="form.name" clearable style="width:100%" />
+          <Input v-model="form.name" clearable style="width: 100%" />
+        </FormItem>
+        <FormItem label="网站Logo" prop="logo">
+          <upload-pic-input v-model="form.logo"></upload-pic-input>
         </FormItem>
         <FormItem label="clientSecret" prop="clientSecret">
           <Row type="flex" justify="space-between">
-            <Input v-model="form.clientSecret" clearable style="width:74%" />
+            <Input v-model="form.clientSecret" clearable style="width: 74%" />
             <Button @click="generateSecret">生成秘钥</Button>
           </Row>
         </FormItem>
         <FormItem label="网站主页" prop="homeUri">
-          <Input v-model="form.homeUri" clearable style="width:100%" />
+          <Input v-model="form.homeUri" clearable style="width: 100%" />
         </FormItem>
         <FormItem label="回调地址" prop="redirectUri">
-          <Input v-model="form.redirectUri" clearable style="width:100%" />
+          <Input v-model="form.redirectUri" clearable style="width: 100%" />
+        </FormItem>
+        <FormItem label="自动授权" prop="autoApprove">
+          <i-switch v-model="form.autoApprove">
+            <span slot="open">开</span>
+            <span slot="close">关</span>
+          </i-switch>
+          <Tooltip
+            content="已认证登录的用户无需授权确认，自动通过（通常用于信任的内部站点和单点登录的实现）"
+            placement="right"
+            transfer
+            max-width="280"
+            style="display: inline-block !important"
+          >
+            <Icon
+              type="md-help-circle"
+              size="20"
+              color="#c5c5c5"
+              style="margin-left: 10px; cursor: pointer"
+            />
+          </Tooltip>
         </FormItem>
       </Form>
       <div slot="footer">
-        <Button type="text" @click="modalVisible=false">取消</Button>
-        <Button type="primary" :loading="submitLoading" @click="handleSubmit">提交</Button>
+        <Button type="text" @click="modalVisible = false">取消</Button>
+        <Button type="primary" :loading="submitLoading" @click="handleSubmit"
+          >提交</Button
+        >
       </div>
     </Modal>
   </div>
@@ -112,11 +152,15 @@ import {
   getClientDataList,
   addClient,
   updateClient,
-  deleteClient
+  deleteClient,
 } from "@/api/open";
+import uploadPicInput from "@/views/my-components/xboot/upload-pic-input";
+import { shortcuts } from "@/libs/shortcuts";
 export default {
   name: "client",
-  components: {},
+  components: {
+    uploadPicInput,
+  },
   data() {
     return {
       openSearch: true, // 显示搜索
@@ -132,57 +176,87 @@ export default {
         sort: "createTime", // 默认排序字段
         order: "desc", // 默认排序方式
         startDate: "", // 起始时间
-        endDate: "" // 终止时间
+        endDate: "", // 终止时间
       },
       selectDate: null,
+      options: {
+        shortcuts: shortcuts,
+      },
       form: {
         // 添加或编辑表单对象初始化数据
         name: "",
         clientSecret: "",
         homeUri: "",
-        redirectUri: ""
+        redirectUri: "",
       },
       // 表单验证规则
       formValidate: {
         name: [{ required: true, message: "不能为空", trigger: "blur" }],
+        logo: [{ required: true, message: "不能为空", trigger: "blur" }],
         clientSecret: [
-          { required: true, message: "不能为空", trigger: "blur" }
+          { required: true, message: "不能为空", trigger: "blur" },
         ],
-        homeUri: [{ required: true, message: "不能为空", trigger: "blur" }],
-        redirectUri: [{ required: true, message: "不能为空", trigger: "blur" }]
+        homeUri: [
+          {
+            required: true,
+            type: "url",
+            message: "无效的URL链接",
+            trigger: "blur",
+          },
+        ],
+        redirectUri: [
+          {
+            required: true,
+            type: "url",
+            message: "无效的回调链接",
+            trigger: "blur",
+          },
+        ],
       },
       submitLoading: false, // 添加或编辑提交状态
       selectList: [], // 多选数据
-      selectCount: 0, // 多选计数
       columns: [
         // 表头
         {
           type: "selection",
           width: 60,
-          align: "center"
+          align: "center",
         },
         {
           type: "index",
           width: 60,
-          align: "center"
+          align: "center",
         },
         {
           title: "网站名称",
           key: "name",
           minWidth: 120,
-          sortable: false
+          sortable: false,
+        },
+        {
+          title: "Logo",
+          key: "logo",
+          width: 80,
+          align: "center",
+          render: (h, params) => {
+            return h("Avatar", {
+              props: {
+                src: params.row.logo,
+              },
+            });
+          },
         },
         {
           title: "clientId",
           key: "id",
-          minWidth: 120,
-          sortable: false
+          width: 190,
+          sortable: false,
         },
         {
           title: "clientSecret",
           key: "clientSecret",
-          minWidth: 120,
-          sortable: false
+          minWidth: 150,
+          sortable: false,
         },
         {
           title: "网站主页",
@@ -196,76 +270,102 @@ export default {
                 {
                   attrs: {
                     href: params.row.homeUri,
-                    target: "_blank"
-                  }
+                    target: "_blank",
+                  },
                 },
                 params.row.homeUri
-              )
+              ),
             ]);
-          }
+          },
         },
+
         {
           title: "回调地址",
           key: "redirectUri",
           minWidth: 120,
-          sortable: false
+          sortable: false,
+        },
+        {
+          title: "自动授权",
+          key: "autoApprove",
+          align: "center",
+          width: 100,
+          render: (h, params) => {
+            if (params.row.autoApprove) {
+              return h("div", [
+                h(
+                  "Tag",
+                  {
+                    props: {
+                      color: "blue",
+                    },
+                  },
+                  "开启"
+                ),
+              ]);
+            } else {
+              return h("div", [
+                h(
+                  "Tag",
+                  {
+                    props: {
+                      color: "default",
+                    },
+                  },
+                  "关闭"
+                ),
+              ]);
+            }
+          },
         },
         {
           title: "创建时间",
           key: "createTime",
-          minWidth: 120,
+          width: 170,
           sortable: true,
-          sortType: "desc"
+          sortType: "desc",
         },
         {
           title: "操作",
           key: "action",
           align: "center",
-          width: 200,
+          width: 130,
           fixed: "right",
           render: (h, params) => {
             return h("div", [
               h(
-                "Button",
+                "a",
                 {
-                  props: {
-                    type: "primary",
-                    size: "small",
-                    icon: "ios-create-outline"
-                  },
-                  style: {
-                    marginRight: "5px"
-                  },
                   on: {
                     click: () => {
                       this.edit(params.row);
-                    }
-                  }
+                    },
+                  },
                 },
                 "编辑"
               ),
+              h("Divider", {
+                props: {
+                  type: "vertical",
+                },
+              }),
               h(
-                "Button",
+                "a",
                 {
-                  props: {
-                    type: "error",
-                    size: "small",
-                    icon: "md-trash"
-                  },
                   on: {
                     click: () => {
                       this.remove(params.row);
-                    }
-                  }
+                    },
+                  },
                 },
                 "删除"
-              )
+              ),
             ]);
-          }
-        }
+          },
+        },
       ],
       data: [], // 表单数据
-      total: 0 // 表单数据总数
+      total: 0, // 表单数据总数
     };
   },
   methods: {
@@ -309,7 +409,6 @@ export default {
     },
     changeSelect(e) {
       this.selectList = e;
-      this.selectCount = e.length;
     },
     selectDateRange(v) {
       if (v) {
@@ -318,7 +417,7 @@ export default {
       }
     },
     generateSecret() {
-      getSecretKey().then(res => {
+      getSecretKey().then((res) => {
         if (res.success) {
           this.form.clientSecret = res.result;
         }
@@ -327,22 +426,26 @@ export default {
     getDataList() {
       this.loading = true;
       // 带多条件搜索参数获取表单数据 请自行修改接口
-      getClientDataList(this.searchForm).then(res => {
+      getClientDataList(this.searchForm).then((res) => {
         this.loading = false;
         if (res.success) {
           this.data = res.result.content;
           this.total = res.result.totalElements;
+          if (this.data.length == 0 && this.searchForm.pageNumber > 1) {
+            this.searchForm.pageNumber -= 1;
+            this.getDataList();
+          }
         }
       });
     },
     handleSubmit() {
-      this.$refs.form.validate(valid => {
+      this.$refs.form.validate((valid) => {
         if (valid) {
           this.submitLoading = true;
           if (this.modalType === 0) {
             // 添加 避免编辑后传入id等数据 记得删除
             delete this.form.id;
-            addClient(this.form).then(res => {
+            addClient(this.form).then((res) => {
               this.submitLoading = false;
               if (res.success) {
                 this.$Message.success("操作成功");
@@ -352,7 +455,7 @@ export default {
             });
           } else {
             // 编辑
-            updateClient(this.form).then(res => {
+            updateClient(this.form).then((res) => {
               this.submitLoading = false;
               if (res.success) {
                 this.$Message.success("操作成功");
@@ -394,33 +497,34 @@ export default {
         loading: true,
         onOk: () => {
           // 删除
-          deleteClient(v.id).then(res => {
+          deleteClient({ ids: v.id }).then((res) => {
             this.$Modal.remove();
             if (res.success) {
+              this.clearSelectAll();
               this.$Message.success("操作成功");
               this.getDataList();
             }
           });
-        }
+        },
       });
     },
     delAll() {
-      if (this.selectCount <= 0) {
+      if (this.selectList.length <= 0) {
         this.$Message.warning("您还未选择要删除的数据");
         return;
       }
       this.$Modal.confirm({
         title: "确认删除",
-        content: "您确认要删除所选的 " + this.selectCount + " 条数据?",
+        content: "您确认要删除所选的 " + this.selectList.length + " 条数据?",
         loading: true,
         onOk: () => {
           let ids = "";
-          this.selectList.forEach(function(e) {
+          this.selectList.forEach(function (e) {
             ids += e.id + ",";
           });
           ids = ids.substring(0, ids.length - 1);
           // 批量删除
-          deleteClient(ids).then(res => {
+          deleteClient({ ids: ids }).then((res) => {
             this.$Modal.remove();
             if (res.success) {
               this.$Message.success("操作成功");
@@ -428,16 +532,15 @@ export default {
               this.getDataList();
             }
           });
-        }
+        },
       });
-    }
+    },
   },
   mounted() {
     this.init();
-  }
+  },
 };
 </script>
 <style lang="less">
-// 建议引入通用样式 可删除下面样式代码
 @import "../../../styles/table-common.less";
 </style>

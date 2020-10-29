@@ -18,7 +18,7 @@
           <img :src="item.url" :style="{height: height}" />
           <div class="upload-list-cover">
             <Icon type="ios-eye-outline" @click="handleView(item.url, index)"></Icon>
-            <Icon type="ios-trash-outline" @click="handleRemove(item)"></Icon>
+            <Icon type="ios-trash-outline" @click="handleRemove(item)" v-show="!preview"></Icon>
           </div>
         </div>
         <div v-else>
@@ -43,6 +43,7 @@
       :headers="accessToken"
       class="upload-btn"
       :style="{width: width}"
+      v-show="!preview"
     >
       <div class="upload-camera" :style="{width: width, height: height, lineHeight: height}">
         <Icon type="md-camera" size="20"></Icon>
@@ -64,6 +65,10 @@ export default {
   props: {
     value: {
       type: null
+    },
+    preview: {
+      type: Boolean,
+      default: false
     },
     draggable: {
       type: Boolean,
@@ -313,7 +318,7 @@ export default {
     margin: 0 2px;
   }
   .list-group {
-    display: inline-block;
+    display: flex;
   }
   .thumb-ghost {
     opacity: 0.5;

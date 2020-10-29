@@ -5,17 +5,27 @@
 <template>
   <div class="search">
     <Card>
-      <Tabs v-model="tabName" :animated="false" @on-click="changeTab" v-if="!member">
+      <Tabs
+        v-model="tabName"
+        :animated="false"
+        @on-click="changeTab"
+        v-if="!member"
+      >
         <TabPane label="登录日志" name="1"></TabPane>
         <TabPane label="操作日志" name="0"></TabPane>
       </Tabs>
-      <Tabs v-model="tabName" :animated="false" @on-click="changeTab" v-if="member">
+      <Tabs
+        v-model="tabName"
+        :animated="false"
+        @on-click="changeTab"
+        v-if="member"
+      >
         <TabPane label="登录日志" name="3"></TabPane>
         <TabPane label="操作日志" name="2"></TabPane>
       </Tabs>
       <Row v-show="openSearch" @keydown.enter.native="handleSearch">
         <Form ref="searchForm" :model="searchForm" inline :label-width="70">
-          <Form-item label="搜索日志">
+          <FormItem label="搜索日志">
             <Input
               type="text"
               v-model="searchKey"
@@ -23,9 +33,10 @@
               placeholder="请输入搜索关键词"
               style="width: 200px"
             />
-          </Form-item>
-          <Form-item label="创建时间">
+          </FormItem>
+          <FormItem label="创建时间">
             <DatePicker
+              :options="options"
               type="daterange"
               v-model="selectDate"
               format="yyyy-MM-dd"
@@ -34,24 +45,30 @@
               placeholder="选择起始时间"
               style="width: 200px"
             ></DatePicker>
-          </Form-item>
-          <Form-item style="margin-left:-35px;" class="br">
-            <Button @click="handleSearch" type="primary" icon="ios-search">搜索</Button>
+          </FormItem>
+          <FormItem style="margin-left: -35px" class="br">
+            <Button @click="handleSearch" type="primary" icon="ios-search"
+              >搜索</Button
+            >
             <Button @click="handleReset">重置</Button>
-          </Form-item>
+          </FormItem>
         </Form>
       </Row>
       <Row class="operation">
         <Button @click="clearAll" type="error" icon="md-trash">清空全部</Button>
         <Button @click="delAll" icon="md-trash">批量删除</Button>
-        <Button @click="getLogList" icon="md-refresh">刷新</Button>
-        <Button type="dashed" @click="openSearch=!openSearch">{{openSearch ? "关闭搜索" : "开启搜索"}}</Button>
-        <Button type="dashed" @click="openTip=!openTip">{{openTip ? "关闭提示" : "开启提示"}}</Button>
+        <Button @click="getDataList" icon="md-refresh">刷新</Button>
+        <Button type="dashed" @click="openSearch = !openSearch">{{
+          openSearch ? "关闭搜索" : "开启搜索"
+        }}</Button>
+        <Button type="dashed" @click="openTip = !openTip">{{
+          openTip ? "关闭提示" : "开启提示"
+        }}</Button>
       </Row>
       <Row v-show="openTip">
         <Alert>
           已选择
-          <span class="select-count">{{selectCount}}</span> 项
+          <span class="select-count">{{ selectList.length }}</span> 项
           <a class="select-clear" @click="clearSelectAll">清空</a>
         </Alert>
       </Row>
@@ -74,7 +91,7 @@
           :page-size="searchForm.pageSize"
           @on-change="changePage"
           @on-page-size-change="changePageSize"
-          :page-size-opts="[10,20,50]"
+          :page-size-opts="[10, 20, 50]"
           size="small"
           show-total
           show-elevator
@@ -87,6 +104,7 @@
 
 <script>
 import { getLogListData, deleteLog, deleteAllLog } from "@/api/index";
+import { shortcuts } from "@/libs/shortcuts";
 export default {
   name: "log-manage",
   data() {
@@ -97,8 +115,10 @@ export default {
       openTip: true,
       loading: true,
       selectList: [],
-      selectCount: 0,
       selectDate: null,
+      options: {
+        shortcuts: shortcuts,
+      },
       searchKey: "",
       searchForm: {
         type: "",
@@ -107,52 +127,50 @@ export default {
         startDate: "",
         endDate: "",
         sort: "createTime",
-        order: "desc"
+        order: "desc",
       },
       columns: [
         {
           type: "selection",
           width: 60,
           align: "center",
-          fixed: "left"
+          fixed: "left",
         },
         {
           type: "index",
           width: 60,
           align: "center",
-          fixed: "left"
+          fixed: "left",
         },
         {
           title: "操作名称",
           key: "name",
           width: 120,
-          sortable: true,
           fixed: "left",
-          tooltip: true
+          tooltip: true,
         },
         {
           title: "请求类型",
           key: "requestType",
-          width: 140,
+          width: 120,
           align: "center",
-          sortable: true,
           filters: [
             {
               label: "GET",
-              value: "GET"
+              value: "GET",
             },
             {
               label: "POST",
-              value: "POST"
+              value: "POST",
             },
             {
               label: "PUT",
-              value: "PUT"
+              value: "PUT",
             },
             {
               label: "DELETE",
-              value: "DELETE"
-            }
+              value: "DELETE",
+            },
           ],
           filterMultiple: false,
           filterMethod(value, row) {
@@ -165,39 +183,36 @@ export default {
             } else if (value == "DELETE") {
               return row.requestType == "DELETE";
             }
-          }
+          },
         },
         {
           title: "请求路径",
           width: 150,
           key: "requestUrl",
-          tooltip: true
+          tooltip: true,
         },
         {
           title: "请求参数",
           minWidth: 200,
           key: "requestParam",
-          tooltip: true
+          tooltip: true,
         },
         {
           title: "登录账号",
           key: "username",
           minWidth: 120,
-          sortable: true,
-          tooltip: true
+          tooltip: true,
         },
         {
           title: "IP",
           key: "ip",
           width: 150,
-          sortable: true,
-          tooltip: true
+          tooltip: true,
         },
         {
           title: "IP信息",
           key: "ipInfo",
           width: 190,
-          sortable: true
         },
         {
           title: "耗时(毫秒)",
@@ -208,12 +223,12 @@ export default {
           filters: [
             {
               label: "≤1000毫秒",
-              value: 0
+              value: 0,
             },
             {
               label: ">1000毫秒",
-              value: 1
-            }
+              value: 1,
+            },
           ],
           filterMultiple: false,
           filterMethod(value, row) {
@@ -222,7 +237,7 @@ export default {
             } else if (value == 1) {
               return row.costTime > 1000;
             }
-          }
+          },
         },
         {
           title: "日志类型",
@@ -236,11 +251,11 @@ export default {
                   "Tag",
                   {
                     props: {
-                      color: "blue"
-                    }
+                      color: "blue",
+                    },
                   },
                   "操作日志"
-                )
+                ),
               ]);
             } else if (params.row.logType == 1) {
               return h("div", [
@@ -248,67 +263,63 @@ export default {
                   "Tag",
                   {
                     props: {
-                      color: "green"
-                    }
+                      color: "green",
+                    },
                   },
                   "登陆日志"
-                )
+                ),
               ]);
             }
-          }
+          },
         },
         {
           title: "创建时间",
           key: "createTime",
           sortable: true,
           width: 170,
-          sortType: "desc"
+          sortType: "desc",
         },
         {
           title: "操作",
           key: "action",
-          width: 98,
+          width: 80,
           align: "center",
           fixed: "right",
           render: (h, params) => {
             return h("div", [
               h(
-                "Button",
+                "a",
                 {
-                  props: {
-                    type: "error",
-                    size: "small"
-                  },
                   on: {
                     click: () => {
                       this.remove(params.row);
-                    }
-                  }
+                    },
+                  },
                 },
                 "删除"
-              )
+              ),
             ]);
-          }
-        }
+          },
+        },
       ],
       data: [],
-      total: 0
+      total: 0,
     };
   },
   methods: {
     init() {},
     changeTab(v) {
       this.searchForm.type = v;
-      this.getLogList();
+      this.getDataList();
     },
     changePage(v) {
       this.searchForm.pageNumber = v;
-      this.getLogList();
+      this.getDataList();
       this.clearSelectAll();
     },
     changePageSize(v) {
       this.searchForm.pageSize = v;
-      this.getLogList();
+      this.getDataList();
     },
     selectDateRange(v) {
       if (v) {
@@ -319,16 +330,20 @@ export default {
     handleSearch() {
       this.searchForm.pageNumber = 1;
       this.searchForm.pageSize = 10;
-      this.getLogList();
+      this.getDataList();
     },
-    getLogList() {
+    getDataList() {
       this.loading = true;
       this.searchForm.key = this.searchKey;
-      getLogListData(this.searchForm).then(res => {
+      getLogListData(this.searchForm).then((res) => {
         this.loading = false;
         if (res.success) {
           this.data = res.result.content;
           this.total = res.result.totalElements;
+          if (this.data.length == 0 && this.searchForm.pageNumber > 1) {
+            this.searchForm.pageNumber -= 1;
+            this.getDataList();
+          }
         }
       });
     },
@@ -337,7 +352,7 @@ export default {
       this.selectDate = null;
       this.searchForm.startDate = "";
       this.searchForm.endDate = "";
-      this.getLogList();
+      this.getDataList();
     },
     remove(v) {
       this.$Modal.confirm({
@@ -345,14 +360,15 @@ export default {
         content: "您确认要删除该条数据?",
         loading: true,
         onOk: () => {
-          deleteLog({ ids: v.id }).then(res => {
+          deleteLog({ ids: v.id }).then((res) => {
             this.$Modal.remove();
             if (res.success) {
               this.$Message.success("删除成功");
-              this.getLogList();
+              this.clearSelectAll();
+              this.getDataList();
             }
           });
-        }
+        },
       });
     },
     clearSelectAll() {
@@ -360,7 +376,6 @@ export default {
     },
     changeSelect(e) {
       this.selectList = e;
-      this.selectCount = e.length;
     },
     changeSort(e) {
       this.searchForm.sort = e.key;
@@ -368,32 +383,32 @@ export default {
       if (e.order == "normal") {
         this.searchForm.order = "";
       }
-      this.getLogList();
+      this.getDataList();
     },
     delAll() {
-      if (this.selectCount <= 0) {
+      if (this.selectList.length <= 0) {
         this.$Message.warning("您还未选择要删除的数据");
         return;
       }
       this.$Modal.confirm({
         title: "确认删除",
-        content: "您确认要删除所选的 " + this.selectCount + " 条数据?",
+        content: "您确认要删除所选的 " + this.selectList.length + " 条数据?",
         loading: true,
         onOk: () => {
           let ids = "";
-          this.selectList.forEach(function(e) {
+          this.selectList.forEach(function (e) {
             ids += e.id + ",";
           });
           ids = ids.substring(0, ids.length - 1);
-          deleteLog({ ids: ids }).then(res => {
+          deleteLog({ ids: ids }).then((res) => {
             this.$Modal.remove();
             if (res.success) {
               this.$Message.success("删除成功");
               this.clearSelectAll();
-              this.getLogList();
+              this.getDataList();
             }
           });
-        }
+        },
       });
     },
     clearAll() {
@@ -403,19 +418,19 @@ export default {
         onOk: () => {
           this.loading = true;
           let ids = "";
-          this.selectList.forEach(function(e) {
+          this.selectList.forEach(function (e) {
             ids += e.id + ",";
           });
           ids = ids.substring(0, ids.length - 1);
-          deleteAllLog().then(res => {
+          deleteAllLog().then((res) => {
             this.loading = false;
             if (res.success) {
               this.$Message.success("清空日志成功");
               this.clearSelectAll();
-              this.getLogList();
+              this.getDataList();
             }
           });
-        }
+        },
       });
     },
     changeLog(name) {
@@ -429,17 +444,17 @@ export default {
         this.searchForm.type = "1";
       }
       this.searchForm.pageNumber = 1;
-      this.getLogList();
-    }
+      this.getDataList();
+    },
   },
   watch: {
     // 监听路由变化
     $route(to, from) {
       this.changeLog(to.name);
-    }
+    },
   },
   mounted() {
     this.changeLog(this.$route.name);
-  }
+  },
 };
 </script>

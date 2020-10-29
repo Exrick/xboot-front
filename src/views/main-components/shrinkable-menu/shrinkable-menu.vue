@@ -3,7 +3,7 @@
 </style>
 
 <template>
-  <div :style="{background: bgColor}" class="ivu-shrinkable-menu">
+  <div :style="{ background: bgColor }" class="ivu-shrinkable-menu">
     <slot name="top"></slot>
     <sidebar-menu
       v-show="!shrink"
@@ -30,30 +30,30 @@ export default {
   name: "shrinkableMenu",
   components: {
     sidebarMenu,
-    sidebarMenuShrink
+    sidebarMenuShrink,
   },
   props: {
     shrink: {
       type: Boolean,
-      default: false
+      default: false,
     },
     menuList: {
       type: Array,
-      required: true
+      required: true,
     },
     theme: {
       type: String,
       default: "dark",
       validator(val) {
         return util.oneOf(val, ["dark", "light"]);
-      }
+      },
     },
     beforePush: {
-      type: Function
+      type: Function,
     },
     openNames: {
-      type: Array
-    }
+      type: Array,
+    },
   },
   computed: {
     bgColor() {
@@ -61,7 +61,7 @@ export default {
     },
     shrinkIconColor() {
       return this.theme == "dark" ? "#fff" : "#515a6e";
-    }
+    },
   },
   methods: {
     handleChange(name) {
@@ -71,13 +71,16 @@ export default {
           willpush = false;
         }
       }
+      if (name == this.$route.name) {
+        willpush = false;
+      }
       if (willpush) {
         this.$router.push({
-          name: name
+          name: name,
         });
       }
       this.$emit("on-change", name);
-    }
-  }
+    },
+  },
 };
 </script>

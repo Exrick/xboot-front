@@ -1,11 +1,15 @@
 <template>
-    <div @click="showMessage" class="message-con">
-        <Tooltip :content="value > 0 ? '有' + value + '条未读消息' : '无未读消息'" placement="bottom">
-            <Badge :count="value" dot>
-                <Icon type="md-notifications" :size="22" />
-            </Badge>
-        </Tooltip>
-    </div>
+  <div class="message-con">
+    <Tooltip placement="bottom">
+      <Badge :count="value">
+        <Icon type="md-notifications" :size="22" @click="showMessage" />
+      </Badge>
+      <div slot="content">
+        <p v-if="value > 0">有 {{ value }} 条未读消息</p>
+        <p v-else>无未读消息</p>
+      </div>
+    </Tooltip>
+  </div>
 </template>
 
 <script>
@@ -15,16 +19,16 @@ export default {
   props: {
     value: {
       type: Number,
-      default: 0
-    }
+      default: 0,
+    },
   },
   methods: {
     showMessage() {
       util.openNewPage(this, "message_index");
       this.$router.push({
-        name: "message_index"
+        name: "message_index",
       });
-    }
-  }
+    },
+  },
 };
 </script>

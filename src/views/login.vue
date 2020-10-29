@@ -5,20 +5,24 @@
       justify="center"
       align="middle"
       @keydown.enter.native="submitLogin"
-      style="height:100%"
+      style="height: 100%"
     >
       <Col class="layout">
         <div>
           <Header />
           <Row>
             <Tabs v-model="tabName">
-              <TabPane :label="$t('usernameLogin')" name="username" icon="md-person">
+              <TabPane
+                :label="$t('usernameLogin')"
+                name="username"
+                icon="md-person"
+              >
                 <Form
                   ref="usernameLoginForm"
                   :model="form"
                   :rules="rules"
                   class="form"
-                  v-if="tabName=='username'"
+                  v-if="tabName == 'username'"
                 >
                   <FormItem prop="username">
                     <Input
@@ -45,7 +49,7 @@
                     <Row
                       type="flex"
                       justify="space-between"
-                      style="align-items: center;overflow: hidden;"
+                      style="align-items: center; overflow: hidden"
                     >
                       <Input
                         v-model="form.imgCode"
@@ -55,26 +59,33 @@
                         :maxlength="10"
                         class="input-verify"
                       />
-                      <div class="code-image" style="position:relative;font-size:12px">
+                      <div
+                        class="code-image"
+                        style="position: relative; font-size: 12px"
+                      >
                         <Spin v-if="loadingCaptcha" fix></Spin>
                         <img
                           :src="captchaImg"
                           @click="getCaptchaImg"
                           alt="加载验证码失败"
-                          style="width:110px;cursor:pointer;display:block"
+                          style="width: 110px; cursor: pointer; display: block"
                         />
                       </div>
                     </Row>
                   </FormItem>
                 </Form>
               </TabPane>
-              <TabPane :label="$t('mobileLogin')" name="mobile" icon="ios-phone-portrait">
+              <TabPane
+                :label="$t('mobileLogin')"
+                name="mobile"
+                icon="ios-phone-portrait"
+              >
                 <Form
                   ref="mobileLoginForm"
                   :model="form"
                   :rules="rules"
                   class="form"
-                  v-if="tabName=='mobile'"
+                  v-if="tabName == 'mobile'"
                 >
                   <FormItem prop="mobile">
                     <Input
@@ -111,12 +122,18 @@
             </Tabs>
 
             <Row type="flex" justify="space-between" align="middle">
-              <Checkbox v-model="saveLogin" size="large">{{ $t('autoLogin') }}</Checkbox>
+              <Checkbox v-model="saveLogin" size="large">{{
+                $t("autoLogin")
+              }}</Checkbox>
               <Dropdown trigger="click" @on-click="handleDropDown">
-                <a class="forget-pass">{{ $t('forgetPass') }}</a>
+                <a class="forget-pass">{{ $t("forgetPass") }}</a>
                 <DropdownMenu slot="list">
-                  <DropdownItem name="resetByMobile">使用手机号重置密码(付费)</DropdownItem>
-                  <DropdownItem name="resetByEmail">使用邮箱重置密码(付费)</DropdownItem>
+                  <DropdownItem name="resetByMobile"
+                    >使用手机号重置密码(付费)</DropdownItem
+                  >
+                  <DropdownItem name="resetByEmail"
+                    >使用邮箱重置密码(付费)</DropdownItem
+                  >
                 </DropdownMenu>
               </Dropdown>
             </Row>
@@ -129,28 +146,61 @@
                 @click="submitLogin"
                 long
               >
-                <span v-if="!loading">{{ $t('login') }}</span>
-                <span v-else>{{ $t('logining') }}</span>
+                <span v-if="!loading">{{ $t("login") }}</span>
+                <span v-else>{{ $t("logining") }}</span>
               </Button>
             </Row>
             <Row type="flex" justify="space-between" class="other-login">
               <div class="other-way icons">
-                {{ $t('otherLogin') }}
+                {{ $t("otherLogin") }}
                 <div class="other-icon" @click="toGithubLogin">
-                  <icon scale="1.3" name="brands/github"></icon>
+                  <Icon
+                    custom="iconfont icon-github"
+                    size="20"
+                    class="other-icon"
+                    @click="toGithubLogin"
+                  />
                 </div>
                 <div class="other-icon" @click="toQQLogin">
-                  <icon scale="1.2" name="brands/qq"></icon>
+                  <Icon custom="iconfont icon-qq" size="22" />
                 </div>
                 <div class="other-icon" @click="toWeixinLogin">
-                  <icon scale="1.3" name="brands/weixin"></icon>
+                  <Icon custom="iconfont icon-weixin" size="23" />
                 </div>
-                <div class="other-icon" @click="toWeiboLogin">
-                  <icon scale="1.3" name="brands/weibo"></icon>
+                <Icon
+                  v-show="!showMore"
+                  type="ios-arrow-down"
+                  class="other-icon"
+                  size="16"
+                  @click="showMore = true"
+                ></Icon>
+                <div class="other-icon" v-show="showMore" @click="toWeiboLogin">
+                  <Icon custom="iconfont icon-weibo" size="23" />
                 </div>
+                <div
+                  class="other-icon"
+                  v-show="showMore"
+                  @click="toDingdingLogin"
+                >
+                  <Icon custom="iconfont icon-dingding" size="20" />
+                </div>
+                <div
+                  class="other-icon"
+                  v-show="showMore"
+                  @click="toWorkwechatLogin"
+                >
+                  <Icon custom="iconfont icon-qiyeweixin" size="20" />
+                </div>
+                <Icon
+                  v-show="showMore"
+                  type="ios-arrow-up"
+                  class="other-icon"
+                  size="16"
+                  @click="showMore = false"
+                ></Icon>
               </div>
               <router-link to="/regist">
-                <a class="forget-pass">{{ $t('regist') }}</a>
+                <a class="forget-pass">{{ $t("regist") }}</a>
               </router-link>
             </Row>
           </Row>
@@ -176,10 +226,11 @@ export default {
     CountDownButton,
     LangSwitch,
     Header,
-    Footer
+    Footer,
   },
   data() {
     return {
+      showMore: false,
       captchaId: "",
       captchaImg: "",
       loadingCaptcha: true,
@@ -194,48 +245,48 @@ export default {
         username: "admin、test、test2（支持邮箱/手机登录）",
         password: "123456",
         mobile: "",
-        code: ""
+        code: "",
       },
       rules: {
         username: [
           {
             required: true,
             message: "账号不能为空",
-            trigger: "blur"
-          }
+            trigger: "blur",
+          },
         ],
         password: [
           {
             required: true,
             message: "密码不能为空",
-            trigger: "blur"
-          }
+            trigger: "blur",
+          },
         ],
         imgCode: [
           {
             required: true,
             message: "验证码不能为空",
-            trigger: "blur"
-          }
+            trigger: "blur",
+          },
         ],
         mobile: [
           {
             required: true,
             message: "手机号不能为空",
-            trigger: "blur"
+            trigger: "blur",
           },
           {
             validator: validateMobile,
-            trigger: "blur"
-          }
-        ]
-      }
+            trigger: "blur",
+          },
+        ],
+      },
     };
   },
   methods: {
     getCaptchaImg() {
       this.loadingCaptcha = true;
-      initCaptcha().then(res => {
+      initCaptcha().then((res) => {
         this.loadingCaptcha = false;
         if (res.success) {
           this.captchaId = res.result;
@@ -244,18 +295,18 @@ export default {
       });
     },
     sendSmsCode() {
-      this.$refs.mobileLoginForm.validate(valid => {
+      this.$refs.mobileLoginForm.validate((valid) => {
         if (valid) {
           this.$Modal.info({
             title: "抱歉，请获取完整版",
-            content: "支付链接: http://xpay.exrick.cn/pay?xboot"
+            content: "支付链接: http://xpay.exrick.cn/pay?xboot",
           });
         }
       });
     },
     submitLogin() {
       if (this.tabName == "username") {
-        this.$refs.usernameLoginForm.validate(valid => {
+        this.$refs.usernameLoginForm.validate((valid) => {
           if (valid) {
             this.loading = true;
             login({
@@ -263,25 +314,26 @@ export default {
               password: this.form.password,
               code: this.form.imgCode,
               captchaId: this.captchaId,
-              saveLogin: this.saveLogin
-            }).then(res => {
+              saveLogin: this.saveLogin,
+            }).then((res) => {
               if (res.success) {
                 this.setStore("accessToken", res.result);
                 // 获取用户信息
-                userInfo().then(res => {
+                userInfo().then((res) => {
                   if (res.success) {
                     // 避免超过大小限制
                     delete res.result.permissions;
                     let roles = [];
-                    res.result.roles.forEach(e => {
+                    res.result.roles.forEach((e) => {
                       roles.push(e.name);
                     });
+                    delete res.result.roles;
                     this.setStore("roles", roles);
                     this.setStore("saveLogin", this.saveLogin);
                     if (this.saveLogin) {
                       // 保存7天
                       Cookies.set("userInfo", JSON.stringify(res.result), {
-                        expires: 7
+                        expires: 7,
                       });
                     } else {
                       Cookies.set("userInfo", JSON.stringify(res.result));
@@ -305,7 +357,7 @@ export default {
           }
         });
       } else if (this.tabName == "mobile") {
-        this.$refs.mobileLoginForm.validate(valid => {
+        this.$refs.mobileLoginForm.validate((valid) => {
           if (valid) {
             if (this.form.code == "") {
               this.errorCode = "验证码不能为空";
@@ -316,7 +368,7 @@ export default {
             this.form.saveLogin = this.saveLogin;
             this.$Modal.info({
               title: "抱歉，请获取完整版",
-              content: "支付链接: http://xpay.exrick.cn/pay?xboot"
+              content: "支付链接: http://xpay.exrick.cn/pay?xboot",
             });
           }
         });
@@ -325,39 +377,51 @@ export default {
     toGithubLogin() {
       this.$Modal.info({
         title: "抱歉，请获取完整版",
-        content: "支付链接: http://xpay.exrick.cn/pay?xboot"
+        content: "支付链接: http://xpay.exrick.cn/pay?xboot",
       });
     },
     toQQLogin() {
       this.$Modal.info({
         title: "抱歉，请获取完整版",
-        content: "支付链接: http://xpay.exrick.cn/pay?xboot"
+        content: "支付链接: http://xpay.exrick.cn/pay?xboot",
       });
     },
     toWeiboLogin() {
       this.$Modal.info({
         title: "抱歉，请获取完整版",
-        content: "支付链接: http://xpay.exrick.cn/pay?xboot"
+        content: "支付链接: http://xpay.exrick.cn/pay?xboot",
       });
     },
     toWeixinLogin() {
       this.$Modal.info({
         title: "抱歉，请获取完整版",
-        content: "支付链接: http://xpay.exrick.cn/pay?xboot"
+        content: "支付链接: http://xpay.exrick.cn/pay?xboot",
+      });
+    },
+    toDingdingLogin() {
+      this.$Modal.info({
+        title: "抱歉，请获取完整版",
+        content: "支付链接: http://xpay.exrick.cn/pay?xboot",
+      });
+    },
+    toWorkwechatLogin() {
+      this.$Modal.info({
+        title: "抱歉，请获取完整版",
+        content: "支付链接: http://xpay.exrick.cn/pay?xboot",
       });
     },
     relatedLogin() {},
     handleDropDown(v) {
       this.$Modal.info({
         title: "抱歉，请获取完整版",
-        content: "支付链接: http://xpay.exrick.cn/pay?xboot"
+        content: "支付链接: http://xpay.exrick.cn/pay?xboot",
       });
-    }
+    },
   },
   mounted() {
     this.relatedLogin();
     this.getCaptchaImg();
-  }
+  },
 };
 </script>
 

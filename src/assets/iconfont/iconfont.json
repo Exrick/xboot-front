@@ -1,0 +1,51 @@
+{
+  "id": "2113600",
+  "name": "xboot",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "1327163",
+      "name": "钉钉",
+      "font_class": "dingding",
+      "unicode": "e608",
+      "unicode_decimal": 58888
+    },
+    {
+      "icon_id": "15475799",
+      "name": "qq",
+      "font_class": "qq",
+      "unicode": "e61c",
+      "unicode_decimal": 58908
+    },
+    {
+      "icon_id": "2742669",
+      "name": "微博",
+      "font_class": "weibo",
+      "unicode": "e67a",
+      "unicode_decimal": 59002
+    },
+    {
+      "icon_id": "3876518",
+      "name": "github",
+      "font_class": "github",
+      "unicode": "e677",
+      "unicode_decimal": 58999
+    },
+    {
+      "icon_id": "6742309",
+      "name": "微信",
+      "font_class": "weixin",
+      "unicode": "e686",
+      "unicode_decimal": 59014
+    },
+    {
+      "icon_id": "15643736",
+      "name": "企业微信",
+      "font_class": "qiyeweixin",
+      "unicode": "e6af",
+      "unicode_decimal": 59055
+    }
+  ]
+}

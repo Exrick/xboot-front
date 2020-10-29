@@ -6,7 +6,7 @@
   <div class="own-space">
     <Card class="own-space-new">
       <div class="own-wrap">
-        <div style="width:240px">
+        <div style="width: 240px">
           <Menu active-name="基本信息" theme="light" @on-select="changeMenu">
             <MenuItem name="基本信息">基本信息</MenuItem>
             <MenuItem name="安全设置">安全设置</MenuItem>
@@ -14,21 +14,36 @@
             <MenuItem name="消息通知">消息通知</MenuItem>
           </Menu>
         </div>
-        <div style="padding: 8px 40px;width:100%">
-          <div class="title">{{currMenu}}</div>
+        <div style="padding: 8px 40px; width: 100%">
+          <div class="title">{{ currMenu }}</div>
           <div>
-            <div v-show="currMenu=='基本信息'">
-              <Form ref="userForm" :model="userForm" :label-width="90" label-position="left">
-                <FormItem label="登录账号：" prop="username">{{userForm.username}}</FormItem>
+            <div v-show="currMenu == '基本信息'">
+              <Form
+                ref="userForm"
+                :model="userForm"
+                :label-width="90"
+                label-position="left"
+              >
+                <FormItem label="登录账号：" prop="username">{{
+                  userForm.username
+                }}</FormItem>
                 <FormItem label="用户头像：">
-                  <upload-pic-thumb v-model="userForm.avatar" :multiple="false"></upload-pic-thumb>
+                  <upload-pic-thumb
+                    v-model="userForm.avatar"
+                    :multiple="false"
+                  ></upload-pic-thumb>
                 </FormItem>
                 <FormItem label="用户名：" prop="nickname">
                   <Input v-model="userForm.nickname" style="width: 300px" />
                 </FormItem>
                 <FormItem label="性别：">
                   <RadioGroup v-model="userForm.sex">
-                    <Radio v-for="(item, i) in dictSex" :key="i" :label="item.value">{{item.title}}</Radio>
+                    <Radio
+                      v-for="(item, i) in dictSex"
+                      :key="i"
+                      :label="item.value"
+                      >{{ item.title }}</Radio
+                    >
                   </RadioGroup>
                 </FormItem>
                 <FormItem label="生日：">
@@ -41,9 +56,8 @@
                 </FormItem>
                 <FormItem label="所在省市：">
                   <al-cascader
-                    v-model="userForm.addressArray"
-                    @on-change="changeAddress"
-                    data-type="code"
+                    v-model="userForm.address"
+                    data-type="name"
                     level="2"
                     style="width: 300px"
                   />
@@ -56,7 +70,7 @@
                     v-model="userForm.description"
                     type="textarea"
                     style="width: 300px"
-                    :autosize="{minRows: 3,maxRows: 5}"
+                    :autosize="{ minRows: 3, maxRows: 5 }"
                     placeholder="个人简介"
                   ></Input>
                 </FormItem>
@@ -69,25 +83,29 @@
                 <FormItem>
                   <Button
                     type="primary"
-                    style="width: 100px;margin-right:5px"
+                    style="width: 100px; margin-right: 5px"
                     :loading="saveLoading"
                     @click="saveEdit"
-                  >保存</Button>
+                    >保存</Button
+                  >
                 </FormItem>
               </Form>
             </div>
-            <div v-show="currMenu=='安全设置'" class="safe">
+            <div v-show="currMenu == '安全设置'" class="safe">
               <div class="item">
                 <div>
                   <div class="title">账户密码</div>
                   <div v-if="userForm.passStrength" class="desc">
                     当前密码强度：
-                    <span
-                      v-if="userForm.passStrength=='弱'"
-                      class="red"
-                    >{{userForm.passStrength}}</span>
-                    <span v-if="userForm.passStrength=='中'" class="middle">{{userForm.passStrength}}</span>
-                    <span v-if="userForm.passStrength=='强'" class="green">{{userForm.passStrength}}</span>
+                    <span v-if="userForm.passStrength == '弱'" class="red">{{
+                      userForm.passStrength
+                    }}</span>
+                    <span v-if="userForm.passStrength == '中'" class="middle">{{
+                      userForm.passStrength
+                    }}</span>
+                    <span v-if="userForm.passStrength == '强'" class="green">{{
+                      userForm.passStrength
+                    }}</span>
                   </div>
                 </div>
                 <div>
@@ -98,7 +116,9 @@
                 <div>
                   <div class="title">绑定手机</div>
                   <div class="desc">
-                    <span v-if="userForm.mobile">已绑定手机：{{userForm.mobile}}</span>
+                    <span v-if="userForm.mobile"
+                      >已绑定手机：{{ userForm.mobile }}</span
+                    >
                     <span v-else>未绑定手机号</span>
                   </div>
                 </div>
@@ -110,7 +130,9 @@
                 <div>
                   <div class="title">绑定邮箱</div>
                   <div class="desc">
-                    <span v-if="userForm.email">已绑定邮箱：{{userForm.email}}</span>
+                    <span v-if="userForm.email"
+                      >已绑定邮箱：{{ userForm.email }}</span
+                    >
                     <span v-else>未绑定邮箱</span>
                   </div>
                 </div>
@@ -121,37 +143,54 @@
               <div class="item">
                 <div>
                   <div class="title">密保问题</div>
-                  <div class="desc">未设置密保问题，密保问题可有效保护账户安全</div>
+                  <div class="desc">
+                    未设置密保问题，密保问题可有效保护账户安全
+                  </div>
                 </div>
                 <div>
                   <a>暂不支持设置</a>
                 </div>
               </div>
             </div>
-            <div v-show="currMenu=='第三方账号绑定'" class="safe">
+            <div v-show="currMenu == '第三方账号绑定'" class="safe">
               <div class="item">
-                <div style="display:flex;align-items:center">
-                  <Icon type="logo-github" size="42" color="#181617" style="margin-right: 16px;" />
+                <div style="display: flex; align-items: center">
+                  <Icon
+                    type="logo-github"
+                    size="42"
+                    color="#181617"
+                    style="margin-right: 16px"
+                  />
                   <div>
                     <div class="title">Github</div>
                     <div class="desc">
-                      <span v-if="relate.github">已绑定Github账号：{{relate.githubUsername}}</span>
+                      <span v-if="relate.github"
+                        >已绑定Github账号：{{ relate.githubUsername }}</span
+                      >
                       <span v-else>当前未绑定Github账号</span>
                     </div>
                   </div>
                 </div>
                 <div>
-                  <a v-if="!relate.github" @click="toRelateGithub()">立即绑定</a>
+                  <a v-if="!relate.github" @click="toRelateGithub()"
+                    >立即绑定</a
+                  >
                   <a v-else @click="unRelateGithub()">解除绑定</a>
                 </div>
               </div>
               <div class="item">
-                <div style="display:flex;align-items:center">
-                  <img src="@/assets/QQ.png" width="42px" style="margin-right: 16px" />
+                <div style="display: flex; align-items: center">
+                  <img
+                    src="@/assets/QQ.png"
+                    width="42px"
+                    style="margin-right: 16px"
+                  />
                   <div>
                     <div class="title">QQ</div>
                     <div class="desc">
-                      <span v-if="relate.qq">已绑定QQ账号：{{relate.qqUsername}}</span>
+                      <span v-if="relate.qq"
+                        >已绑定QQ账号：{{ relate.qqUsername }}</span
+                      >
                       <span v-else>当前未绑定QQ账号</span>
                     </div>
                   </div>
@@ -162,28 +201,42 @@
                 </div>
               </div>
               <div class="item">
-                <div style="display:flex;align-items:center">
-                  <icon name="brands/weixin" scale="2.5" style="margin: 0 16px 0 2px;color:#60c126"></icon>
+                <div style="display: flex; align-items: center">
+                  <Icon
+                    custom="iconfont icon-weixin"
+                    size="40"
+                    style="margin-right: 16px; color: #60c126"
+                  ></Icon>
                   <div>
                     <div class="title">微信</div>
                     <div class="desc">
-                      <span v-if="relate.wechat">已绑定微信账号：{{relate.wechatUsername}}</span>
+                      <span v-if="relate.wechat"
+                        >已绑定微信账号：{{ relate.wechatUsername }}</span
+                      >
                       <span v-else>当前未绑定微信账号</span>
                     </div>
                   </div>
                 </div>
                 <div>
-                  <a v-if="!relate.wechat" @click="toRelateWechat()">立即绑定</a>
+                  <a v-if="!relate.wechat" @click="toRelateWechat()"
+                    >立即绑定</a
+                  >
                   <a v-else @click="unRelateWechat()">解除绑定</a>
                 </div>
               </div>
               <div class="item">
-                <div style="display:flex;align-items:center">
-                  <img src="@/assets/weibo.png" width="41px" style="margin-right: 16px" />
+                <div style="display: flex; align-items: center">
+                  <img
+                    src="@/assets/weibo.png"
+                    width="41px"
+                    style="margin-right: 16px"
+                  />
                   <div>
                     <div class="title">微博</div>
                     <div class="desc">
-                      <span v-if="relate.weibo">已绑定微博账号：{{relate.weiboUsername}}</span>
+                      <span v-if="relate.weibo"
+                        >已绑定微博账号：{{ relate.weiboUsername }}</span
+                      >
                       <span v-else>当前未绑定微博账号</span>
                     </div>
                   </div>
@@ -193,9 +246,59 @@
                   <a v-else @click="unRelateWeibo()">解除绑定</a>
                 </div>
               </div>
+              <div class="item">
+                <div style="display: flex; align-items: center">
+                  <img
+                    src="@/assets/dingding.png"
+                    width="41px"
+                    style="margin-right: 16px"
+                  />
+                  <div>
+                    <div class="title">钉钉</div>
+                    <div class="desc">
+                      <span v-if="relate.dingding"
+                        >已绑定钉钉账号：{{ relate.dingdingUsername }}</span
+                      >
+                      <span v-else>当前未绑定钉钉账号</span>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <a v-if="!relate.dingding" @click="toRelateDingding()"
+                    >立即绑定</a
+                  >
+                  <a v-else @click="unRelateDingding()">解除绑定</a>
+                </div>
+              </div>
+              <div class="item">
+                <div style="display: flex; align-items: center">
+                  <img
+                    src="@/assets/qiyeweixin.png"
+                    width="41px"
+                    style="margin-right: 16px"
+                  />
+                  <div>
+                    <div class="title">企业微信</div>
+                    <div class="desc">
+                      <span v-if="relate.workwechat"
+                        >已绑定企业微信账号：{{
+                          relate.workwechatUsername
+                        }}</span
+                      >
+                      <span v-else>当前未绑定企业微信</span>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <a v-if="!relate.workwechat" @click="toRelateWorkwechat()"
+                    >立即绑定</a
+                  >
+                  <a v-else @click="unRelateWorkwechat()">解除绑定</a>
+                </div>
+              </div>
               <Spin fix v-if="jumping">跳转中...</Spin>
             </div>
-            <div v-show="currMenu=='消息通知'" class="safe">
+            <div v-show="currMenu == '消息通知'" class="safe">
               <div class="item">
                 <div>
                   <div class="title">系统消息</div>
@@ -233,11 +336,19 @@
         :rules="mobileEditValidate"
       >
         <FormItem label="手机号" prop="mobile">
-          <Input v-model="mobileEditForm.mobile" @on-change="hasChangePhone" placeholder="请输入新手机号" />
+          <Input
+            v-model="mobileEditForm.mobile"
+            @on-change="hasChangePhone"
+            placeholder="请输入新手机号"
+          />
         </FormItem>
         <FormItem label="验证码" prop="code" :error="codeError">
           <Row type="flex" justify="space-between">
-            <Input v-model="mobileEditForm.code" placeholder="请输入您收到的短信验证码" style="width:280px;" />
+            <Input
+              v-model="mobileEditForm.code"
+              placeholder="请输入您收到的短信验证码"
+              style="width: 280px"
+            />
             <CountDownButton
               ref="countDownMobile"
               @on-click="sendEditMobileCode"
@@ -251,7 +362,12 @@
       </Form>
       <div slot="footer">
         <Button type="text" @click="cancelInputCodeBox">取消</Button>
-        <Button type="primary" :loading="checkCodeLoading" @click="submitEditMobile">提交</Button>
+        <Button
+          type="primary"
+          :loading="checkCodeLoading"
+          @click="submitEditMobile"
+          >提交</Button
+        >
       </div>
     </Modal>
 
@@ -269,11 +385,19 @@
         :rules="emailEditValidate"
       >
         <FormItem label="新邮箱地址" prop="email">
-          <Input v-model="emailEditForm.email" @on-change="hasChangeEmail" placeholder="请输入新邮箱地址"></Input>
+          <Input
+            v-model="emailEditForm.email"
+            @on-change="hasChangeEmail"
+            placeholder="请输入新邮箱地址"
+          ></Input>
         </FormItem>
         <FormItem label="验证码" prop="code" :error="codeError">
           <Row type="flex" justify="space-between">
-            <Input v-model="emailEditForm.code" placeholder="请输入您收到的邮件中的验证码" style="width:250px;" />
+            <Input
+              v-model="emailEditForm.code"
+              placeholder="请输入您收到的邮件中的验证码"
+              style="width: 250px"
+            />
             <CountDownButton
               ref="countDownEmail"
               @on-click="sendVerifyEmail"
@@ -287,7 +411,12 @@
       </Form>
       <div slot="footer">
         <Button type="text" @click="cancelEditEmail">取消</Button>
-        <Button type="primary" :loading="editEmailLoading" @click="submitEditEmail">提交</Button>
+        <Button
+          type="primary"
+          :loading="editEmailLoading"
+          @click="submitEditEmail"
+          >提交</Button
+        >
       </div>
     </Modal>
 
@@ -309,7 +438,7 @@ export default {
   components: {
     uploadPicThumb,
     checkPassword,
-    CountDownButton
+    CountDownButton,
   },
   name: "ownspace_index",
   data() {
@@ -326,16 +455,15 @@ export default {
         status: "",
         type: "",
         typeTxt: "",
-        address: "",
-        addressArray: []
+        address: [],
       },
       mobileEditForm: {
         mobile: "",
-        code: ""
+        code: "",
       },
       emailEditForm: {
         email: "",
-        code: ""
+        code: "",
       },
       codeError: "",
       initPhone: "",
@@ -350,14 +478,14 @@ export default {
       mobileEditValidate: {
         mobile: [
           { required: true, message: "请输入手机号码" },
-          { validator: validateMobile }
-        ]
+          { validator: validateMobile },
+        ],
       },
       emailEditValidate: {
         email: [
           { required: true, message: "请输入邮箱地址" },
-          { type: "email", message: "邮箱格式不正确" }
-        ]
+          { type: "email", message: "邮箱格式不正确" },
+        ],
       },
       editMobileVisible: false, // 显示填写验证码box
       editEmailVisible: false,
@@ -365,7 +493,7 @@ export default {
       relate: {},
       jumping: false,
       currMenu: "基本信息",
-      dictSex: this.$store.state.dict.sex
+      dictSex: this.$store.state.dict.sex,
     };
   },
   methods: {
@@ -379,15 +507,15 @@ export default {
       }
       let str = JSON.stringify(v);
       let userInfo = JSON.parse(str);
-      userInfo.addressArray = [];
       this.userForm = userInfo;
       this.initPhone = userInfo.mobile;
       this.mobileEditForm.mobile = userInfo.mobile;
       this.initEmail = userInfo.email;
       this.emailEditForm.email = userInfo.email;
       if (userInfo.address) {
-        this.userForm.address = userInfo.address;
-        this.userForm.addressArray = JSON.parse(userInfo.address);
+        this.userForm.address = userInfo.address.split(",");
+      } else {
+        this.userForm.address = [];
       }
       if (this.userForm.type == 0) {
         this.userForm.typeTxt = "普通用户";
@@ -407,7 +535,7 @@ export default {
     },
     changePass() {
       this.$router.push({
-        name: "change_pass"
+        name: "change_pass",
       });
     },
     changeMenu(v) {
@@ -416,25 +544,37 @@ export default {
     toRelateGithub() {
       this.$Modal.info({
         title: "抱歉，请获取完整版",
-        content: "支付链接: http://xpay.exrick.cn/pay?xboot"
+        content: "支付链接: http://xpay.exrick.cn/pay?xboot",
       });
     },
     toRelateQQ() {
       this.$Modal.info({
         title: "抱歉，请获取完整版",
-        content: "支付链接: http://xpay.exrick.cn/pay?xboot"
+        content: "支付链接: http://xpay.exrick.cn/pay?xboot",
       });
     },
     toRelateWeibo() {
       this.$Modal.info({
         title: "抱歉，请获取完整版",
-        content: "支付链接: http://xpay.exrick.cn/pay?xboot"
+        content: "支付链接: http://xpay.exrick.cn/pay?xboot",
       });
     },
     toRelateWechat() {
       this.$Modal.info({
         title: "抱歉，请获取完整版",
-        content: "支付链接: http://xpay.exrick.cn/pay?xboot"
+        content: "支付链接: http://xpay.exrick.cn/pay?xboot",
+      });
+    },
+    toRelateDingding() {
+      this.$Modal.info({
+        title: "抱歉，请获取完整版",
+        content: "支付链接: http://xpay.exrick.cn/pay?xboot",
+      });
+    },
+    toRelateWorkwechat() {
+      this.$Modal.info({
+        title: "抱歉，请获取完整版",
+        content: "支付链接: http://xpay.exrick.cn/pay?xboot",
       });
     },
     showChangeMobile() {
@@ -455,7 +595,7 @@ export default {
         this.userForm.birth = this.format(this.userForm.birth, "yyyy-MM-dd");
       }
       delete this.userForm.roles;
-      userInfoEdit(this.userForm).then(res => {
+      userInfoEdit(this.userForm).then((res) => {
         this.saveLoading = false;
         if (res.success) {
           this.$Message.success("保存成功");
@@ -465,9 +605,6 @@ export default {
           this.$store.commit("setAvatarPath", this.userForm.avatar);
         }
       });
-    },
-    changeAddress() {
-      this.userForm.address = JSON.stringify(this.userForm.addressArray);
     },
     changeBirth(v) {
       this.userForm.birth = v;
@@ -481,17 +618,17 @@ export default {
       this.emailEditForm.email = this.initEmail;
     },
     sendEditMobileCode() {
-      this.$refs["mobileEditForm"].validate(valid => {
+      this.$refs["mobileEditForm"].validate((valid) => {
         if (valid) {
           this.$Modal.info({
             title: "抱歉，请获取完整版",
-            content: "支付链接: http://xpay.exrick.cn/pay?xboot"
+            content: "支付链接: http://xpay.exrick.cn/pay?xboot",
           });
         }
       });
     },
     submitEditMobile() {
-      this.$refs["mobileEditForm"].validate(valid => {
+      this.$refs["mobileEditForm"].validate((valid) => {
         if (valid) {
           if (!this.mobileEditForm.code) {
             this.codeError = "请填写短信验证码";
@@ -501,7 +638,7 @@ export default {
           }
           this.$Modal.info({
             title: "抱歉，请获取完整版",
-            content: "支付链接: http://xpay.exrick.cn/pay?xboot"
+            content: "支付链接: http://xpay.exrick.cn/pay?xboot",
           });
         }
       });
@@ -510,7 +647,7 @@ export default {
       if (this.mobileEditForm.mobile == this.initPhone) {
         this.canSendMobileCode = true;
       } else {
-        this.$refs["mobileEditForm"].validate(valid => {
+        this.$refs["mobileEditForm"].validate((valid) => {
           if (valid) {
             this.canSendMobileCode = false;
           } else {
@@ -527,17 +664,17 @@ export default {
       }
     },
     sendVerifyEmail() {
-      this.$refs["emailEditForm"].validate(valid => {
+      this.$refs["emailEditForm"].validate((valid) => {
         if (valid) {
           this.$Modal.info({
             title: "抱歉，请获取完整版",
-            content: "支付链接: http://xpay.exrick.cn/pay?xboot"
+            content: "支付链接: http://xpay.exrick.cn/pay?xboot",
           });
         }
       });
     },
     submitEditEmail() {
-      this.$refs["emailEditForm"].validate(valid => {
+      this.$refs["emailEditForm"].validate((valid) => {
         if (valid) {
           if (!this.emailEditForm.code) {
             this.codeError = "验证码不能为空";
@@ -547,21 +684,21 @@ export default {
           }
           this.$Modal.info({
             title: "抱歉，请获取完整版",
-            content: "支付链接: http://xpay.exrick.cn/pay?xboot"
+            content: "支付链接: http://xpay.exrick.cn/pay?xboot",
           });
         }
       });
     },
     updateUserInfo() {
       // 更新用户信息
-      userInfo().then(res => {
+      userInfo().then((res) => {
         if (res.success) {
           // 避免超过大小限制
           delete res.result.permissions;
           if (this.getStore("saveLogin")) {
             // 保存7天
             Cookies.set("userInfo", JSON.stringify(res.result), {
-              expires: 7
+              expires: 7,
             });
           } else {
             Cookies.set("userInfo", JSON.stringify(res.result));
@@ -572,10 +709,10 @@ export default {
     },
     changeMessage(v) {
       this.setStore("messageOpen", v);
-    }
+    },
   },
   mounted() {
     this.init();
-  }
+  },
 };
 </script>

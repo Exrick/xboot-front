@@ -22,7 +22,7 @@
     </Row>
     <Row>
       <Divider orientation="left">Redis详细信息</Divider>
-      <Table :columns="columns" :data="redisInfo" :show-header="false"></Table>
+      <Table :columns="columns" :data="redisInfo" :show-header="false" size="small"></Table>
     </Row>
   </div>
 </template>

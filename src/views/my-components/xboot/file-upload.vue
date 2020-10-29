@@ -8,12 +8,13 @@
         :on-error="handleError"
         :format="format"
         :accept="accept"
-        :max-size="maxSize*1024"
+        :max-size="maxSize * 1024"
         :on-format-error="handleFormatError"
         :on-exceeded-size="handleMaxSize"
         :before-upload="beforeUpload"
         :show-upload-list="false"
         class="file-upload"
+        v-show="showUpload"
       >
         <Button
           :loading="loading"
@@ -23,10 +24,11 @@
           :size="size"
           :disabled="disabled"
           :icon="icon"
-        >{{text}}</Button>
+          >{{ text }}</Button
+        >
       </Upload>
       <Tooltip transfer :content="title" placement="top">
-        <a @click="download">{{currentValue.name}}</a>
+        <a @click="download">{{ currentValue.name }}</a>
       </Tooltip>
     </div>
   </div>
@@ -42,39 +44,43 @@ export default {
     type: String,
     ghost: {
       type: Boolean,
-      default: false
+      default: false,
     },
     disabled: {
       type: Boolean,
-      default: false
+      default: false,
     },
     shape: String,
     icon: {
       type: String,
-      default: "ios-cloud-upload-outline"
+      default: "ios-cloud-upload-outline",
     },
     text: {
       type: String,
-      default: "上传文件"
+      default: "上传文件",
     },
     maxSize: {
       type: Number,
-      default: 5
+      default: 5,
     },
-    accept: String
+    accept: String,
+    showUpload: {
+      type: Boolean,
+      default: true,
+    },
   },
   computed: {
     format() {
       if (this.accept) {
         let format = [];
-        this.accept.split(",").forEach(e => {
+        this.accept.split(",").forEach((e) => {
           format.push(e.replace(".", "").replace(" ", ""));
         });
         return format;
       } else {
         return [];
       }
-    }
+    },
   },
   data() {
     return {
@@ -82,13 +88,13 @@ export default {
       title: "点击下载",
       currentValue: this.value,
       loading: false,
-      uploadFileUrl: uploadFile
+      uploadFileUrl: uploadFile,
     };
   },
   methods: {
     init() {
       this.accessToken = {
-        accessToken: this.getStore("accessToken")
+        accessToken: this.getStore("accessToken"),
       };
     },
     download() {
@@ -111,7 +117,7 @@ export default {
           file.name +
           " ’格式不正确, 请选择 " +
           this.accept +
-          " 格式文件"
+          " 格式文件",
       });
     },
     handleMaxSize(file) {
@@ -123,7 +129,7 @@ export default {
           file.name +
           " ’大小过大, 不得超过 " +
           this.maxSize +
-          "M."
+          "M.",
       });
     },
     beforeUpload() {
@@ -136,12 +142,10 @@ export default {
         this.currentValue = {
           url: res.result,
           name: file.name,
-          size: file.size
+          size: file.size,
         };
         this.title =
-          "点击下载(" +
-          ((file.size * 1.0) / (1024 * 1024)).toFixed(2) +
-          " MB)";
+          "点击下载(" + ((file.size * 1.0) / (1024 * 1024)).toFixed(2) + " MB)";
         this.$emit("input", this.currentValue);
         this.$emit("on-change", this.currentValue);
       } else {
@@ -170,16 +174,16 @@ export default {
         this.title = "点击下载";
       }
       this.$emit("on-change", this.currentValue);
-    }
+    },
   },
   watch: {
     value(val) {
       this.setCurrentValue(val);
-    }
+    },
   },
   mounted() {
     this.init();
-  }
+  },
 };
 </script>
 

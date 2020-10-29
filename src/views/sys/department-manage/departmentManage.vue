@@ -6,7 +6,13 @@
   <div class="search">
     <Card>
       <Row class="operation">
-        <Button @click="add" type="primary" icon="md-add" v-show="showType=='tree'">添加子部门</Button>
+        <Button
+          @click="add"
+          type="primary"
+          icon="md-add"
+          v-show="showType == 'tree'"
+          >添加子部门</Button
+        >
         <Button @click="addRoot" icon="md-add">添加一级部门</Button>
         <Button @click="delAll" icon="md-trash">批量删除</Button>
         <Button @click="getParentList" icon="md-refresh">刷新</Button>
@@ -17,9 +23,14 @@
           placeholder="输入部门名搜索"
           clearable
           style="width: 250px"
-          v-show="showType=='list'"
+          v-show="showType == 'list'"
         />
-        <i-switch v-model="strict" size="large" v-show="showType=='tree'" style="margin-left:5px">
+        <i-switch
+          v-model="strict"
+          size="large"
+          v-show="showType == 'tree'"
+          style="margin-left: 5px"
+        >
           <span slot="open">级联</span>
           <span slot="close">单选</span>
         </i-switch>
@@ -34,12 +45,14 @@
           </RadioGroup>
         </div>
       </Row>
-      <Row type="flex" justify="start" v-show="showType=='tree'">
-        <Col :md="8" :lg="8" :xl="6">
+      <Row type="flex" justify="start" :gutter="16" v-show="showType == 'tree'">
+        <Col :sm="8" :md="8" :lg="8" :xl="6">
           <Alert show-icon>
             当前选择编辑：
-            <span class="select-title">{{editTitle}}</span>
-            <a class="select-clear" v-if="form.id" @click="cancelEdit">取消选择</a>
+            <span class="select-title">{{ editTitle }}</span>
+            <a class="select-clear" v-if="form.id" @click="cancelEdit"
+              >取消选择</a
+            >
           </Alert>
           <Input
             v-model="searchKey"
@@ -48,7 +61,7 @@
             placeholder="输入部门名搜索"
             clearable
           />
-          <div class="tree-bar" :style="{maxHeight: maxHeight}">
+          <div class="tree-bar" :style="{ maxHeight: maxHeight }">
             <Tree
               ref="tree"
               :data="data"
@@ -61,15 +74,37 @@
             <Spin size="large" fix v-if="loading"></Spin>
           </div>
         </Col>
-        <Col :md="15" :lg="13" :xl="9" style="margin-left:10px;">
-          <Form ref="form" :model="form" :label-width="100" :rules="formValidate">
+        <Col :sm="16" :md="16" :lg="16" :xl="9">
+          <Form
+            ref="form"
+            :model="form"
+            :label-width="100"
+            :rules="formValidate"
+          >
             <FormItem label="上级部门" prop="parentTitle">
-              <div style="display:flex;">
-                <Input v-model="form.parentTitle" readonly style="margin-right:10px;" />
-                <Poptip transfer trigger="click" placement="right-start" title="选择上级部门" width="250">
+              <div style="display: flex">
+                <Input
+                  v-model="form.parentTitle"
+                  readonly
+                  style="margin-right: 10px"
+                />
+                <Poptip
+                  transfer
+                  trigger="click"
+                  placement="right-start"
+                  title="选择上级部门"
+                  width="250"
+                >
                   <Button icon="md-list">选择部门</Button>
-                  <div slot="content" style="position:relative;min-height:5vh">
-                    <Tree :data="dataEdit" :load-data="loadData" @on-select-change="selectTreeEdit"></Tree>
+                  <div
+                    slot="content"
+                    style="position: relative; min-height: 5vh"
+                  >
+                    <Tree
+                      :data="dataEdit"
+                      :load-data="loadData"
+                      @on-select-change="selectTreeEdit"
+                    ></Tree>
                     <Spin size="large" fix v-if="loadingEdit"></Spin>
                   </div>
                 </Poptip>
@@ -93,8 +128,8 @@
                   :key="item.id"
                   :label="item.nickname"
                 >
-                  <span style="margin-right:10px;">{{ item.nickname }}</span>
-                  <span style="color:#ccc;">{{ item.username }}</span>
+                  <span style="margin-right: 10px">{{ item.nickname }}</span>
+                  <span style="color: #ccc">{{ item.username }}</span>
                 </Option>
               </Select>
             </FormItem>
@@ -113,37 +148,51 @@
                   :key="item.id"
                   :label="item.nickname"
                 >
-                  <span style="margin-right:10px;">{{ item.nickname }}</span>
-                  <span style="color:#ccc;">{{ item.username }}</span>
+                  <span style="margin-right: 10px">{{ item.nickname }}</span>
+                  <span style="color: #ccc">{{ item.username }}</span>
                 </Option>
               </Select>
             </FormItem>
             <FormItem label="排序值" prop="sortOrder">
-              <Tooltip trigger="hover" placement="right" content="值越小越靠前，支持小数">
-                <InputNumber :max="1000" :min="0" v-model="form.sortOrder"></InputNumber>
+              <Tooltip
+                trigger="hover"
+                placement="right"
+                content="值越小越靠前，支持小数"
+              >
+                <InputNumber
+                  :max="1000"
+                  :min="0"
+                  v-model="form.sortOrder"
+                ></InputNumber>
               </Tooltip>
             </FormItem>
             <FormItem label="是否启用" prop="status">
-              <i-switch size="large" v-model="form.status" :true-value="0" :false-value="-1">
+              <i-switch
+                size="large"
+                v-model="form.status"
+                :true-value="0"
+                :false-value="-1"
+              >
                 <span slot="open">启用</span>
                 <span slot="close">禁用</span>
               </i-switch>
             </FormItem>
-            <Form-item class="br">
+            <FormItem class="br">
               <Button
                 @click="submitEdit"
                 :loading="submitLoading"
                 type="primary"
                 icon="ios-create-outline"
-              >修改并保存</Button>
+                >修改并保存</Button
+              >
               <Button @click="handleReset">重置</Button>
-            </Form-item>
+            </FormItem>
           </Form>
         </Col>
       </Row>
-      <Alert show-icon v-show="showType=='list'">
+      <Alert show-icon v-show="showType == 'list'">
         已选择
-        <span class="select-count">{{selectCount}}</span> 项
+        <span class="select-count">{{ selectList.length }}</span> 项
         <a class="select-clear" @click="clearSelectAll">清空</a>
       </Alert>
       <Table
@@ -155,25 +204,48 @@
         border
         ref="table"
         @on-selection-change="showSelect"
-        v-if="showType=='list'"
+        v-if="showType == 'list'"
       ></Table>
     </Card>
 
-    <Modal :title="modalTitle" v-model="modalVisible" :mask-closable="false" :width="500">
-      <Form ref="formAdd" :model="formAdd" :label-width="85" :rules="formValidate">
+    <Modal
+      :title="modalTitle"
+      v-model="modalVisible"
+      :mask-closable="false"
+      :width="500"
+    >
+      <Form
+        ref="formAdd"
+        :model="formAdd"
+        :label-width="85"
+        :rules="formValidate"
+      >
         <div v-if="showParent">
-          <FormItem label="上级部门：">{{form.title}}</FormItem>
+          <FormItem label="上级部门：">{{ form.title }}</FormItem>
         </div>
         <FormItem label="部门名称" prop="title">
           <Input v-model="formAdd.title" />
         </FormItem>
         <FormItem label="排序值" prop="sortOrder">
-          <Tooltip trigger="hover" placement="right" content="值越小越靠前，支持小数">
-            <InputNumber :max="1000" :min="0" v-model="formAdd.sortOrder"></InputNumber>
+          <Tooltip
+            trigger="hover"
+            placement="right"
+            content="值越小越靠前，支持小数"
+          >
+            <InputNumber
+              :max="1000"
+              :min="0"
+              v-model="formAdd.sortOrder"
+            ></InputNumber>
           </Tooltip>
         </FormItem>
         <FormItem label="是否启用" prop="status">
-          <i-switch size="large" v-model="formAdd.status" :true-value="0" :false-value="-1">
+          <i-switch
+            size="large"
+            v-model="formAdd.status"
+            :true-value="0"
+            :false-value="-1"
+          >
             <span slot="open">启用</span>
             <span slot="close">禁用</span>
           </i-switch>
@@ -181,7 +253,9 @@
       </Form>
       <div slot="footer">
         <Button type="text" @click="cancelAdd">取消</Button>
-        <Button type="primary" :loading="submitLoading" @click="submitAdd">提交</Button>
+        <Button type="primary" :loading="submitLoading" @click="submitAdd"
+          >提交</Button
+        >
       </div>
     </Modal>
   </div>
@@ -195,7 +269,7 @@ import {
   editDepartment,
   deleteDepartment,
   searchDepartment,
-  getUserByDepartmentId
+  getUserByDepartmentId,
 } from "@/api/index";
 export default {
   name: "department-manage",
@@ -209,18 +283,17 @@ export default {
       loadingEdit: true,
       modalVisible: false,
       selectList: [],
-      selectCount: 0,
       showParent: false,
       modalTitle: "",
       editTitle: "",
       searchKey: "",
       form: {
         id: "",
-        title: "",
+        title: null,
         parentId: "",
         parentTitle: "",
         sortOrder: 0,
-        status: 0
+        status: 0,
       },
       formAdd: {},
       formValidate: {
@@ -230,9 +303,9 @@ export default {
             required: true,
             type: "number",
             message: "排序值不能为空",
-            trigger: "blur"
-          }
-        ]
+            trigger: "blur",
+          },
+        ],
       },
       submitLoading: false,
       data: [],
@@ -242,19 +315,19 @@ export default {
         {
           type: "selection",
           width: 60,
-          align: "center"
+          align: "center",
         },
         {
           type: "index",
           width: 60,
-          align: "center"
+          align: "center",
         },
         {
           title: "部门名称",
           key: "title",
           minWidth: 120,
           sortable: true,
-          tree: true
+          tree: true,
         },
         {
           title: "排序",
@@ -262,13 +335,13 @@ export default {
           width: 150,
           sortable: true,
           align: "center",
-          sortType: "asc"
+          sortType: "asc",
         },
         {
           title: "创建时间",
           key: "createTime",
           sortable: true,
-          width: 200
+          width: 200,
         },
         {
           title: "操作",
@@ -278,43 +351,36 @@ export default {
           render: (h, params) => {
             return h("div", [
               h(
-                "Button",
+                "a",
                 {
-                  props: {
-                    type: "primary",
-                    size: "small",
-                    icon: "md-add"
-                  },
-                  style: {
-                    marginRight: "5px"
-                  },
                   on: {
                     click: () => {
                       this.tableAdd(params.row);
-                    }
-                  }
-                },
-                " 添加子部门"
-              ),
-              h(
-                "Button",
-                {
-                  props: {
-                    type: "error",
-                    size: "small"
+                    },
                   },
+                },
+                "添加子部门"
+              ),
+              h("Divider", {
+                props: {
+                  type: "vertical",
+                },
+              }),
+              h(
+                "a",
+                {
                   on: {
                     click: () => {
                       this.remove(params.row);
-                    }
-                  }
+                    },
+                  },
                 },
                 "删除"
-              )
+              ),
             ]);
-          }
-        }
-      ]
+          },
+        },
+      ],
     };
   },
   methods: {
@@ -324,10 +390,10 @@ export default {
     },
     getParentList() {
       this.loading = true;
-      initDepartment().then(res => {
+      initDepartment().then((res) => {
         this.loading = false;
         if (res.success) {
-          res.result.forEach(function(e) {
+          res.result.forEach(function (e) {
             if (e.isParent) {
               e.loading = false;
               e.children = [];
@@ -340,10 +406,10 @@ export default {
     },
     getParentListEdit() {
       this.loadingEdit = true;
-      initDepartment().then(res => {
+      initDepartment().then((res) => {
         this.loadingEdit = false;
         if (res.success) {
-          res.result.forEach(function(e) {
+          res.result.forEach(function (e) {
             if (e.isParent) {
               e.loading = false;
               e.children = [];
@@ -352,7 +418,7 @@ export default {
           // 头部加入一级
           let first = {
             id: "0",
-            title: "一级部门"
+            title: "一级部门",
           };
           res.result.unshift(first);
           this.dataEdit = res.result;
@@ -360,9 +426,9 @@ export default {
       });
     },
     loadData(item, callback) {
-      loadDepartment(item.id).then(res => {
+      loadDepartment(item.id).then((res) => {
         if (res.success) {
-          res.result.forEach(function(e) {
+          res.result.forEach(function (e) {
             if (e.isParent) {
               e.loading = false;
               e.children = [];
@@ -376,9 +442,16 @@ export default {
     search() {
       if (this.searchKey) {
         this.loading = true;
-        searchDepartment({ title: this.searchKey }).then(res => {
+        searchDepartment({ title: this.searchKey }).then((res) => {
           this.loading = false;
           if (res.success) {
+            res.result.forEach(function (e) {
+              if (e.isParent) {
+                e.loading = false;
+                e.children = [];
+                e._loading = false;
+              }
+            });
             this.data = res.result;
           }
         });
@@ -399,7 +472,7 @@ export default {
         this.editTitle = data.title;
         // 加载部门用户数据
         this.userLoading = true;
-        getUserByDepartmentId(data.id).then(res => {
+        getUserByDepartmentId(data.id).then((res) => {
           this.userLoading = false;
           if (res.success) {
             this.users = res.result;
@@ -443,20 +516,19 @@ export default {
     },
     showSelect(e) {
       this.selectList = e;
-      this.selectCount = e.length;
     },
     clearSelectAll() {
       this.$refs.table.selectAll(false);
     },
     submitEdit() {
-      this.$refs.form.validate(valid => {
+      this.$refs.form.validate((valid) => {
         if (valid) {
           if (!this.form.id) {
             this.$Message.warning("请先点击选择要修改的部门");
             return;
           }
           this.submitLoading = true;
-          editDepartment(this.form).then(res => {
+          editDepartment(this.form).then((res) => {
             this.submitLoading = false;
             if (res.success) {
               this.$Message.success("编辑成功");
@@ -468,10 +540,10 @@ export default {
       });
     },
     submitAdd() {
-      this.$refs.formAdd.validate(valid => {
+      this.$refs.formAdd.validate((valid) => {
         if (valid) {
           this.submitLoading = true;
-          addDepartment(this.formAdd).then(res => {
+          addDepartment(this.formAdd).then((res) => {
             this.submitLoading = false;
             if (res.success) {
               this.$Message.success("添加成功");
@@ -496,7 +568,7 @@ export default {
       this.formAdd = {
         parentId: this.form.id,
         sortOrder: 0,
-        status: 0
+        status: 0,
       };
       this.modalVisible = true;
     },
@@ -506,54 +578,54 @@ export default {
       this.formAdd = {
         parentId: 0,
         sortOrder: 0,
-        status: 0
+        status: 0,
       };
       this.modalVisible = true;
     },
     changeSelect(v) {
-      this.selectCount = v.length;
       this.selectList = v;
     },
     remove(v) {
-      this.selectCount = 1;
+      this.selectList = [];
       this.selectList.push(v);
       this.delAll();
     },
     delAll() {
-      if (this.selectCount <= 0) {
+      if (this.selectList.length <= 0) {
         this.$Message.warning("您还未勾选要删除的数据");
         return;
       }
       this.$Modal.confirm({
         title: "确认删除",
         content:
-          "您确认要删除所选的 " + this.selectCount + " 条数据及其下级所有数据?",
+          "您确认要删除所选的 " +
+          this.selectList.length +
+          " 条数据及其下级所有数据?",
         loading: true,
         onOk: () => {
           let ids = "";
-          this.selectList.forEach(function(e) {
+          this.selectList.forEach(function (e) {
             ids += e.id + ",";
           });
           ids = ids.substring(0, ids.length - 1);
-          deleteDepartment({ids: ids}).then(res => {
+          deleteDepartment({ ids: ids }).then((res) => {
             this.$Modal.remove();
             if (res.success) {
               this.$Message.success("删除成功");
               this.selectList = [];
-              this.selectCount = 0;
               this.cancelEdit();
               this.init();
             }
           });
-        }
+        },
       });
-    }
+    },
   },
   mounted() {
     // 计算高度
     let height = document.documentElement.clientHeight;
     this.maxHeight = Number(height - 287) + "px";
     this.init();
-  }
+  },
 };
 </script>

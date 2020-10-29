@@ -1,4 +1,4 @@
-.unlock-body-con{
+.unlock-body-con {
     position: absolute;
     width: 400px;
     height: 100px;
@@ -8,11 +8,12 @@
     margin-top: -200px;
     transform-origin: center center;
     z-index: 10;
-    .unlock-avator-con{
+
+    .unlock-avator-con {
         position: absolute;
         left: 50%;
         top: 50%;
-        transform: translate(-50%,-50%);
+        transform: translate(-50%, -50%);
         box-sizing: border-box;
         width: 100px;
         height: 100px;
@@ -23,13 +24,15 @@
         transition: all .5s;
         z-index: 12;
         box-shadow: 0 0 10px 2px rgba(255, 255, 255, .3);
-        .unlock-avator-img{
+
+        .unlock-avator-img {
             width: 100%;
             height: 100%;
             display: block;
             z-index: 7;
         }
-        .unlock-avator-cover{
+
+        .unlock-avator-cover {
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, .6);
@@ -40,27 +43,31 @@
             opacity: 0;
             transition: opacity .2s;
             color: white;
-            span{
+
+            span {
                 display: block;
                 margin: 20px auto 5px;
                 text-align: center;
             }
-            p{
+
+            p {
                 text-align: center;
                 font-size: 16px;
                 font-weight: 500;
             }
         }
-        &:hover .unlock-avator-cover{
+
+        &:hover .unlock-avator-cover {
             opacity: 1;
             transition: opacity .2s;
         }
     }
-    .unlock-avator-under-back{
+
+    .unlock-avator-under-back {
         position: absolute;
         left: 50%;
         top: 50%;
-        transform: translate(-45px,-50%);
+        transform: translate(-45px, -50%);
         box-sizing: border-box;
         width: 100px;
         height: 100px;
@@ -69,27 +76,31 @@
         transition: all .5s;
         z-index: 5;
     }
-    .unlock-input-con{
+
+    .unlock-input-con {
         position: absolute;
         height: 70px;
         width: 350px;
         top: 15px;
         right: 0px;
-        .unlock-input-overflow-con{
+
+        .unlock-input-overflow-con {
             position: absolute;
             width: 100%;
             height: 100%;
             left: 0;
             top: 0;
             overflow: hidden;
-            .unlock-overflow-body{
+
+            .unlock-overflow-body {
                 position: absolute;
                 top: 0;
                 right: 0;
                 width: 100%;
                 height: 100%;
                 transition: all .5s ease .5s;
-                .unlock-input{
+
+                .unlock-input {
                     float: left;
                     display: block;
                     box-sizing: content-box;
@@ -101,7 +112,8 @@
                     border: 2px solid #e2ddde;
                     margin-top: 10px;
                 }
-                .unlock-btn{
+
+                .unlock-btn {
                     float: left;
                     display: block;
                     font-size: 20px;
@@ -114,18 +126,21 @@
                     outline: none;
                     transition: all .2s;
                     margin-top: 10px;
-                    &:hover{
+
+                    &:hover {
                         background: #5cadff;
                         box-shadow: 0 0 10px 3px rgba(255, 255, 255, .2);
                     }
                 }
-                .click-unlock-btn{
+
+                .click-unlock-btn {
                     background: #2b85e4 !important;
                 }
             }
         }
     }
-    .unlock-locking-tip-con{
+
+    .unlock-locking-tip-con {
         width: 100px;
         height: 30px;
         text-align: center;
@@ -137,41 +152,52 @@
         font-size: 18px;
     }
 }
-@keyframes unlock-in{
+
+@keyframes unlock-in {
     0% {
         transform: scale(0);
     }
-    80%{
+
+    80% {
         transform: scale(0);
     }
+
     88% {
         transform: scale(1.3);
     }
+
     100% {
         transform: scale(1);
     }
 }
-@keyframes unlock-out{
+
+@keyframes unlock-out {
     0% {
         transform: scale(1);
     }
-    60%{
+
+    60% {
         transform: scale(1.2);
     }
+
     100% {
         transform: scale(0);
     }
 }
-.show-unlock-enter-active{
+
+.show-unlock-enter-active {
     animation: unlock-in 1.4s ease;
 }
-.show-unlock-leave-to{
+
+.show-unlock-leave-to {
     opacity: 0;
 }
-.show-unlock-leave-active{
+
+.show-unlock-leave-active {
     transition: opacity .2s;
 }
-.unlock-con{
+
+.unlock-con {
     width: 100%;
     height: 100%;
 }

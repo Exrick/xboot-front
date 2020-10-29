@@ -1,7 +1,11 @@
 <template>
   <Card :padding="0">
     <div class="info-card-con">
-      <Col class="info-card-icon-con" :style="{backgroundColor: color, color: 'white'}" span="8">
+      <Col
+        class="info-card-icon-con"
+        :style="{ backgroundColor: color, color: 'white' }"
+        span="8"
+      >
         <Row class="height-100" type="flex" align="middle" justify="center">
           <Icon :type="iconType" :size="iconSize"></Icon>
         </Row>
@@ -30,7 +34,7 @@ import countUp from "./countUp.vue";
 export default {
   name: "inforCard",
   components: {
-    countUp
+    countUp,
   },
   props: {
     idName: String,
@@ -40,17 +44,17 @@ export default {
     introText: String,
     countSize: {
       type: String,
-      default: "30px"
+      default: "30px",
     },
     countWeight: {
       type: Number,
-      default: 700
+      default: 700,
     },
     iconSize: {
       type: Number,
-      default: 40
-    }
-  }
+      default: 40,
+    },
+  },
 };
 </script>
 <style lang="less">

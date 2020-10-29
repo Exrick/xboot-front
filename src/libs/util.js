@@ -168,7 +168,7 @@ util.setCurrentPath = function (vm, name) {
 };
 
 util.openNewPage = function (vm, name, argu, query) {
-    if(!vm.$store){
+    if (!vm.$store) {
         return;
     }
     let pageOpenedList = vm.$store.state.app.pageOpenedList;
@@ -254,10 +254,12 @@ util.initRouter = function (vm) {
         return;
     }
     if (!vm.$store.state.app.added) {
+        vm.$Loading.start();
         // 第一次加载 读取数据
         let accessToken = window.localStorage.getItem('accessToken');
         // 加载菜单
         axios.get(getMenuList, { headers: { 'accessToken': accessToken } }).then(res => {
+            vm.$Loading.finish();
             let menuData = res.result;
             if (!menuData) {
                 return;
@@ -277,7 +279,7 @@ util.initRouter = function (vm) {
     } else {
         // 读取缓存数据
         let data = window.localStorage.getItem('menuData');
-        if(!data){
+        if (!data) {
             vm.$store.commit('setAdded', false);
             return;
         }
@@ -292,8 +294,8 @@ util.initAllMenuData = function (constRoutes, data) {
 
     let allMenuData = [];
     data.forEach(e => {
-        if(e.type==-1){
-            e.children.forEach(item=>{
+        if (e.type == -1) {
+            e.children.forEach(item => {
                 allMenuData.push(item);
             })
         }
@@ -311,7 +313,10 @@ util.initMenuData = function (vm, data) {
         let nav = {
             name: e.name,
             title: e.title,
-            icon: e.icon
+            icon: e.icon,
+            isMenu: e.isMenu,
+            url: e.url,
+            description: e.description
         }
         navList.push(nav);
     })

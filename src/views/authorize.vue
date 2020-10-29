@@ -5,12 +5,35 @@
       justify="center"
       align="middle"
       @keydown.enter.native="submit"
-      style="height:100%"
+      style="height: 100%"
     >
-      <Col class="layout">
+      <Col class="layout" :style="{ width: userInfo ? '450px' : '390px' }">
         <div>
-          <Header />
-          <Row v-if="!error&&!authLoading">
+          <div class="logos-wrap">
+            <div class="logos">
+              <Avatar
+                :src="site.logo"
+                :style="{ background: '#fff' }"
+                size="96"
+                class="top site-logo"
+              />
+              <Icon
+                type="ios-checkmark-circle"
+                color="#52c41a"
+                size="32"
+                class="top"
+              ></Icon>
+              <Avatar
+                :src="require('@/assets/logo-min.png')"
+                :style="{ background: '#f1f2f5' }"
+                size="96"
+                class="top"
+              />
+              <div class="line"></div>
+            </div>
+            <div class="auth-title">{{ $t("authorize") }} {{ site.name }}</div>
+          </div>
+          <Row v-if="!error && !authLoading && !userInfo">
             <Tabs value="1">
               <TabPane label="XBoot统一认证平台" name="1" icon="md-people">
                 <Form ref="loginForm" :model="form" :rules="rules" class="form">
@@ -20,7 +43,7 @@
                       prefix="ios-contact"
                       size="large"
                       clearable
-                      placeholder="请输入用户名"
+                      placeholder="账号/邮箱/手机号"
                       autocomplete="off"
                     />
                   </FormItem>
@@ -39,7 +62,7 @@
                     <Row
                       type="flex"
                       justify="space-between"
-                      style="align-items: center;overflow: hidden;"
+                      style="align-items: center; overflow: hidden"
                     >
                       <Input
                         v-model="form.code"
@@ -47,15 +70,18 @@
                         clearable
                         placeholder="请输入图片验证码"
                         :maxlength="10"
-                        style="width: 67%;"
+                        style="width: 67%"
                       />
-                      <div class="code-image" style="position:relative;font-size:12px">
+                      <div
+                        class="code-image"
+                        style="position: relative; font-size: 12px"
+                      >
                         <Spin v-if="loadingCaptcha" fix></Spin>
                         <img
                           :src="captchaImg"
                           @click="getCaptchaImg"
                           alt="加载验证码失败"
-                          style="width:110px;cursor:pointer;display:block"
+                          style="width: 110px; cursor: pointer; display: block"
                         />
                       </div>
                     </Row>
@@ -64,9 +90,15 @@
               </TabPane>
             </Tabs>
             <Row>
-              <Button type="primary" size="large" :loading="loading" @click="submit" long>
-                <span v-if="!loading">授权并登录</span>
-                <span v-else>授权中...</span>
+              <Button
+                type="primary"
+                size="large"
+                :loading="loading"
+                @click="submit"
+                long
+              >
+                <span v-if="!loading">{{ $t("authorizeAndSignin") }}</span>
+                <span v-else>{{ $t("authorizing") }}</span>
               </Button>
             </Row>
             <Row type="flex" justify="space-between" class="other-thing">
@@ -76,10 +108,73 @@
               </router-link>
             </Row>
           </Row>
+          <div v-else>
+            <Card dis-hover :padding="0" v-if="!error">
+              <div class="auth-card">
+                <div class="auth-info-wrap">
+                  <div class="auth-detail" style="margin-bottom: 25px">
+                    <Avatar
+                      :src="userInfo.avatar"
+                      :style="{ background: '#fff' }"
+                      size="40"
+                      class="auth-pic"
+                    />
+                    <div>
+                      <a
+                        :href="site.homeUri"
+                        target="_blank"
+                        class="auth-detail-href"
+                        >{{ site.name }}</a
+                      >
+                      <div class="auth-detail-sub-title">
+                        {{ $t("wants") }}
+                        <span class="auth-detail-strong">{{
+                          userInfo.username
+                        }}</span>
+                        {{ $t("wants2") }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="auth-detail" style="margin-bottom: 15px">
+                    <Icon
+                      type="md-person"
+                      color="#6a737d"
+                      size="40"
+                      class="auth-pic"
+                    ></Icon>
+                    <div>
+                      <div class="auth-detail-title">
+                        {{ $t("authAquire") }}
+                      </div>
+                      <div class="auth-detail-sub-title">
+                        {{ $t("aquireInfo") }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <Row class="button-confirm">
+                  <Button
+                    type="primary"
+                    size="large"
+                    :loading="loading"
+                    @click="confirm"
+                    long
+                  >
+                    <span v-if="!loading">{{ $t("authorize") }}</span>
+                    <span v-else>{{ $t("authorizing") }}</span>
+                  </Button>
+                </Row>
+                <Row class="to-wrap">
+                  <div>{{ $t("afterAuth") }}</div>
+                  <div class="to-strong">{{ site.homeUri }}</div>
+                </Row>
+              </div>
+            </Card>
+          </div>
           <div v-if="error" style="margin-top: 15vh">
             <Alert type="error" show-icon>
-              {{title}}
-              <span slot="desc">{{msg}}</span>
+              {{ title }}
+              <span slot="desc">{{ msg }}</span>
             </Alert>
           </div>
           <div v-if="authLoading">
@@ -95,28 +190,33 @@
 
 <script>
 import Cookies from "js-cookie";
-import { initCaptcha, drawCodeImage } from "@/api/index";
-import { authorize, authorized } from "@/api/open";
-import Header from "@/views/main-components/header";
+import { initCaptcha, drawCodeImage, userInfo } from "@/api/index";
+import { siteInfo, authorize, authorized } from "@/api/open";
 import Footer from "@/views/main-components/footer";
 import LangSwitch from "@/views/main-components/lang-switch";
 import RectLoading from "@/views/my-components/xboot/rect-loading";
 export default {
   components: {
     LangSwitch,
-    Header,
     Footer,
-    RectLoading
+    RectLoading,
   },
   data() {
     return {
-      authLoading: false,
+      authLoading: true,
       title: "",
       msg: "",
       error: false,
       loadingCaptcha: true,
       captchaImg: "",
       loading: false,
+      userInfo: {},
+      site: {
+        name: "",
+        homeUri: "",
+        logo: "",
+        autoApprove: false,
+      },
       form: {
         username: "",
         password: "",
@@ -125,35 +225,35 @@ export default {
         redirect_uri: "",
         state: "",
         response_type: "",
-        captchaId: this.captchaId
+        captchaId: this.captchaId,
       },
       rules: {
         username: [
           {
             required: true,
             message: "账号不能为空",
-            trigger: "blur"
-          }
+            trigger: "blur",
+          },
         ],
         password: [
           {
             required: true,
             message: "密码不能为空",
-            trigger: "blur"
-          }
+            trigger: "blur",
+          },
         ],
         code: [
           {
             required: true,
             message: "验证码不能为空",
-            trigger: "blur"
-          }
-        ]
-      }
+            trigger: "blur",
+          },
+        ],
+      },
     };
   },
   methods: {
-    judgeUrl() {
+    init() {
       let q = this.$route.query;
       if (!q.client_id) {
         this.title = "参数client_id非法";
@@ -177,27 +277,30 @@ export default {
       this.form.redirect_uri = q.redirect_uri;
       this.form.state = q.state;
       this.form.responseType = q.responseType;
+      this.getSiteInfo(this.form.client_id);
     },
-    getCaptchaImg() {
-      this.loadingCaptcha = true;
-      initCaptcha().then(res => {
-        this.loadingCaptcha = false;
+    getSiteInfo(v) {
+      siteInfo(v).then((res) => {
         if (res.success) {
-          this.form.captchaId = res.result;
-          this.captchaImg = drawCodeImage + res.result;
+          this.site = res.result;
+          this.isAuthed();
+        } else {
+          this.error = true;
+          this.title = res.message;
+          this.authLoading = false;
         }
       });
     },
-    submit() {
-      this.$refs.loginForm.validate(valid => {
-        if (valid) {
-          this.loading = true;
-          authorize(this.form).then(res => {
+    isAuthed() {
+      // 判断是否认证过
+      let userInfo = Cookies.get("userInfo");
+      this.userInfo = userInfo;
+      if (userInfo) {
+        this.userInfo = JSON.parse(userInfo);
+        // 自动授权
+        if (this.site.autoApprove) {
+          authorized(this.form).then((res) => {
             if (res.success) {
-              // 存储认证信息 避免下次认证
-              Cookies.set("oauthUsername", this.form.username, {
-                expires: 30
-              });
               let url =
                 res.result.redirect_uri +
                 "?code=" +
@@ -206,22 +309,20 @@ export default {
                 res.result.state;
               window.location.href = url;
             } else {
-              this.loading = false;
-              this.getCaptchaImg();
+              this.authLoading = false;
             }
           });
+        } else {
+          this.authLoading = false;
         }
-      });
-    }
-  },
-  mounted() {
-    this.judgeUrl();
-    // 判断是否认证过
-    let username = Cookies.get("oauthUsername");
-    if (username) {
-      this.authLoading = true;
-      this.form.username = username;
-      authorized(this.form).then(res => {
+      } else {
+        this.authLoading = false;
+      }
+    },
+    confirm() {
+      this.loading = true;
+      authorized(this.form).then((res) => {
+        this.loading = false;
         if (res.success) {
           let url =
             res.result.redirect_uri +
@@ -230,13 +331,68 @@ export default {
             "&state=" +
             res.result.state;
           window.location.href = url;
-        } else {
-          this.authLoading = false;
         }
       });
-    }
+    },
+    getCaptchaImg() {
+      this.loadingCaptcha = true;
+      initCaptcha().then((res) => {
+        this.loadingCaptcha = false;
+        if (res.success) {
+          this.form.captchaId = res.result;
+          this.captchaImg = drawCodeImage + res.result;
+        }
+      });
+    },
+    submit() {
+      this.$refs.loginForm.validate((valid) => {
+        if (valid) {
+          this.loading = true;
+          authorize(this.form).then((res) => {
+            if (res.success) {
+              // 存储accessToken
+              this.setStore("accessToken", res.result.accessToken);
+              // 获取用户信息
+              userInfo().then((res) => {
+                if (res.success) {
+                  // 避免超过大小限制
+                  delete res.result.permissions;
+                  let roles = [];
+                  res.result.roles.forEach((e) => {
+                    roles.push(e.name);
+                  });
+                  this.setStore("roles", roles);
+                  Cookies.set("userInfo", JSON.stringify(res.result), {
+                    expires: 7,
+                  });
+                  this.setStore("userInfo", res.result);
+                  this.$store.commit("setAvatarPath", res.result.avatar);
+                  // 跳转
+                  let url =
+                    res.result.redirect_uri +
+                    "?code=" +
+                    res.result.code +
+                    "&state=" +
+                    res.result.state;
+                  window.location.href = url;
+                } else {
+                  this.loading = false;
+                  this.getCaptchaImg();
+                }
+              });
+            } else {
+              this.loading = false;
+              this.getCaptchaImg();
+            }
+          });
+        }
+      });
+    },
+  },
+  mounted() {
+    this.init();
     this.getCaptchaImg();
-  }
+  },
 };
 </script>
 

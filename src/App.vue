@@ -11,7 +11,7 @@ export default {
   },
   mounted() {},
   beforeDestroy() {},
-  methods: {}
+  methods: {},
 };
 </script>
 
@@ -53,5 +53,9 @@ body {
 .block-pop .ivu-poptip,
 .block-pop .ivu-poptip-rel {
   display: block;
+}
+
+.viewer-container {
+  z-index: 2050 !important;
 }
 </style>

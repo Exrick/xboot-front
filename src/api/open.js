@@ -1,24 +1,23 @@
 // 统一请求路径前缀在libs/axios.js中修改
-import { getRequest, postRequest, putRequest } from '@/libs/axios';
+import { getRequest, getNoAuthRequest, postNoAuthRequest, postRequest, putRequest } from '@/libs/axios';
 
 
 // 认证
+export const siteInfo = (id, params) => {
+    return getNoAuthRequest('/oauth2/info/' + id, params)
+}
+// 认证
 export const authorize = (params) => {
-    return getRequest('/oauth2/authorize', params)
+    return postNoAuthRequest('/oauth2/authorize', params)
 }
 // 认证过
 export const authorized = (params) => {
-    return getRequest('/oauth2/authorized', params)
+    return postRequest('/oauth2/authorized', params)
 }
 // 获取token
 export const token = (params) => {
-    return getRequest('/oauth2/token', params)
+    return getNoAuthRequest('/oauth2/token', params)
 }
-// 获取user信息
-export const user = (params) => {
-    return getRequest('/oauth2/user', params)
-}
-
 
 
 
@@ -42,10 +41,3 @@ export const updateClient = (params) => {
 export const deleteClient = (params) => {
     return postRequest('/client/delByIds', params)
 }
-
-
-
-
-
-
-

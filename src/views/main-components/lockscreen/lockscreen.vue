@@ -1,9 +1,9 @@
 <template>
-    <div @click="lockScreen" class="lock-screen-btn-con">
-        <Tooltip content="锁屏" placement="bottom">
-            <Icon type="md-lock" :size="24"></Icon>
-        </Tooltip>
-    </div>
+  <div @click="lockScreen" class="lock-screen-btn-con">
+    <Tooltip content="锁屏" placement="bottom">
+      <Icon type="md-lock" :size="24"></Icon>
+    </Tooltip>
+  </div>
 </template>
 
 <script>
@@ -19,8 +19,8 @@ export default {
   props: {
     value: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   methods: {
     lockScreen() {
@@ -34,11 +34,11 @@ export default {
       setTimeout(() => {
         lockScreenBack.style.transition = "all 0s";
         this.$router.push({
-          name: "locking"
+          name: "locking",
         });
       }, 800);
       Cookies.set("locking", "1");
-    }
+    },
   },
   mounted() {
     let lockScreenBack;
@@ -61,7 +61,7 @@ export default {
     this.lockScreenSize = size;
     lockScreenBack.style.transition = "all 3s";
     lockScreenBack.style.width = lockScreenBack.style.height = size + "px";
-  }
+  },
 };
 </script>
 

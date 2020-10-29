@@ -8,12 +8,14 @@
         <Button @click="add" type="primary" icon="md-add">新窗口中添加</Button>
         <Button @click="delAll" icon="md-trash">批量删除</Button>
         <Button @click="getDataList" icon="md-refresh">刷新</Button>
-        <Button type="dashed" @click="openTip=!openTip">{{openTip ? "关闭提示" : "开启提示"}}</Button>
+        <Button type="dashed" @click="openTip = !openTip">{{
+          openTip ? "关闭提示" : "开启提示"
+        }}</Button>
       </Row>
       <Row v-show="openTip">
         <Alert show-icon>
           已选择
-          <span class="select-count">{{selectCount}}</span> 项
+          <span class="select-count">{{ selectList.length }}</span> 项
           <a class="select-clear" @click="clearSelectAll">清空</a>
         </Alert>
       </Row>
@@ -36,7 +38,7 @@
           :page-size="searchForm.pageSize"
           @on-change="changePage"
           @on-page-size-change="changePageSize"
-          :page-size-opts="[10,20,50]"
+          :page-size-opts="[10, 20, 50]"
           size="small"
           show-total
           show-elevator
@@ -59,37 +61,36 @@ export default {
         pageNumber: 1, // 当前页数
         pageSize: 10, // 页面大小
         sort: "createTime", // 默认排序字段
-        order: "desc" // 默认排序方式
+        order: "desc", // 默认排序方式
       },
       selectList: [], // 多选数据
-      selectCount: 0, // 多选计数
       columns: [
         // 表头
         {
           type: "selection",
           width: 60,
-          align: "center"
+          align: "center",
         },
         {
           type: "index",
           width: 60,
-          align: "center"
+          align: "center",
         },
         {
           title: "名称",
           key: "name",
-          sortable: true
+          sortable: true,
         },
         {
           title: "创建时间",
           key: "createTime",
           sortable: true,
-          sortType: "desc"
+          sortType: "desc",
         },
         {
           title: "更新时间",
           key: "updateTime",
-          sortable: true
+          sortable: true,
         },
         {
           title: "操作",
@@ -99,46 +100,38 @@ export default {
           render: (h, params) => {
             return h("div", [
               h(
-                "Button",
+                "a",
                 {
-                  props: {
-                    type: "primary",
-                    size: "small",
-                    icon: "ios-create-outline"
-                  },
-                  style: {
-                    marginRight: "5px"
-                  },
                   on: {
                     click: () => {
                       this.edit(params.row);
-                    }
-                  }
+                    },
+                  },
                 },
                 "新窗口中编辑"
               ),
+              h("Divider", {
+                props: {
+                  type: "vertical",
+                },
+              }),
               h(
-                "Button",
+                "a",
                 {
-                  props: {
-                    type: "error",
-                    size: "small",
-                    icon: "md-trash"
-                  },
                   on: {
                     click: () => {
                       this.remove(params.row);
-                    }
-                  }
+                    },
+                  },
                 },
                 "删除"
-              )
+              ),
             ]);
-          }
-        }
+          },
+        },
       ],
       data: [], // 表单数据
-      total: 0 // 表单数据总数
+      total: 0, // 表单数据总数
     };
   },
   methods: {
@@ -167,7 +160,6 @@ export default {
     },
     changeSelect(e) {
       this.selectList = e;
-      this.selectCount = e.length;
     },
     getDataList() {
       this.loading = true;
@@ -177,6 +169,10 @@ export default {
       //   if (res.success) {
       //     this.data = res.result.content;
       //     this.total = res.result.totalElements;
+      //     if (this.data.length == 0 && this.searchForm.pageNumber > 1) {
+      //       this.searchForm.pageNumber -= 1;
+      //       this.getDataList();
+      //     }
       //   }
       // });
       // 以下为模拟数据
@@ -185,14 +181,14 @@ export default {
           id: "1",
           name: "XBoot(新窗口提交自动关闭后可返回该页面)",
           createTime: "2018-08-08 00:08:00",
-          updateTime: "2018-08-08 00:08:00"
+          updateTime: "2018-08-08 00:08:00",
         },
         {
           id: "2",
           name: "Exrick(新窗口提交自动关闭后可返回该页面)",
           createTime: "2018-08-08 00:08:00",
-          updateTime: "2018-08-08 00:08:00"
-        }
+          updateTime: "2018-08-08 00:08:00",
+        },
       ];
       this.total = this.data.length;
       this.loading = false;
@@ -203,7 +199,7 @@ export default {
       this.$router.push({
         // 该路由已在/router/router.js中定义好
         name: "add",
-        query: query
+        query: query,
       });
     },
     edit(v) {
@@ -212,7 +208,7 @@ export default {
       this.$router.push({
         // 该路由已在/router/router.js中定义好 携带id参数
         name: "edit",
-        query: query
+        query: query,
       });
     },
     remove(v) {
@@ -227,28 +223,30 @@ export default {
           //   this.$Modal.remove();
           //   if (res.success) {
           //     this.$Message.success("操作成功");
+          //     this.clearSelectAll();
           //     this.getDataList();
           //   }
           // });
           // 模拟请求成功
           this.$Message.success("操作成功");
+          this.clearSelectAll();
           this.$Modal.remove();
           this.getDataList();
-        }
+        },
       });
     },
     delAll() {
-      if (this.selectCount <= 0) {
+      if (this.selectList.length <= 0) {
         this.$Message.warning("您还未选择要删除的数据");
         return;
       }
       this.$Modal.confirm({
         title: "确认删除",
-        content: "您确认要删除所选的 " + this.selectCount + " 条数据?",
+        content: "您确认要删除所选的 " + this.selectList.length + " 条数据?",
         loading: true,
         onOk: () => {
           let ids = "";
-          this.selectList.forEach(function(e) {
+          this.selectList.forEach(function (e) {
             ids += e.id + ",";
           });
           ids = ids.substring(0, ids.length - 1);
@@ -266,12 +264,12 @@ export default {
           this.$Modal.remove();
           this.clearSelectAll();
           this.getDataList();
-        }
+        },
       });
-    }
+    },
   },
   mounted() {
     this.init();
-  }
+  },
 };
 </script>

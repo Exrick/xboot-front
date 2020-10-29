@@ -20,5 +20,13 @@ export default {
     help: 'Help',
     privacy: 'Privacy',
     terms: 'Terms',
-    rights: 'All Rights Reserved'
+    rights: 'All Rights Reserved',
+    authorize: "Authorize",
+    authorizeAndSignin: "Authorize and Sign in",
+    authorizing: "Authorizing...",
+    wants: "wants to access your Exrick account",
+    wants2: "",
+    authAquire: "Public data only",
+    aquireInfo: "Limited access to your public data",
+    afterAuth: "Authorizing will redirect to"
 };

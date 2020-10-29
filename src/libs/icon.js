@@ -714,7 +714,8 @@ export const icons = [
             "md-checkbox-outline"
         ],
         "tags": [
-            "checkbox"
+            "checkbox",
+            "success"
         ]
     },
     {
@@ -723,7 +724,8 @@ export const icons = [
             "md-checkbox"
         ],
         "tags": [
-            "checkbox"
+            "checkbox",
+            "success"
         ]
     },
     {
@@ -732,7 +734,8 @@ export const icons = [
             "md-checkmark-circle-outline"
         ],
         "tags": [
-            "checkmark"
+            "checkmark",
+            "success"
         ]
     },
     {
@@ -742,7 +745,8 @@ export const icons = [
         ],
         "tags": [
             "checkmark",
-            "circle"
+            "circle",
+            "success"
         ]
     },
     {
@@ -751,7 +755,8 @@ export const icons = [
             "md-checkmark"
         ],
         "tags": [
-            "checkmark"
+            "checkmark",
+            "success"
         ]
     },
     {
@@ -3503,6 +3508,60 @@ export const icons = [
         ],
         "tags": [
             "youtube"
+        ]
+    },
+    {
+        "custom": true,
+        "icons": [
+            "iconfont icon-github"
+        ],
+        "tags": [
+            "github"
+        ]
+    },
+    {
+        "custom": true,
+        "icons": [
+            "iconfont icon-qq"
+        ],
+        "tags": [
+            "qq"
+        ]
+    },
+    {
+        "custom": true,
+        "icons": [
+            "iconfont icon-weixin"
+        ],
+        "tags": [
+            "weixin"
+        ]
+    },
+    {
+        "custom": true,
+        "icons": [
+            "iconfont icon-weibo"
+        ],
+        "tags": [
+            "weibo"
+        ]
+    },
+    {
+        "custom": true,
+        "icons": [
+            "iconfont icon-dingding"
+        ],
+        "tags": [
+            "dingding"
+        ]
+    },
+    {
+        "custom": true,
+        "icons": [
+            "iconfont icon-qiyeweixin"
+        ],
+        "tags": [
+            "qiyeweixin"
         ]
     }
 ]

@@ -1,43 +1,50 @@
 <template>
   <div>
-    <div style="display:flex;">
-      <Input
-        v-model="currentValue"
-        @on-change="handleChange"
-        :placeholder="placeholder"
-        :size="size"
-        :disabled="disabled"
-        :readonly="readonly"
-        :maxlength="maxlength"
-        icon="md-eye"
-        style="margin-right:10px;"
-      >
-        <Poptip
-          transfer
-          trigger="hover"
-          title="图片预览"
-          placement="right"
-          width="350"
-          style="width: 17px;cursor:pointer"
-          slot="append"
+    <div style="display: flex">
+      <div style="width: 100%; margin-right: 10px">
+        <Input
+          v-model="currentValue"
+          @on-change="handleChange"
+          :placeholder="placeholder"
+          :size="size"
+          :disabled="disabled"
+          :readonly="readonly"
+          :maxlength="maxlength"
+          icon="md-eye"
         >
-          <Button type="primary" icon="md-eye"></Button>
-          <div slot="content">
-            <img
-              v-show="currentValue"
-              :src="currentValue"
-              style="width: 100%;margin: 0 auto;display: block;cursor:zoom-in"
-              @click="viewImage"
-            />
-            <span v-show="!currentValue">无效的图片链接</span>
-            <a
-              v-show="currentValue"
-              @click="viewImage"
-              style="margin-top:5px;text-align:right;display:block"
-            >查看大图</a>
-          </div>
-        </Poptip>
-      </Input>
+          <Poptip
+            transfer
+            trigger="hover"
+            title="图片预览"
+            placement="right"
+            width="350"
+            style="width: 17px; cursor: pointer"
+            slot="append"
+          >
+            <Button type="primary" icon="md-eye"></Button>
+            <div slot="content">
+              <img
+                v-show="currentValue"
+                :src="currentValue"
+                style="
+                  width: 100%;
+                  margin: 0 auto;
+                  display: block;
+                  cursor: zoom-in;
+                "
+                @click="viewImage"
+              />
+              <span v-show="!currentValue">无效的图片链接</span>
+              <a
+                v-show="currentValue"
+                @click="viewImage"
+                style="margin-top: 5px; text-align: right; display: block"
+                >查看大图</a
+              >
+            </div>
+          </Poptip>
+        </Input>
+      </div>
       <Upload
         :action="uploadFileUrl"
         :headers="accessToken"
@@ -45,13 +52,20 @@
         :on-error="handleError"
         :format="format"
         :accept="accept"
-        :max-size="maxSize*1024"
+        :max-size="maxSize * 1024"
         :on-format-error="handleFormatError"
         :on-exceeded-size="handleMaxSize"
         :before-upload="beforeUpload"
         :show-upload-list="false"
+        :v-show="showUpload"
       >
-        <Button :loading="loading" :size="size" :disabled="disabled" :icon="icon">上传图片</Button>
+        <Button
+          :loading="loading"
+          :size="size"
+          :disabled="disabled"
+          :icon="icon"
+          >上传图片</Button
+        >
       </Upload>
     </div>
   </div>
@@ -68,64 +82,68 @@ export default {
     size: String,
     placeholder: {
       type: String,
-      default: "可输入图片链接"
+      default: "可输入图片链接",
     },
     disabled: {
       type: Boolean,
-      default: false
+      default: false,
     },
     readonly: {
       type: Boolean,
-      default: false
+      default: false,
     },
     maxlength: Number,
     icon: {
       type: String,
-      default: "ios-cloud-upload-outline"
+      default: "ios-cloud-upload-outline",
     },
     maxSize: {
       type: Number,
-      default: 5
+      default: 5,
     },
     accept: {
       type: String,
-      default: ".jpg, .jpeg, .png, .gif"
-    }
+      default: ".jpg, .jpeg, .png, .gif",
+    },
+    showUpload: {
+      type: Boolean,
+      default: true
+    },
   },
   computed: {
     format() {
       if (this.accept) {
         let format = [];
-        this.accept.split(",").forEach(e => {
+        this.accept.split(",").forEach((e) => {
           format.push(e.replace(".", "").replace(" ", ""));
         });
         return format;
       } else {
         return [];
       }
-    }
+    },
   },
   data() {
     return {
       accessToken: {},
       currentValue: this.value,
       loading: false,
-      uploadFileUrl: uploadFile
+      uploadFileUrl: uploadFile,
     };
   },
   methods: {
     init() {
       this.accessToken = {
-        accessToken: this.getStore("accessToken")
+        accessToken: this.getStore("accessToken"),
       };
     },
     viewImage() {
       let image = new Image();
       image.src = this.currentValue;
       let viewer = new Viewer(image, {
-        hidden: function() {
+        hidden: function () {
           viewer.destroy();
-        }
+        },
       });
       viewer.show();
     },
@@ -136,7 +154,9 @@ export default {
         desc:
           "所选文件‘ " +
           file.name +
-          " ’格式不正确, 请选择 "+this.accept+" 格式文件"
+          " ’格式不正确, 请选择 " +
+          this.accept +
+          " 格式文件",
       });
     },
     handleMaxSize(file) {
@@ -148,7 +168,7 @@ export default {
           file.name +
           " ’大小过大, 不得超过 " +
           this.maxSize +
-          "M."
+          "M.",
       });
     },
     beforeUpload() {
@@ -179,16 +199,16 @@ export default {
       }
       this.currentValue = value;
       this.$emit("on-change", this.currentValue);
-    }
+    },
   },
   watch: {
     value(val) {
       this.setCurrentValue(val);
-    }
+    },
   },
   mounted() {
     this.init();
-  }
+  },
 };
 </script>
 

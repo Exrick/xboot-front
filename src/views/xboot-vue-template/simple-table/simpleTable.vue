@@ -8,16 +8,21 @@
         <Button @click="add" type="primary" icon="md-add">添加</Button>
         <Button @click="delAll" icon="md-trash">批量删除</Button>
         <Button @click="getDataList" icon="md-refresh">刷新</Button>
-        <Button type="dashed" @click="openTip=!openTip">{{openTip ? "关闭提示" : "开启提示"}}</Button>
+        <Button type="dashed" @click="openTip = !openTip">{{
+          openTip ? "关闭提示" : "开启提示"
+        }}</Button>
         <!-- 动态列按钮 -->
-        <Poptip placement="bottom-end" width="360" style="float:right;">
+        <Poptip placement="bottom-end" width="360" style="float: right">
           <Button shape="circle" icon="md-apps"></Button>
           <div slot="content">
             <CheckboxGroup v-model="columnSettings" @on-change="changeColumns">
               <div v-for="(column, i) in columns" :key="i">
-                <Col span="8" v-if="column.key&&column.key.indexOf(whiteColumns)<=-1">
+                <Col
+                  span="8"
+                  v-if="column.key && column.key.indexOf(whiteColumns) <= -1"
+                >
                   <Checkbox :label="column.key" :disabled="column.disabled">
-                    <span>{{column.title}}</span>
+                    <span>{{ column.title }}</span>
                   </Checkbox>
                 </Col>
               </div>
@@ -28,9 +33,10 @@
       <Row v-show="openTip">
         <Alert show-icon>
           已选择
-          <span class="select-count">{{selectCount}}</span> 项
-          <a class="select-clear" @click="clearSelectAll">清空</a> 这里还可以做一些数据统计显示
-          <span style="float:right;">点击右上角按钮配置动态列↑</span>
+          <span class="select-count">{{ selectList.length }}</span> 项
+          <a class="select-clear" @click="clearSelectAll">清空</a>
+          这里还可以做一些数据统计显示
+          <span style="float: right">点击右上角按钮配置动态列↑</span>
         </Alert>
       </Row>
       <Row>
@@ -52,7 +58,7 @@
           :page-size="searchForm.pageSize"
           @on-change="changePage"
           @on-page-size-change="changePageSize"
-          :page-size-opts="[10,20,50]"
+          :page-size-opts="[10, 20, 50]"
           size="small"
           show-total
           show-elevator
@@ -61,7 +67,12 @@
       </Row>
     </Card>
 
-    <Modal :title="modalTitle" v-model="modalVisible" :mask-closable="false" :width="500">
+    <Modal
+      :title="modalTitle"
+      v-model="modalVisible"
+      :mask-closable="false"
+      :width="500"
+    >
       <Form ref="form" :model="form" :label-width="80" :rules="formValidate">
         <FormItem label="名称" prop="name">
           <Input v-model="form.name" />
@@ -69,7 +80,9 @@
       </Form>
       <div slot="footer">
         <Button type="text" @click="handleCancel">取消</Button>
-        <Button type="primary" :loading="submitLoading" @click="handleSubmit">提交</Button>
+        <Button type="primary" :loading="submitLoading" @click="handleSubmit"
+          >提交</Button
+        >
       </div>
     </Modal>
   </div>
@@ -87,23 +100,22 @@ export default {
         pageNumber: 1, // 当前页数
         pageSize: 10, // 页面大小
         sort: "createTime", // 默认排序字段
-        order: "desc" // 默认排序方式
+        order: "desc", // 默认排序方式
       },
       modalType: 0, // 添加或编辑标识
       modalVisible: false, // 添加或编辑显示
       modalTitle: "", // 添加或编辑标题
       form: {
         // 添加或编辑表单对象初始化数据
-        name: ""
+        name: "",
       },
       // 表单验证规则
       formValidate: {
-        name: [{ required: true, message: "不能为空", trigger: "blur" }]
+        name: [{ required: true, message: "不能为空", trigger: "blur" }],
       },
       submitLoading: false, // 添加或编辑提交状态
       selectList: [], // 多选数据
-      selectCount: 0, // 多选计数
-      // 表格动态列 默认勾选显示的列的key 
+      // 表格动态列 默认勾选显示的列的key
       columnSettings: ["name", "sex", "createTime", "updateTime"],
       // 不能配置的列（不显示）
       whiteColumns: ["action"],
@@ -112,35 +124,35 @@ export default {
         {
           type: "selection",
           width: 60,
-          align: "center"
+          align: "center",
         },
         {
           type: "index",
           width: 60,
-          align: "center"
+          align: "center",
         },
         {
           title: "名称",
           key: "name",
-          sortable: true
+          sortable: true,
         },
         {
           title: "性别",
           key: "sex",
-          sortable: true
+          sortable: true,
         },
         {
           title: "创建时间",
           key: "createTime",
           sortable: true,
-          sortType: "desc"
+          sortType: "desc",
         },
         {
           title: "更新时间",
           key: "updateTime",
           sortable: true,
           // 禁止配置的列
-          disabled: true
+          disabled: true,
         },
         {
           title: "操作",
@@ -149,69 +161,61 @@ export default {
           render: (h, params) => {
             return h("div", [
               h(
-                "Button",
+                "a",
                 {
-                  props: {
-                    type: "primary",
-                    size: "small",
-                    icon: "ios-create-outline"
-                  },
-                  style: {
-                    marginRight: "5px"
-                  },
                   on: {
                     click: () => {
                       this.edit(params.row);
-                    }
-                  }
+                    },
+                  },
                 },
                 "编辑"
               ),
+              h("Divider", {
+                props: {
+                  type: "vertical",
+                },
+              }),
               h(
-                "Button",
+                "a",
                 {
-                  props: {
-                    type: "error",
-                    size: "small",
-                    icon: "md-trash"
-                  },
                   on: {
                     click: () => {
                       this.remove(params.row);
-                    }
-                  }
+                    },
+                  },
                 },
                 "删除"
-              )
+              ),
             ]);
-          }
-        }
+          },
+        },
       ],
       columnChange: false,
       data: [], // 表单数据
-      total: 0 // 表单数据总数
+      total: 0, // 表单数据总数
     };
   },
   // 表格动态列 计算属性
   computed: {
-    dynamicColums: function() {
+    dynamicColums: function () {
       this.columnChange;
-      return this.columns.filter(item => item.hide != true);
-    }
+      return this.columns.filter((item) => item.hide != true);
+    },
   },
   methods: {
     init() {
       this.getDataList();
     },
     changeColumns(v) {
-      this.columns.map(item => {
+      this.columns.map((item) => {
         let hide = true;
         for (let i = 0; i < v.length; i++) {
           if (!item.key) {
             hide = false;
             break;
           }
-          if (item.key == v[i] || item.key.indexOf(this.whiteColumns)>-1) {
+          if (item.key == v[i] || item.key.indexOf(this.whiteColumns) > -1) {
             hide = false;
             break;
           }
@@ -247,6 +251,10 @@ export default {
       //   if (res.success) {
       //     this.data = res.result.content;
       //     this.total = res.result.totalElements;
+      //     if (this.data.length == 0 && this.searchForm.pageNumber > 1) {
+      //       this.searchForm.pageNumber -= 1;
+      //       this.getDataList();
+      //     }
       //   }
       // });
       // 以下为模拟数据
@@ -256,15 +264,15 @@ export default {
           name: "XBoot",
           sex: "男",
           createTime: "2018-08-08 00:08:00",
-          updateTime: "2018-08-08 00:08:00"
+          updateTime: "2018-08-08 00:08:00",
         },
         {
           id: "2",
           name: "Exrick",
           sex: "女",
           createTime: "2018-08-08 00:08:00",
-          updateTime: "2018-08-08 00:08:00"
-        }
+          updateTime: "2018-08-08 00:08:00",
+        },
       ];
       this.total = this.data.length;
       this.loading = false;
@@ -273,7 +281,7 @@ export default {
       this.modalVisible = false;
     },
     handleSubmit() {
-      this.$refs.form.validate(valid => {
+      this.$refs.form.validate((valid) => {
         if (valid) {
           this.submitLoading = true;
           if (this.modalType == 0) {
@@ -345,14 +353,16 @@ export default {
           //   this.$Modal.remove();
           //   if (res.success) {
           //     this.$Message.success("操作成功");
+          //     this.clearSelectAll();
           //     this.getDataList();
           //   }
           // });
           // 模拟请求成功
           this.$Message.success("操作成功");
+          this.clearSelectAll();
           this.$Modal.remove();
           this.getDataList();
-        }
+        },
       });
     },
     clearSelectAll() {
@@ -360,20 +370,19 @@ export default {
     },
     changeSelect(e) {
       this.selectList = e;
-      this.selectCount = e.length;
     },
     delAll() {
-      if (this.selectCount <= 0) {
+      if (this.selectList.length <= 0) {
         this.$Message.warning("您还未选择要删除的数据");
         return;
       }
       this.$Modal.confirm({
         title: "确认删除",
-        content: "您确认要删除所选的 " + this.selectCount + " 条数据?",
+        content: "您确认要删除所选的 " + this.selectList.length + " 条数据?",
         loading: true,
         onOk: () => {
           let ids = "";
-          this.selectList.forEach(function(e) {
+          this.selectList.forEach(function (e) {
             ids += e.id + ",";
           });
           ids = ids.substring(0, ids.length - 1);
@@ -391,12 +400,12 @@ export default {
           this.$Modal.remove();
           this.clearSelectAll();
           this.getDataList();
-        }
+        },
       });
-    }
+    },
   },
   mounted() {
     this.init();
-  }
+  },
 };
 </script>

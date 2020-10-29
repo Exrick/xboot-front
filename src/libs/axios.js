@@ -22,8 +22,9 @@ axios.interceptors.response.use(response => {
     // 根据返回的code值来做不同的处理(和后端约定)
     switch (data.code) {
         case 401:
-            // 未登录 清除已登录状态
+            // 未登录 清除已登录状态 清除锁屏状态
             Cookies.set('userInfo', '');
+            Cookies.set("locking", "0");
             setStore('accessToken', '');
             if (router.history.current.name != "login") {
                 if (data.message !== null) {

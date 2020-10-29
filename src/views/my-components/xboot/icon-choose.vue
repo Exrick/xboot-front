@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div style="display:flex">
+    <div style="display: flex">
       <Input
         v-model="currentValue"
         @on-change="handleChange"
@@ -12,19 +12,20 @@
         :icon="currentValue"
       />
       <Button
-        @click="iconModalVisible=true"
+        @click="iconModalVisible = true"
         :size="size"
         :disabled="disabled"
         :icon="icon"
-        style="margin-left:10px"
-      >选择图标</Button>
+        style="margin-left: 10px"
+        >选择图标</Button
+      >
     </div>
 
     <Modal
       title="选择图标"
       v-model="iconModalVisible"
       :width="950"
-      :styles="{top: '30px'}"
+      :styles="{ top: '30px' }"
       footer-hide
       :z-index="1060"
     >
@@ -36,13 +37,23 @@
           @input="handleInput"
           @focus="handleFocus"
           @blur="handleBlur"
-        >
+        />
       </div>
       <div class="icon-block icon-bar">
-        <div class="icon-wrap" v-for="(item, i) in iconData" :key="i" @click="hanleChoose(item)">
+        <div
+          class="icon-wrap"
+          v-for="(item, i) in iconData"
+          :key="i"
+          @click="hanleChoose(item)"
+        >
           <div class="icons-item">
-            <Icon :type="item" style="font-size: 32px;"/>
-            <p>{{item}}</p>
+            <Icon
+              v-if="item.indexOf('iconfont') > -1"
+              :custom="item"
+              size="32"
+            />
+            <Icon v-else :type="item" size="32" />
+            <p>{{ item }}</p>
           </div>
         </div>
       </div>
@@ -57,26 +68,26 @@ export default {
   props: {
     value: {
       type: String,
-      default: ""
+      default: "",
     },
     size: String,
     placeholder: {
       type: String,
-      default: "输入图标名或选择图标"
+      default: "输入图标名或选择图标",
     },
     disabled: {
       type: Boolean,
-      default: false
+      default: false,
     },
     readonly: {
       type: Boolean,
-      default: false
+      default: false,
     },
     maxlength: Number,
     icon: {
       type: String,
-      default: "md-ionic"
-    }
+      default: "md-ionic",
+    },
   },
   data() {
     return {
@@ -84,14 +95,14 @@ export default {
       currentValue: this.value,
       iconData: [],
       key: "",
-      tip: "输入英文关键词搜索，比如 success"
+      tip: "输入英文关键词搜索，比如 success",
     };
   },
   methods: {
     init() {
       let re = [];
-      icons.forEach(e => {
-        e.icons.forEach(item => {
+      icons.forEach((e) => {
+        e.icons.forEach((item) => {
           re.push(item);
         });
       });
@@ -101,10 +112,10 @@ export default {
       if (this.key) {
         // 搜索
         let re = [];
-        icons.forEach(e => {
-          e.tags.forEach(item => {
+        icons.forEach((e) => {
+          e.tags.forEach((item) => {
             if (item.indexOf(this.key) >= 0) {
-              e.icons.forEach(r => {
+              e.icons.forEach((r) => {
                 re.push(r);
               });
             }
@@ -130,7 +141,7 @@ export default {
       this.$emit("on-change", this.currentValue);
     },
     setCurrentValue(value) {
-      if (value == this.currentValue) {
+      if (value === this.currentValue) {
         return;
       }
       this.currentValue = value;
@@ -140,16 +151,16 @@ export default {
       this.$emit("input", this.currentValue);
       this.$emit("on-change", this.currentValue);
       this.iconModalVisible = false;
-    }
+    },
   },
   watch: {
     value(val) {
       this.setCurrentValue(val);
-    }
+    },
   },
-  created() {
+  mounted() {
     this.init();
-  }
+  },
 };
 </script>
 

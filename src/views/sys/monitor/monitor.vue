@@ -5,20 +5,14 @@
   <div>
     <Card>
       <Row>
-        <Form
-          ref="searchForm"
-          inline
-          :label-width="70"
-         
-          @keydown.enter.native="handleGo"
-        >
-          <Form-item label="链接地址" prop="url">
+        <Form ref="searchForm" inline :label-width="70" @keydown.enter.native="handleGo">
+          <FormItem label="链接地址" prop="url">
             <Input type="text" v-model="url" placeholder="http://" clearable style="width: 350px" />
-          </Form-item>
-          <Form-item style="margin-left:-50px;">
+          </FormItem>
+          <FormItem style="margin-left:-50px;">
             <Button @click="handleGo" type="primary" icon="ios-send" style="margin-right:5px">前往</Button>
             <Button @click="handleOpen" icon="md-open">新窗口中打开</Button>
-          </Form-item>
+          </FormItem>
         </Form>
       </Row>
       <Divider style="margin-top:-10px;margin-bottom:0px;" />
