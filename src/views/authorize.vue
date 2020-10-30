@@ -108,7 +108,7 @@
               </router-link>
             </Row>
           </Row>
-          <div v-else>
+          <div v-if="!error && !authLoading && userInfo">
             <Card dis-hover :padding="0" v-if="!error">
               <div class="auth-card">
                 <div class="auth-info-wrap">
