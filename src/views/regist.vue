@@ -12,7 +12,7 @@
           <Header />
           <Row>
             <Form ref="registForm" :model="form" :rules="rules" class="form">
-              <span class="regist-title">注册</span>
+              <span class="regist-title">{{ $t("register") }}</span>
               <FormItem prop="username">
                 <Input
                   v-model="form.username"
@@ -87,11 +87,11 @@
                 :loading="loading"
                 @click="submitRegist"
               >
-                <span v-if="!loading">注册</span>
-                <span v-else>注册中...</span>
+                <span v-if="!loading">{{ $t("register") }}</span>
+                <span v-else>{{ $t("registering") }}</span>
               </Button>
               <router-link to="/login">
-                <a class="to-login">使用已有账号登录</a>
+                <a class="to-login">{{ $t("loginNow") }}</a>
               </router-link>
             </Row>
           </Row>

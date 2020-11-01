@@ -35,7 +35,7 @@
           </div>
           <Row v-if="!error && !authLoading && !userInfo">
             <Tabs value="1">
-              <TabPane label="XBoot统一认证平台" name="1" icon="md-people">
+              <TabPane :label="$t('sso')" name="1" icon="md-people">
                 <Form ref="loginForm" :model="form" :rules="rules" class="form">
                   <FormItem prop="username">
                     <Input
@@ -102,9 +102,11 @@
               </Button>
             </Row>
             <Row type="flex" justify="space-between" class="other-thing">
-              <router-link to="/reset" class="back">忘记密码</router-link>
-              <router-link to="/regist">
-                <a class="back">还没有账号？立即注册</a>
+              <router-link to="/reset" class="back">{{
+                $t("forgetPass")
+              }}</router-link>
+              <router-link to="/regist" class="back">
+                {{ $t("registerNow") }}
               </router-link>
             </Row>
           </Row>
@@ -171,7 +173,7 @@
               </div>
             </Card>
           </div>
-          <div v-if="error" style="margin-top: 15vh">
+          <div v-if="error && !authLoading" style="margin-top: 15vh">
             <Alert type="error" show-icon>
               {{ title }}
               <span slot="desc">{{ msg }}</span>
