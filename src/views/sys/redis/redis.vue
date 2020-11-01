@@ -149,14 +149,14 @@ export default {
       },
       // 表单验证规则
       formValidate: {
-        key: [{ required: true, message: "不能为空", trigger: "blur" }],
-        value: [{ required: true, message: "不能为空", trigger: "blur" }],
+        key: [{ required: true, message: "不能为空", trigger: "change" }],
+        value: [{ required: true, message: "不能为空", trigger: "change" }],
         expireTime: [
           {
             required: true,
             type: "number",
             message: "不能为空",
-            trigger: "blur",
+            trigger: "change",
           },
         ],
       },

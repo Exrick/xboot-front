@@ -203,13 +203,13 @@ export default {
       },
       formValidate: {
         // 表单验证规则
-        title: [{ required: true, message: "名称不能为空", trigger: "blur" }],
+        title: [{ required: true, message: "名称不能为空", trigger: "change" }],
         sortOrder: [
           {
             required: true,
             type: "number",
             message: "排序值不能为空",
-            trigger: "blur",
+            trigger: "change",
           },
         ],
       },

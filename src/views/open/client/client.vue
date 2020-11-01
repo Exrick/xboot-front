@@ -185,23 +185,25 @@ export default {
       form: {
         // 添加或编辑表单对象初始化数据
         name: "",
+        logo: "",
         clientSecret: "",
         homeUri: "",
         redirectUri: "",
+        autoApprove: false
       },
       // 表单验证规则
       formValidate: {
-        name: [{ required: true, message: "不能为空", trigger: "blur" }],
-        logo: [{ required: true, message: "不能为空", trigger: "blur" }],
+        name: [{ required: true, message: "不能为空", trigger: "change" }],
+        logo: [{ required: true, message: "不能为空", trigger: "change" }],
         clientSecret: [
-          { required: true, message: "不能为空", trigger: "blur" },
+          { required: true, message: "不能为空", trigger: "change" },
         ],
         homeUri: [
           {
             required: true,
             type: "url",
             message: "无效的URL链接",
-            trigger: "blur",
+            trigger: "change",
           },
         ],
         redirectUri: [
@@ -209,7 +211,7 @@ export default {
             required: true,
             type: "url",
             message: "无效的回调链接",
-            trigger: "blur",
+            trigger: "change",
           },
         ],
       },

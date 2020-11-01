@@ -571,21 +571,21 @@ export default {
         buttonType: "",
       },
       formValidate: {
-        title: [{ required: true, message: "名称不能为空", trigger: "blur" }],
+        title: [{ required: true, message: "名称不能为空", trigger: "change" }],
         name: [
-          { required: true, message: "路由英文名不能为空", trigger: "blur" },
+          { required: true, message: "路由英文名不能为空", trigger: "change" },
         ],
         icon: [{ required: true, message: "图标不能为空", trigger: "click" }],
-        path: [{ required: true, message: "路径不能为空", trigger: "blur" }],
+        path: [{ required: true, message: "路径不能为空", trigger: "change" }],
         component: [
-          { required: true, message: "前端组件不能为空", trigger: "blur" },
+          { required: true, message: "前端组件不能为空", trigger: "change" },
         ],
         sortOrder: [
           {
             required: true,
             type: "number",
             message: "排序值不能为空",
-            trigger: "blur",
+            trigger: "change",
           },
         ],
       },

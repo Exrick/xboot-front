@@ -296,27 +296,27 @@ export default {
       },
       dictFormValidate: {
         // 表单验证规则
-        title: [{ required: true, message: "不能为空", trigger: "blur" }],
-        type: [{ required: true, message: "不能为空", trigger: "blur" }],
+        title: [{ required: true, message: "不能为空", trigger: "change" }],
+        type: [{ required: true, message: "不能为空", trigger: "change" }],
         sortOrder: [
           {
             required: true,
             type: "number",
             message: "排序值不能为空",
-            trigger: "blur",
+            trigger: "change",
           },
         ],
       },
       formValidate: {
         // 表单验证规则
-        title: [{ required: true, message: "不能为空", trigger: "blur" }],
-        value: [{ required: true, message: "不能为空", trigger: "blur" }],
+        title: [{ required: true, message: "不能为空", trigger: "change" }],
+        value: [{ required: true, message: "不能为空", trigger: "change" }],
         sortOrder: [
           {
             required: true,
             type: "number",
             message: "排序值不能为空",
-            trigger: "blur",
+            trigger: "change",
           },
         ],
       },

@@ -233,19 +233,19 @@ export default {
       formValidate: {
         // 表单验证规则
         username: [
-          { required: true, message: "请输入登录账号", trigger: "blur" },
-          { validator: validateUsername, trigger: "blur" },
+          { required: true, message: "请输入登录账号", trigger: "change" },
+          { validator: validateUsername, trigger: "change" },
         ],
         nickname: [
-          { required: true, message: "请输入用户名", trigger: "blur" },
+          { required: true, message: "请输入用户名", trigger: "change" },
         ],
         mobile: [
-          { required: true, message: "请输入手机号", trigger: "blur" },
-          { validator: validateMobile, trigger: "blur" },
+          { required: true, message: "请输入手机号", trigger: "change" },
+          { validator: validateMobile, trigger: "change" },
         ],
         password: [
-          { required: true, message: "请输入密码", trigger: "blur" },
-          { validator: validatePassword, trigger: "blur" },
+          { required: true, message: "请输入密码", trigger: "change" },
+          { validator: validatePassword, trigger: "change" },
         ],
         email: [
           { required: true, message: "请输入邮箱地址" },

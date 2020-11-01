@@ -144,26 +144,26 @@ export default {
           {
             required: true,
             message: "请输入注册登录账号",
-            trigger: "blur",
+            trigger: "change",
           },
-          { validator: validateUsername, trigger: "blur" },
+          { validator: validateUsername, trigger: "change" },
         ],
         nickname: [
           {
             required: true,
             message: "请输入用户名（昵称）",
-            trigger: "blur",
+            trigger: "change",
           },
         ],
         password: [
           {
             required: true,
             message: "请输入密码",
-            trigger: "blur",
+            trigger: "change",
           },
           {
             validator: validatePassword,
-            trigger: "blur",
+            trigger: "change",
           },
         ],
         email: [
@@ -174,11 +174,11 @@ export default {
           {
             required: true,
             message: "请输入手机号",
-            trigger: "blur",
+            trigger: "change",
           },
           {
             validator: validateMobile,
-            trigger: "blur",
+            trigger: "change",
           },
         ],
       },

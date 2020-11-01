@@ -141,10 +141,10 @@ export default {
       },
       formValidate: {
         jobClassName: [
-          { required: true, message: "任务类名不能为空", trigger: "blur" },
+          { required: true, message: "任务类名不能为空", trigger: "change" },
         ],
         cronExpression: [
-          { required: true, message: "cron表达式不能为空", trigger: "blur" },
+          { required: true, message: "cron表达式不能为空", trigger: "change" },
         ],
       },
       submitLoading: false,

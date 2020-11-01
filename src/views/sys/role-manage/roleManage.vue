@@ -220,7 +220,7 @@ export default {
       },
       roleFormValidate: {
         name: [
-          { required: true, message: "角色名称不能为空", trigger: "blur" },
+          { required: true, message: "角色名称不能为空", trigger: "change" },
         ],
       },
       submitLoading: false,

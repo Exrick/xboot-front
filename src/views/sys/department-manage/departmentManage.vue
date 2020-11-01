@@ -297,13 +297,13 @@ export default {
       },
       formAdd: {},
       formValidate: {
-        title: [{ required: true, message: "名称不能为空", trigger: "blur" }],
+        title: [{ required: true, message: "名称不能为空", trigger: "change" }],
         sortOrder: [
           {
             required: true,
             type: "number",
             message: "排序值不能为空",
-            trigger: "blur",
+            trigger: "change",
           },
         ],
       },

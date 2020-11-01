@@ -232,21 +232,21 @@ export default {
           {
             required: true,
             message: "账号不能为空",
-            trigger: "blur",
+            trigger: "change",
           },
         ],
         password: [
           {
             required: true,
             message: "密码不能为空",
-            trigger: "blur",
+            trigger: "change",
           },
         ],
         code: [
           {
             required: true,
             message: "验证码不能为空",
-            trigger: "blur",
+            trigger: "change",
           },
         ],
       },

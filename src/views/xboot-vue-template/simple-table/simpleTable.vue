@@ -111,7 +111,7 @@ export default {
       },
       // 表单验证规则
       formValidate: {
-        name: [{ required: true, message: "不能为空", trigger: "blur" }],
+        name: [{ required: true, message: "不能为空", trigger: "change" }],
       },
       submitLoading: false, // 添加或编辑提交状态
       selectList: [], // 多选数据

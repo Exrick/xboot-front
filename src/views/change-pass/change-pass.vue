@@ -70,35 +70,35 @@ export default {
           {
             required: true,
             message: "请输入原密码",
-            trigger: "blur"
+            trigger: "change"
           }
         ],
         newPass: [
           {
             required: true,
             message: "请输入新密码",
-            trigger: "blur"
+            trigger: "change"
           },
           {
             min: 6,
             message: "请至少输入6个字符",
-            trigger: "blur"
+            trigger: "change"
           },
           {
             max: 32,
             message: "最多输入32个字符",
-            trigger: "blur"
+            trigger: "change"
           }
         ],
         rePass: [
           {
             required: true,
             message: "请再次输入新密码",
-            trigger: "blur"
+            trigger: "change"
           },
           {
             validator: valideRePassword,
-            trigger: "blur"
+            trigger: "change"
           }
         ]
       }
