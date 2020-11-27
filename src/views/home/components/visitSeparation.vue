@@ -12,7 +12,6 @@
 </template>
 
 <script>
-var map;
 export default {
   name: "visitSeparation",
   data() {

@@ -202,6 +202,7 @@
         :data="data"
         :loading="loading"
         border
+        :update-show-children="true"
         ref="table"
         @on-selection-change="showSelect"
         v-if="showType == 'list'"

@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import areaData from "area-data/pcaa";
+import areaData from "./data/data";
 import util from "./util/index";
 const levelShow = (level, code) => {
   if (level === 2) {
