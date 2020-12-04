@@ -354,6 +354,7 @@ export default {
             if (res.success) {
               // 存储accessToken
               this.setStore("accessToken", res.result.accessToken);
+              let redictInfo = res.result;
               // 获取用户信息
               userInfo().then((res) => {
                 if (res.success) {
@@ -371,11 +372,11 @@ export default {
                   this.$store.commit("setAvatarPath", res.result.avatar);
                   // 跳转
                   let url =
-                    res.result.redirect_uri +
+                    redictInfo.redirect_uri +
                     "?code=" +
-                    res.result.code +
+                    redictInfo.code +
                     "&state=" +
-                    res.result.state;
+                    redictInfo.state;
                   window.location.href = url;
                 } else {
                   this.loading = false;
