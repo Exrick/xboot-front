@@ -5,21 +5,51 @@
   <div class="search">
     <Card>
       <Row class="operation">
-        <Button @click="add" type="primary" icon="md-add">添加子节点</Button>
+        <Button
+          @click="add"
+          type="primary"
+          icon="md-add"
+          v-show="showType == 'tree'"
+          >添加子节点</Button
+        >
         <Button @click="addRoot" icon="md-add">添加一级节点</Button>
         <Button @click="delAll" icon="md-trash">批量删除</Button>
         <Button @click="getParentList" icon="md-refresh">刷新</Button>
-        <i-switch v-model="strict" size="large" style="margin-left: 5px">
+        <Input
+          v-model="searchKey"
+          suffix="ios-search"
+          @on-change="search"
+          placeholder="输入名称搜索"
+          clearable
+          style="width: 250px"
+          v-show="showType == 'list'"
+        />
+        <i-switch
+          v-model="strict"
+          size="large"
+          style="margin-left: 5px"
+          v-show="showType == 'tree'"
+        >
           <span slot="open">级联</span>
           <span slot="close">单选</span>
         </i-switch>
+        <div style="float: right">
+          <RadioGroup v-model="showType" type="button">
+            <Radio title="树结构" label="tree">
+              <Icon type="md-list"></Icon>
+            </Radio>
+            <Radio title="列表" label="list">
+              <Icon type="ios-apps"></Icon>
+            </Radio>
+          </RadioGroup>
+        </div>
       </Row>
-      <Row type="flex" justify="start" :gutter="16">
+      <Row type="flex" justify="start" :gutter="16" v-show="showType == 'tree'">
         <Col :sm="8" :md="8" :lg="8" :xl="6">
           <Alert show-icon>
             当前选择编辑：
             <span class="select-title">{{ editTitle }}</span>
-            <a class="select-clear" v-if="form.id" @click="cancelEdit"
+            <a class="select-clear" v-show="form.id && editTitle" @click="cancelEdit"
               >取消选择</a
             >
           </Alert>
@@ -27,19 +57,21 @@
             v-model="searchKey"
             suffix="ios-search"
             @on-change="search"
-            placeholder="输入节点名搜索"
+            placeholder="输入名称搜索"
             clearable
           />
-          <div class="tree-bar" :style="{ maxHeight: maxHeight }">
-            <Tree
-              ref="tree"
-              :data="data"
-              :load-data="loadData"
-              show-checkbox
-              @on-check-change="changeSelect"
-              @on-select-change="selectTree"
-              :check-strictly="!strict"
-            ></Tree>
+          <div style="position: relative">
+            <div class="tree-bar" :style="{ maxHeight: maxHeight }">
+              <Tree
+                ref="tree"
+                :data="data"
+                :load-data="loadData"
+                show-checkbox
+                @on-check-change="changeSelect"
+                @on-select-change="selectTree"
+                :check-strictly="!strict"
+              ></Tree>
+            </div>
             <Spin size="large" fix v-if="loading"></Spin>
           </div>
         </Col>
@@ -110,6 +142,7 @@
               <Button
                 @click="submitEdit"
                 :loading="submitLoading"
+                :disabled="!form.id || !editTitle"
                 type="primary"
                 icon="ios-create-outline"
                 >修改并保存</Button
@@ -119,6 +152,23 @@
           </Form>
         </Col>
       </Row>
+      <Alert show-icon v-show="showType == 'list'">
+        已选择
+        <span class="select-count">{{ selectList.length }}</span> 项
+        <a class="select-clear" @click="clearSelectAll">清空</a>
+      </Alert>
+      <Table
+        row-key="title"
+        :load-data="loadData"
+        :columns="columns"
+        :data="data"
+        :loading="loading"
+        border
+        :update-show-children="true"
+        ref="table"
+        @on-selection-change="showSelect"
+        v-if="showType == 'list'"
+      ></Table>
     </Card>
 
     <Modal
@@ -179,6 +229,7 @@ export default {
   name: "tree",
   data() {
     return {
+      showType: "tree",
       loading: false, // 树加载状态
       maxHeight: "500px",
       strict: true,
@@ -216,6 +267,76 @@ export default {
       submitLoading: false,
       data: [],
       dataEdit: [],
+      columns: [
+        {
+          type: "selection",
+          width: 60,
+          align: "center",
+        },
+        {
+          type: "index",
+          width: 60,
+          align: "center",
+        },
+        {
+          title: "名称",
+          key: "title",
+          minWidth: 120,
+          sortable: true,
+          tree: true,
+        },
+        {
+          title: "排序",
+          key: "sortOrder",
+          width: 150,
+          sortable: true,
+          align: "center",
+          sortType: "asc",
+        },
+        {
+          title: "创建时间",
+          key: "createTime",
+          sortable: true,
+          width: 200,
+        },
+        {
+          title: "操作",
+          key: "action",
+          width: 300,
+          align: "center",
+          render: (h, params) => {
+            return h("div", [
+              h(
+                "a",
+                {
+                  on: {
+                    click: () => {
+                      this.tableAdd(params.row);
+                    },
+                  },
+                },
+                "添加子节点"
+              ),
+              h("Divider", {
+                props: {
+                  type: "vertical",
+                },
+              }),
+              h(
+                "a",
+                {
+                  on: {
+                    click: () => {
+                      this.remove(params.row);
+                    },
+                  },
+                },
+                "删除"
+              ),
+            ]);
+          },
+        },
+      ],
     };
   },
   methods: {
@@ -234,6 +355,7 @@ export default {
       //       if (e.isParent) {
       //         e.loading = false;
       //         e.children = [];
+      //         e._loading = false;
       //       }
       //     });
       //     this.data = res.result;
@@ -248,6 +370,8 @@ export default {
           parentTitle: "一级节点",
           status: 0,
           loading: false,
+          sortOrder: 1,
+          createTime: "2020-12-10 19:51:59",
           children: [
             {
               title: "二级1",
@@ -256,6 +380,8 @@ export default {
               parentId: "1",
               status: 0,
               parentTitle: "一级1",
+              sortOrder: 2,
+              createTime: "2020-12-10 19:51:59",
               children: [
                 {
                   title: "三级1",
@@ -263,6 +389,8 @@ export default {
                   status: 0,
                   parentId: "2",
                   parentTitle: "二级1",
+                  sortOrder: 3,
+                  createTime: "2020-12-10 19:51:59",
                 },
               ],
             },
@@ -274,6 +402,8 @@ export default {
           parentId: "0",
           parentTitle: "一级节点",
           status: 0,
+          sortOrder: 4,
+          createTime: "2020-12-10 19:51:59",
         },
         {
           title: "一级3",
@@ -281,6 +411,8 @@ export default {
           parentId: "0",
           parentTitle: "一级节点",
           status: -1,
+          sortOrder: 5,
+          createTime: "2020-12-10 19:51:59",
         },
       ];
     },
@@ -361,6 +493,7 @@ export default {
       //       if (e.isParent) {
       //         e.loading = false;
       //         e.children = [];
+      //         e._loading = false;
       //       }
       //     });
       //     callback(res.result);
@@ -379,6 +512,7 @@ export default {
         //       if (e.isParent) {
         //         e.loading = false;
         //         e.children = [];
+        //         e._loading = false;
         //       }
         //     });
         //     this.data = res.result;
@@ -392,6 +526,8 @@ export default {
             parentId: "0",
             parentTitle: "一级节点",
             status: 0,
+            sortOrder: 1,
+            createTime: "2020-12-10 19:51:59",
           },
           {
             title: "所以这里是假数据",
@@ -399,6 +535,8 @@ export default {
             parentId: "0",
             parentTitle: "一级节点",
             status: 0,
+            sortOrder: 2,
+            createTime: "2020-12-10 19:51:59",
           },
           {
             title: "我是被禁用的节点",
@@ -406,6 +544,8 @@ export default {
             parentId: "0",
             parentTitle: "一级节点",
             status: -1,
+            sortOrder: 3,
+            createTime: "2020-12-10 19:51:59",
           },
         ];
       } else {
@@ -448,6 +588,11 @@ export default {
         }
         let str = JSON.stringify(v[0]);
         let data = JSON.parse(str);
+        if (this.form.id == data.id) {
+          this.$Message.warning("请勿选择自己作为父节点");
+          v[0].selected = false;
+          return;
+        }
         this.form.parentId = data.id;
         this.form.parentTitle = data.title;
       }
@@ -506,9 +651,12 @@ export default {
       }
       this.modalTitle = "添加子节点";
       this.showParent = true;
+      if (!this.form.children) {
+        this.form.children = [];
+      }
       this.formAdd = {
         parentId: this.form.id,
-        sortOrder: 0,
+        sortOrder: this.form.children.length + 1,
         status: 0,
       };
       this.modalVisible = true;
@@ -518,13 +666,33 @@ export default {
       this.showParent = false;
       this.formAdd = {
         parentId: 0,
-        sortOrder: 0,
+        sortOrder: this.data.length + 1,
         status: 0,
       };
       this.modalVisible = true;
     },
     changeSelect(v) {
       this.selectList = v;
+    },
+    clearSelectAll() {
+      this.$refs.table.selectAll(false);
+    },
+    tableAdd(v) {
+      this.form = v;
+      this.add();
+      this.editTitle = "";
+      let data = this.$refs.tree.getSelectedNodes()[0];
+      if (data) {
+        data.selected = false;
+      }
+    },
+    showSelect(e) {
+      this.selectList = e;
+    },
+    remove(v) {
+      this.selectList = [];
+      this.selectList.push(v);
+      this.delAll();
     },
     delAll() {
       if (this.selectList.length <= 0) {

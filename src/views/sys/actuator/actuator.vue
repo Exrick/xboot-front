@@ -17,18 +17,30 @@
       :width="900"
       :fullscreen="full"
     >
-      <div style="position:relative">
-        <div v-if="!full" style="max-height:60vh;overflow:auto">
-          <vue-json-pretty v-if="!full" :data="jsonData" :deep="deep" showLength />
+      <div style="position: relative">
+        <div v-if="!full" style="max-height: 60vh; overflow: auto">
+          <vue-json-pretty
+            v-if="!full"
+            :data="jsonData"
+            :deep="deep"
+            showLength
+          />
         </div>
         <vue-json-pretty v-if="full" :data="jsonData" :deep="deep" showLength />
         <Spin fix v-if="loading" />
       </div>
       <div slot="footer">
         展开数据级数深度：
-        <InputNumber :min="0" v-model="myDeep" @on-change="changDeep" style="margin-right:10px"></InputNumber>
-        <Button @click="full=!full" type="primary" icon="md-expand">全屏开/关</Button>
-        <Button @click="modalVisible=false">关闭</Button>
+        <InputNumber
+          :min="0"
+          v-model="myDeep"
+          @on-change="changDeep"
+          style="margin-right: 10px"
+        ></InputNumber>
+        <Button @click="full = !full" type="primary" icon="md-expand"
+          >全屏开/关</Button
+        >
+        <Button @click="modalVisible = false">关闭</Button>
       </div>
     </Modal>
   </div>
@@ -36,10 +48,11 @@
 
 <script>
 import VueJsonPretty from "vue-json-pretty";
+import "vue-json-pretty/lib/styles.css";
 export default {
   name: "actuator",
   components: {
-    VueJsonPretty
+    VueJsonPretty,
   },
   data() {
     return {
@@ -54,21 +67,21 @@ export default {
         {
           type: "index",
           width: 60,
-          align: "center"
+          align: "center",
         },
         {
           title: "功能名称",
           key: "name",
-          sortable: true
+          sortable: true,
         },
         {
           title: "URL",
           key: "url",
-          sortable: true
+          sortable: true,
         },
         {
           title: "备注",
-          key: "description"
+          key: "description",
         },
         {
           title: "操作",
@@ -88,19 +101,19 @@ export default {
                     props: {
                       // type: "primary",
                       size: "small",
-                      icon: "md-eye"
+                      icon: "md-eye",
                     },
                     style: {
-                      marginRight: "5px"
+                      marginRight: "5px",
                     },
                     on: {
                       click: () => {
                         this.showData(params.row);
-                      }
-                    }
+                      },
+                    },
                   },
                   "查看数据"
-                )
+                ),
               ]);
             } else {
               return h("div", [
@@ -109,104 +122,98 @@ export default {
                   {
                     props: {
                       size: "small",
-                      icon: "ios-close-circle-outline"
+                      icon: "ios-close-circle-outline",
                     },
                     style: {
-                      marginRight: "5px"
+                      marginRight: "5px",
                     },
                     on: {
-                      click: () => {}
-                    }
+                      click: () => {},
+                    },
                   },
                   "您无权查看"
-                )
+                ),
               ]);
             }
-          }
-        }
+          },
+        },
       ],
       data: [
         {
           name: "查看健康状态",
           url: "/health",
-          needPerm: false // 不需要查看权限
+          needPerm: false, // 不需要查看权限
         },
         {
           name: "查看应用信息",
           url: "/info",
-          needPerm: false
+          needPerm: false,
         },
         {
           name: "查看环境变量",
           url: "/env",
-          needPerm: true
+          needPerm: true,
         },
         {
           name: "查看metrics指标",
           url: "/metrics",
-          needPerm: false
+          needPerm: false,
         },
         {
           name: "查看@Scheduled定时计划任务",
           url: "/scheduledtasks",
-          needPerm: false
+          needPerm: false,
         },
         {
           name: "查看日志文件",
           url: "/logfile",
           description:
             "数据极多，最大10M，可能加载较慢甚至造成卡顿，网速不给力可能将加载超时",
-          needPerm: true
+          needPerm: true,
         },
         {
           name: "查看最近100个请求",
           url: "/httptrace",
           description: "数据较多，可能加载较慢甚至造成卡顿",
-          needPerm: true
-        },
-        {
-          name: "查看审计事件信息",
-          url: "/auditevents",
-          description: "数据较多，可能加载较慢甚至造成卡顿",
-          needPerm: true
+          needPerm: true,
         },
         {
           name: "查看线程栈",
           url: "/threaddump",
           description: "数据较多，可能加载较慢甚至造成卡顿",
-          needPerm: true
+          needPerm: true,
         },
         {
           name: "查看所有URL映射列表",
           url: "/mappings",
           description: "数据较多，可能加载较慢甚至造成卡顿",
-          needPerm: true
+          needPerm: true,
         },
         {
           name: "查看所有Spring Beans的完整列表",
           url: "/beans",
           description: "数据较多，可能加载较慢甚至造成卡顿",
-          needPerm: true
+          needPerm: true,
         },
         {
           name: "查看配置类和自动配置类状态",
           url: "/conditions",
           description: "包含被应用或未被应用的原因，数据较多，可能加载较慢",
-          needPerm: true
+          needPerm: true,
         },
         {
           name: "查看所有@ConfigurationProperties的属性集合列表",
           url: "/configprops",
           description: "数据较多，可能加载较慢甚至造成卡顿",
-          needPerm: true
+          needPerm: true,
         },
         {
           name: "查看日志配置",
           url: "/loggers",
           description: "数据较多，可能加载较慢甚至造成卡顿",
-          needPerm: true
-        }
-      ]
+          needPerm: true,
+        },
+      ],
     };
   },
   methods: {
@@ -215,7 +222,7 @@ export default {
       this.myDeep = null;
       this.modalVisible = true;
       this.loading = true;
-      this.getRequest("/actuator" + v.url).then(res => {
+      this.getRequest("/actuator" + v.url).then((res) => {
         this.loading = false;
         this.jsonData = res;
       });
@@ -223,8 +230,8 @@ export default {
     },
     changDeep(v) {
       this.deep = v;
-    }
+    },
   },
-  mounted() {}
+  mounted() {},
 };
 </script>

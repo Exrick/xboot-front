@@ -11,7 +11,6 @@ import { getRequest, postRequest, putRequest, postBodyRequest, getNoAuthRequest,
 import { setStore, getStore, removeStore } from '@/libs/storage'
 import { format } from "date-fns";
 import util from '@/libs/util'
-import dictUtil from '@/libs/dictUtil'
 import hasPermission from '@/libs/hasPermission'
 import hasRole from '@/libs/hasRole'
 import iviewArea from '@/views/my-components/iview-area';
@@ -60,8 +59,6 @@ new Vue({
     mounted() {
         // 初始化菜单
         util.initRouter(this);
-        // 初始化全局数据字典
-        dictUtil.initDictData(this);
         this.currentPageName = this.$route.name;
         // 显示打开的页面的列表
         this.$store.commit('setOpenedList');

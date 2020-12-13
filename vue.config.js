@@ -32,6 +32,7 @@ module.exports = {
         //     dplayer: 'DPlayer',
         //     'print-js': 'printJS',
         //     html2canvas: 'html2canvas',
+        //     'vue-json-pretty': 'VueJsonPretty',
         //     'vue-lazyload': 'VueLazyload',
         //     gitalk: 'Gitalk',
         //     'js-cookie': 'Cookies',

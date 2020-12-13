@@ -43,19 +43,7 @@
               />
             </FormItem>
             <FormItem label="性别" prop="sex">
-              <Select
-                v-model="searchForm.sex"
-                placeholder="请选择"
-                clearable
-                style="width: 200px"
-              >
-                <Option
-                  v-for="(item, i) in dictSex"
-                  :key="i"
-                  :value="item.value"
-                  >{{ item.title }}</Option
-                >
-              </Select>
+              <dict dict="sex" v-model="searchForm.sex" style="width: 200px"/>
             </FormItem>
             <FormItem label="登录账号" prop="username">
               <Input
@@ -198,12 +186,14 @@ import departmentChoose from "../../my-components/xboot/department-choose";
 import checkPassword from "@/views/my-components/xboot/check-password";
 import addEdit from "./addEdit.vue";
 import { shortcuts } from "@/libs/shortcuts";
+import dict from "@/views/my-components/xboot/dict";
 export default {
   name: "user-manage",
   components: {
     departmentChoose,
     checkPassword,
     addEdit,
+    dict
   },
   data() {
     return {
@@ -545,8 +535,7 @@ export default {
       ],
       data: [],
       exportData: [],
-      total: 0,
-      dictSex: this.$store.state.dict.sex,
+      total: 0
     };
   },
   methods: {

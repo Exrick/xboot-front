@@ -90,14 +90,7 @@
             </Col>
             <Col span="12">
               <FormItem label="性别">
-                <Select v-model="form.sex" transfer>
-                  <Option
-                    v-for="(item, i) in this.$store.state.dict.sex"
-                    :key="i"
-                    :value="item.value"
-                    >{{ item.title }}</Option
-                  >
-                </Select>
+                <dict dict="sex" v-model="form.sex" transfer/>
               </FormItem>
             </Col>
           </Row>
@@ -199,12 +192,14 @@ import {
 import departmentTreeChoose from "@/views/my-components/xboot/department-tree-choose";
 import uploadPicInput from "@/views/my-components/xboot/upload-pic-input";
 import SetPassword from "@/views/my-components/xboot/set-password";
+import dict from "@/views/my-components/xboot/dict";
 export default {
   name: "user",
   components: {
     departmentTreeChoose,
     uploadPicInput,
     SetPassword,
+    dict
   },
   props: {
     value: {

@@ -20,7 +20,9 @@
       @on-open-change="handleOpenChange"
       @on-select="handleSelect"
     >
-      <Option v-for="(item, i) in dictData" :key="i" :value="item.value">{{item.title}}</Option>
+      <Option v-for="(item, i) in dictData" :key="i" :value="item.value">{{
+        item.title
+      }}</Option>
     </Select>
   </div>
 </template>
@@ -34,27 +36,27 @@ export default {
     dict: String,
     placeholder: {
       type: String,
-      default: "请选择"
+      default: "请选择",
     },
     placement: {
       type: String,
-      default: "bottom-start"
+      default: "bottom-start",
     },
     multiple: {
       type: Boolean,
-      default: false
+      default: false,
     },
     disabled: {
       type: Boolean,
-      default: false
+      default: false,
     },
     filterable: {
       type: Boolean,
-      default: false
+      default: false,
     },
     transfer: {
       type: Boolean,
-      default: false
+      default: false,
     },
     transferClassName: String,
     prefix: String,
@@ -62,20 +64,20 @@ export default {
     maxTagPlaceholder: Function,
     clearable: {
       type: Boolean,
-      default: true
-    }
+      default: true,
+    },
   },
   data() {
     return {
       currentValue: null,
       dictData: [],
-      loading: false
+      loading: false,
     };
   },
   methods: {
     getData(v) {
       this.loading = true;
-      getDictDataByType(v).then(res => {
+      getDictDataByType(v).then((res) => {
         this.loading = false;
         if (res.success) {
           this.dictData = res.result;
@@ -104,7 +106,7 @@ export default {
       }
       this.currentValue = value;
       this.$emit("on-change", this.currentValue);
-    }
+    },
   },
   watch: {
     value(val) {
@@ -112,11 +114,11 @@ export default {
     },
     dict(val) {
       this.getData(val);
-    }
+    },
   },
   mounted() {
     this.getData(this.dict);
-  }
+  },
 };
 </script>
 

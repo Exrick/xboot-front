@@ -50,7 +50,7 @@
           <Alert show-icon>
             当前选择编辑：
             <span class="select-title">{{ editTitle }}</span>
-            <a class="select-clear" v-if="form.id" @click="cancelEdit"
+            <a class="select-clear" v-show="form.id && editTitle" @click="cancelEdit"
               >取消选择</a
             >
           </Alert>
@@ -61,16 +61,18 @@
             placeholder="输入部门名搜索"
             clearable
           />
-          <div class="tree-bar" :style="{ maxHeight: maxHeight }">
-            <Tree
-              ref="tree"
-              :data="data"
-              :load-data="loadData"
-              show-checkbox
-              @on-check-change="changeSelect"
-              @on-select-change="selectTree"
-              :check-strictly="!strict"
-            ></Tree>
+          <div style="position: relative">
+            <div class="tree-bar" :style="{ maxHeight: maxHeight }">
+              <Tree
+                ref="tree"
+                :data="data"
+                :load-data="loadData"
+                show-checkbox
+                @on-check-change="changeSelect"
+                @on-select-change="selectTree"
+                :check-strictly="!strict"
+              ></Tree>
+            </div>
             <Spin size="large" fix v-if="loading"></Spin>
           </div>
         </Col>
@@ -181,6 +183,7 @@
               <Button
                 @click="submitEdit"
                 :loading="submitLoading"
+                :disabled="!form.id || !editTitle"
                 type="primary"
                 icon="ios-create-outline"
                 >修改并保存</Button
@@ -298,7 +301,7 @@ export default {
       },
       formAdd: {},
       formValidate: {
-        title: [{ required: true, message: "名称不能为空", trigger: "change" }],
+        title: [{ required: true, message: "名称不能为空", trigger: "blur" }],
         sortOrder: [
           {
             required: true,
@@ -504,6 +507,11 @@ export default {
         }
         let str = JSON.stringify(v[0]);
         let data = JSON.parse(str);
+        if (this.form.id == data.id) {
+          this.$Message.warning("请勿选择自己作为父节点");
+          v[0].selected = false;
+          return;
+        }
         this.form.parentId = data.id;
         this.form.parentTitle = data.title;
       }
@@ -514,12 +522,6 @@ export default {
     handleReset() {
       this.$refs.form.resetFields();
       this.form.status = 0;
-    },
-    showSelect(e) {
-      this.selectList = e;
-    },
-    clearSelectAll() {
-      this.$refs.table.selectAll(false);
     },
     submitEdit() {
       this.$refs.form.validate((valid) => {
@@ -555,10 +557,6 @@ export default {
         }
       });
     },
-    tableAdd(v) {
-      this.form = v;
-      this.add();
-    },
     add() {
       if (this.form.id == "" || this.form.id == null) {
         this.$Message.warning("请先点击选择一个部门");
@@ -566,9 +564,12 @@ export default {
       }
       this.modalTitle = "添加子部门";
       this.showParent = true;
+      if (!this.form.children) {
+        this.form.children = [];
+      }
       this.formAdd = {
         parentId: this.form.id,
-        sortOrder: 0,
+        sortOrder: this.form.children.length + 1,
         status: 0,
       };
       this.modalVisible = true;
@@ -578,13 +579,28 @@ export default {
       this.showParent = false;
       this.formAdd = {
         parentId: 0,
-        sortOrder: 0,
+        sortOrder: this.data.length + 1,
         status: 0,
       };
       this.modalVisible = true;
     },
     changeSelect(v) {
       this.selectList = v;
+    },
+    tableAdd(v) {
+      this.form = v;
+      this.add();
+      this.editTitle = "";
+      let data = this.$refs.tree.getSelectedNodes()[0];
+      if (data) {
+        data.selected = false;
+      }
+    },
+    showSelect(e) {
+      this.selectList = e;
+    },
+    clearSelectAll() {
+      this.$refs.table.selectAll(false);
     },
     remove(v) {
       this.selectList = [];

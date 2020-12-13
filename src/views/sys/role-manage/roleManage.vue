@@ -1,5 +1,6 @@
 <style lang="less">
 @import "../../../styles/table-common.less";
+@import "../../../styles/drawer-common.less";
 @import "./roleManage.less";
 </style>
 <template>
@@ -87,45 +88,47 @@
       </div>
     </Modal>
     <!-- 菜单权限 -->
-    <Modal
+    <Drawer
       :title="modalTitle"
       v-model="permModalVisible"
       :mask-closable="false"
       :width="500"
-      :styles="{ top: '30px' }"
-      class="permModal"
+      draggable
     >
-      <div style="position: relative">
-        <Tree
-          ref="tree"
-          :data="permData"
-          show-checkbox
-          :render="renderContent"
-          :check-strictly="true"
-        ></Tree>
-        <Spin size="large" fix v-if="treeLoading"></Spin>
+      <div :style="{ maxHeight: maxHeight }" class="drawer-content">
+        <div style="position: relative">
+          <Tree
+            ref="tree"
+            :data="permData"
+            show-checkbox
+            :render="renderContent"
+            :check-strictly="true"
+          ></Tree>
+          <Spin size="large" fix v-if="treeLoading"></Spin>
+        </div>
       </div>
-      <div slot="footer">
-        <Button type="text" @click="cancelPermEdit">取消</Button>
-        <Select
-          v-model="openLevel"
-          @on-change="changeOpen"
-          style="width: 110px; text-align: left; margin-right: 10px"
-        >
-          <Option value="0">展开所有</Option>
-          <Option value="1">收合所有</Option>
-          <Option value="2">仅展开一级</Option>
-          <Option value="3">仅展开两级</Option>
-        </Select>
-        <Button @click="selectTreeAll">全选/反选</Button>
+      <div class="drawer-footer br">
         <Button
           type="primary"
           :loading="submitPermLoading"
           @click="submitPermEdit"
           >提交</Button
         >
+        <Button @click="selectTreeAll">全选/反选</Button>
+        <Select
+          v-model="openLevel"
+          @on-change="changeOpen"
+          style="width: 110px;"
+          transfer
+        >
+          <Option value="0">展开所有</Option>
+          <Option value="1">收合所有</Option>
+          <Option value="2">仅展开一级</Option>
+          <Option value="3">仅展开两级</Option>
+        </Select>
+        <Button type="text" @click="cancelPermEdit">取消</Button>
       </div>
-    </Modal>
+    </Drawer>
     <!-- 数据权限 -->
     <Modal
       :title="modalTitle"
@@ -191,6 +194,7 @@ export default {
   name: "role-manage",
   data() {
     return {
+      maxHeight: 510,
       openTip: true,
       openLevel: "0",
       loading: true,
@@ -857,6 +861,7 @@ export default {
     },
   },
   mounted() {
+    this.maxHeight = Number(document.documentElement.clientHeight - 121) + "px";
     this.init();
   },
 };

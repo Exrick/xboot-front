@@ -23,7 +23,7 @@
       @on-open-change="handleOpenChange"
       @on-select="handleSelect"
     >
-      <Option v-for="(item, i) in dictData" :key="i" :value="item.value">{{item.title}}</Option>
+      <Option v-for="(item, i) in data" :key="i" :value="item.value">{{item.title}}</Option>
     </Select>
     <Select
       v-if="description"
@@ -48,7 +48,7 @@
       @on-open-change="handleOpenChange"
       @on-select="handleSelect"
     >
-      <Option v-for="(item, i) in dictData" :value="item.value" :key="i" :label="item.title">
+      <Option v-for="(item, i) in data" :value="item.value" :key="i" :label="item.title">
         <span style="margin-right:10px;">{{ item.title }}</span>
         <span style="color:#ccc;">{{ item.description }}</span>
       </Option>
@@ -131,7 +131,7 @@ export default {
   data() {
     return {
       currentValue: null,
-      dictData: [],
+      data: [],
       loading: false
     };
   },
@@ -165,7 +165,7 @@ export default {
               e.description = e[this.description];
             });
           }
-          this.dictData = res.result;
+          this.data = res.result;
         }
       });
     },

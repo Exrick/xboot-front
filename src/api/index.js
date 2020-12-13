@@ -159,6 +159,10 @@ export const deleteRole = (params) => {
 export const getAllPermissionList = (params) => {
     return getRequest('/permission/getAllList', params)
 }
+// 加载数据
+export const loadPermission = (id, params) => {
+    return getRequest(`/permission/getByParentId/${id}`, params)
+}
 // 添加权限
 export const addPermission = (params) => {
     return postRequest('/permission/add', params)

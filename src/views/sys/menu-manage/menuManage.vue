@@ -6,12 +6,22 @@
   <div class="search">
     <Card>
       <Row class="operation">
-        <Button @click="addMenu" type="primary" icon="md-add"
+        <Button
+          @click="add"
+          type="primary"
+          icon="md-add"
+          v-show="showType == 'tree'"
           >添加子节点</Button
         >
-        <Button @click="addRootMenu" icon="md-add">添加顶部菜单</Button>
+        <Button @click="addRoot" icon="md-add">添加顶部菜单</Button>
         <Button @click="delAll" icon="md-trash">批量删除</Button>
-        <Dropdown @on-click="handleDropdown">
+        <Button
+          @click="getParentList"
+          icon="md-refresh"
+          v-show="showType == 'list'"
+          >刷新</Button
+        >
+        <Dropdown @on-click="handleDropdown" v-show="showType == 'tree'">
           <Button>
             更多操作
             <Icon type="md-arrow-dropdown"></Icon>
@@ -24,17 +34,61 @@
             <DropdownItem name="expandAll">展开所有</DropdownItem>
           </DropdownMenu>
         </Dropdown>
-        <i-switch v-model="strict" size="large" style="margin-left: 5px">
+        <Input
+          v-model="searchKey"
+          suffix="ios-search"
+          @on-change="search"
+          placeholder="输入菜单名搜索"
+          clearable
+          style="width: 250px"
+          v-show="showType == 'list'"
+        />
+        <i-switch
+          v-model="strict"
+          size="large"
+          style="margin-left: 5px"
+          v-show="showType == 'tree'"
+        >
           <span slot="open">级联</span>
           <span slot="close">单选</span>
         </i-switch>
+        <div style="float: right">
+          <RadioGroup v-model="showType" type="button">
+            <Radio title="树结构" label="tree">
+              <Icon type="md-list"></Icon>
+            </Radio>
+            <Radio title="列表" label="list">
+              <Icon type="ios-apps"></Icon>
+            </Radio>
+          </RadioGroup>
+        </div>
       </Row>
-      <Row type="flex" justify="start" :gutter="16">
+      <Alert show-icon v-show="showType == 'list'">
+        已选择
+        <span class="select-count">{{ selectList.length }}</span> 项
+        <a class="select-clear" @click="clearSelectAll">清空</a>
+      </Alert>
+      <Table
+        row-key="title"
+        :load-data="loadData"
+        :columns="columns"
+        :data="tableData"
+        :loading="loading"
+        border
+        :update-show-children="true"
+        ref="table"
+        @on-selection-change="showSelect"
+        v-if="showType == 'list'"
+      ></Table>
+      <Row type="flex" justify="start" :gutter="16" v-show="showType == 'tree'">
         <Col :sm="8" :md="8" :lg="8" :xl="6">
           <Alert show-icon>
             当前选择编辑：
             <span class="select-title">{{ editTitle }}</span>
-            <a class="select-clear" v-if="form.id" @click="cancelEdit"
+            <a
+              class="select-clear"
+              v-show="form.id && editTitle"
+              @click="cancelEdit"
               >取消选择</a
             >
           </Alert>
@@ -45,16 +99,18 @@
             placeholder="输入菜单名搜索"
             clearable
           />
-          <div class="tree-bar" :style="{ maxHeight: maxHeight }">
-            <Tree
-              ref="tree"
-              :data="data"
-              show-checkbox
-              :render="renderContent"
-              @on-select-change="selectTree"
-              @on-check-change="changeSelect"
-              :check-strictly="!strict"
-            ></Tree>
+          <div style="position: relative">
+            <div class="tree-bar" :style="{ maxHeight: maxHeight }">
+              <Tree
+                ref="tree"
+                :data="data"
+                show-checkbox
+                :render="renderContent"
+                @on-select-change="selectTree"
+                @on-check-change="changeSelect"
+                :check-strictly="!strict"
+              ></Tree>
+            </div>
             <Spin size="large" fix v-if="loading"></Spin>
           </div>
         </Col>
@@ -89,6 +145,34 @@
                   style="margin-right: 5px"
                 ></Icon>
                 <span>操作按钮</span>
+              </div>
+            </FormItem>
+            <FormItem label="上级菜单" prop="parentTitle">
+              <div style="display: flex">
+                <Input
+                  v-model="form.parentTitle"
+                  readonly
+                  style="margin-right: 10px"
+                />
+                <Poptip
+                  transfer
+                  trigger="click"
+                  placement="right-start"
+                  title="选择上级菜单"
+                  width="250"
+                >
+                  <Button icon="md-list">选择菜单</Button>
+                  <div
+                    slot="content"
+                    style="position: relative; min-height: 5vh"
+                  >
+                    <Tree
+                      :data="dataEdit"
+                      @on-select-change="selectTreeEdit"
+                    ></Tree>
+                    <Spin size="large" fix v-if="loading"></Spin>
+                  </div>
+                </Poptip>
               </div>
             </FormItem>
             <FormItem
@@ -276,6 +360,7 @@
                 style="margin-right: 5px"
                 @click="submitEdit"
                 :loading="submitLoading"
+                :disabled="!form.id || !editTitle"
                 type="primary"
                 icon="ios-create-outline"
                 >修改并保存</Button
@@ -524,6 +609,7 @@
 <script>
 import {
   getAllPermissionList,
+  loadPermission,
   addPermission,
   editPermission,
   deletePermission,
@@ -539,6 +625,144 @@ export default {
   },
   data() {
     return {
+      showType: "tree",
+      columns: [
+        {
+          type: "selection",
+          width: 60,
+          align: "center",
+        },
+        {
+          type: "index",
+          width: 60,
+          align: "center",
+        },
+        {
+          title: "菜单名称",
+          key: "title",
+          minWidth: 150,
+          sortable: true,
+          tree: true,
+        },
+        {
+          title: "英文名",
+          key: "name",
+          minWidth: 100,
+          sortable: true,
+        },
+        {
+          title: "类型",
+          key: "type",
+          minWidth: 120,
+          sortable: true,
+          align: "center",
+          render: (h, params) => {
+            let icon = "",
+              type = "",
+              level = params.row.level;
+            if (level == 0) {
+              icon = "ios-navigate";
+              type = "顶部菜单";
+            } else if (level == 1) {
+              icon = "md-list-box";
+              type = "页面菜单";
+            } else if (level == 2) {
+              icon = "md-list";
+              type = "页面菜单";
+            } else if (level == 3) {
+              icon = "md-radio-button-on";
+              type = "操作按钮";
+            } else {
+              icon = "md-radio-button-off";
+            }
+            return h("div", [
+              h("Icon", {
+                props: {
+                  type: icon,
+                },
+                style: {
+                  margin: "0 5px 0 0",
+                },
+              }),
+              h("span", type),
+            ]);
+          },
+        },
+        {
+          title: "图标",
+          key: "icon",
+          minWidth: 100,
+          sortable: true,
+          align: "center",
+          render: (h, params) => {
+            return h("div", [
+              h("Icon", {
+                props: {
+                  type: params.row.icon,
+                },
+              }),
+            ]);
+          },
+        },
+        {
+          title: "路径/URL",
+          minWidth: 100,
+          key: "path",
+          tooltip: true,
+        },
+        {
+          title: "排序",
+          key: "sortOrder",
+          minWidth: 100,
+          sortable: true,
+          align: "center",
+          sortType: "asc",
+        },
+        {
+          title: "创建时间",
+          key: "createTime",
+          sortable: true,
+          width: 170,
+        },
+        {
+          title: "操作",
+          key: "action",
+          width: 200,
+          fixed: "right",
+          align: "center",
+          render: (h, params) => {
+            return h("div", [
+              h(
+                "a",
+                {
+                  on: {
+                    click: () => {
+                      this.tableAdd(params.row);
+                    },
+                  },
+                },
+                "添加子节点"
+              ),
+              h("Divider", {
+                props: {
+                  type: "vertical",
+                },
+              }),
+              h(
+                "a",
+                {
+                  on: {
+                    click: () => {
+                      this.remove(params.row);
+                    },
+                  },
+                },
+                "删除"
+              ),
+            ]);
+          },
+        },
+      ],
       loading: true,
       strict: true,
       maxHeight: "500px",
@@ -566,6 +790,7 @@ export default {
         status: 0,
         url: "",
         showAlways: true,
+        parentTitle: "",
       },
       formAdd: {
         buttonType: "",
@@ -575,7 +800,7 @@ export default {
         name: [
           { required: true, message: "路由英文名不能为空", trigger: "change" },
         ],
-        icon: [{ required: true, message: "图标不能为空", trigger: "click" }],
+        icon: [{ required: true, message: "图标不能为空", trigger: "change" }],
         path: [{ required: true, message: "路径不能为空", trigger: "change" }],
         component: [
           { required: true, message: "前端组件不能为空", trigger: "change" },
@@ -591,6 +816,8 @@ export default {
       },
       submitLoading: false,
       data: [],
+      dataEdit: [],
+      tableData: [],
       dictPermissions: [],
     };
   },
@@ -598,11 +825,40 @@ export default {
     init() {
       this.getAllList();
       this.getDictPermissions();
+      this.getParentList();
     },
     getDictPermissions() {
       getDictDataByType("permission_type").then((res) => {
         if (res.success) {
           this.dictPermissions = res.result;
+        }
+      });
+    },
+    getParentList() {
+      this.loading = true;
+      loadPermission("0").then((res) => {
+        this.loading = false;
+        if (res.success) {
+          res.result.forEach(function (e) {
+            if (e.isParent) {
+              e.children = [];
+              e._loading = false;
+            }
+          });
+          this.tableData = res.result;
+        }
+      });
+    },
+    loadData(item, callback) {
+      loadPermission(item.id).then((res) => {
+        if (res.success) {
+          res.result.forEach(function (e) {
+            if (e.isParent) {
+              e.children = [];
+              e._loading = false;
+            }
+          });
+          callback(res.result);
         }
       });
     },
@@ -712,6 +968,15 @@ export default {
             }
           });
           this.data = res.result;
+          let str = JSON.stringify(res.result);
+          this.dataEdit = JSON.parse(str);
+          // 头部加入一级
+          let first = {
+            id: "0",
+            level: -1,
+            title: "一级菜单",
+          };
+          this.dataEdit.unshift(first);
         }
       });
     },
@@ -722,10 +987,12 @@ export default {
           this.loading = false;
           if (res.success) {
             this.data = res.result;
+            this.tableData = res.result;
           }
         });
       } else {
         this.getAllList();
+        this.getParentList();
       }
     },
     selectTree(v) {
@@ -737,11 +1004,35 @@ export default {
           }
         }
         let str = JSON.stringify(v[0]);
-        let menu = JSON.parse(str);
-        this.form = menu;
-        this.editTitle = menu.title;
+        let data = JSON.parse(str);
+        this.form = data;
+        this.editTitle = data.title;
       } else {
         this.cancelEdit();
+      }
+    },
+    selectTreeEdit(v) {
+      if (v.length > 0) {
+        // 转换null为""
+        for (let attr in v[0]) {
+          if (v[0][attr] == null) {
+            v[0][attr] = "";
+          }
+        }
+        let str = JSON.stringify(v[0]);
+        let data = JSON.parse(str);
+        if (this.form.id == data.id) {
+          this.$Message.warning("请勿选择自己作为父节点");
+          v[0].selected = false;
+          return;
+        }
+        this.form.parentId = data.id;
+        let level = data.level + 1;
+        if (level < 0) {
+          level = 0;
+        }
+        this.form.level = level;
+        this.form.parentTitle = data.title;
       }
     },
     cancelEdit() {
@@ -828,7 +1119,7 @@ export default {
         this.formAdd.component = "sys/monitor/monitor";
       }
     },
-    addMenu() {
+    add() {
       if (!this.form.id) {
         this.$Message.warning("请先点击选择一个菜单权限节点");
         return;
@@ -851,6 +1142,9 @@ export default {
         type = 0;
       }
       let component = "";
+      if (!this.form.children) {
+        this.form.children = [];
+      }
       this.formAdd = {
         icon: "",
         type: type,
@@ -867,7 +1161,16 @@ export default {
       }
       this.menuModalVisible = true;
     },
-    addRootMenu() {
+    tableAdd(v) {
+      this.form = v;
+      this.add();
+      this.editTitle = "";
+      let data = this.$refs.tree.getSelectedNodes()[0];
+      if (data) {
+        data.selected = false;
+      }
+    },
+    addRoot() {
       this.modalTitle = "添加顶部菜单(可拖动)";
       this.showParent = false;
       this.formAdd = {
@@ -883,6 +1186,17 @@ export default {
     changeSelect(v) {
       this.selectList = v;
     },
+    showSelect(e) {
+      this.selectList = e;
+    },
+    clearSelectAll() {
+      this.$refs.table.selectAll(false);
+    },
+    remove(v) {
+      this.selectList = [];
+      this.selectList.push(v);
+      this.delAll();
+    },
     delAll() {
       if (this.selectList.length <= 0) {
         this.$Message.warning("您还未勾选要删除的数据");
@@ -890,7 +1204,10 @@ export default {
       }
       this.$Modal.confirm({
         title: "确认删除",
-        content: "您确认要删除所选的 " + this.selectList.length + " 条数据?",
+        content:
+          "您确认要删除所选的 " +
+          this.selectList.length +
+          " 条数据及其下级所有数据?",
         loading: true,
         onOk: () => {
           let ids = "";

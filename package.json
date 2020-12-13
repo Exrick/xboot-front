@@ -1,6 +1,6 @@
 {
   "name": "xboot-front",
-  "version": "3.1.0",
+  "version": "3.2.0",
   "description": "XBoot前后端分离开发平台",
   "author": "Exrick <1012139570@qq.com>",
   "private": true,
@@ -19,7 +19,7 @@
     "gitalk": "^1.7.0",
     "html2canvas": "^1.0.0-rc.7",
     "view-design": "^4.4.0",
-    "viewerjs": "^1.8.0",
+    "viewerjs": "^1.9.0",
     "js-cookie": "^2.2.1",
     "print-js": "^1.5.0",
     "vue": "^2.6.12",

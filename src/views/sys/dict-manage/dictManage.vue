@@ -37,12 +37,14 @@
             placeholder="输入搜索字典"
             clearable
           />
-          <div class="tree-bar" :style="{ maxHeight: maxHeight }">
-            <Tree
-              ref="tree"
-              :data="treeData"
-              @on-select-change="selectTree"
-            ></Tree>
+          <div style="position: relative">
+            <div class="tree-bar" :style="{ maxHeight: maxHeight }">
+              <Tree
+                ref="tree"
+                :data="treeData"
+                @on-select-change="selectTree"
+              ></Tree>
+            </div>
             <Spin size="large" fix v-if="treeLoading"></Spin>
           </div>
         </Col>

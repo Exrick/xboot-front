@@ -117,7 +117,7 @@ export default {
                   type: "ios-person"
                 },
                 style: {
-                  margin: "0 5px 3px 0"
+                  margin: "0 5px 0 0"
                 }
               }),
               h("strong", params.row.name)
