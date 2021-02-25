@@ -1,27 +1,15 @@
-<style lang="less">
-@import "../main.less";
-</style>
-
 <template>
   <div
     ref="scrollCon"
     @DOMMouseScroll="handlescroll"
     @mousewheel="handlescroll"
-    class="tags-outer-scroll-con"
+    class="tags-scroll-content"
   >
-    <div class="close-all-tag-con">
-      <Dropdown transfer @on-click="handleTagsOption">
-        <Button size="small" type="primary">
-          {{ $t('tagOption') }}
-          <Icon type="md-arrow-dropdown"></Icon>
-        </Button>
-        <DropdownMenu slot="list">
-          <DropdownItem name="clearAll">{{ $t('closeAll') }}</DropdownItem>
-          <DropdownItem name="clearOthers">{{ $t('closeOthers') }}</DropdownItem>
-        </DropdownMenu>
-      </Dropdown>
-    </div>
-    <div ref="scrollBody" class="tags-inner-scroll-body" :style="{left: tagBodyLeft + 'px'}">
+    <div
+      ref="scrollBody"
+      class="tags-scroll-body"
+      :style="{ left: tagBodyLeft + 'px' }"
+    >
       <transition-group name="taglist-moving-animation">
         <Tag
           type="dot"
@@ -31,10 +19,38 @@
           :name="item.name"
           @on-close="closePage"
           @click.native="linkTo(item)"
-          :closable="item.name=='home_index'?false:true"
-          :color="item.children?(item.children[0].name==currentPageName?'primary':'default'):(item.name==currentPageName?'primary':'default')"
-        >{{ itemTitle(item) }}</Tag>
+          :closable="item.name == 'home_index' ? false : true"
+          :color="
+            item.children
+              ? item.children[0].name == currentPageName
+                ? 'primary'
+                : 'default'
+              : item.name == currentPageName
+              ? 'primary'
+              : 'default'
+          "
+          >{{ itemTitle(item) }}</Tag
+        >
       </transition-group>
+    </div>
+    <div class="close-tag-content">
+      <Dropdown
+        transfer
+        trigger="hover"
+        @on-click="handleTagsOption"
+        placement="bottom-end"
+        transfer-class-name="close-tag-dropdown"
+      >
+        <div class="icon-content">
+          <Icon type="ios-arrow-down" size="16" />
+        </div>
+        <DropdownMenu slot="list">
+          <DropdownItem name="clearAll">{{ $t("closeAll") }}</DropdownItem>
+          <DropdownItem name="clearOthers">{{
+            $t("closeOthers")
+          }}</DropdownItem>
+        </DropdownMenu>
+      </Dropdown>
     </div>
   </div>
 </template>
@@ -46,18 +62,19 @@ export default {
     return {
       currentPageName: this.$route.name,
       tagBodyLeft: 0,
+      paddingRight: 40,
       refsTag: [],
-      tagsCount: 1
+      tagsCount: 1,
     };
   },
   props: {
     pageTagsList: Array,
     beforePush: {
       type: Function,
-      default: item => {
+      default: (item) => {
         return true;
-      }
-    }
+      },
+    },
   },
   computed: {
     title() {
@@ -65,7 +82,7 @@ export default {
     },
     tagsList() {
       return this.$store.state.app.pageOpenedList;
-    }
+    },
   },
   methods: {
     itemTitle(item) {
@@ -137,7 +154,7 @@ export default {
             -(
               this.$refs.scrollBody.offsetWidth -
               this.$refs.scrollCon.offsetWidth +
-              100
+              this.paddingRight
             )
           ) {
             left = this.tagBodyLeft;
@@ -146,7 +163,7 @@ export default {
               this.tagBodyLeft + delta,
               this.$refs.scrollCon.offsetWidth -
                 this.$refs.scrollBody.offsetWidth -
-                100
+                this.paddingRight
             );
           }
         } else {
@@ -159,7 +176,7 @@ export default {
       if (type == "clearAll") {
         this.$store.commit("clearAllTags");
         this.$router.push({
-          name: "home_index"
+          name: "home_index",
         });
       } else {
         this.$store.commit("clearOtherTags", this);
@@ -173,13 +190,15 @@ export default {
       } else if (
         tag.offsetLeft + 10 > -this.tagBodyLeft &&
         tag.offsetLeft + tag.offsetWidth <
-          -this.tagBodyLeft + this.$refs.scrollCon.offsetWidth - 100
+          -this.tagBodyLeft +
+            this.$refs.scrollCon.offsetWidth -
+            this.paddingRight
       ) {
         // 标签在可视区域
         this.tagBodyLeft = Math.min(
           0,
           this.$refs.scrollCon.offsetWidth -
-            100 -
+            this.paddingRight -
             tag.offsetWidth -
             tag.offsetLeft -
             20
@@ -188,11 +207,13 @@ export default {
         // 标签在可视区域右侧
         this.tagBodyLeft = -(
           tag.offsetLeft -
-          (this.$refs.scrollCon.offsetWidth - 100 - tag.offsetWidth) +
+          (this.$refs.scrollCon.offsetWidth -
+            this.paddingRight -
+            tag.offsetWidth) +
           20
         );
       }
-    }
+    },
   },
   mounted() {
     this.refsTag = this.$refs.tagsPageOpened;
@@ -218,7 +239,74 @@ export default {
         });
       });
       this.tagsCount = this.tagsList.length;
-    }
-  }
+    },
+  },
 };
 </script>
+
+<style lang="less">
+.tags-scroll-content {
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  height: 40px;
+  z-index: 0;
+  overflow: hidden;
+  background: #f0f2f5;
+  padding-right: 40px;
+
+  .tags-scroll-body {
+    position: absolute;
+    padding: 2px 10px;
+    overflow: visible;
+    white-space: nowrap;
+    transition: left 0.3s ease;
+    // 自定义Tag样式
+    .ivu-tag {
+      font-size: 14px;
+      padding: 0 16px;
+      .ivu-icon-ios-close {
+        font-size: 16px;
+        margin-left: 3px !important;
+        margin-right: -5px;
+        top: 0px;
+      }
+      .ivu-tag-text {
+        color: #74788d;
+        transition: all 0.2s ease-in-out;
+      }
+      &:hover {
+        .ivu-tag-text {
+          color: #2d8cf0;
+        }
+      }
+    }
+    .ivu-tag-primary .ivu-tag-text {
+      color: #2d8cf0;
+    }
+    .ivu-tag-dot-inner {
+      display: none;
+    }
+  }
+
+  .close-tag-content {
+    position: absolute;
+    right: 0;
+    top: 0;
+    .icon-content {
+      background: white;
+      box-shadow: -3px 0 15px 3px rgba(0, 0, 0, 0.1);
+      z-index: 10;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+  }
+}
+.close-tag-dropdown {
+  right: 5px !important;
+}
+</style>

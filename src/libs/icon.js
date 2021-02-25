@@ -3509,9 +3509,11 @@ export const icons = [
         "tags": [
             "youtube"
         ]
-    },
+    }
+]
+
+export const iconfont = [
     {
-        "custom": true,
         "icons": [
             "iconfont icon-github"
         ],
@@ -3520,7 +3522,6 @@ export const icons = [
         ]
     },
     {
-        "custom": true,
         "icons": [
             "iconfont icon-qq"
         ],
@@ -3529,7 +3530,6 @@ export const icons = [
         ]
     },
     {
-        "custom": true,
         "icons": [
             "iconfont icon-weixin"
         ],
@@ -3538,7 +3538,6 @@ export const icons = [
         ]
     },
     {
-        "custom": true,
         "icons": [
             "iconfont icon-weibo"
         ],
@@ -3547,7 +3546,6 @@ export const icons = [
         ]
     },
     {
-        "custom": true,
         "icons": [
             "iconfont icon-dingding"
         ],
@@ -3556,12 +3554,29 @@ export const icons = [
         ]
     },
     {
-        "custom": true,
         "icons": [
             "iconfont icon-qiyeweixin"
         ],
         "tags": [
             "qiyeweixin"
+        ]
+    },
+    {
+        "icons": [
+            "iconfont icon-menu-unfold"
+        ],
+        "tags": [
+            "menu",
+            "unfold"
+        ]
+    },
+    {
+        "icons": [
+            "iconfont icon-menu-fold"
+        ],
+        "tags": [
+            "menu",
+            "fold"
         ]
     }
 ]

@@ -1,65 +1,49 @@
 <template>
   <div>
     <template v-for="(item, index) in menuList">
-      <div style="text-align: center" :key="index">
+      <div :class="`shrink-menu-content shrink-menu-icon-${theme}`" :key="index">
         <Dropdown
-          transfer
-          v-if="item.children.length !== 1"
+          v-if="item.children.length != 1"
           placement="right-start"
           :key="index"
           @on-click="changeMenu"
         >
-          <Button
-            style="
-              width: 70px;
-              height: 42px;
-              margin-left: -5px;
-              padding: 10px 0;
-            "
-            type="text"
+          <div
+            class="shrink-icon"
+            :class="{ 'active': item.name == openNames[0] }"
           >
-            <Icon :size="20" :color="iconColor" :type="item.icon"></Icon>
-          </Button>
+            <XIcon :size="20" :type="item.icon"></XIcon>
+          </div>
           <DropdownMenu style="width: 200px" slot="list">
-            <template v-for="(child, i) in item.children">
-              <DropdownItem :name="child.name" :key="i">
-                <Icon :type="child.icon"></Icon>
-                <span style="padding-left: 10px">{{ itemTitle(child) }}</span>
-              </DropdownItem>
-            </template>
+            <DropdownItem
+              :name="child.name"
+              :key="i"
+              v-for="(child, i) in item.children"
+              :selected="$route.name == child.name"
+            >
+              <XIcon :type="child.icon"></XIcon>
+              <span style="padding-left: 10px">{{ itemTitle(child) }}</span>
+            </DropdownItem>
           </DropdownMenu>
         </Dropdown>
         <Dropdown
-          transfer
           v-else
           placement="right-start"
           :key="index"
           @on-click="changeMenu"
         >
-          <Button
-            @click="changeMenu(item.children[0].name)"
-            style="
-              width: 70px;
-              height: 42px;
-              margin-left: -5px;
-              padding: 10px 0;
-            "
-            type="text"
-          >
-            <Icon
-              :size="20"
-              :color="iconColor"
-              :type="item.children[0].icon || item.icon"
-            ></Icon>
-          </Button>
-          <DropdownMenu style="width: 200px" slot="list">
-            <DropdownItem :name="item.children[0].name" :key="'d' + index">
-              <Icon :type="item.children[0].icon || item.icon"></Icon>
-              <span style="padding-left: 10px">{{
-                itemTitle(item.children[0])
-              }}</span>
-            </DropdownItem>
-          </DropdownMenu>
+          <Tooltip :content="item.title" placement="right">
+            <div
+              @click="changeMenu(item.children[0].name)"
+              class="shrink-icon"
+              :class="{ 'active': item.name == openNames[0] }"
+            >
+              <XIcon
+                :size="20"
+                :type="item.children[0].icon || item.icon"
+              ></XIcon>
+            </div>
+          </Tooltip>
         </Dropdown>
       </div>
     </template>
@@ -73,13 +57,12 @@ export default {
     menuList: {
       type: Array,
     },
-    iconColor: {
+    theme: {
       type: String,
-      default: "white",
+      default: "darkblue",
     },
-    menuTheme: {
-      type: String,
-      default: "dark",
+    openNames: {
+      type: Array,
     },
   },
   methods: {

@@ -1,49 +1,59 @@
 <style lang="less">
 @import "./home.less";
-@import "../../styles/common.less";
 </style>
 
 <template>
   <div>
     <div v-show="currNav == 'xboot'" class="home">
       <Row :gutter="10">
-        <Col :lg="24" :xl="8">
+        <!-- 左上侧 用户信息及github链接 -->
+        <Col :sm="24" :lg="24" :xl="8">
           <Row :gutter="10">
-            <Col :lg="12" :xl="24" :style="{ marginBottom: '10px' }">
-              <Card>
-                <Row type="flex" class="user-info">
-                  <Col span="8">
-                    <Row
-                      class-name="made-child-con-middle"
-                      type="flex"
-                      align="middle"
-                    >
-                      <img class="avator-img" :src="avatarPath" />
-                    </Row>
-                  </Col>
-                  <Col span="16" style="padding-left: 6px">
-                    <Row
-                      class-name="made-child-con-middle"
-                      type="flex"
-                      align="middle"
-                    >
-                      <div>
-                        <b class="card-user-info-name">{{ username }}</b>
-                        <p>您好，XBoot 欢迎您的使用</p>
+            <Col style="margin-bottom: 10px; width: 100%">
+              <Card :padding="0">
+                <div class="welcome-card">
+                  <div class="left">
+                    <div class="user">
+                      <Avatar
+                        v-if="avatar"
+                        :src="avatar"
+                        size="60"
+                        class="avator-img"
+                      ></Avatar>
+                      <Avatar
+                        v-else
+                        icon="md-person"
+                        size="60"
+                        class="avator-icon"
+                      ></Avatar>
+                      <div class="info">
+                        <p class="username">Hi, {{ nickname }} !</p>
+                        <p class="welcome">欢迎回到XBoot快速开发平台</p>
                       </div>
-                    </Row>
-                  </Col>
-                </Row>
-                <div class="line-gray"></div>
-                <Row class="margin-top-8">
-                  <Col span="8">
-                    <p class="notwrap">本次登录地点:</p>
-                  </Col>
-                  <Col span="16" class="padding-left-8">{{ city }}</Col>
-                </Row>
+                    </div>
+                    <div class="list">
+                      <div class="p">
+                        <div class="dot"></div>
+                        您当前所在的部门为：{{ departmentTitle }}
+                      </div>
+                      <div class="p">
+                        <div class="dot"></div>
+                        您当前的用户类型为：{{ userType }}
+                      </div>
+                      <div class="p">
+                        <div class="dot"></div>
+                        本次登录地点：{{ city }}
+                      </div>
+                    </div>
+                  </div>
+                  <img
+                    class="pic"
+                    :src="require('@/assets/icon/computer.svg')"
+                  />
+                </div>
               </Card>
             </Col>
-            <Col :lg="12" :xl="24" style="margin-bottom: 10px">
+            <Col style="margin-bottom: 10px; width: 100%">
               <Card>
                 <p slot="title">
                   <Icon
@@ -58,7 +68,7 @@
                 <p slot="extra">
                   <a target="_blank" href="http://exrick.cn">作者：Exrick</a>
                 </p>
-                <div style="height: 268px">
+                <div class="timeline-content">
                   <Timeline>
                     <TimelineItem>
                       <Icon
@@ -67,7 +77,7 @@
                         slot="dot"
                       ></Icon>
                       <a @click="showVideo = true"
-                        >作者亲自制作XBoot文字快闪宣传片 点我观看</a
+                        >作者亲自制作XBoot文字快闪宣传片</a
                       >
                     </TimelineItem>
                     <TimelineItem>
@@ -112,48 +122,10 @@
             </Col>
           </Row>
         </Col>
+        <!-- 右上侧 -->
         <Col :lg="24" :xl="16">
-          <Row :gutter="5">
-            <Col :sm="24" :md="12" :lg="6" :style="{ marginBottom: '10px' }">
-              <info-card
-                id-name="user_created_count"
-                :end-val="count.createUser"
-                iconType="md-person-add"
-                color="#2d8cf0"
-                intro-text="今日新增用户"
-              ></info-card>
-            </Col>
-            <Col :sm="24" :md="12" :lg="6" :style="{ marginBottom: '10px' }">
-              <info-card
-                id-name="visit_count"
-                :end-val="count.visit"
-                iconType="ios-eye"
-                color="#64d572"
-                :iconSize="50"
-                intro-text="今日浏览量"
-              ></info-card>
-            </Col>
-            <Col :sm="24" :md="12" :lg="6" :style="{ marginBottom: '10px' }">
-              <info-card
-                id-name="collection_count"
-                :end-val="count.collection"
-                iconType="md-cloud-upload"
-                color="#ffd572"
-                intro-text="今日数据采集量"
-              ></info-card>
-            </Col>
-            <Col :sm="24" :md="12" :lg="6" :style="{ marginBottom: '10px' }">
-              <info-card
-                id-name="transfer_count"
-                :end-val="count.transfer"
-                iconType="md-shuffle"
-                color="#f25e43"
-                intro-text="今日服务调用量"
-              ></info-card>
-            </Col>
-          </Row>
-          <Row>
-            <Col :lg="24" :xl="12" style="padding: 0 5px 10px 0">
+          <Row :gutter="10">
+            <Col :sm="24" :lg="24" :xl="12" style="margin-bottom: 10px">
               <Card>
                 <p slot="title" style="overflow: visible">
                   <a href="http://xpay.exrick.cn/pay?xboot" target="_blank">
@@ -165,29 +137,23 @@
                     <Badge dot>立即获取 XBoot 完整版</Badge>
                   </a>
                 </p>
-                <div style="height: 368px; overflow: auto">
+                <div class="buy-content">
                   <div class="qr">
-                    <Tooltip
-                      trigger="hover"
-                      placement="top"
-                      content="手机扫一扫支付，限时优惠！"
-                    >
-                      <img src="@/assets/qr.png" width="120" />
-                    </Tooltip>
+                    <img src="@/assets/qr.png" width="130" />
+                    <span class="des">手机扫一扫支付，限时优惠</span>
                   </div>
                   <Alert
                     type="warning"
                     show-icon
                     style="padding: 8px 8px 8px 36px; font-size: 12px"
+                    >价格上调提示：App端开发中，价格即将上调，请尽快获取！永久更新！</Alert
                   >
-                    价格上调提示：APP模块开发中，价格即将上涨，请尽快获取！永久更新！
-                  </Alert>
                   <div class="flex">
                     完整版(仅供学习)：
                     <span class="rmb">￥</span>
-                    <span class="price">198</span>
+                    <span class="price">238</span>
                     <span class="origin">￥</span>
-                    <s class="origin">258</s>
+                    <s class="origin">298</s>
                     <Button
                       to="http://xpay.exrick.cn/pay?xboot"
                       target="_blank"
@@ -198,7 +164,7 @@
                     >
                   </div>
                   <div class="flex">
-                    商用授权价格：
+                    商用授权：
                     <span class="rmb">￥</span>
                     <span class="price">?998</span>
                     <span class="origin">￥</span>
@@ -227,7 +193,7 @@
                 </div>
               </Card>
             </Col>
-            <Col :lg="24" :xl="12" style="padding: 0 0 10px 5px">
+            <Col :sm="24" :lg="24" :xl="12" style="margin-bottom: 10px">
               <Card>
                 <p slot="title">
                   <Icon type="md-bookmark" style="margin-right: 5px"></Icon
@@ -240,15 +206,129 @@
         </Col>
       </Row>
       <Row :gutter="10">
-        <Col :lg="24" :xl="16" :style="{ marginBottom: '10px' }">
+        <Col :sm="24" :md="12" :lg="6" :style="{ marginBottom: '10px' }">
+          <card1
+            id-name="card1"
+            prefix="￥"
+            :end-val="count.data1"
+            description="今日销售额"
+            :image="require('@/assets/icon/money.png')"
+            width="34px"
+            height="34px"
+          />
+        </Col>
+        <Col :sm="24" :md="12" :lg="6" :style="{ marginBottom: '10px' }">
+          <card2
+            id-name="card2"
+            suffix="%"
+            :end-val="count.data2"
+            color="#f90"
+            title="销售量增长"
+            description="相比昨日"
+          />
+        </Col>
+        <Col :sm="24" :md="12" :lg="6" :style="{ marginBottom: '10px' }">
+          <card4
+            title="待办事项"
+            :time="time"
+            description="您有一个新的待审批任务，请前往查看"
+          />
+        </Col>
+        <Col :sm="24" :md="12" :lg="6" :style="{ marginBottom: '10px' }">
+          <card3
+            id-name="card3"
+            title="应用中心"
+            description="销量统计，用户统计，日活分析"
+            :image="require('@/assets/icon/app.png')"
+            width="34px"
+            height="34px"
+            titleSize="18px"
+          />
+        </Col>
+      </Row>
+      <Row :gutter="10">
+        <Col :sm="24" :md="12" :lg="4" :style="{ marginBottom: '10px' }">
+          <cardApp icon="logo-buffer" title="SaaS应用" />
+        </Col>
+        <Col :sm="24" :md="12" :lg="4" :style="{ marginBottom: '10px' }">
+          <cardApp activeColor="#2db7f5" icon="md-bookmarks" title="日志分析" />
+        </Col>
+        <Col :sm="24" :md="12" :lg="4" :style="{ marginBottom: '10px' }">
+          <cardApp activeColor="#19be6b" icon="md-cloud" title="云运维" />
+        </Col>
+        <Col :sm="24" :md="12" :lg="4" :style="{ marginBottom: '10px' }">
+          <cardApp activeColor="#f90" icon="md-film" title="视频监控" />
+        </Col>
+        <Col :sm="24" :md="12" :lg="4" :style="{ marginBottom: '10px' }">
+          <cardApp activeColor="#8950fc" icon="md-stats" title="数据分析"
+        /></Col>
+        <Col :sm="24" :md="12" :lg="4" :style="{ marginBottom: '10px' }">
+          <cardApp activeColor="#ed4014" icon="md-people" title="用户分析"
+        /></Col>
+      </Row>
+      <Row :gutter="10">
+        <Col :sm="24" :md="12" :lg="6" :style="{ marginBottom: '10px' }">
+          <card1
+            id-name="card5"
+            :bordered="false"
+            :end-val="126778"
+            description="今日新增互动数"
+            backgroundColor="#fff4df"
+            :image="require('@/assets/icon/comment.png')"
+            width="34px"
+            height="34px"
+          />
+        </Col>
+        <Col :sm="24" :md="12" :lg="6" :style="{ marginBottom: '10px' }">
+          <card1
+            id-name="card6"
+            :bordered="false"
+            :end-val="68893"
+            backgroundColor="#6993fe"
+            titleColor="#fff"
+            icon="md-person-add"
+            iconColor="#fff"
+            descriptionColor="#fff"
+            description="今日新增用户"
+          />
+        </Col>
+        <Col :sm="24" :md="12" :lg="6" :style="{ marginBottom: '10px' }">
+          <card1
+            id-name="card7"
+            :bordered="false"
+            :end-val="count.data4"
+            backgroundColor="#8950fe"
+            titleColor="#fff"
+            icon="md-cloud-download"
+            iconColor="#fff"
+            descriptionColor="#fff"
+            description="今日下载量"
+          />
+        </Col>
+        <Col :sm="24" :md="12" :lg="6" :style="{ marginBottom: '10px' }">
+          <card1
+            id-name="card8"
+            :bordered="false"
+            :end-val="13507632434"
+            backgroundColor="#f64e61"
+            titleColor="#fff"
+            icon="md-calendar"
+            iconColor="#fff"
+            descriptionColor="#fff"
+            description="月活"
+          />
+        </Col>
+      </Row>
+      <Row :gutter="10">
+        <Col :sm="24" :lg="24" :xl="16" :style="{ marginBottom: '10px' }">
           <visit-volume />
         </Col>
-        <Col :lg="24" :xl="8" :style="{ marginBottom: '10px' }">
+        <Col :sm="24" :lg="24" :xl="8" :style="{ marginBottom: '10px' }">
           <visit-separation />
         </Col>
       </Row>
     </div>
-    <div v-show="currNav == 'app'">
+    <div v-if="currNav == 'app'">
       <dashboard2 />
     </div>
 
@@ -276,74 +356,83 @@
 import { ipInfo } from "@/api/index";
 import visitVolume from "./components/visitVolume.vue";
 import visitSeparation from "./components/visitSeparation.vue";
-import infoCard from "./components/infoCard.vue";
+import card1 from "./components/card1.vue";
+import card2 from "./components/card2.vue";
+import card3 from "./components/card3.vue";
+import card4 from "./components/card4.vue";
+import cardApp from "./components/cardApp.vue";
 import dashboard2 from "../xboot-charts/dashboard2/dashboard2.vue";
 import Cookies from "js-cookie";
 import "gitalk/dist/gitalk.css";
 import Gitalk from "gitalk";
+
 export default {
   name: "home",
   components: {
     visitVolume,
     visitSeparation,
-    infoCard,
+    card1,
+    card2,
+    card3,
+    card4,
+    cardApp,
     dashboard2,
   },
   data() {
     return {
       showVideo: false,
       count: {
-        createUser: 496,
-        visit: 3264,
-        collection: 24389305,
-        transfer: 39503498,
+        data1: 5396,
+        data2: 68,
+        data3: 19305,
+        data4: 39503498,
       },
-      city: "",
-      username: "",
+      city: "未知",
+      departmentTitle: "无",
+      userType: "无",
+      time: "",
     };
   },
   computed: {
     currNav() {
       return this.$store.state.app.currNav;
     },
-    avatarPath() {
-      return localStorage.avatorImgPath;
+    nickname() {
+      return this.$store.state.user.nickname;
+    },
+    avatar() {
+      return this.$store.state.user.avatar;
     },
   },
   methods: {
     init() {
       let userInfo = JSON.parse(Cookies.get("userInfo"));
-      this.username = userInfo.nickname;
+      this.departmentTitle = userInfo.departmentTitle;
+      if (userInfo.type == "0") {
+        this.userType = "普通用户";
+      } else if (userInfo.type == "1") {
+        this.userType = "管理员";
+      }
       ipInfo().then((res) => {
         if (res.success) {
           this.city = res.result;
         }
       });
+      this.time = this.format(new Date(), "yyyy年MM月dd日");
     },
     showNotice() {
-      getNotice().then((res) => {
-        if (res.success) {
-          if (!res.result) {
-            return;
-          }
-          let data = res.result;
-          if (
-            data.open &&
-            (data.title || data.content) &&
-            data.position == "HOME"
-          ) {
-            this.$Notice.info({
-              title: data.title,
-              desc: data.content,
-              duration: data.duration,
-            });
-          }
-        }
-      });
+
     },
   },
   mounted() {
     this.init();
+    // 通知
+    let noticeFlag = "noticeShowed";
+    let notice = Cookies.get(noticeFlag);
+    if (notice != noticeFlag) {
+      this.showNotice();
+      Cookies.set(noticeFlag, noticeFlag);
+    }
     // Gitalk
     var gitalk = new Gitalk({
       clientID: "a128de2dd7383614273a",

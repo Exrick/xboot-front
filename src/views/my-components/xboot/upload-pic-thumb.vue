@@ -2,7 +2,7 @@
   <div class="upload-thumb">
     <vuedraggable
       :list="uploadList"
-      :disabled="!draggable||!multiple"
+      :disabled="!draggable || !multiple"
       :animation="200"
       class="list-group"
       ghost-class="thumb-ghost"
@@ -10,19 +10,34 @@
     >
       <div
         class="upload-list"
-        :style="{width: `calc(${width} + 2px)`, height: `calc(${height} + 2px)`, lineHeight: height}"
+        :style="{
+          width: `calc(${width} + 2px)`,
+          height: `calc(${height} + 2px)`,
+          lineHeight: height,
+        }"
         v-for="(item, index) in uploadList"
         :key="index"
       >
         <div v-if="item.status == 'finished'">
-          <img :src="item.url" :style="{height: height}" />
+          <img :src="item.url" :style="{ height: height }" />
           <div class="upload-list-cover">
-            <Icon type="ios-eye-outline" @click="handleView(item.url, index)"></Icon>
-            <Icon type="ios-trash-outline" @click="handleRemove(item)" v-show="!preview"></Icon>
+            <Icon
+              type="ios-eye-outline"
+              @click="handleView(item.url, index)"
+            ></Icon>
+            <Icon
+              type="ios-trash-outline"
+              @click="handleRemove(item)"
+              v-show="!preview"
+            ></Icon>
           </div>
         </div>
         <div v-else>
-          <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+          <Progress
+            v-if="item.showProgress"
+            :percent="item.percentage"
+            hide-info
+          ></Progress>
         </div>
       </div>
     </vuedraggable>
@@ -34,7 +49,7 @@
       :on-error="handleError"
       :format="format"
       :accept="accept"
-      :max-size="maxSize*1024"
+      :max-size="maxSize * 1024"
       :on-format-error="handleFormatError"
       :on-exceeded-size="handleMaxSize"
       :before-upload="handleBeforeUpload"
@@ -42,10 +57,13 @@
       :action="uploadFileUrl"
       :headers="accessToken"
       class="upload-btn"
-      :style="{width: width}"
+      :style="{ width: width }"
       v-show="!preview"
     >
-      <div class="upload-camera" :style="{width: width, height: height, lineHeight: height}">
+      <div
+        class="upload-camera"
+        :style="{ width: width, height: height, lineHeight: height }"
+      >
         <Icon type="md-camera" size="20"></Icon>
       </div>
     </Upload>
@@ -60,63 +78,63 @@ import vuedraggable from "vuedraggable";
 export default {
   name: "uploadPicThumb",
   components: {
-    vuedraggable
+    vuedraggable,
   },
   props: {
     value: {
-      type: null
+      type: null,
     },
     preview: {
       type: Boolean,
-      default: false
+      default: false,
     },
     draggable: {
       type: Boolean,
-      default: true
+      default: true,
     },
     multiple: {
       type: Boolean,
-      default: true
+      default: false,
     },
     maxSize: {
       type: Number,
-      default: 5
+      default: 5,
     },
     limit: {
       type: Number,
-      default: 10
+      default: 10,
     },
     width: {
       type: String,
-      default: "60px"
+      default: "60px",
     },
     height: {
       type: String,
-      default: "60px"
+      default: "60px",
     },
     accept: {
       type: String,
-      default: ".jpg, .jpeg, .png, .gif"
-    }
+      default: ".jpg, .jpeg, .png, .gif",
+    },
   },
   computed: {
     format() {
       if (this.accept) {
         let format = [];
-        this.accept.split(",").forEach(e => {
+        this.accept.split(",").forEach((e) => {
           format.push(e.replace(".", "").replace(" ", ""));
         });
         return format;
       } else {
         return [];
       }
-    }
+    },
   },
   data() {
     return {
       accessToken: {},
       uploadFileUrl: uploadFile,
-      uploadList: []
+      uploadList: [],
     };
   },
   methods: {
@@ -124,18 +142,18 @@ export default {
       this.returnValue();
     },
     init() {
-      this.setData(this.value, true);
+      this.setData(this.value);
       this.accessToken = {
-        accessToken: this.getStore("accessToken")
+        accessToken: this.getStore("accessToken"),
       };
     },
     handleView(v, i) {
       let image = new Image();
       image.src = v;
       let viewer = new Viewer(image, {
-        hidden: function() {
+        hidden: function () {
           viewer.destroy();
-        }
+        },
       });
       viewer.show();
     },
@@ -170,7 +188,7 @@ export default {
           file.name +
           " ’格式不正确, 请选择 " +
           this.accept +
-          " 图片格式文件"
+          " 图片格式文件",
       });
     },
     handleMaxSize(file) {
@@ -181,7 +199,7 @@ export default {
           file.name +
           " ’大小过大, 不得超过 " +
           this.maxSize +
-          "M."
+          "M.",
       });
     },
     handleBeforeUpload() {
@@ -209,18 +227,18 @@ export default {
         this.$emit("on-change", v);
       } else {
         let v = [];
-        this.uploadList.forEach(e => {
+        this.uploadList.forEach((e) => {
           v.push(e.url);
         });
         this.$emit("input", v);
         this.$emit("on-change", v);
       }
     },
-    setData(v, init) {
+    setData(v) {
       if (typeof v == "string") {
         // 单张
         if (this.multiple) {
-          this.$Message.warning("多张上传仅支持数组数据类型");
+          this.$Message.warning("多张上传仅支持传入数组数据类型");
           return;
         }
         if (!v) {
@@ -229,51 +247,48 @@ export default {
         this.uploadList = [];
         let item = {
           url: v,
-          status: "finished"
+          status: "finished",
         };
         this.uploadList.push(item);
         this.$emit("on-change", v);
       } else if (typeof v == "object") {
         // 多张
         if (!this.multiple) {
-          this.$Message.warning("单张上传仅支持字符串数据类型");
+          this.$Message.warning("单张上传仅支持传入字符串数据类型");
           return;
         }
         this.uploadList = [];
         if (v.length > this.limit) {
           for (let i = 0; i < this.limit; i++) {
-            let item = {
+            this.uploadList.push({
               url: v[i],
-              status: "finished"
-            };
-            this.uploadList.push(item);
+              status: "finished",
+            });
           }
           this.$emit("on-change", v.slice(0, this.limit));
-          if (init) {
-            this.$emit("input", v.slice(0, this.limit));
-          }
+          this.$emit("input", v.slice(0, this.limit));
           this.$Message.warning("最多只能上传" + this.limit + "张图片");
         } else {
-          v.forEach(e => {
+          v.forEach((e) => {
             let item = {
               url: e,
-              status: "finished"
+              status: "finished",
             };
             this.uploadList.push(item);
           });
           this.$emit("on-change", v);
         }
       }
-    }
+    },
   },
   watch: {
     value(val) {
       this.setData(val);
-    }
+    },
   },
   mounted() {
     this.init();
-  }
+  },
 };
 </script>
 

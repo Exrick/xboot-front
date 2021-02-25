@@ -20,10 +20,13 @@
         />
       </Col>
     </Row>
-    <Row>
-      <Divider orientation="left">Redis详细信息</Divider>
-      <Table :columns="columns" :data="redisInfo" :show-header="false" size="small"></Table>
-    </Row>
+    <Divider orientation="left">Redis详细信息</Divider>
+    <Table
+      :columns="columns"
+      :data="redisInfo"
+      :show-header="false"
+      size="small"
+    ></Table>
   </div>
 </template>
 
@@ -41,37 +44,37 @@ export default {
               enabled: true,
               easing: "linear",
               dynamicAnimation: {
-                speed: 5000
-              }
+                speed: 5000,
+              },
             },
             toolbar: {
-              show: false
+              show: false,
             },
             zoom: {
-              enabled: false
-            }
+              enabled: false,
+            },
           },
           dataLabels: {
-            enabled: false
+            enabled: false,
           },
           stroke: {
-            curve: "smooth"
+            curve: "smooth",
           },
           title: {
             text: "Redis内存实时占用情况（KB）",
-            align: "left"
+            align: "left",
           },
           markers: {
-            size: 0
+            size: 0,
           },
           xaxis: {},
           yaxis: {},
           legend: {
-            show: false
-          }
+            show: false,
+          },
         },
         data: [],
-        xdata: []
+        xdata: [],
       },
       key: {
         series: [],
@@ -81,55 +84,55 @@ export default {
               enabled: true,
               easing: "linear",
               dynamicAnimation: {
-                speed: 5000
-              }
+                speed: 5000,
+              },
             },
             toolbar: {
-              show: false
+              show: false,
             },
             zoom: {
-              enabled: false
-            }
+              enabled: false,
+            },
           },
           dataLabels: {
-            enabled: false
+            enabled: false,
           },
           colors: ["#f5564e"],
           stroke: {
-            curve: "smooth"
+            curve: "smooth",
           },
           title: {
             text: "Redis key实时数量（个）",
-            align: "left"
+            align: "left",
           },
           markers: {
-            size: 0
+            size: 0,
           },
           xaxis: {},
           yaxis: {},
           legend: {
-            show: false
-          }
+            show: false,
+          },
         },
         data: [],
-        xdata: []
+        xdata: [],
       },
       columns: [
         {
           key: "key",
-          minWidth: 200
+          minWidth: 200,
         },
         {
           key: "description",
-          minWidth: 500
+          minWidth: 500,
         },
         {
           key: "value",
-          width: 400
-        }
+          width: 400,
+        },
       ],
       redisInfo: [],
-      timer: null
+      timer: null,
     };
   },
   methods: {
@@ -145,7 +148,7 @@ export default {
       let maxSize = -1e10;
       this.timer = setInterval(() => {
         // 内存
-        getRedisMemory().then(res => {
+        getRedisMemory().then((res) => {
           let currentMemory = Number(res.result.memory) / 1024;
           // 更新最大最小值
           if (currentMemory < minMemory) {
@@ -166,27 +169,27 @@ export default {
           this.$refs.memoryInfo.updateSeries([
             {
               name: "内存(KB)",
-              data: this.memory.data
-            }
+              data: this.memory.data,
+            },
           ]);
 
           // 更新最大最小值
           this.$refs.memoryInfo.updateOptions(
             {
               xaxis: {
-                categories: this.memory.xdata
+                categories: this.memory.xdata,
               },
               yaxis: {
                 min: minMemory - 2,
-                max: maxMemory + 2
-              }
+                max: maxMemory + 2,
+              },
             },
             true,
             true
           );
         });
         // 键值
-        getRedisKeySize().then(res => {
+        getRedisKeySize().then((res) => {
           let currentSize = res.result.keySize;
           // 更新最大最小值
           if (currentSize < minSize) {
@@ -207,20 +210,20 @@ export default {
           this.$refs.keySize.updateSeries([
             {
               name: "key数量",
-              data: this.key.data
-            }
+              data: this.key.data,
+            },
           ]);
           // 更新最大最小值
           this.$refs.keySize.updateOptions(
             {
               xaxis: {
-                categories: this.key.xdata
+                categories: this.key.xdata,
               },
               // 避免最大最小值一致
               yaxis: {
                 min: minSize - 2,
-                max: maxSize + 2
-              }
+                max: maxSize + 2,
+              },
             },
             true,
             true
@@ -229,16 +232,16 @@ export default {
       }, 5000);
     },
     getInfo() {
-      getRedisInfo().then(res => {
+      getRedisInfo().then((res) => {
         let data = [];
-        res.result.forEach(e => {
+        res.result.forEach((e) => {
           if (e.description) {
             data.push(e);
           }
         });
         this.redisInfo = data;
       });
-    }
+    },
   },
   beforeDestroy() {
     if (this.timer) {
@@ -247,7 +250,7 @@ export default {
   },
   mounted() {
     this.init();
-  }
+  },
 };
 </script>
 <style lang="less">

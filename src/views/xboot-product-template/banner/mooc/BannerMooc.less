@@ -1,0 +1,224 @@
+.mooc {
+    .bk {
+        z-index: -1;
+        height: 180px;
+        opacity: .3;
+        filter: blur(100px);
+        width: 100%;
+        position: absolute;
+        top: 0;
+        transition: all .3s;
+    }
+
+    .wrap {
+        display: flex;
+        justify-content: center;
+        margin-top: 32px;
+        margin-bottom: 30px;
+
+        .banner {
+            background-color: #fff;
+            box-shadow: 0 12px 24px 0 rgba(7, 17, 27, .2);
+            height: 444px;
+            overflow: hidden;
+            position: relative;
+            width: 1152px;
+            border-radius: 8px; // 左侧
+
+            .menu-content {
+                position: relative;
+                float: left;
+                width: 216px;
+                height: 444px;
+                z-index: 20;
+                padding-top: 12px;
+                background: #2b333b;
+                border-bottom-left-radius: 4px;
+                font-weight: 400;
+
+                .item {
+                    height: 60px;
+                    font-size: 14px;
+                    cursor: pointer;
+                    margin-left: 12px;
+                    padding: 0 16px 0 16px;
+                    color: rgba(255, 255, 255, .6);
+                    position: relative;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    border-top-left-radius: 4px;
+                    border-bottom-left-radius: 4px;
+                    transition: all .1s;
+
+                    i {
+                        font-size: 14px;
+                    }
+
+                    &:hover {
+                        color: #fff;
+                        background-color: rgba(255, 255, 255, .3)
+                    }
+                }
+            }
+
+            .submenu {
+                background: #fff;
+                left: 216px;
+                top: 0px;
+                width: 768px;
+                height: 444px;
+                z-index: 100;
+                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, .1);
+                position: absolute;
+
+                .sub-wrap {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+
+                    .innerBox {
+                        background-color: #fff;
+                        padding: 12px 48px 32px;
+                        position: relative;
+                        min-height: 150px; // 上方
+
+                        .banner-line {
+                            position: relative;
+                            height: 1px;
+                            margin: 35px 0 23px;
+                            background-color: rgba(77, 85, 93, .08);
+
+                            span {
+                                position: absolute;
+                                top: -12px;
+                                left: 0;
+                                padding-right: 12px;
+                                font-size: 14px;
+                                font-weight: 700;
+                                color: #F20D0D;
+                                line-height: 24px;
+                                background-color: #fff;
+                            }
+                        }
+
+                        .tag-box a {
+                            margin-bottom: 16px;
+                            font-size: 14px;
+                            color: #4D555D;
+                            line-height: 22px;
+                            margin-right: 24px;
+                            display: inline-block;
+
+                            &:hover {
+                                color: #f01414;
+                            }
+                        }
+                    }
+
+                    // 下方推荐
+                    .recomment-box {
+                        position: absolute;
+                        bottom: 0;
+                        background: #F8FAFC;
+                        padding: 36px 0 0 48px;
+                        display: flex;
+                        width: 100%;
+                        flex-wrap: wrap;
+
+                        .banner-card {
+                            width: 312px;
+                            height: 60px;
+                            margin-right: 48px;
+                            margin-bottom: 36px;
+                            display: flex;
+
+                            img {
+                                width: 64px;
+                                height: 42px;
+                                border-radius: 4px;
+                                background-color: #ccc;
+                            }
+
+                            .card {
+                                margin-left: 16px;
+
+                                .name {
+                                    width: 232px;
+                                    font-size: 12px;
+                                    color: #07111B;
+                                    line-height: 20px;
+                                    overflow: hidden;
+                                    text-overflow: ellipsis;
+                                    white-space: nowrap;
+                                    font-weight: 400;
+                                }
+
+                                .price,
+                                .sales {
+                                    font-size: 12px;
+                                    color: #4D555D;
+                                    line-height: 20px;
+                                    display: inline-block;
+                                    margin-right: 10px;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // 轮播图
+            .carousel {
+                width: 937px;
+                margin-left: 215px;
+            }
+
+            // 下方图标
+            .hot-banner {
+                height: 128px;
+                overflow: hidden;
+                box-shadow: 0 4px 8px 0 rgba(7, 17, 27, .1);
+                background-color: #fff;
+                text-align: center;
+                padding: 0 18px;
+
+                a {
+                    float: left;
+                    font-size: 0;
+                    width: 180px;
+                    height: 128px;
+                    overflow: hidden;
+                    transition: all .3s;
+
+                    &:hover {
+                        margin-top: -4px;
+                    }
+                }
+
+                img {
+                    display: inline-block;
+                    width: 36px;
+                    height: 36px;
+                    background-size: 100%;
+                    margin-top: 22px;
+                }
+
+                .tit {
+                    font-size: 14px;
+                    color: #07111B;
+                    letter-spacing: 1px;
+                    margin-top: 4px;
+                }
+
+                .desc {
+                    font-size: 12px;
+                    color: #93999F;
+                    line-height: 16px;
+                    margin-top: 2px;
+                    font-weight: 400;
+                }
+            }
+        }
+    }
+}

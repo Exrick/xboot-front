@@ -1,25 +1,32 @@
+<style lang="less">
+</style>
 <template>
-  <div class="sorry">
-    <img src="@/assets/sorry.png">
-    <span class="text">抱歉，请获取完整版</span>
-    <Button to="http://xpay.exrick.cn/pay?xboot" target="_blank" type="error" icon="md-paper-plane">立即获取</Button>
+  <div>
+    <Card>
+      <Tabs value="1">
+        <TabPane label="慕课类" name="1">
+          <CategoryMooc />
+        </TabPane>
+      </Tabs>
+    </Card>
   </div>
 </template>
 
 <script>
+import CategoryMooc from "./mooc/CategoryMooc.vue";
 export default {
+  name: "category",
+  components: {
+    CategoryMooc,
+  },
+  data() {
+    return {};
+  },
+  methods: {
+    init() {},
+  },
+  mounted() {
+    this.init();
+  },
 };
 </script>
-<style lang="less">
-  .sorry{
-    height: 500px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    .text{
-      font-size: 20px;
-      margin: 20px 0;
-    }
-  }
-</style>

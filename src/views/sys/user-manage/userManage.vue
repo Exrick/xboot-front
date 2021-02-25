@@ -43,7 +43,7 @@
               />
             </FormItem>
             <FormItem label="性别" prop="sex">
-              <dict dict="sex" v-model="searchForm.sex" style="width: 200px"/>
+              <dict dict="sex" v-model="searchForm.sex" style="width: 200px" />
             </FormItem>
             <FormItem label="登录账号" prop="username">
               <Input
@@ -111,31 +111,27 @@
           openTip ? "关闭提示" : "开启提示"
         }}</Button>
       </Row>
-      <Row v-show="openTip">
-        <Alert show-icon>
-          已选择
-          <span class="select-count">{{ this.selectList.length }}</span> 项
-          <a class="select-clear" @click="clearSelectAll">清空</a>
-        </Alert>
-      </Row>
-      <Row>
-        <Table
-          :loading="loading"
-          border
-          :columns="columns"
-          :data="data"
-          sortable="custom"
-          @on-sort-change="changeSort"
-          @on-selection-change="showSelect"
-          ref="table"
-        ></Table>
-        <Table
-          :columns="exportColumns"
-          :data="exportData"
-          ref="exportTable"
-          style="display: none"
-        ></Table>
-      </Row>
+      <Alert show-icon v-show="openTip">
+        已选择
+        <span class="select-count">{{ this.selectList.length }}</span> 项
+        <a class="select-clear" @click="clearSelectAll">清空</a>
+      </Alert>
+      <Table
+        :loading="loading"
+        border
+        :columns="columns"
+        :data="data"
+        sortable="custom"
+        @on-sort-change="changeSort"
+        @on-selection-change="showSelect"
+        ref="table"
+      ></Table>
+      <Table
+        :columns="exportColumns"
+        :data="exportData"
+        ref="exportTable"
+        style="display: none"
+      ></Table>
       <Row type="flex" justify="end" class="page">
         <Page
           :current="searchForm.pageNumber"
@@ -193,7 +189,7 @@ export default {
     departmentChoose,
     checkPassword,
     addEdit,
-    dict
+    dict,
   },
   data() {
     return {
@@ -535,7 +531,7 @@ export default {
       ],
       data: [],
       exportData: [],
-      total: 0
+      total: 0,
     };
   },
   methods: {

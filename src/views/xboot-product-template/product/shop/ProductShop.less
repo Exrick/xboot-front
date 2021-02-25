@@ -1,0 +1,143 @@
+.saleoff-wrap {
+    height: 339px !important;
+    padding-top: 39px !important;
+}
+
+.shop-hover-container {
+    :hover {
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        transform: translate3d(0, -2px, 0);
+
+        .review-wrapper {
+            height: 76px;
+            opacity: 1;
+            box-shadow: none !important;
+            transform: none !important;
+            .review {
+                box-shadow: none !important;
+                transform: none !important;
+            }
+
+            .reviewer {
+                box-shadow: none !important;
+                transform: none !important;
+            }
+        }
+    }
+}
+
+.shop-product-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 300px;
+    width: 234px;
+    padding-top: 20px;
+    border-top-width: 1px;
+    border-top-style: solid;
+    position: relative;
+    transition: all .2s linear;
+    background: #fff;
+
+    .flag {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        z-index: 1;
+        width: 64px;
+        height: 20px;
+        margin-left: -32px;
+        font-size: 12px;
+        line-height: 20px;
+        text-align: center;
+        color: #fff;
+    }
+
+    .bg {
+        background: rgba(0, 0, 0, 0.02);
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 2;
+    }
+
+    .bgt {
+        background: rgba(0, 0, 0, 0);
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 2;
+    }
+
+    .title {
+        width: 200px;
+        text-align: center;
+        color: #212121;
+        margin: 0 20px 3px;
+        font-size: 14px;
+        font-weight: 400;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+    .desc {
+        width: 210px;
+        text-align: center;
+        height: 18px;
+        margin: 0 20px 12px;
+        font-size: 12px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        color: #b0b0b0;
+    }
+
+    .item-price {
+        display: flex;
+
+        .item-discount {
+            color: #ff6709;
+        }
+
+        .item-origin {
+            margin-left: 10px;
+            color: #b0b0b0;
+        }
+    }
+
+    .review-wrapper {
+        height: 0;
+        opacity: 0;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        z-index: 3;
+        width: 234px;
+        overflow: hidden;
+        font-size: 12px;
+        background: #ff6700;
+        transition: all .2s linear;
+        padding: 8px 30px;
+
+        .review {
+            margin-bottom: 5px;
+            color: #fff;
+        }
+
+        .reviewer {
+            color: rgba(255, 255, 255, 0.6);
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+    }
+}

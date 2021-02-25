@@ -8,6 +8,7 @@
         <Input
           autofocus
           v-model="password"
+          password
           size="large"
           placeholder="请输入您的密码"
           type="password"

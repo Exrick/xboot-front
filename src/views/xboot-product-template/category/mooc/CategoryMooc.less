@@ -1,0 +1,304 @@
+.products-banner-wrap {
+    width: 100%;
+    height: 132px;
+    position: relative;
+    .banner-content-wrap {
+        z-index: 10;
+        position: relative;
+        .content-nav {
+            position: absolute;
+            width: 1152px;
+            top: 30px;
+            left: 50%;
+            margin-left: -571px;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center; // 图标
+            .header-icon {
+                width: 190px;
+                height: 64px;
+                overflow: hidden;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                .bag-wrap {
+                    width: 48px;
+                    height: 48px; // background: #9447eb;
+                    background: #F01414;
+                    border-radius: 50%;
+                    cursor: pointer;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    .bag-icon {
+                        color: #fff;
+                        font-size: 22px;
+                    }
+                }
+                span {
+                    color: #fff;
+                    font-size: 30px;
+                    font-weight: 550;
+                    line-height: 64px;
+                    height: 64px;
+                }
+            } // 搜索
+            .header-search {
+                width: 560px; // 热搜
+                .search-hot {
+                    margin-top: 8px;
+                    span {
+                        color: rgba(255, 255, 255, 0.8);
+                        margin-right: 24px;
+                    }
+                    a {
+                        color: rgba(255, 255, 255, 0.8);
+                        margin-right: 24px;
+                        transition: .3s all linear;
+                        &:hover {
+                            color: #fff;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    .darker {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: 0;
+        background: rgba(0, 0, 0, .2);
+        z-index: 9;
+    } // 背景动画
+    .products-banner {
+        width: 100%;
+        height: 132px;
+        position: relative;
+        background-color: #1b324a;
+        overflow: hidden;
+        .banner-absolute {
+            position: absolute;
+            width: 3174px;
+            height: 2624px;
+            left: 50%;
+            margin-left: -1587px;
+            top: 50%;
+            margin-top: -940px;
+            .banner-bk {
+                position: absolute;
+                left: 0;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                overflow: hidden;
+                background-position: center 24%;
+                width: 3174px;
+                height: 2624px;
+            }
+            .svg-block {
+                position: absolute;
+                width: 848px;
+                height: 848px;
+                left: 250px;
+                top: 80px;
+                background-size: contain;
+                background-repeat: no-repeat;
+                opacity: .6;
+                z-index: 8;
+            }
+            .image1 {
+                animation: spin2 300s linear infinite;
+            }
+            .svg-diamond {
+                position: absolute;
+                width: 1213px;
+                height: 1213px;
+                left: 215px;
+                top: 190px;
+                background-size: contain;
+                background-repeat: no-repeat;
+                opacity: .6;
+                z-index: 3;
+            }
+            .image2 {
+                animation: spin1 300s linear infinite;
+            }
+            .svg-leaf {
+                position: absolute;
+                width: 930px;
+                height: 930px;
+                left: 1060px;
+                top: 450px;
+                background-size: contain;
+                background-repeat: no-repeat;
+                opacity: .6;
+                z-index: 2;
+            }
+            .image3 {
+                animation: spin1 300s linear infinite;
+            }
+            .svg-small-circle {
+                position: absolute;
+                width: 864px;
+                height: 864px;
+                right: 478px;
+                top: 336px;
+                background-size: contain;
+                background-repeat: no-repeat;
+                opacity: .6;
+                z-index: 0;
+            }
+            .svg-big-circle {
+                position: absolute;
+                width: 1664px;
+                height: 1664px;
+                right: 811px;
+                top: 956px;
+                background-size: contain;
+                background-repeat: no-repeat;
+                opacity: .6;
+                z-index: 0;
+            }
+            .svg-triangle {
+                position: absolute;
+                width: 1374px;
+                height: 1184px;
+                right: 0;
+                bottom: 445px;
+                // background: url(https://s1.ax1x.com/2018/10/23/ir881O.png);
+                background-size: contain;
+                background-repeat: no-repeat;
+                opacity: .6;
+                z-index: 1;
+            }
+            .image4 {
+                animation: spin1 500s linear infinite;
+            }
+        }
+    }
+    .ivu-input-group .ivu-input {
+        height: 48px !important;
+        padding: 6px 14px !important;
+    }
+    .ivu-input-search {
+        background: #F01414!important;
+        border-color: #F01414!important;
+    }
+    .ivu-input-search:hover {
+        background: #c31515 !important;
+        border-color: #c31515 !important;
+    }
+}
+
+.products-content-wrap {
+    background: #F8FAFC;
+    .products-header-nav {
+        height: 72px;
+        background: #FFFFFF;
+        box-shadow: 0 8px 16px 0 rgba(28, 31, 33, 0.1);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .nav-wrap{
+            width: 1152px;
+            margin-left: 12px;
+        }
+        a {
+            font-size: 16px;
+            color: #07111B;
+            line-height: 40px;
+            height: 40px;
+            position: relative;
+            margin-right: 48px;
+            font-weight: bold;
+            transition: none !important;
+            &:hover {
+                color: #F01414;
+            }
+        }
+        .active {
+            color: #F01414 !important;
+            &:before {
+                content: ' ';
+                position: absolute;
+                bottom: 0;
+                background: #F01414;
+                width: 16px;
+                height: 3px;
+                left: 50%;
+                top: 25px;
+                margin-left: -8px;
+            }
+        }
+    }
+    .products-cat {
+        width: 1152px;
+        margin: 0 auto;
+        padding: 24px 0 10px;
+        border-bottom: 1px solid #D9DDE1;
+        a {
+            display: inline-block;
+            margin-right: 20px;
+            padding: 0 12px;
+            font-size: 14px;
+            color: #4D555D;
+            line-height: 32px;
+            border-radius: 16px;
+            margin-bottom: 12px;
+            &:hover {
+                background: #D9DDE1;
+            }
+        }
+        .active {
+            color: #fff !important;
+            background: #2B333B !important;
+        }
+    }
+    .order-box {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .order-type {
+            padding: 20px 12px;
+            width: 1152px;
+            a {
+                padding: 6px 12px;
+                font-size: 12px;
+                line-height: 16px;
+                color: #4D555D;
+                height: 16px;
+                margin-right: 12px;
+                border-radius: 12px;
+                &:hover {
+                    color: #07111B;
+                }
+            }
+            .active {
+                background: #93999F !important;
+                color: #FFFFFF !important;
+            }
+        }
+    }
+}
+
+@keyframes spin1 {
+    100% {
+        transform: rotate(360deg);
+        transform-origin: 50% 50%
+    }
+}
+
+@keyframes spin2 {
+    100% {
+        transform: rotate(-360deg);
+        transform-origin: 50% 50%
+    }
+}
+
+.ivu-btn:focus {
+    box-shadow: none !important;
+}

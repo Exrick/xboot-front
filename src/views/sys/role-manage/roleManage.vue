@@ -22,25 +22,21 @@
           style="width: 250px"
         />
       </Row>
-      <Row v-show="openTip">
-        <Alert show-icon>
-          已选择
-          <span class="select-count">{{ selectList.length }}</span> 项
-          <a class="select-clear" @click="clearSelectAll">清空</a>
-        </Alert>
-      </Row>
-      <Row>
-        <Table
-          :loading="loading"
-          border
-          :columns="columns"
-          :data="data"
-          ref="table"
-          sortable="custom"
-          @on-sort-change="changeSort"
-          @on-selection-change="changeSelect"
-        ></Table>
-      </Row>
+      <Alert show-icon v-show="openTip">
+        已选择
+        <span class="select-count">{{ selectList.length }}</span> 项
+        <a class="select-clear" @click="clearSelectAll">清空</a>
+      </Alert>
+      <Table
+        :loading="loading"
+        border
+        :columns="columns"
+        :data="data"
+        ref="table"
+        sortable="custom"
+        @on-sort-change="changeSort"
+        @on-selection-change="changeSelect"
+      ></Table>
       <Row type="flex" justify="end" class="page">
         <Page
           :current="searchForm.pageNumber"
@@ -118,7 +114,7 @@
         <Select
           v-model="openLevel"
           @on-change="changeOpen"
-          style="width: 110px;"
+          style="width: 110px"
           transfer
         >
           <Option value="0">展开所有</Option>

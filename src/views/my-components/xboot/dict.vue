@@ -2,6 +2,7 @@
   <div>
     <Select
       v-model="currentValue"
+      :size="size"
       :loading="loading"
       :placeholder="placeholder"
       :multiple="multiple"
@@ -42,6 +43,7 @@ export default {
       type: String,
       default: "bottom-start",
     },
+    size: String,
     multiple: {
       type: Boolean,
       default: false,
@@ -69,7 +71,7 @@ export default {
   },
   data() {
     return {
-      currentValue: null,
+      currentValue: this.value,
       dictData: [],
       loading: false,
     };

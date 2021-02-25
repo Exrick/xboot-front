@@ -1,12 +1,19 @@
 <template>
   <div>
-    <p
+    <div
       :class="className"
-      :style="{textAlign: 'center', color: color, fontSize: countSize, fontWeight: countWeight}"
+      :style="{
+        color: color,
+        fontSize: countSize,
+        fontWeight: countWeight,
+        display: display,
+      }"
     >
+      <span>{{ prefix }}</span>
       <span v-cloak :id="idName"></span>
       <span>{{ unit }}</span>
-    </p>
+      <span>{{ suffix }}</span>
+    </div>
     <slot name="intro"></slot>
   </div>
 </template>
@@ -17,11 +24,8 @@ import { CountUp } from "countup.js";
 function transformValue(val) {
   let endVal = 0;
   let unit = "";
-  if (val < 1000) {
+  if (val < 1000000) {
     endVal = val;
-  } else if (val >= 1000 && val < 1000000) {
-    endVal = parseInt(val / 1000);
-    unit = "K+";
   } else if (val >= 1000000 && val < 10000000000) {
     endVal = parseInt(val / 1000000);
     unit = "M+";
@@ -31,7 +35,7 @@ function transformValue(val) {
   }
   return {
     val: endVal,
-    unit: unit
+    unit: unit,
   };
 }
 
@@ -39,20 +43,26 @@ export default {
   data() {
     return {
       unit: "",
-      demo: {}
+      count: {},
     };
   },
   name: "countUp",
   props: {
     idName: String,
     className: String,
+    prefix: String,
+    suffix: String,
+    display: {
+      type: String,
+      default: "inline-block",
+    },
     endVal: {
       type: Number,
-      required: true
+      required: true,
     },
     delay: {
       type: Number,
-      default: 500
+      default: 500,
     },
     options: {
       type: Object,
@@ -64,20 +74,20 @@ export default {
           useEasing: true,
           useGrouping: true,
           separator: ",",
-          decimal: "."
+          decimal: ".",
         };
-      }
+      },
     },
     color: String,
     countSize: {
       type: String,
-      default: "30px"
+      default: "30px",
     },
     countWeight: {
       type: Number,
-      default: 700
+      default: 700,
     },
-    introText: [String, Number]
+    introText: [String, Number],
   },
   mounted() {
     this.$nextTick(() => {
@@ -85,10 +95,10 @@ export default {
         let res = transformValue(this.endVal);
         let endVal = res.val;
         this.unit = res.unit;
-        let demo = {};
-        this.demo = demo = new CountUp(this.idName, endVal, this.options);
-        if (!demo.error) {
-          demo.start();
+        let count = {};
+        this.count = count = new CountUp(this.idName, endVal, this.options);
+        if (!count.error) {
+          count.start();
         }
       }, this.delay);
     });
@@ -98,8 +108,8 @@ export default {
       let res = transformValue(val);
       let endVal = res.val;
       this.unit = res.unit;
-      this.demo.update(endVal);
-    }
-  }
+      this.count.update(endVal);
+    },
+  },
 };
 </script>

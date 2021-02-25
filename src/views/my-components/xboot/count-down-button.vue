@@ -6,12 +6,13 @@
       :type="type"
       :size="size"
       :ghost="ghost"
-      :disabled="disabled||clicked"
+      :disabled="disabled || clicked"
       :icon="icon"
       :shape="shape"
       :long="long"
       @click="handleClick"
-    >{{buttonText}}</Button>
+      >{{ buttonText }}</Button
+    >
   </div>
 </template>
 
@@ -21,46 +22,46 @@ export default {
   props: {
     text: {
       type: String,
-      default: "提交"
+      default: "提交",
     },
     autoCountDown: {
       type: Boolean,
-      default: true
+      default: true,
     },
     countTime: {
       type: [Number, String],
-      default: 60
+      default: 60,
     },
     suffixText: {
       type: String,
-      default: "后重试"
+      default: "秒后重试",
     },
     type: String,
     size: String,
     loading: {
       type: Boolean,
-      default: false
+      default: false,
     },
     ghost: {
       type: Boolean,
-      default: false
+      default: false,
     },
     disabled: {
       type: Boolean,
-      default: false
+      default: false,
     },
     icon: String,
     shape: String,
     long: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   data() {
     return {
       buttonText: this.text,
       count: Number(this.countTime),
-      clicked: false
+      clicked: false,
     };
   },
   methods: {
@@ -77,18 +78,17 @@ export default {
       this.countDown();
     },
     countDown() {
-      let that = this;
       if (this.count == 0) {
         this.clicked = false;
         this.count = this.countTime;
         this.buttonText = this.text;
         return;
       } else {
-        this.buttonText = this.count + " 秒" + this.suffixText;
+        this.buttonText = this.count + " " + this.suffixText;
         this.count--;
       }
-      setTimeout(function() {
-        that.countDown();
+      setTimeout(() => {
+        this.countDown();
       }, 1000);
     },
     setText(value) {
@@ -101,11 +101,11 @@ export default {
   watch: {
     text(val) {
       this.setText(val);
-    }
+    },
   },
   mounted() {
     this.init();
-  }
+  },
 };
 </script>
 

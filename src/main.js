@@ -14,6 +14,7 @@ import util from '@/libs/util'
 import hasPermission from '@/libs/hasPermission'
 import hasRole from '@/libs/hasRole'
 import iviewArea from '@/views/my-components/iview-area';
+import XIcon from '@/views/my-components/xboot/x-icon'
 import VueLazyload from 'vue-lazyload'
 import VueClipboard from 'vue-clipboard2'
 import VueApexCharts from 'vue-apexcharts'
@@ -32,6 +33,7 @@ Vue.use(VueClipboard);
 Vue.use(hasPermission);
 Vue.use(hasRole);
 Vue.use(iviewArea);
+Vue.use(XIcon);
 Vue.use(VueApexCharts)
 Vue.component('apexchart', VueApexCharts)
 // 挂载全局使用的方法
@@ -57,9 +59,12 @@ new Vue({
         currentPageName: ''
     },
     mounted() {
+        // 加载主题
+        this.$store.commit('setTheme', localStorage.theme);
         // 初始化菜单
         util.initRouter(this);
-        this.currentPageName = this.$route.name;
+        // 设置用户信息
+        this.$store.commit("setUserInfo", { nickname: localStorage.nickname, avatar: localStorage.avatar });
         // 显示打开的页面的列表
         this.$store.commit('setOpenedList');
         this.$store.commit('initCachepage');

@@ -23,25 +23,21 @@
           style="width: 250px"
         />
       </Row>
-      <Row v-show="openTip">
-        <Alert show-icon>
-          已选择
-          <span class="select-count">{{ selectList.length }}</span> 项
-          <a class="select-clear" @click="clearSelectAll">清空</a>
-        </Alert>
-      </Row>
-      <Row>
-        <Table
-          :loading="loading"
-          border
-          :columns="columns"
-          :data="data"
-          ref="table"
-          sortable="custom"
-          @on-sort-change="changeSort"
-          @on-selection-change="changeSelect"
-        ></Table>
-      </Row>
+      <Alert show-icon v-show="openTip">
+        已选择
+        <span class="select-count">{{ selectList.length }}</span> 项
+        <a class="select-clear" @click="clearSelectAll">清空</a>
+      </Alert>
+      <Table
+        :loading="loading"
+        border
+        :columns="columns"
+        :data="data"
+        ref="table"
+        sortable="custom"
+        @on-sort-change="changeSort"
+        @on-selection-change="changeSelect"
+      ></Table>
       <Row type="flex" justify="end" class="page">
         <Page
           :current="searchForm.pageNumber"
@@ -223,11 +219,7 @@ export default {
           ],
           filterMultiple: false,
           filterMethod(value, row) {
-            if (value == 0) {
-              return row.status == 0;
-            } else if (value == -1) {
-              return row.status == -1;
-            }
+            return row.status == value;
           },
         },
         {

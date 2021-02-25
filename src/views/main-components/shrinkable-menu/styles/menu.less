@@ -1,8 +1,305 @@
-.ivu-shrinkable-menu{
+.shrinkable-menu {
     height: 100%;
     width: 100%;
 }
 
-.ivu-btn-text:hover {
-    background-color: rgba(255,255,255,.2) !important;
+// 收缩 默认暗蓝
+.shrink-menu-content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .shrink-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        min-width: 60px;
+        width: 100%;
+        height: 45px;
+    }
+
+    .ivu-select-dropdown {
+        margin: 0 0 0 5px;
+
+        .ivu-dropdown-item {
+            padding: 10px 16px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    }
+}
+
+// 激活颜色
+.shrink-menu-icon-darkblue,
+.shrink-menu-icon-dark {
+    .active {
+        color: #fff !important;
+    }
+}
+
+.shrink-menu-icon-light {
+    .active {
+        color: #2d8cf0 !important;
+    }
+}
+
+// 默认暗蓝
+.darkblue-menu {
+
+    // 背景色
+    .ivu-menu-darkblue {
+        background: #17233d;
+    }
+
+    // 一级和二级 字体色
+    .ivu-menu-item,
+    .ivu-menu-submenu-title {
+        color: hsla(0, 0%, 100%, .65);
+
+        &:hover {
+            color: #fff;
+        }
+    }
+
+    // 打开 变深
+    .ivu-menu-opened {
+        background: #001529;
+    }
+
+    // 一级打开 不变
+    .ivu-menu-opened {
+        .ivu-menu-submenu-title {
+            color: #fff;
+            background: #17233d;
+        }
+    }
+
+    .ivu-menu-submenu-title {
+        &:hover {
+            color: #fff;
+            background: #17233d;
+        }
+    }
+
+    // 单个
+    .ivu-menu-item-active:not(.ivu-menu-submenu),
+    .ivu-menu-submenu-title-active:not(.ivu-menu-submenu) {
+        color: #2d8cf0;
+    }
+
+    .ivu-menu-item-active:not(.ivu-menu-submenu),
+    .ivu-menu-item-active:not(.ivu-menu-submenu):hover,
+    .ivu-menu-submenu-title-active:not(.ivu-menu-submenu),
+    .ivu-menu-submenu-title-active:not(.ivu-menu-submenu):hover {
+        background: #001529;
+    }
+
+    // 激活
+    .ivu-menu-submenu .ivu-menu-item-active,
+    .ivu-menu-submenu .ivu-menu-item-active:hover {
+        color: #fff;
+        background: #2d8cf0;
+    }
+
+    // 激活
+    .ivu-menu-item-active .ivu-menu-submenu-title {
+        color: #fff;
+    }
+
+    // 收缩
+    .shrink-menu-content {
+        .shrink-icon {
+            color: hsla(0, 0%, 100%, .65);
+            transition: all .2s ease-in-out;
+
+            &:hover {
+                color: #fff;
+                background: #001529;
+            }
+        }
+
+        .ivu-select-dropdown {
+            background: #17233d;
+
+            .ivu-dropdown-item {
+                color: hsla(0, 0%, 100%, .65);
+                transition: all .2s ease-in-out;
+
+                &:hover {
+                    color: #fff;
+                    background: #17233d;
+                }
+            }
+
+            .ivu-dropdown-item-selected,
+            .ivu-dropdown-item-selected:hover {
+                color: #fff;
+                background: #2d8cf0;
+            }
+        }
+    }
+}
+
+// 分割线--------------------------------------------
+
+// light
+.light-menu {
+
+    // 一级打开 变蓝
+    .ivu-menu-opened {
+        .ivu-menu-submenu-title {
+            color: #2d8cf0;
+        }
+    }
+
+    // 激活
+    .ivu-menu-item-active .ivu-menu-submenu-title {
+        color: #2d8cf0;
+    }
+
+    // 收缩
+    .shrink-menu-content {
+        .shrink-icon {
+            transition: all .2s ease-in-out;
+
+            &:hover {
+                color: #2d8cf0;
+                background: #f3f3f3;
+            }
+        }
+
+        .ivu-select-dropdown {
+
+            // f3f3f3
+            .ivu-dropdown-item {
+                transition: all .2s ease-in-out;
+
+                &:hover {
+                    color: #2d8cf0;
+                    background: #fff;
+                }
+            }
+        }
+    }
+}
+
+// 分割线--------------------------------------------
+
+// dark灰蓝
+.dark-menu {
+
+    // 收缩
+    .shrink-menu-content {
+        .shrink-icon {
+            color: hsla(0, 0%, 100%, .7);
+            transition: all .2s ease-in-out;
+
+            &:hover {
+                color: #fff;
+                background: hsla(0, 0%, 100%, .2);
+            }
+        }
+    }
+}
+
+// 分割线--------------------------------------------
+
+// 暗黑
+.black-menu {
+
+    // 背景色
+    .ivu-menu-black {
+        background: #1f1f1f;
+    }
+
+    // 一级和二级 字体色
+    .ivu-menu-item,
+    .ivu-menu-submenu-title {
+        color: hsla(0, 0%, 100%, .65);
+
+        &:hover {
+            color: #fff;
+        }
+    }
+
+    // 打开 变深
+    .ivu-menu-opened {
+        background: #141414;
+    }
+
+    // 一级打开 不变
+    .ivu-menu-opened {
+        .ivu-menu-submenu-title {
+            color: #fff;
+            background: #1f1f1f;
+        }
+    }
+
+    .ivu-menu-submenu-title {
+        &:hover {
+            color: #fff;
+            background: #1f1f1f;
+        }
+    }
+
+    // 单个
+    .ivu-menu-item-active:not(.ivu-menu-submenu),
+    .ivu-menu-submenu-title-active:not(.ivu-menu-submenu) {
+        color: #2d8cf0;
+    }
+
+    .ivu-menu-item-active:not(.ivu-menu-submenu),
+    .ivu-menu-item-active:not(.ivu-menu-submenu):hover,
+    .ivu-menu-submenu-title-active:not(.ivu-menu-submenu),
+    .ivu-menu-submenu-title-active:not(.ivu-menu-submenu):hover {
+        background: #141414;
+    }
+
+    // 激活
+    .ivu-menu-submenu .ivu-menu-item-active,
+    .ivu-menu-submenu .ivu-menu-item-active:hover {
+        color: #fff;
+        background: #2d8cf0;
+    }
+
+    // 激活
+    .ivu-menu-item-active .ivu-menu-submenu-title {
+        color: #fff;
+    }
+
+    // 收缩
+    .shrink-menu-content {
+        .shrink-icon {
+            color: hsla(0, 0%, 100%, .65);
+            transition: all .2s ease-in-out;
+
+            &:hover {
+                color: #fff;
+                background: #141414;
+            }
+        }
+
+        .ivu-select-dropdown {
+            background: #1f1f1f;
+
+            .ivu-dropdown-item {
+                color: hsla(0, 0%, 100%, .65);
+                transition: all .2s ease-in-out;
+
+                &:hover {
+                    color: #fff;
+                    background: #1f1f1f;
+                }
+            }
+
+            .ivu-dropdown-item-selected,
+            .ivu-dropdown-item-selected:hover {
+                color: #fff;
+                background: #2d8cf0;
+            }
+        }
+    }
 }

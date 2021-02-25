@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="file-upload-wrap">
+    <div :class="{ 'file-upload-wrap-nobutton': !showUpload }">
       <Upload
         :action="uploadFileUrl"
         :headers="accessToken"
@@ -12,24 +12,23 @@
         :on-format-error="handleFormatError"
         :on-exceeded-size="handleMaxSize"
         :before-upload="beforeUpload"
-        :show-upload-list="false"
-        class="file-upload"
-        v-show="showUpload"
+        :default-file-list="fileList"
+        :on-preview="handlePreview"
+        :on-remove="handleRemove"
+        ref="upload"
       >
         <Button
-          :loading="loading"
           :type="type"
           :ghost="ghost"
           :shape="shape"
           :size="size"
           :disabled="disabled"
           :icon="icon"
+          v-show="showUpload"
           >{{ text }}</Button
         >
       </Upload>
-      <Tooltip transfer :content="title" placement="top">
-        <a @click="download">{{ currentValue.name }}</a>
-      </Tooltip>
+      <span v-show="!showUpload && fileList.length < 1">{{ noDataText }}</span>
     </div>
   </div>
 </template>
@@ -39,9 +38,17 @@ import { uploadFile } from "@/api/index";
 export default {
   name: "fileUpload",
   props: {
-    value: Object,
+    value: null,
     size: String,
     type: String,
+    multi: {
+      type: Boolean,
+      default: false,
+    },
+    limit: {
+      type: Number,
+      default: 10,
+    },
     ghost: {
       type: Boolean,
       default: false,
@@ -68,6 +75,18 @@ export default {
       type: Boolean,
       default: true,
     },
+    noDataText: {
+      type: String,
+      default: "暂无数据",
+    },
+    showTip: {
+      type: Boolean,
+      default: true,
+    },
+    tipSize: {
+      type: Number,
+      default: 50,
+    },
   },
   computed: {
     format() {
@@ -85,10 +104,9 @@ export default {
   data() {
     return {
       accessToken: {},
-      title: "点击下载",
       currentValue: this.value,
-      loading: false,
       uploadFileUrl: uploadFile,
+      fileList: [],
     };
   },
   methods: {
@@ -96,20 +114,9 @@ export default {
       this.accessToken = {
         accessToken: this.getStore("accessToken"),
       };
-    },
-    download() {
-      if (!this.currentValue.url) {
-        this.$Message.error("无效的链接");
-        return;
-      }
-      window.open(
-        this.currentValue.url +
-          "?attname=&response-content-type=application/octet-stream&filename=" +
-          this.currentValue.name
-      );
+      this.setCurrentValue(this.value);
     },
     handleFormatError(file) {
-      this.loading = false;
       this.$Notice.warning({
         title: "不支持的文件格式",
         desc:
@@ -121,7 +128,6 @@ export default {
       });
     },
     handleMaxSize(file) {
-      this.loading = false;
       this.$Notice.warning({
         title: "文件大小过大",
         desc:
@@ -132,47 +138,141 @@ export default {
           "M.",
       });
     },
-    beforeUpload() {
-      this.loading = true;
+    beforeUpload(file) {
+      if (this.multi && this.fileList.length >= this.limit) {
+        this.$Message.warning("最多只能上传" + this.limit + "张图片");
+        return false;
+      }
       return true;
     },
-    handleSuccess(res, file) {
-      this.loading = false;
+    handleSuccess(res, file, fileList) {
       if (res.success) {
-        this.currentValue = {
-          url: res.result,
-          name: file.name,
-          size: file.size,
-        };
-        this.title =
-          "点击下载(" + ((file.size * 1.0) / (1024 * 1024)).toFixed(2) + " MB)";
+        if (this.multi) {
+          this.currentValue.push({
+            url: res.result,
+            name: file.name,
+            size: file.size,
+          });
+        } else {
+          this.currentValue = {
+            url: res.result,
+            name: file.name,
+            size: file.size,
+          };
+        }
         this.$emit("input", this.currentValue);
         this.$emit("on-change", this.currentValue);
       } else {
+        file.percentage = 0;
+        file.status = "fail";
+        file.name += "（上传失败）";
         this.$Message.error(res.message);
       }
     },
     handleError(error, file, fileList) {
-      this.loading = false;
       this.$Message.error(error.toString());
     },
-    handleChange(v) {
+    handlePreview(file) {
+      let showTip =
+        this.showTip && file.size && file.size > this.tipSize * 1024 * 1024;
+      if (showTip) {
+        this.$Modal.confirm({
+          title: "文件较大提示",
+          content: "该文件大小已超过 " + this.tipSize + " MB，确认下载？",
+          okText: "继续下载",
+          onOk: () => {
+            this.download(file);
+          },
+        });
+      } else {
+        this.download(file);
+      }
+    },
+    download(file) {
+      if (!file.url) {
+        this.$Message.error("无效的链接");
+        return;
+      }
+      window.open(
+        file.url +
+          "?attname=&response-content-type=application/octet-stream&filename=" +
+          file.name
+      );
+    },
+    handleRemove(file, fileList) {
+      if (this.multi) {
+        let re = [];
+        fileList.forEach((e) => {
+          if (e.status == "finished") {
+            re.push({
+              url: e.url,
+              name: e.name,
+              size: e.size,
+            });
+          }
+        });
+        this.fileList = re;
+        this.currentValue = re;
+      } else {
+        if (fileList.length > 0 && fileList[0].status == "finished") {
+          this.currentValue = {
+            url: fileList[0].url,
+            name: fileList[0].name,
+            size: fileList[0].size,
+          };
+          this.fileList = [this.currentValue];
+        } else {
+          this.currentValue = {};
+        }
+      }
       this.$emit("input", this.currentValue);
       this.$emit("on-change", this.currentValue);
     },
-    setCurrentValue(value) {
-      if (value === this.currentValue) {
-        return;
-      }
-      this.currentValue = value;
-      if (this.currentValue.size) {
-        this.title =
-          "点击下载(" +
-          ((this.currentValue.size * 1.0) / (1024 * 1024)).toFixed(2) +
-          " MB)";
+    setCurrentValue(v) {
+      if (!v.length && v.length != 0) {
+        // 单个
+        if (this.multi) {
+          this.$Message.warning("多个上传仅支持传入数组数据类型");
+          return;
+        }
+        if (!v) {
+          return;
+        }
+        this.currentValue = v;
+        this.fileList.push(v);
       } else {
-        this.title = "点击下载";
+        // 多个
+        if (!this.multi) {
+          this.$Message.warning("单个上传仅支持传入字符串数据类型");
+          return;
+        }
+        if (v.length > this.limit) {
+          for (let i = 0; i < this.limit; i++) {
+            this.fileList.push({
+              url: v[i].url,
+              name: v[i].name,
+              size: v[i].size,
+            });
+          }
+          this.currentValue = this.fileList;
+          this.$emit("input", this.currentValue);
+          this.$Message.warning("最多只能上传" + this.limit + "个文件");
+        } else {
+          this.currentValue = v;
+          this.fileList = v;
+        }
       }
+      this.count = this.currentValue.length;
+      this.$emit("on-change", this.currentValue);
+    },
+    clear() {
+      this.$refs.upload.clearFiles();
+      if (this.multi) {
+        this.currentValue = [];
+      } else {
+        this.currentValue = {};
+      }
+      this.$emit("input", this.currentValue);
       this.$emit("on-change", this.currentValue);
     },
   },
@@ -187,13 +287,10 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
-.file-upload-wrap {
-  display: flex;
-  align-items: center;
-  .file-upload {
-    display: inline-block;
-    margin-right: 10px;
+<style lang="less">
+.file-upload-wrap-nobutton {
+  .ivu-upload-list {
+    margin-top: -20px;
   }
 }
 </style>

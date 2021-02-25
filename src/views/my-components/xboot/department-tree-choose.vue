@@ -1,16 +1,34 @@
 <template>
   <div>
-    <div style="display:flex;">
+    <div style="display: flex;">
       <Input
         v-model="departmentTitle"
         readonly
-        style="margin-right:10px;"
+        :size="size"
+        :disabled="disabled"
+        :prefix="prefix"
+        :suffix="suffix"
+        style="margin-right: 10px"
         :placeholder="placeholder"
         :clearable="clearable"
         @on-clear="clearSelect"
       />
-      <Poptip transfer trigger="click" placement="right" title="选择部门" width="250">
-        <Button icon="md-list">选择部门</Button>
+      <Poptip
+        transfer
+        trigger="click"
+        placement="right"
+        title="选择部门"
+        width="250"
+      >
+        <Button
+          :size="size"
+          :disabled="disabled"
+          :icon="icon"
+          :type="type"
+          :shape="shape"
+          :ghost="ghost"
+          >{{ text }}</Button
+        >
         <div slot="content">
           <Input
             v-model="searchKey"
@@ -39,18 +57,39 @@ import { initDepartment, loadDepartment, searchDepartment } from "@/api/index";
 export default {
   name: "departmentTreeChoose",
   props: {
+    text: {
+      type: String,
+      default: "选择部门",
+    },
+    icon: {
+      type: String,
+      default: "md-list",
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
+    size: String,
+    type: String,
+    shape: String,
+    ghost: {
+      type: Boolean,
+      default: false,
+    },
+    prefix: String,
+    suffix: String,
     multiple: {
       type: Boolean,
-      default: false
+      default: false,
     },
     clearable: {
       type: Boolean,
-      default: true
+      default: true,
     },
     placeholder: {
       type: String,
-      default: "点击选择部门"
-    }
+      default: "点击选择部门",
+    },
   },
   data() {
     return {
@@ -59,14 +98,14 @@ export default {
       searchKey: "",
       dataDep: [],
       selectDep: [],
-      departmentId: []
+      departmentId: [],
     };
   },
   methods: {
     initDepartmentData() {
-      initDepartment().then(res => {
+      initDepartment().then((res) => {
         if (res.success) {
-          res.result.forEach(function(e) {
+          res.result.forEach(function (e) {
             if (e.isParent) {
               e.loading = false;
               e.children = [];
@@ -81,9 +120,9 @@ export default {
       });
     },
     loadData(item, callback) {
-      loadDepartment(item.id).then(res => {
+      loadDepartment(item.id).then((res) => {
         if (res.success) {
-          res.result.forEach(function(e) {
+          res.result.forEach(function (e) {
             if (e.isParent) {
               e.loading = false;
               e.children = [];
@@ -101,10 +140,10 @@ export default {
       // 搜索部门
       if (this.searchKey) {
         this.depLoading = true;
-        searchDepartment({ title: this.searchKey }).then(res => {
+        searchDepartment({ title: this.searchKey }).then((res) => {
           this.depLoading = false;
           if (res.success) {
-            res.result.forEach(function(e) {
+            res.result.forEach(function (e) {
               if (e.status == -1) {
                 e.title = "[已禁用] " + e.title;
                 e.disabled = true;
@@ -120,7 +159,7 @@ export default {
     selectTree(v) {
       let ids = [],
         title = "";
-      v.forEach(e => {
+      v.forEach((e) => {
         ids.push(e.id);
         if (title == "") {
           title = e.title;
@@ -156,11 +195,11 @@ export default {
         this.departmentId.push(ids);
       }
       this.$emit("on-change", this.departmentId);
-    }
+    },
   },
-  created() {
+  mounted() {
     this.initDepartmentData();
-  }
+  },
 };
 </script>
 

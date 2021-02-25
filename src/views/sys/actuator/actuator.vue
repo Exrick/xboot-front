@@ -5,18 +5,33 @@
   <div class="search">
     <Card>
       <p slot="title">Spring Boot 2.x Actuator监控列表</p>
-      <Row>
-        <Table border :columns="columns" :data="data" ref="table"></Table>
-      </Row>
+      <Table border :columns="columns" :data="data" ref="table"></Table>
     </Card>
 
     <Modal
-      :title="modalTitle"
       v-model="modalVisible"
       :mask-closable="false"
       :width="900"
       :fullscreen="full"
     >
+      <div slot="header">
+        <div class="ivu-modal-header-inner">{{ modalTitle }}</div>
+        <a @click="full = !full" class="modal-fullscreen">
+          <Icon
+            v-show="!full"
+            type="ios-expand"
+            class="model-fullscreen-icon"
+          />
+          <Icon
+            v-show="full"
+            type="ios-contract"
+            class="model-fullscreen-icon"
+          />
+        </a>
+        <a @click="modalVisible = false" class="ivu-modal-close">
+          <Icon type="ios-close" class="ivu-icon-ios-close" />
+        </a>
+      </div>
       <div style="position: relative">
         <div v-if="!full" style="max-height: 60vh; overflow: auto">
           <vue-json-pretty
@@ -37,9 +52,6 @@
           @on-change="changDeep"
           style="margin-right: 10px"
         ></InputNumber>
-        <Button @click="full = !full" type="primary" icon="md-expand"
-          >全屏开/关</Button
-        >
         <Button @click="modalVisible = false">关闭</Button>
       </div>
     </Modal>

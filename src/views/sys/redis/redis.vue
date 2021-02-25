@@ -25,7 +25,7 @@
           <Row class="operation">
             <Button @click="add" type="primary" icon="md-add">添加</Button>
             <Button type="error" @click="clear" icon="md-trash"
-              >清空所有</Button
+              >清空全部</Button
             >
             <Button @click="delAll" icon="md-trash">批量删除</Button>
             <Button @click="getDataList" icon="md-refresh">刷新</Button>
@@ -36,25 +36,21 @@
               openTip ? "关闭提示" : "开启提示"
             }}</Button>
           </Row>
-          <Row v-show="openTip">
-            <Alert show-icon>
-              已选择
-              <span class="select-count">{{ selectList.length }}</span> 项
-              <a class="select-clear" @click="clearSelectAll">清空</a>
-            </Alert>
-          </Row>
-          <Row>
-            <Table
-              :loading="loading"
-              border
-              :columns="columns"
-              :data="data"
-              ref="table"
-              sortable="custom"
-              @on-sort-change="changeSort"
-              @on-selection-change="changeSelect"
-            ></Table>
-          </Row>
+          <Alert show-icon v-show="openTip">
+            已选择
+            <span class="select-count">{{ selectList.length }}</span> 项
+            <a class="select-clear" @click="clearSelectAll">清空</a>
+          </Alert>
+          <Table
+            :loading="loading"
+            border
+            :columns="columns"
+            :data="data"
+            ref="table"
+            sortable="custom"
+            @on-sort-change="changeSort"
+            @on-selection-change="changeSelect"
+          ></Table>
           <Row type="flex" justify="end" class="page">
             <Page
               :current="pageNumber"

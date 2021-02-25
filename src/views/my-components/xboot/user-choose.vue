@@ -1,11 +1,23 @@
 <template>
   <div class="user-choose">
-    <Button @click="userModalVisible=true" :icon="icon">{{text}}</Button>
-    <span @click="clearSelectData" class="clear">清空已选</span>
+    <Button
+      :size="size"
+      :type="type"
+      :shape="shape"
+      @click="userModalVisible = true"
+      :icon="icon"
+      >{{ text }}</Button
+    >
+    <span
+      v-show="showClear && selectUsers.length > 0"
+      @click="clearData"
+      class="clear"
+      >清空已选</span
+    >
     <Collapse simple class="collapse">
       <Panel name="1">
         已选择
-        <span class="select-count">{{selectUsers.length}}</span> 人
+        <span class="select-count">{{ selectUsers.length }}</span> 人
         <p slot="content">
           <Tag
             v-for="(item, i) in selectUsers"
@@ -15,50 +27,110 @@
             closable
             @on-close="handleCancelUser"
           >
-            <Tooltip placement="top" :content="item.username">{{item.nickname}}</Tooltip>
+            <Tooltip placement="top" :content="item.username">{{
+              item.nickname
+            }}</Tooltip>
           </Tag>
         </p>
       </Panel>
     </Collapse>
-    <Drawer title="选择用户" closable v-model="userModalVisible" width="800" draggable>
-      <Form ref="searchUserForm" :model="searchUserForm" inline :label-width="55">
+    <Drawer
+      title="选择用户"
+      closable
+      v-model="userModalVisible"
+      width="815"
+      draggable
+      class="user-choose-drawer"
+    >
+      <Form ref="searchForm" :model="searchForm" inline :label-width="70">
         <FormItem label="用户名" prop="nickname">
           <Input
             type="text"
-            v-model="searchUserForm.nickname"
+            v-model="searchForm.nickname"
             clearable
             placeholder="请输入用户名"
-            style="width: 200px"
+            style="width: 180px"
           />
         </FormItem>
         <FormItem label="部门" prop="department">
-          <department-choose @on-change="handleSelectDep" style="width: 200px" ref="dep"></department-choose>
+          <department-choose
+            @on-change="handleSelectDep"
+            style="width: 180px"
+            ref="dep"
+          ></department-choose>
         </FormItem>
-        <FormItem style="margin-left:-35px;" class="br">
-          <Button @click="handleSearchUser" type="primary" icon="ios-search">搜索</Button>
+        <span v-if="drop">
+          <FormItem label="手机号" prop="mobile">
+            <Input
+              type="text"
+              v-model="searchForm.mobile"
+              clearable
+              placeholder="请输入手机号"
+              style="width: 180px"
+            />
+          </FormItem>
+          <FormItem label="邮箱" prop="email">
+            <Input
+              type="text"
+              v-model="searchForm.email"
+              clearable
+              placeholder="请输入邮箱"
+              style="width: 180px"
+            />
+          </FormItem>
+          <FormItem label="性别" prop="sex">
+            <dict dict="sex" v-model="searchForm.sex" style="width: 180px" />
+          </FormItem>
+          <FormItem label="登录账号" prop="username">
+            <Input
+              type="text"
+              v-model="searchForm.username"
+              clearable
+              placeholder="请输入登录账号"
+              style="width: 180px"
+            />
+          </FormItem>
+          <FormItem label="用户ID" prop="id">
+            <Input
+              type="text"
+              v-model="searchForm.id"
+              clearable
+              placeholder="请输入用户ID"
+              style="width: 180px"
+            />
+          </FormItem>
+        </span>
+        <FormItem style="margin-left: -35px" class="br">
+          <Button @click="handleSearchUser" type="primary" icon="ios-search"
+            >搜索</Button
+          >
           <Button @click="handleResetUser">重置</Button>
+          <a class="drop-down" @click="dropDown">
+            {{ dropDownContent }}
+            <Icon :type="dropDownIcon"></Icon>
+          </a>
         </FormItem>
       </Form>
       <Alert show-icon>
         已选择
-        <span class="select-count">{{selectUsers.length}}</span> 项
-        <a style="margin-left: 10px;" @click="clearSelectData">清空已选</a>
+        <span class="select-count">{{ selectUsers.length }}</span> 项
+        <a style="margin-left: 10px" @click="clearData">清空已选</a>
       </Alert>
       <Table
         :loading="userLoading"
         border
         :columns="userColumns"
         :data="userData"
-        style="margin: 2vh 0;"
+        style="margin: 2vh 0"
       ></Table>
       <Row type="flex" justify="end">
         <Page
-          :current="searchUserForm.pageNumber"
+          :current="searchForm.pageNumber"
           :total="totalUser"
-          :page-size="searchUserForm.pageSize"
-          @on-change="changeUserPage"
-          @on-page-size-change="changeUserPageSize"
-          :page-size-opts="[10,20,50]"
+          :page-size="searchForm.pageSize"
+          @on-change="changePage"
+          @on-page-size-change="changePageSize"
+          :page-size-opts="[10, 20, 50]"
           size="small"
           show-total
           show-elevator
@@ -73,27 +145,43 @@
 <script>
 import { getUserListData } from "@/api/index";
 import departmentChoose from "./department-choose";
+import dict from "@/views/my-components/xboot/dict";
 export default {
   name: "userChoose",
   components: {
-    departmentChoose
+    departmentChoose,
+    dict,
   },
   props: {
+    value: {
+      type: Array,
+      default: [],
+    },
     text: {
       type: String,
-      default: "选择用户"
+      default: "选择用户",
     },
     icon: {
       type: String,
-      default: "md-person-add"
-    }
+      default: "md-person-add",
+    },
+    showClear: {
+      type: Boolean,
+      default: true,
+    },
+    size: String,
+    type: String,
+    shape: String,
   },
   data() {
     return {
       userLoading: true,
       userModalVisible: false,
-      selectUsers: [],
-      searchUserForm: {
+      drop: false,
+      dropDownContent: "展开",
+      dropDownIcon: "ios-arrow-down",
+      selectUsers: this.value,
+      searchForm: {
         id: "",
         nickname: "",
         type: "",
@@ -101,25 +189,25 @@ export default {
         pageNumber: 1, // 当前页数
         pageSize: 10, // 页面大小
         sort: "createTime", // 默认排序字段
-        order: "desc" // 默认排序方式
+        order: "desc", // 默认排序方式
       },
       userColumns: [
         {
           type: "index",
           width: 60,
-          align: "center"
+          align: "center",
         },
         {
           title: "用户名",
           key: "nickname",
           minWidth: 130,
-          sortable: true
+          sortable: true,
         },
         {
           title: "登录账号",
           key: "username",
           minWidth: 130,
-          sortable: true
+          sortable: true,
         },
         {
           title: "头像",
@@ -129,40 +217,40 @@ export default {
           render: (h, params) => {
             return h("Avatar", {
               props: {
-                src: params.row.avatar
-              }
+                src: params.row.avatar,
+              },
             });
-          }
+          },
         },
         {
           title: "所属部门",
           key: "departmentTitle",
-          width: 120
+          width: 120,
         },
         {
           title: "手机",
           key: "mobile",
           width: 125,
-          sortable: true
+          sortable: true,
         },
         {
           title: "邮箱",
           key: "email",
           width: 180,
-          sortable: true
+          sortable: true,
         },
         {
           title: "性别",
           key: "sex",
           width: 70,
-          align: "center"
+          align: "center",
         },
         {
           title: "创建时间",
           key: "createTime",
           sortable: true,
           sortType: "desc",
-          width: 170
+          width: 170,
         },
         {
           title: "操作",
@@ -177,39 +265,49 @@ export default {
                 {
                   props: {
                     type: "info",
-                    size: "small"
+                    size: "small",
                   },
                   on: {
                     click: () => {
                       this.chooseUser(params.row);
-                    }
-                  }
+                    },
+                  },
                 },
                 "添加该用户"
-              )
+              ),
             ]);
-          }
-        }
+          },
+        },
       ],
       userData: [],
-      totalUser: 0
+      totalUser: 0,
     };
   },
   methods: {
     handleSelectDep(v) {
-      this.searchUserForm.departmentId = v;
+      this.searchForm.departmentId = v;
     },
-    changeUserPage(v) {
-      this.searchUserForm.pageNumber = v;
-      this.getUserDataList();
+    dropDown() {
+      if (this.drop) {
+        this.dropDownContent = "展开";
+        this.dropDownIcon = "ios-arrow-down";
+      } else {
+        this.dropDownContent = "收起";
+        this.dropDownIcon = "ios-arrow-up";
+      }
+      this.drop = !this.drop;
     },
-    changeUserPageSize(v) {
-      this.searchUserForm.pageSize = v;
-      this.getUserDataList();
+    changePage(v) {
+      this.searchForm.pageNumber = v;
+      this.getDataList();
     },
-    getUserDataList() {
+    changePageSize(v) {
+      this.searchForm.pageSize = v;
+      this.getDataList();
+    },
+    getDataList() {
       this.userLoading = true;
-      getUserListData(this.searchUserForm).then(res => {
+      getUserListData(this.searchForm).then((res) => {
         this.userLoading = false;
         if (res.success) {
           this.userData = res.result.content;
@@ -218,28 +316,29 @@ export default {
       });
     },
     handleSearchUser() {
-      this.searchUserForm.pageNumber = 1;
-      this.searchUserForm.pageSize = 10;
-      this.getUserDataList();
+      this.searchForm.pageNumber = 1;
+      this.searchForm.pageSize = 10;
+      this.getDataList();
     },
     handleResetUser() {
-      this.$refs.searchUserForm.resetFields();
-      this.searchUserForm.pageNumber = 1;
-      this.searchUserForm.pageSize = 10;
+      this.$refs.searchForm.resetFields();
+      this.searchForm.pageNumber = 1;
+      this.searchForm.pageSize = 10;
       this.$refs.dep.clearSelect();
-      this.searchUserForm.departmentId = "";
+      this.searchForm.departmentId = "";
       // 重新加载数据
-      this.getUserDataList();
+      this.getDataList();
     },
     setData(v) {
       this.selectUsers = v;
       this.$emit("on-change", this.selectUsers);
+      this.$emit("input", this.selectUsers);
     },
     chooseUser(v) {
       // 去重
       let that = this;
       let flag = true;
-      this.selectUsers.forEach(e => {
+      this.selectUsers.forEach((e) => {
         if (v.id == e.id) {
           that.$Message.warning("已经添加过啦，请勿重复选择");
           flag = false;
@@ -249,29 +348,43 @@ export default {
         let u = {
           id: v.id,
           username: v.username,
-          nickname: v.nickname
+          nickname: v.nickname,
         };
         this.selectUsers.push(u);
         this.$emit("on-change", this.selectUsers);
+        this.$emit("input", this.selectUsers);
         this.$Message.success(`添加用户 ${v.nickname} 成功`);
       }
     },
-    clearSelectData() {
+    clearData() {
       this.selectUsers = [];
       this.$emit("on-change", this.selectUsers);
+      this.$emit("input", this.selectUsers);
     },
-    handleCancelUser(e, id) {
+    handleCancelUser(event, id) {
       // 删除所选用户
-      this.selectUsers = this.selectUsers.filter(e => {
+      this.selectUsers = this.selectUsers.filter((e) => {
         return e.id != id;
       });
       this.$emit("on-change", this.selectUsers);
+      this.$emit("input", this.selectUsers);
       this.$Message.success("删除所选用户成功");
-    }
+    },
+    setCurrentValue(value) {
+      if (value === this.selectUsers) {
+        return;
+      }
+      this.selectUsers = value;
+    },
+  },
+  watch: {
+    value(val) {
+      this.setCurrentValue(val);
+    },
   },
   mounted() {
-    this.getUserDataList();
-  }
+    this.getDataList();
+  },
 };
 </script>
 
@@ -288,9 +401,14 @@ export default {
     margin-top: 15px;
     width: 500px;
   }
+}
+.user-choose-drawer {
   .select-count {
     font-weight: 600;
     color: #40a9ff;
+  }
+  .drop-down {
+    margin-left: 5px;
   }
 }
 </style>

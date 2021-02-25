@@ -3,6 +3,7 @@
     <Select
       v-if="!description"
       v-model="currentValue"
+      :size="size"
       :loading="loading"
       :placeholder="placeholder"
       :multiple="multiple"
@@ -28,6 +29,7 @@
     <Select
       v-if="description"
       v-model="currentValue"
+      :size="size"
       :loading="loading"
       :placeholder="placeholder"
       :multiple="multiple"
@@ -87,6 +89,7 @@ export default {
       type: String,
       default: "description"
     },
+    size: String,
     placeholder: {
       type: String,
       default: "请选择"
@@ -130,7 +133,7 @@ export default {
   },
   data() {
     return {
-      currentValue: null,
+      currentValue: this.value,
       data: [],
       loading: false
     };

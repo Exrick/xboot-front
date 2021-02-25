@@ -1,22 +1,17 @@
 import { otherRouter } from '@/router/router';
 import { router } from '@/router/index';
-import Util from '@/libs/util';
-import Cookies from 'js-cookie';
+import util from '@/libs/util';
 import Vue from 'vue';
 
 const app = {
     state: {
         loading: false, // 全局加载动画
-        added: false, // 加载路由标志
+        added: false, // 加载路由标识
         navList: [], // 顶部菜单
         currNav: "", // 当前顶部菜单name
         currNavTitle: "", // 当前顶部菜单标题
         cachePage: [],
         lang: '',
-        isFullScreen: false,
-        openedSubmenuArr: [], // 要展开的菜单数组
-        menuTheme: 'dark', // 主题
-        themeColor: '',
         pageOpenedList: [{
             title: '首页',
             path: '',
@@ -29,7 +24,7 @@ const app = {
                 path: '',
                 name: 'home_index'
             }
-        ], 
+        ],
         // 面包屑数组
         menuList: [],
         routers: [
@@ -49,6 +44,9 @@ const app = {
         // 动态添加全局路由404、500等页面，不需要缓存
         updateDefaultRouter(state, routes) {
             router.addRoutes(routes);
+        },
+        setTheme(state, v) {
+            state.theme = v;
         },
         setLoading(state, v) {
             state.loading = v;
@@ -70,19 +68,6 @@ const app = {
         },
         updateMenulist(state, routes) {
             state.menuList = routes;
-        },
-        addOpenSubmenu(state, name) {
-            let hasThisName = false;
-            let isEmpty = false;
-            if (name.length == 0) {
-                isEmpty = true;
-            }
-            if (state.openedSubmenuArr.indexOf(name) > -1) {
-                hasThisName = true;
-            }
-            if (!hasThisName && !isEmpty) {
-                state.openedSubmenuArr.push(name);
-            }
         },
         closePage(state, name) {
             state.cachePage.forEach((item, index) => {
@@ -148,21 +133,16 @@ const app = {
         setCurrentPageName(state, name) {
             state.currentPageName = name;
         },
-        setAvatarPath(state, path) {
-            localStorage.avatorImgPath = path;
-        },
         switchLang(state, lang) {
             state.lang = lang;
+            localStorage.lang = lang;
             Vue.config.lang = lang;
-        },
-        clearOpenedSubmenu(state) {
-            state.openedSubmenuArr.length = 0;
         },
         setMessageCount(state, count) {
             state.messageCount = count;
         },
         increateTag(state, tagObj) {
-            if (!Util.oneOf(tagObj.name, state.dontCache)) {
+            if (!util.oneOf(tagObj.name, state.dontCache)) {
                 state.cachePage.push(tagObj.name);
                 localStorage.cachePage = JSON.stringify(state.cachePage);
             }

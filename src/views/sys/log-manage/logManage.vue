@@ -65,25 +65,21 @@
           openTip ? "关闭提示" : "开启提示"
         }}</Button>
       </Row>
-      <Row v-show="openTip">
-        <Alert>
-          已选择
-          <span class="select-count">{{ selectList.length }}</span> 项
-          <a class="select-clear" @click="clearSelectAll">清空</a>
-        </Alert>
-      </Row>
-      <Row>
-        <Table
-          :loading="loading"
-          border
-          :columns="columns"
-          :data="data"
-          ref="table"
-          sortable="custom"
-          @on-sort-change="changeSort"
-          @on-selection-change="changeSelect"
-        ></Table>
-      </Row>
+      <Alert v-show="openTip">
+        已选择
+        <span class="select-count">{{ selectList.length }}</span> 项
+        <a class="select-clear" @click="clearSelectAll">清空</a>
+      </Alert>
+      <Table
+        :loading="loading"
+        border
+        :columns="columns"
+        :data="data"
+        ref="table"
+        sortable="custom"
+        @on-sort-change="changeSort"
+        @on-selection-change="changeSelect"
+      ></Table>
       <Row type="flex" justify="end" class="page">
         <Page
           :current="searchForm.pageNumber"
@@ -174,15 +170,7 @@ export default {
           ],
           filterMultiple: false,
           filterMethod(value, row) {
-            if (value == "GET") {
-              return row.requestType == "GET";
-            } else if (value == "POST") {
-              return row.requestType == "POST";
-            } else if (value == "PUT") {
-              return row.requestType == "PUT";
-            } else if (value == "DELETE") {
-              return row.requestType == "DELETE";
-            }
+            return row.requestType == value;
           },
         },
         {
@@ -240,36 +228,37 @@ export default {
           },
         },
         {
+          title: "设备信息",
+          minWidth: 200,
+          key: "device",
+          tooltip: true,
+        },
+        {
           title: "日志类型",
           key: "logType",
           align: "center",
           width: 110,
           render: (h, params) => {
+            let color = "",
+              text = "";
             if (params.row.logType == 0) {
-              return h("div", [
-                h(
-                  "Tag",
-                  {
-                    props: {
-                      color: "blue",
-                    },
-                  },
-                  "操作日志"
-                ),
-              ]);
+              color = "blue";
+              text = "操作日志";
             } else if (params.row.logType == 1) {
-              return h("div", [
-                h(
-                  "Tag",
-                  {
-                    props: {
-                      color: "green",
-                    },
-                  },
-                  "登陆日志"
-                ),
-              ]);
+              color = "green";
+              text = "登陆日志";
             }
+            return h("div", [
+              h(
+                "Tag",
+                {
+                  props: {
+                    color: color,
+                  },
+                },
+                text
+              ),
+            ]);
           },
         },
         {

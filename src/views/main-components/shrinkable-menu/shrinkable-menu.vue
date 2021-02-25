@@ -3,20 +3,23 @@
 </style>
 
 <template>
-  <div :style="{ background: bgColor }" class="ivu-shrinkable-menu">
+  <div
+    :style="{ background: bgColor }"
+    :class="`shrinkable-menu ${theme}-menu`"
+  >
     <slot name="top"></slot>
     <sidebar-menu
       v-show="!shrink"
-      :menu-theme="theme"
+      :theme="theme"
       :menu-list="menuList"
       :open-names="openNames"
       @on-change="handleChange"
     ></sidebar-menu>
     <sidebar-menu-shrink
       v-show="shrink"
-      :menu-theme="theme"
+      :theme="theme"
       :menu-list="menuList"
-      :icon-color="shrinkIconColor"
+      :open-names="openNames"
       @on-change="handleChange"
     ></sidebar-menu-shrink>
   </div>
@@ -25,7 +28,6 @@
 <script>
 import sidebarMenu from "./components/sidebarMenu.vue";
 import sidebarMenuShrink from "./components/sidebarMenuShrink.vue";
-import util from "@/libs/util";
 export default {
   name: "shrinkableMenu",
   components: {
@@ -43,24 +45,27 @@ export default {
     },
     theme: {
       type: String,
-      default: "dark",
-      validator(val) {
-        return util.oneOf(val, ["dark", "light"]);
-      },
+      default: "darkblue",
     },
     beforePush: {
       type: Function,
     },
-    openNames: {
-      type: Array,
-    },
+  },
+  data() {
+    return {
+      openNames: [],
+    };
   },
   computed: {
     bgColor() {
-      return this.theme == "dark" ? "#515a6e" : "#fff";
-    },
-    shrinkIconColor() {
-      return this.theme == "dark" ? "#fff" : "#515a6e";
+      if (this.theme == "darkblue") {
+        return "#17233d";
+      } else if (this.theme == "dark") {
+        return "#515a6e";
+      } else if (this.theme == "black") {
+        return "#1f1f1f";
+      }
+      return "#fff";
     },
   },
   methods: {
@@ -81,6 +86,15 @@ export default {
       }
       this.$emit("on-change", name);
     },
+  },
+  watch: {
+    // 监听路由变化
+    $route(to, from) {
+      this.openNames = [this.$route.matched[0].name];
+    },
+  },
+  mounted() {
+    this.openNames = [this.$route.matched[0].name];
   },
 };
 </script>

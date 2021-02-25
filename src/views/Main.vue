@@ -4,10 +4,11 @@
 
 <template>
   <div class="main" :class="{ 'main-hide-text': shrink }">
+    <!-- 左侧菜单 -->
     <div
-      class="sidebar-menu-con menu-bar"
+      :class="`sidebar-menu-content side-bar-menu-theme-${menuTheme}`"
       :style="{
-        width: shrink ? '60px' : '220px',
+        width: shrink ? '60px' : menuWidth + 'px',
         overflow: shrink ? 'visible' : 'auto',
       }"
     >
@@ -16,173 +17,131 @@
         @on-change="handleSubmenuChange"
         :theme="menuTheme"
         :before-push="beforePush"
-        :open-names="openedSubmenuArr"
         :menu-list="menuList"
       >
-        <div slot="top" class="logo-con">
-          <img v-show="!shrink" src="../assets/logo.png" key="max-logo" />
-          <img v-show="shrink" src="../assets/logo-min.png" key="min-logo" />
+        <div slot="top" class="logo-content" v-if="showLogo || fixNav">
+          <img
+            v-show="
+              !shrink && (menuTheme != 'light' || mainTheme == 'darkMode')
+            "
+            src="@/assets/logo-white.png"
+          />
+          <img
+            v-show="!shrink && menuTheme == 'light' && mainTheme != 'darkMode'"
+            src="@/assets/logo-black.png"
+          />
+          <img v-show="shrink" src="@/assets/logo-min.png" key="min-logo" />
         </div>
       </shrinkable-menu>
     </div>
+    <!-- 右上顶部导航条 -->
     <div
-      class="main-header-con"
-      :style="{ paddingLeft: shrink ? '60px' : '220px' }"
+      :class="`main-header-content fix-nav-${fixNav}`"
+      :style="{
+        paddingLeft: navPaddingLeft,
+      }"
     >
-      <div class="main-header">
-        <div class="navicon-con">
-          <Button
-            :style="{
-              transform: 'rotateZ(' + (this.shrink ? '-90' : '0') + 'deg)',
-              height: '48px',
-            }"
-            type="text"
+      <div :class="`main-header header-theme-${navTheme}`">
+        <div class="header-left">
+          <!-- 固定图标 -->
+          <div v-if="fixNav && showLogo" style="width: 220px" class="fix-logo">
+            <img
+              src="@/assets/logo-black.png"
+              v-if="navTheme == 'light' && mainTheme != 'darkMode'"
+            />
+            <img src="@/assets/logo-white.png" key="max-logo" v-else />
+          </div>
+          <!-- 收缩图标 -->
+          <div
+            class="header-navicon-content header-action"
             @click="toggleClick"
+            v-if="showFold"
           >
-            <Icon type="md-menu" size="32"></Icon>
-          </Button>
-        </div>
-        <div class="header-middle-con">
-          <div class="main-breadcrumb" v-if="navType == 4">
-            <breadcrumb-nav :currentPath="currentPath"></breadcrumb-nav>
+            <Icon
+              custom="iconfont icon-menu-unfold"
+              size="20"
+              v-show="this.shrink"
+            />
+            <Icon
+              custom="iconfont icon-menu-fold"
+              size="20"
+              v-show="!this.shrink"
+            />
           </div>
-          <div class="main-nav-menu" v-if="navType == 1 || navType == 2">
-            <Menu
-              mode="horizontal"
-              :active-name="currNav"
-              @on-select="selectNav"
-            >
-              <MenuItem
-                v-for="(item, i) in navList.slice(0, sliceNum)"
-                :key="i"
-                :name="item.name"
-              >
-                <Icon :type="item.icon" v-if="navType == 1" />
-                {{ item.title }}
-              </MenuItem>
-              <Submenu name="sub" v-if="navList.length > sliceNum">
-                <template slot="title">更多</template>
-                <MenuItem
-                  v-for="(item, i) in navList.slice(sliceNum, navList.length)"
-                  :key="i"
-                  :name="item.name"
-                >
-                  <Icon :type="item.icon" v-if="navType == 1" />
-                  {{ item.title }}
-                </MenuItem>
-              </Submenu>
-            </Menu>
-          </div>
-          <div class="main-nav" v-if="navType == 3">
-            <Dropdown transfer @on-click="selectNav">
-              <div style="cursor: pointer">
-                {{ currNavTitle }}
-                <Icon type="ios-arrow-down"></Icon>
-              </div>
-              <DropdownMenu slot="list">
-                <DropdownItem
-                  v-for="(item, i) in navList"
-                  :key="i"
-                  :name="item.name"
-                  :selected="currNav == item.name"
-                >
-                  <div class="nav-item">
-                    <Icon
-                      :type="item.icon"
-                      :size="16"
-                      style="margin: 0 10px 3px 0"
-                    ></Icon>
-                    {{ item.title }}
-                  </div>
-                </DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
+          <div class="header-middle-content">
+            <!-- 顶部菜单 -->
+            <div v-if="navType == 1">
+              <navMenu
+                :theme="navTheme"
+                :currNav="currNav"
+                :navList="navList"
+                @on-click="selectNav"
+                :sliceNum="sliceNum"
+                :showIcon="showNavMenuIcon"
+              />
+            </div>
+            <!-- 下拉菜单 -->
+            <div v-if="navType == 2">
+              <navApp
+                currType="tabs"
+                placement="bottom-start"
+                :currNavTitle="currNavTitle"
+                :currNav="currNav"
+                :navList="navList"
+                :type="navShowType"
+                :theme="navTheme"
+                @on-click="selectNav"
+              />
+            </div>
+            <!-- 面包导航 -->
+            <div class="main-breadcrumb" v-if="navType == 3">
+              <breadcrumb-nav :theme="navTheme" :currentPath="currentPath" />
+            </div>
           </div>
         </div>
-        <div
-          :class="{
-            'header-avator-con': navType != 4,
-            'header-avator-con nav4': navType == 4,
-          }"
-        >
-          <Dropdown @on-click="selectNav" class="options" v-if="navType == 4">
-            <Icon type="ios-apps" :size="24" class="language"></Icon>
-            <DropdownMenu slot="list">
-              <DropdownItem
-                v-for="(item, i) in navList"
-                :key="i"
-                :name="item.name"
-                :selected="currNav == item.name"
-              >
-                <div>
-                  <Icon
-                    :type="item.icon"
-                    :size="14"
-                    style="margin: 0 10px 2px 0"
-                  ></Icon>
-                  {{ item.title }}
-                </div>
-              </DropdownItem>
-            </DropdownMenu>
-          </Dropdown>
-          <full-screen
-            v-model="isFullScreen"
-            @on-change="fullscreenChange"
-          ></full-screen>
-          <Dropdown @on-click="handleLanDropdown" class="options">
-            <Icon type="md-globe" :size="24" class="language"></Icon>
-            <DropdownMenu slot="list">
-              <DropdownItem name="zh-CN">中文</DropdownItem>
-              <DropdownItem name="en-US">English</DropdownItem>
-            </DropdownMenu>
-          </Dropdown>
-          <lock-screen></lock-screen>
-          <message-tip v-model="mesCount"></message-tip>
-          <div class="user-dropdown-menu-con">
-            <Row
-              type="flex"
-              justify="end"
-              align="middle"
-              class="user-dropdown-innercon"
-            >
-              <Dropdown
-                transfer
-                trigger="hover"
-                @on-click="handleClickUserDropdown"
-              >
-                <a href="javascript:void(0)">
-                  <span class="main-user-name">{{ username }}</span>
-                  <Icon type="md-arrow-dropdown" />
-                  <Avatar
-                    :src="avatarPath"
-                    style="background: #619fe7; margin-left: 10px"
-                  ></Avatar>
-                </a>
-                <DropdownMenu slot="list">
-                  <DropdownItem name="ownSpace">{{
-                    $t("userCenter")
-                  }}</DropdownItem>
-                  <DropdownItem name="changePass">{{
-                    $t("changePass")
-                  }}</DropdownItem>
-                  <DropdownItem name="loginout" divided>{{
-                    $t("logout")
-                  }}</DropdownItem>
-                </DropdownMenu>
-              </Dropdown>
-            </Row>
-          </div>
+        <!-- 顶部右侧按钮 -->
+        <div class="header-right-content">
+          <search :theme="navTheme" :type="searchType" v-if="showSearch" />
+          <navApp
+            :currNav="currNav"
+            :navList="navList"
+            :type="navShowType"
+            @on-click="selectNav"
+            v-if="navType == 3"
+          />
+          <full-screen v-model="isFullScreen" @on-change="fullscreenChange" />
+          <language />
+          <message-tip />
+          <user />
+          <theme />
         </div>
-      </div>
-      <div class="tags-con">
-        <tags-page-opened :pageTagsList="pageTagsList"></tags-page-opened>
       </div>
     </div>
-    <div class="single-page-con" :style="{ left: shrink ? '60px' : '220px' }">
+    <!-- Tags 标签 -->
+    <div
+      class="nav-tags"
+      :style="{
+        paddingLeft: shrink ? '60px' : menuWidth + 'px',
+      }"
+    >
+      <tags-page-opened :pageTagsList="pageTagsList" v-if="showTags" />
+    </div>
+    <!-- 页面部分 -->
+    <div
+      class="single-page-content"
+      :style="{
+        left: shrink ? '60px' : menuWidth + 'px',
+        top: showTags ? '100px' : '60px',
+      }"
+    >
       <div class="single-page">
         <keep-alive :include="cachePage">
-          <router-view></router-view>
+          <router-view />
         </keep-alive>
+      </div>
+      <!-- 页面页脚 -->
+      <div class="main-page-footer-content" v-if="showFooter">
+        <Footer class="main-page-footer" />
       </div>
     </div>
     <!-- 全局加载动画 -->
@@ -194,44 +153,95 @@
 import shrinkableMenu from "./main-components/shrinkable-menu/shrinkable-menu.vue";
 import tagsPageOpened from "./main-components/tags-page-opened.vue";
 import breadcrumbNav from "./main-components/breadcrumb-nav.vue";
+import navMenu from "./main-components/navMenu.vue";
+import navApp from "./main-components/navApp.vue";
+import search from "./main-components/search.vue";
 import fullScreen from "./main-components/fullscreen.vue";
-import lockScreen from "./main-components/lockscreen/lockscreen.vue";
+import language from "./main-components/language.vue";
 import messageTip from "./main-components/message-tip.vue";
+import user from "./main-components/user.vue";
+import Footer from "./main-components/footer.vue";
+import theme from "./main-components/theme.vue";
 import circleLoading from "@/views/my-components/xboot/circle-loading.vue";
-import Cookies from "js-cookie";
+
 import util from "@/libs/util.js";
+
 export default {
   components: {
     shrinkableMenu,
     tagsPageOpened,
     breadcrumbNav,
+    navMenu,
+    navApp,
+    search,
     fullScreen,
-    lockScreen,
+    language,
     messageTip,
+    user,
+    Footer,
+    theme,
     circleLoading,
   },
   data() {
     return {
-      sliceNum: 3,
+      navPaddingLeft: this.menuWidth,
+      searchType: "input",
       shrink: false,
-      username: "",
-      userId: "",
+      sliceNum: 3,
+      currNav: "",
       isFullScreen: false,
-      openedSubmenuArr: this.$store.state.app.openedSubmenuArr,
-      firstThreeNav: [],
-      lastNav: [],
-      navType: 1,
     };
   },
   computed: {
+    // 主题
+    mainTheme() {
+      return this.$store.state.theme.theme.mainTheme;
+    },
+    menuTheme() {
+      return this.$store.state.theme.theme.menuTheme;
+    },
+    navTheme() {
+      return this.$store.state.theme.theme.navTheme;
+    },
+    menuWidth() {
+      return this.$store.state.theme.theme.menuWidth;
+    },
+    fixNav() {
+      return this.$store.state.theme.theme.fixNav;
+    },
+    navType() {
+      return this.$store.state.theme.theme.navType;
+    },
+    showTags() {
+      return this.$store.state.theme.theme.showTags;
+    },
+    showNavMenuIcon() {
+      return this.$store.state.theme.theme.showNavMenuIcon;
+    },
+    navShowType() {
+      return this.$store.state.theme.theme.navShowType;
+    },
+    showFold() {
+      return this.$store.state.theme.theme.showFold;
+    },
+    showLogo() {
+      return this.$store.state.theme.theme.showLogo;
+    },
+    showSearch() {
+      return this.$store.state.theme.theme.showSearch;
+    },
+    showFooter() {
+      return this.$store.state.theme.theme.showFooter;
+    },
+    weakMode() {
+      return this.$store.state.theme.theme.weakMode;
+    },
+    // 应用
     loading() {
       return this.$store.state.app.loading;
     },
     navList() {
       return this.$store.state.app.navList;
-    },
-    currNav() {
-      return this.$store.state.app.currNav;
     },
     currNavTitle() {
       return this.$store.state.app.currNavTitle;
@@ -245,38 +255,35 @@ export default {
     currentPath() {
       return this.$store.state.app.currentPath; // 当前面包屑数组
     },
-    avatarPath() {
-      return localStorage.avatorImgPath;
-    },
     cachePage() {
       return this.$store.state.app.cachePage;
     },
     lang() {
       return this.$store.state.app.lang;
     },
-    menuTheme() {
-      return this.$store.state.app.menuTheme;
-    },
-    mesCount() {
-      return this.$store.state.app.messageCount;
-    },
-  },
-  stompClient: {
-    monitorIntervalTime: 100,
-    stompReconnect: true,
-    timeout(orgCmd) {},
   },
   methods: {
     init() {
+      this.changeFixNav();
+      // 菜单
       let pathArr = util.setCurrentPath(this, this.$route.name);
-      // this.$store.commit("updateMenulist");
-      if (pathArr.length >= 2) {
-        this.$store.commit("addOpenSubmenu", pathArr[1].name);
-      }
-      let userInfo = JSON.parse(Cookies.get("userInfo"));
-      this.username = userInfo.nickname;
-      this.userId = userInfo.id;
       this.checkTag(this.$route.name);
+      let currWidth = document.body.clientWidth;
+      if (currWidth <= 1200) {
+        this.sliceNum = 2;
+      }
+    },
+    getCurrNav() {
+      // 读取选中顶部菜单名
+      let currNav = this.getStore("currNav");
+      if (currNav) {
+        this.currNav = currNav;
+      } else {
+        // 默认第一个
+        if (this.navList && this.navList.length > 0) {
+          this.currNav = this.navList[0].name;
+        }
+      }
     },
     selectNav(name) {
       let flag = false;
@@ -298,10 +305,11 @@ export default {
         // 第三方站外链接 不作其他操作
         return;
       }
+      // 缓存当前顶部菜单名
+      this.currNav = name;
       this.setStore("currNav", name);
       this.$store.commit("setCurrNav", name);
-      // 清空所有已打开标签
-      // this.$store.commit("clearAllTags");
+      // 点击顶部菜单 回到首页
       if (this.$route.name != "home_index") {
         this.$router.push({
           name: "home_index",
@@ -311,34 +319,13 @@ export default {
     },
     toggleClick() {
       this.shrink = !this.shrink;
+      this.changeFixNav();
     },
-    handleLanDropdown(name) {
-      this.$i18n.locale = name;
-      this.$store.commit("switchLang", name);
-    },
-    handleClickUserDropdown(name) {
-      if (name == "ownSpace") {
-        util.openNewPage(this, "ownspace_index");
-        this.$router.push({
-          name: "ownspace_index",
-        });
-      } else if (name == "ownSpaceOld") {
-        util.openNewPage(this, "ownspace_old");
-        this.$router.push({
-          name: "ownspace_old",
-        });
-      } else if (name == "changePass") {
-        util.openNewPage(this, "change_pass");
-        this.$router.push({
-          name: "change_pass",
-        });
-      } else if (name == "loginout") {
-        // 退出登录
-        this.$store.commit("logout", this);
-        this.$store.commit("clearOpenedSubmenu");
-        this.setStore("accessToken", "");
-        // 强制刷新页面 重新加载router
-        location.reload();
+    changeFixNav() {
+      if (this.fixNav) {
+        this.navPaddingLeft = "0px";
+      } else {
+        this.navPaddingLeft = this.shrink ? "60px" : this.menuWidth + "px";
       }
     },
     checkTag(name) {
@@ -379,33 +366,50 @@ export default {
         this.sliceNum = 3;
         this.shrink = false;
       }
+      if (currWidth < 1325 && currWidth > 1200) {
+        this.searchType = "icon";
+      } else if (currWidth < 1000 && currWidth > 900) {
+        this.searchType = "icon";
+      } else if (currWidth < 835) {
+        this.searchType = "icon";
+      } else {
+        this.searchType = "input";
+      }
+      this.changeFixNav();
     },
   },
   watch: {
     $route(to) {
       this.$store.commit("setCurrentPageName", to.name);
       let pathArr = util.setCurrentPath(this, to.name);
-      if (pathArr.length > 2) {
-        this.$store.commit("addOpenSubmenu", pathArr[1].name);
-      }
       this.checkTag(to.name);
-      localStorage.currentPageName = to.name;
     },
     lang() {
       util.setCurrentPath(this, this.$route.name); // 在切换语言时用于刷新面包屑
     },
-  },
-  mounted() {
-    this.init();
-    let that = this;
-    this.resize();
-    window.addEventListener("resize", function () {
-      that.resize();
-    });
+    fixNav() {
+      this.changeFixNav();
+    },
+    menuWidth() {
+      this.changeFixNav();
+    },
+    navList() {
+      setTimeout(() => {
+        this.getCurrNav();
+      }, 100);
+    },
   },
   created() {
     // 显示打开的页面的列表
     this.$store.commit("setOpenedList");
+    this.init();
+    this.resize();
+    window.addEventListener("resize", () => {
+      this.resize();
+    });
+    if (this.navList && this.navList.length > 0) {
+      this.getCurrNav();
+    }
   },
 };
 </script>

@@ -5,36 +5,38 @@
 <template>
   <div class="search">
     <Card>
-      <Row class="operation">
-        <Button
-          @click="add"
-          type="primary"
-          icon="md-add"
-          v-show="showType == 'tree'"
-          >添加子部门</Button
-        >
-        <Button @click="addRoot" icon="md-add">添加一级部门</Button>
-        <Button @click="delAll" icon="md-trash">批量删除</Button>
-        <Button @click="getParentList" icon="md-refresh">刷新</Button>
-        <Input
-          v-model="searchKey"
-          suffix="ios-search"
-          @on-change="search"
-          placeholder="输入部门名搜索"
-          clearable
-          style="width: 250px"
-          v-show="showType == 'list'"
-        />
-        <i-switch
-          v-model="strict"
-          size="large"
-          v-show="showType == 'tree'"
-          style="margin-left: 5px"
-        >
-          <span slot="open">级联</span>
-          <span slot="close">单选</span>
-        </i-switch>
-        <div style="float: right">
+      <Row class="operation" align="middle" justify="space-between">
+        <div>
+          <Button
+            @click="add"
+            type="primary"
+            icon="md-add"
+            v-show="showType == 'tree'"
+            >添加子部门</Button
+          >
+          <Button @click="addRoot" icon="md-add">添加一级部门</Button>
+          <Button @click="delAll" icon="md-trash">批量删除</Button>
+          <Button @click="getParentList" icon="md-refresh">刷新</Button>
+          <Input
+            v-model="searchKey"
+            suffix="ios-search"
+            @on-change="search"
+            placeholder="输入部门名搜索"
+            clearable
+            style="width: 250px"
+            v-show="showType == 'list'"
+          />
+          <i-switch
+            v-model="strict"
+            size="large"
+            v-show="showType == 'tree'"
+            style="margin-left: 5px"
+          >
+            <span slot="open">级联</span>
+            <span slot="close">单选</span>
+          </i-switch>
+        </div>
+        <div>
           <RadioGroup v-model="showType" type="button">
             <Radio title="树结构" label="tree">
               <Icon type="md-list"></Icon>
@@ -50,7 +52,10 @@
           <Alert show-icon>
             当前选择编辑：
             <span class="select-title">{{ editTitle }}</span>
-            <a class="select-clear" v-show="form.id && editTitle" @click="cancelEdit"
+            <a
+              class="select-clear"
+              v-show="form.id && editTitle"
+              @click="cancelEdit"
               >取消选择</a
             >
           </Alert>
@@ -71,7 +76,8 @@
                 @on-check-change="changeSelect"
                 @on-select-change="selectTree"
                 :check-strictly="!strict"
-              ></Tree>
+              >
+              </Tree>
             </div>
             <Spin size="large" fix v-if="loading"></Spin>
           </div>
@@ -83,7 +89,7 @@
             :label-width="100"
             :rules="formValidate"
           >
-            <FormItem label="上级部门" prop="parentTitle">
+            <FormItem label="上级部门" prop="parentTitle" class="form-noheight">
               <div style="display: flex">
                 <Input
                   v-model="form.parentTitle"
@@ -98,10 +104,7 @@
                   width="250"
                 >
                   <Button icon="md-list">选择部门</Button>
-                  <div
-                    slot="content"
-                    style="position: relative; min-height: 5vh"
-                  >
+                  <div slot="content" class="tree-bar tree-select">
                     <Tree
                       :data="dataEdit"
                       :load-data="loadData"
@@ -116,44 +119,18 @@
               <Input v-model="form.title" />
             </FormItem>
             <FormItem label="部门负责人" prop="mainHeader">
-              <Select
-                :loading="userLoading"
-                not-found-text="该部门暂无用户数据"
+              <user-select
                 v-model="form.mainHeader"
                 multiple
-                filterable
-                placeholder="请选择或输入搜索用户"
-              >
-                <Option
-                  v-for="item in users"
-                  :value="item.id"
-                  :key="item.id"
-                  :label="item.nickname"
-                >
-                  <span style="margin-right: 10px">{{ item.nickname }}</span>
-                  <span style="color: #ccc">{{ item.username }}</span>
-                </Option>
-              </Select>
+                ref="mainHeader"
+              />
             </FormItem>
             <FormItem label="副负责人" prop="viceHeader">
-              <Select
-                :loading="userLoading"
-                not-found-text="该部门暂无用户数据"
+              <user-select
                 v-model="form.viceHeader"
                 multiple
-                filterable
-                placeholder="请选择或输入搜索用户"
-              >
-                <Option
-                  v-for="item in users"
-                  :value="item.id"
-                  :key="item.id"
-                  :label="item.nickname"
-                >
-                  <span style="margin-right: 10px">{{ item.nickname }}</span>
-                  <span style="color: #ccc">{{ item.username }}</span>
-                </Option>
-              </Select>
+                ref="viceHeader"
+              />
             </FormItem>
             <FormItem label="排序值" prop="sortOrder">
               <Tooltip
@@ -273,17 +250,19 @@ import {
   editDepartment,
   deleteDepartment,
   searchDepartment,
-  getUserByDepartmentId,
 } from "@/api/index";
+import userSelect from "@/views/my-components/xboot/user-select";
 export default {
   name: "department-manage",
+  components: {
+    userSelect,
+  },
   data() {
     return {
       showType: "tree",
       loading: true,
       maxHeight: "500px",
       strict: true,
-      userLoading: false,
       loadingEdit: true,
       modalVisible: false,
       selectList: [],
@@ -314,7 +293,6 @@ export default {
       submitLoading: false,
       data: [],
       dataEdit: [],
-      users: [],
       columns: [
         {
           type: "selection",
@@ -474,16 +452,10 @@ export default {
         let str = JSON.stringify(v[0]);
         let data = JSON.parse(str);
         this.editTitle = data.title;
-        // 加载部门用户数据
-        this.userLoading = true;
-        getUserByDepartmentId(data.id).then((res) => {
-          this.userLoading = false;
-          if (res.success) {
-            this.users = res.result;
-            // 回显
-            this.form = data;
-          }
-        });
+        // 回显
+        this.form = data;
+        this.$refs.mainHeader.setData(data.mainHeaders);
+        this.$refs.viceHeader.setData(data.viceHeaders);
       } else {
         this.cancelEdit();
       }
@@ -531,6 +503,8 @@ export default {
             return;
           }
           this.submitLoading = true;
+          delete this.form.mainHeaders;
+          delete this.form.viceHeaders;
           editDepartment(this.form).then((res) => {
             this.submitLoading = false;
             if (res.success) {

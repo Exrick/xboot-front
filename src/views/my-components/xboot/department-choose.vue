@@ -5,10 +5,15 @@
       :data="department"
       :load-data="loadData"
       @on-change="handleChangeDep"
+      @on-visible-change="handleVisibleChange"
       change-on-select
-      filterable
-      clearable
-      placeholder="请选择或输入搜索部门"
+      :size="size"
+      :transfer="transfer"
+      :transfer-class-name="transferClassName"
+      :disabled="disabled"
+      :filterable="filterable"
+      :clearable="clearable"
+      :placeholder="placeholder"
     ></Cascader>
   </div>
 </template>
@@ -18,19 +23,40 @@ import { initDepartment, loadDepartment } from "@/api/index";
 export default {
   name: "departmentChoose",
   props: {
-
+    size: String,
+    transfer: {
+      type: Boolean,
+      default: false,
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
+    filterable: {
+      type: Boolean,
+      default: true,
+    },
+    clearable: {
+      type: Boolean,
+      default: true,
+    },
+    placeholder: {
+      type: String,
+      default: "请选择或输入搜索部门",
+    },
+    transferClassName: String,
   },
   data() {
     return {
       selectDep: [],
-      department: []
+      department: [],
     };
   },
   methods: {
     initDepartmentData() {
-      initDepartment().then(res => {
+      initDepartment().then((res) => {
         if (res.success) {
-          res.result.forEach(function(e) {
+          res.result.forEach(function (e) {
             if (e.isParent) {
               e.value = e.id;
               e.label = e.title;
@@ -51,10 +77,10 @@ export default {
     },
     loadData(item, callback) {
       item.loading = true;
-      loadDepartment(item.value).then(res => {
+      loadDepartment(item.value).then((res) => {
         item.loading = false;
         if (res.success) {
-          res.result.forEach(function(e) {
+          res.result.forEach(function (e) {
             if (e.isParent) {
               e.value = e.id;
               e.label = e.title;
@@ -82,13 +108,17 @@ export default {
       }
       this.$emit("on-change", departmentId);
     },
+    handleVisibleChange(status) {
+      this.$emit("on-visible-change", status);
+    },
     clearSelect() {
       this.selectDep = [];
-    }
+      this.$emit("on-change", "");
+    },
   },
-  created() {
+  mounted() {
     this.initDepartmentData();
-  }
+  },
 };
 </script>
 

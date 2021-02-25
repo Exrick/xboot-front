@@ -4,53 +4,54 @@
 <template>
   <div class="search">
     <Card>
-      <Row class="operation">
-        <Button @click="add" type="primary" icon="md-add">添加</Button>
-        <Button @click="delAll" icon="md-trash">批量删除</Button>
-        <Button @click="getDataList" icon="md-refresh">刷新</Button>
-        <Button type="dashed" @click="openTip = !openTip">{{
-          openTip ? "关闭提示" : "开启提示"
-        }}</Button>
+      <Row class="operation" align="middle" justify="space-between">
+        <div>
+          <Button @click="add" type="primary" icon="md-add">添加</Button>
+          <Button @click="delAll" icon="md-trash">批量删除</Button>
+          <Button @click="getDataList" icon="md-refresh">刷新</Button>
+          <Button type="dashed" @click="openTip = !openTip">{{
+            openTip ? "关闭提示" : "开启提示"
+          }}</Button>
+        </div>
         <!-- 动态列按钮 -->
-        <Poptip placement="bottom-end" width="360" style="float: right">
+        <Poptip placement="bottom-end" width="160">
           <Button shape="circle" icon="md-apps"></Button>
           <div slot="content">
             <CheckboxGroup v-model="columnSettings" @on-change="changeColumns">
-              <div v-for="(column, i) in columns" :key="i">
-                <Col
-                  span="8"
+              <div
+                v-for="(column, i) in columns"
+                :key="i"
+                style="margin: 3px 0"
+              >
+                <Checkbox
+                  :label="column.key"
+                  :disabled="column.disabled"
                   v-if="column.key && column.key.indexOf(whiteColumns) <= -1"
                 >
-                  <Checkbox :label="column.key" :disabled="column.disabled">
-                    <span>{{ column.title }}</span>
-                  </Checkbox>
-                </Col>
+                  <span>{{ column.title }}</span>
+                </Checkbox>
               </div>
             </CheckboxGroup>
           </div>
         </Poptip>
       </Row>
-      <Row v-show="openTip">
-        <Alert show-icon>
-          已选择
-          <span class="select-count">{{ selectList.length }}</span> 项
-          <a class="select-clear" @click="clearSelectAll">清空</a>
-          这里还可以做一些数据统计显示
-          <span style="float: right">点击右上角按钮配置动态列↑</span>
-        </Alert>
-      </Row>
-      <Row>
-        <Table
-          :loading="loading"
-          border
-          :columns="dynamicColums"
-          :data="data"
-          ref="table"
-          sortable="custom"
-          @on-sort-change="changeSort"
-          @on-selection-change="changeSelect"
-        ></Table>
-      </Row>
+      <Alert show-icon v-show="openTip">
+        已选择
+        <span class="select-count">{{ selectList.length }}</span> 项
+        <a class="select-clear" @click="clearSelectAll">清空</a>
+        这里还可以做一些数据统计显示
+        <span style="float: right">点击右上角按钮配置动态列↑</span>
+      </Alert>
+      <Table
+        :loading="loading"
+        border
+        :columns="dynamicColums"
+        :data="data"
+        ref="table"
+        sortable="custom"
+        @on-sort-change="changeSort"
+        @on-selection-change="changeSelect"
+      ></Table>
       <Row type="flex" justify="end" class="page">
         <Page
           :current="searchForm.pageNumber"

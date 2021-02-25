@@ -10,7 +10,7 @@
       <Col class="layout">
         <div>
           <Header />
-          <Row>
+          <div>
             <Tabs v-model="tabName">
               <TabPane
                 :label="$t('usernameLogin')"
@@ -203,7 +203,7 @@
                 <a class="forget-pass">{{ $t("regist") }}</a>
               </router-link>
             </Row>
-          </Row>
+          </div>
         </div>
         <Footer />
       </Col>

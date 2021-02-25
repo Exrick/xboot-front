@@ -5,54 +5,56 @@
 <template>
   <div class="search">
     <Card>
-      <Row class="operation">
-        <Button
-          @click="add"
-          type="primary"
-          icon="md-add"
-          v-show="showType == 'tree'"
-          >添加子节点</Button
-        >
-        <Button @click="addRoot" icon="md-add">添加顶部菜单</Button>
-        <Button @click="delAll" icon="md-trash">批量删除</Button>
-        <Button
-          @click="getParentList"
-          icon="md-refresh"
-          v-show="showType == 'list'"
-          >刷新</Button
-        >
-        <Dropdown @on-click="handleDropdown" v-show="showType == 'tree'">
-          <Button>
-            更多操作
-            <Icon type="md-arrow-dropdown"></Icon>
-          </Button>
-          <DropdownMenu slot="list">
-            <DropdownItem name="refresh">刷新</DropdownItem>
-            <DropdownItem name="expandOne">收合所有</DropdownItem>
-            <DropdownItem name="expandTwo">仅展开一级</DropdownItem>
-            <DropdownItem name="expandThree">仅展开两级</DropdownItem>
-            <DropdownItem name="expandAll">展开所有</DropdownItem>
-          </DropdownMenu>
-        </Dropdown>
-        <Input
-          v-model="searchKey"
-          suffix="ios-search"
-          @on-change="search"
-          placeholder="输入菜单名搜索"
-          clearable
-          style="width: 250px"
-          v-show="showType == 'list'"
-        />
-        <i-switch
-          v-model="strict"
-          size="large"
-          style="margin-left: 5px"
-          v-show="showType == 'tree'"
-        >
-          <span slot="open">级联</span>
-          <span slot="close">单选</span>
-        </i-switch>
-        <div style="float: right">
+      <Row class="operation" align="middle" justify="space-between">
+        <div>
+          <Button
+            @click="add"
+            type="primary"
+            icon="md-add"
+            v-show="showType == 'tree'"
+            >添加子节点</Button
+          >
+          <Button @click="addRoot" icon="md-add">添加顶部菜单</Button>
+          <Button @click="delAll" icon="md-trash">批量删除</Button>
+          <Button
+            @click="getParentList"
+            icon="md-refresh"
+            v-show="showType == 'list'"
+            >刷新</Button
+          >
+          <Dropdown @on-click="handleDropdown" v-show="showType == 'tree'">
+            <Button>
+              更多操作
+              <Icon type="md-arrow-dropdown"></Icon>
+            </Button>
+            <DropdownMenu slot="list">
+              <DropdownItem name="refresh">刷新</DropdownItem>
+              <DropdownItem name="expandOne">收合所有</DropdownItem>
+              <DropdownItem name="expandTwo">仅展开一级</DropdownItem>
+              <DropdownItem name="expandThree">仅展开两级</DropdownItem>
+              <DropdownItem name="expandAll">展开所有</DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
+          <Input
+            v-model="searchKey"
+            suffix="ios-search"
+            @on-change="search"
+            placeholder="输入菜单名搜索"
+            clearable
+            style="width: 250px"
+            v-show="showType == 'list'"
+          />
+          <i-switch
+            v-model="strict"
+            size="large"
+            style="margin-left: 5px"
+            v-show="showType == 'tree'"
+          >
+            <span slot="open">级联</span>
+            <span slot="close">单选</span>
+          </i-switch>
+        </div>
+        <div>
           <RadioGroup v-model="showType" type="button">
             <Radio title="树结构" label="tree">
               <Icon type="md-list"></Icon>
@@ -147,7 +149,7 @@
                 <span>操作按钮</span>
               </div>
             </FormItem>
-            <FormItem label="上级菜单" prop="parentTitle">
+            <FormItem label="上级菜单" prop="parentTitle" class="form-noheight">
               <div style="display: flex">
                 <Input
                   v-model="form.parentTitle"
@@ -162,10 +164,7 @@
                   width="250"
                 >
                   <Button icon="md-list">选择菜单</Button>
-                  <div
-                    slot="content"
-                    style="position: relative; min-height: 5vh"
-                  >
+                  <div slot="content" class="tree-bar tree-select">
                     <Tree
                       :data="dataEdit"
                       @on-select-change="selectTreeEdit"
@@ -215,19 +214,13 @@
               prop="buttonType"
               v-if="form.type == 1"
             >
-              <Select
+              <dict
+                dict="permission_type"
                 v-model="form.buttonType"
                 placeholder="请选择或输入搜索"
                 filterable
                 clearable
-              >
-                <Option
-                  v-for="(item, i) in dictPermissions"
-                  :key="i"
-                  :value="item.value"
-                  >{{ item.title }}</Option
-                >
-              </Select>
+              />
             </FormItem>
             <FormItem
               label="英文名"
@@ -254,7 +247,11 @@
               prop="icon"
               v-if="form.type == -1 || form.type == 0"
             >
-              <icon-choose v-model="form.icon"></icon-choose>
+              <icon-choose
+                showCustom
+                showInput
+                v-model="form.icon"
+              ></icon-choose>
             </FormItem>
             <FormItem label="系统站内菜单" prop="isMenu" v-if="form.type == -1">
               <i-switch size="large" v-model="form.isMenu">
@@ -455,19 +452,13 @@
           prop="buttonType"
           v-if="formAdd.type == 1"
         >
-          <Select
+          <dict
+            dict="permission_type"
             v-model="formAdd.buttonType"
             placeholder="请选择或输入搜索"
             filterable
             clearable
-          >
-            <Option
-              v-for="(item, i) in dictPermissions"
-              :key="i"
-              :value="item.value"
-              >{{ item.title }}</Option
-            >
-          </Select>
+          />
         </FormItem>
         <FormItem
           label="英文名"
@@ -494,7 +485,11 @@
           prop="icon"
           v-if="formAdd.type == -1 || formAdd.type == 0"
         >
-          <icon-choose v-model="formAdd.icon"></icon-choose>
+          <icon-choose
+            showCustom
+            showInput
+            v-model="formAdd.icon"
+          ></icon-choose>
         </FormItem>
         <FormItem label="系统站内菜单" prop="isMenu" v-if="formAdd.type == -1">
           <i-switch size="large" v-model="formAdd.isMenu">
@@ -614,13 +609,15 @@ import {
   editPermission,
   deletePermission,
   searchPermission,
-  getDictDataByType,
 } from "@/api/index";
+import dict from "@/views/my-components/xboot/dict";
 import IconChoose from "@/views/my-components/xboot/icon-choose";
 import util from "@/libs/util.js";
+import Dict from "../../my-components/xboot/dict.vue";
 export default {
   name: "menu-manage",
   components: {
+    dict,
     IconChoose,
   },
   data() {
@@ -696,7 +693,7 @@ export default {
           align: "center",
           render: (h, params) => {
             return h("div", [
-              h("Icon", {
+              h("XIcon", {
                 props: {
                   type: params.row.icon,
                 },
@@ -824,20 +821,16 @@ export default {
   methods: {
     init() {
       this.getAllList();
-      this.getDictPermissions();
-      this.getParentList();
+      this.getParentList(null, true);
     },
-    getDictPermissions() {
-      getDictDataByType("permission_type").then((res) => {
-        if (res.success) {
-          this.dictPermissions = res.result;
-        }
-      });
-    },
-    getParentList() {
-      this.loading = true;
+    getParentList(f, notShowLoading) {
+      if (!notShowLoading) {
+        this.loading = true;
+      }
       loadPermission("0").then((res) => {
-        this.loading = false;
+        if (!notShowLoading) {
+          this.loading = false;
+        }
         if (res.success) {
           res.result.forEach(function (e) {
             if (e.isParent) {

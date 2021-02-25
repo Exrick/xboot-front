@@ -1,0 +1,265 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    border-radius: 4px;
+    margin-bottom: 12px;
+    width: 216px;
+    height: 252px;
+    transition: .3s all linear;
+
+    &:hover {
+        .card-top {
+            box-shadow: 0 8px 16px 0 rgba(7, 17, 27, .1);
+        }
+
+        .card-content {
+            .name {
+                color: #f01414 !important;
+            }
+        }
+
+        // .product-label {
+        //     bottom: 16px !important;
+        // }
+        .bounce {
+            box-shadow: none;
+
+            .img-up {
+                top: -10px;
+                left: 0;
+                width: 216px;
+            }
+
+            .img-mid {
+                top: 0;
+                left: 8px;
+                width: 200px;
+            }
+
+            .img-down {
+                top: 10px;
+                left: 16px;
+                width: 184px;
+            }
+        }
+    }
+
+    .card-top {
+        width: 216px;
+        height: 120px;
+        border-radius: 8px;
+        transition: all .3s;
+        position: relative;
+
+        .bage {
+            top: -6px;
+            right: 13px;
+        }
+
+        .new {
+            background: #FF6C00;
+            top: -6px;
+            right: 13px;
+        }
+
+        .hot {
+            background: #FF005D;
+            top: -6px;
+            right: 13px;
+        }
+
+        .img-up {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #f3f5f7;
+            border-radius: 8px;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            transition: all .3s;
+        }
+
+        .img-mid {
+            position: absolute;
+            border-radius: 8px;
+            top: 4px;
+            left: 4px;
+            width: 208px;
+            height: 120px;
+            opacity: .4;
+            transition: all .3s;
+        }
+
+        .img-down {
+            position: absolute;
+            border-radius: 8px;
+            top: 8px;
+            left: 8px;
+            width: 200px;
+            height: 120px;
+            opacity: .2;
+            transition: all .3s;
+        }
+
+        .product-label {
+            position: absolute;
+            bottom: 6px;
+            left: 8px;
+            font-size: 12px;
+            color: #FFF;
+            line-height: 16px;
+            z-index: 1;
+            transition: all .3s;
+
+            span {
+                display: inline-block;
+                background: rgba(7, 17, 27, .4);
+                border-radius: 12px;
+                padding: 4px 8px;
+                margin-bottom: 2px;
+                margin-right: 0;
+                font-weight: 200;
+            }
+        }
+    }
+
+    .card-content {
+        padding: 12px 8px;
+
+        .name {
+            font-size: 16px;
+            color: #07111B;
+            line-height: 24px;
+            word-wrap: break-word;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-height: 46px;
+            transition: all .3s;
+            font-weight: 400;
+        }
+
+        .comment {
+            font-size: 12px;
+            color: #93999F;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .info {
+            font-size: 12px;
+            color: #93999F;
+            line-height: 24px;
+            margin-bottom: 5px;
+            font-weight: 400;
+            width: 200px;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+            transition: .3s all linear;
+        }
+
+        .price {
+            display: flex;
+            justify-content: space-between;
+            line-height: 20px;
+            align-items: center;
+
+            .p {
+                font-size: 14px;
+                color: #f01414;
+            }
+
+            .sales {
+                color: #93999F;
+                padding-right: 5px;
+                font-size: 12px;
+            }
+
+            .add-cart {
+                i {
+                    font-size: 12px;
+                    margin-right: 8px;
+                    margin-bottom: 3px;
+                }
+
+                a {
+                    font-size: 12px;
+                    color: #93999F;
+
+                    &:hover {
+                        color: #f01414;
+                    }
+                }
+            }
+        }
+    }
+
+    .ivu-badge {
+        position: unset !important;
+    }
+}
+
+.large {
+    width: 270px !important;
+    height: 320px !important;
+
+    &:hover {
+        .product-label {
+            bottom: 18px !important;
+        }
+
+        .bounce {
+            .img-up {
+                top: -12px !important;
+                left: 0 !important;
+                width: 270px !important;
+            }
+
+            .img-mid {
+                top: -2px !important;
+                left: 8px !important;
+                width: 254px !important;
+            }
+
+            .img-down {
+                top: 9px !important;
+                left: 16px !important;
+                width: 238px !important;
+            }
+        }
+    }
+
+    .card-top {
+        width: 270px !important;
+        height: 148px !important;
+
+        .img-mid {
+            top: 5px !important;
+            left: 4px !important;
+            width: 262px !important;
+            height: 148px !important;
+        }
+
+        .img-down {
+            top: 9px !important;
+            left: 8px !important;
+            width: 254px !important;
+            height: 148px !important;
+        }
+    }
+
+    .name {
+        font-weight: 700 !important;
+        margin-top: 4px;
+        max-height: 48px !important;
+    }
+
+    .info {
+        width: 260px !important;
+        white-space: unset !important;
+        max-height: 50px;
+    }
+}

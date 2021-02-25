@@ -7,7 +7,7 @@
       @keydown.enter.native="submit"
       style="height: 100%"
     >
-      <Col class="layout" :style="{ width: userInfo ? '450px' : '390px' }">
+      <Col class="content" :style="{ width: userInfo ? '450px' : '390px' }">
         <div>
           <div class="logos-wrap">
             <div class="logos">
@@ -33,7 +33,7 @@
             </div>
             <div class="auth-title">{{ $t("authorize") }} {{ site.name }}</div>
           </div>
-          <Row v-if="!error && !authLoading && !userInfo">
+          <div v-if="!error && !authLoading && !userInfo">
             <Tabs value="1">
               <TabPane :label="$t('sso')" name="1" icon="md-people">
                 <Form ref="loginForm" :model="form" :rules="rules" class="form">
@@ -109,7 +109,7 @@
                 {{ $t("registerNow") }}
               </router-link>
             </Row>
-          </Row>
+          </div>
           <div v-if="!error && !authLoading && userInfo">
             <Card dis-hover :padding="0" v-if="!error">
               <div class="auth-card">
@@ -205,7 +205,7 @@ export default {
   },
   data() {
     return {
-      authLoading: true,
+      authLoading: false,
       title: "",
       msg: "",
       error: false,
@@ -369,7 +369,7 @@ export default {
                     expires: 7,
                   });
                   this.setStore("userInfo", res.result);
-                  this.$store.commit("setAvatarPath", res.result.avatar);
+                  this.$store.commit("setUserInfo", res.result);
                   // 跳转
                   let url =
                     redictInfo.redirect_uri +

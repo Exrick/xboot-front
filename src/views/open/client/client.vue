@@ -52,25 +52,21 @@
           openTip ? "关闭提示" : "开启提示"
         }}</Button>
       </Row>
-      <Row v-show="openTip">
-        <Alert show-icon>
-          已选择
-          <span class="select-count">{{ selectList.length }}</span> 项
-          <a class="select-clear" @click="clearSelectAll">清空</a>
-        </Alert>
-      </Row>
-      <Row>
-        <Table
-          :loading="loading"
-          border
-          :columns="columns"
-          :data="data"
-          ref="table"
-          sortable="custom"
-          @on-sort-change="changeSort"
-          @on-selection-change="changeSelect"
-        ></Table>
-      </Row>
+      <Alert show-icon v-show="openTip">
+        已选择
+        <span class="select-count">{{ selectList.length }}</span> 项
+        <a class="select-clear" @click="clearSelectAll">清空</a>
+      </Alert>
+      <Table
+        :loading="loading"
+        border
+        :columns="columns"
+        :data="data"
+        ref="table"
+        sortable="custom"
+        @on-sort-change="changeSort"
+        @on-selection-change="changeSelect"
+      ></Table>
       <Row type="flex" justify="end" class="page">
         <Page
           :current="searchForm.pageNumber"
@@ -100,7 +96,7 @@
         <FormItem label="网站名称" prop="name">
           <Input v-model="form.name" clearable style="width: 100%" />
         </FormItem>
-        <FormItem label="网站Logo" prop="logo">
+        <FormItem label="网站Logo" prop="logo" class="form-noheight">
           <upload-pic-input v-model="form.logo"></upload-pic-input>
         </FormItem>
         <FormItem label="clientSecret" prop="clientSecret">
@@ -189,7 +185,7 @@ export default {
         clientSecret: "",
         homeUri: "",
         redirectUri: "",
-        autoApprove: false
+        autoApprove: false,
       },
       // 表单验证规则
       formValidate: {

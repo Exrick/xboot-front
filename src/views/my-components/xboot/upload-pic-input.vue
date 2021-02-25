@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div style="display: flex">
+    <div style="display: flex;">
       <div style="width: 100%; margin-right: 10px">
         <Input
           v-model="currentValue"
@@ -10,7 +10,6 @@
           :disabled="disabled"
           :readonly="readonly"
           :maxlength="maxlength"
-          icon="md-eye"
         >
           <Poptip
             transfer
@@ -21,7 +20,7 @@
             style="width: 17px; cursor: pointer"
             slot="append"
           >
-            <Button type="primary" icon="md-eye"></Button>
+            <Button :icon="previewIcon"></Button>
             <div slot="content">
               <img
                 v-show="currentValue"
@@ -64,7 +63,10 @@
           :size="size"
           :disabled="disabled"
           :icon="icon"
-          >上传图片</Button
+          :type="type"
+          :shape="shape"
+          :ghost="ghost"
+          >{{ text }}</Button
         >
       </Upload>
     </div>
@@ -93,9 +95,23 @@ export default {
       default: false,
     },
     maxlength: Number,
+    previewIcon: {
+      type: String,
+      default: "md-eye",
+    },
     icon: {
       type: String,
       default: "ios-cloud-upload-outline",
+    },
+    text: {
+      type: String,
+      default: "上传图片",
+    },
+    type: String,
+    shape: String,
+    ghost: {
+      type: Boolean,
+      default: false,
     },
     maxSize: {
       type: Number,
@@ -107,7 +123,7 @@ export default {
     },
     showUpload: {
       type: Boolean,
-      default: true
+      default: true,
     },
   },
   computed: {

@@ -4,36 +4,38 @@
 <template>
   <div class="search">
     <Card>
-      <Row class="operation">
-        <Button
-          @click="add"
-          type="primary"
-          icon="md-add"
-          v-show="showType == 'tree'"
-          >添加子节点</Button
-        >
-        <Button @click="addRoot" icon="md-add">添加一级节点</Button>
-        <Button @click="delAll" icon="md-trash">批量删除</Button>
-        <Button @click="getParentList" icon="md-refresh">刷新</Button>
-        <Input
-          v-model="searchKey"
-          suffix="ios-search"
-          @on-change="search"
-          placeholder="输入名称搜索"
-          clearable
-          style="width: 250px"
-          v-show="showType == 'list'"
-        />
-        <i-switch
-          v-model="strict"
-          size="large"
-          style="margin-left: 5px"
-          v-show="showType == 'tree'"
-        >
-          <span slot="open">级联</span>
-          <span slot="close">单选</span>
-        </i-switch>
-        <div style="float: right">
+      <Row class="operation" align="middle" justify="space-between">
+        <div>
+          <Button
+            @click="add"
+            type="primary"
+            icon="md-add"
+            v-show="showType == 'tree'"
+            >添加子节点</Button
+          >
+          <Button @click="addRoot" icon="md-add">添加一级节点</Button>
+          <Button @click="delAll" icon="md-trash">批量删除</Button>
+          <Button @click="getParentList" icon="md-refresh">刷新</Button>
+          <Input
+            v-model="searchKey"
+            suffix="ios-search"
+            @on-change="search"
+            placeholder="输入名称搜索"
+            clearable
+            style="width: 250px"
+            v-show="showType == 'list'"
+          />
+          <i-switch
+            v-model="strict"
+            size="large"
+            style="margin-left: 5px"
+            v-show="showType == 'tree'"
+          >
+            <span slot="open">级联</span>
+            <span slot="close">单选</span>
+          </i-switch>
+        </div>
+        <div>
           <RadioGroup v-model="showType" type="button">
             <Radio title="树结构" label="tree">
               <Icon type="md-list"></Icon>
@@ -49,7 +51,10 @@
           <Alert show-icon>
             当前选择编辑：
             <span class="select-title">{{ editTitle }}</span>
-            <a class="select-clear" v-show="form.id && editTitle" @click="cancelEdit"
+            <a
+              class="select-clear"
+              v-show="form.id && editTitle"
+              @click="cancelEdit"
               >取消选择</a
             >
           </Alert>
@@ -82,7 +87,7 @@
             :label-width="100"
             :rules="formValidate"
           >
-            <FormItem label="上级节点" prop="parentTitle">
+            <FormItem label="上级节点" prop="parentTitle" class="form-noheight">
               <div style="display: flex">
                 <Input
                   v-model="form.parentTitle"
@@ -97,10 +102,7 @@
                   width="250"
                 >
                   <Button icon="md-list">选择分类</Button>
-                  <div
-                    slot="content"
-                    style="position: relative; min-height: 5vh"
-                  >
+                  <div slot="content" class="tree-bar tree-select">
                     <Tree
                       :data="dataEdit"
                       :load-data="loadData"

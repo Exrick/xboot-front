@@ -1,0 +1,89 @@
+.banner-container {
+    display: flex;
+    justify-content: center;
+    .banner-wrap {
+        width: 1226px;
+        position: relative;
+        .category {
+            display: block;
+            position: absolute;
+            z-index: 10;
+            padding: 20px 0;
+            width: 234px;
+            height: 460px;
+            font-size: 14px;
+            overflow: hidden;
+            background: rgba(0, 0, 0, 0.6);
+            .category-list {
+                height: 420px;
+                border: 0;
+                color: #fff;
+                .item {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    height: 42px;
+                    padding-left: 30px;
+                    padding-right: 20px;
+                    .title {
+                        color: #fff;
+                    }
+                }
+                :hover {
+                    background: #ff6700 !important;
+                }
+            }
+        }
+        .category-children {
+            width: 992px;
+            left: 234px;
+            top: 0;
+            position: absolute;
+            z-index: 20;
+            height: 460px;
+            border: 1px solid #e0e0e0;
+            border-left: 0;
+            background: #fff;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.18);
+            overflow: hidden;
+            .children-wrap {
+                width: 992px;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: flex-start;
+                .item {
+                    display: flex;
+                    align-items: center;
+                    padding: 18px 20px;
+                    height: 76px;
+                    width: 248px;
+                    color: #333;
+                    img {
+                        margin-right: 12px;
+                    }
+                }
+                :hover {
+                    .title {
+                        color: #ff6700;
+                        transition: color .2s;
+                    }
+                }
+            }
+        }
+        .carousel {
+            img {
+                height: 460px;
+                width: 100%;
+            }
+            .ivu-carousel-arrow.left {
+                left: 248px;
+            }
+            .ivu-carousel-dots-inside {
+                display: block;
+                position: absolute;
+                bottom: 3px;
+                left: 117px;
+            }
+        }
+    }
+}
