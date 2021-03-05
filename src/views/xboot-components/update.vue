@@ -6,6 +6,14 @@
     >
     <Timeline class="timeline">
       <TimelineItem>
+        <div class="version">20210305【3.3.3】</div>
+        <ul type="circle">
+          <li>用户选择相关组件新增mask-style、class-name等属性以便自定义Drawer弹窗层级</li>
+          <li>修复文件上传单个为空判断BUG</li>
+          <li>wangEditor更新至v4.6.8</li>
+        </ul>
+      </TimelineItem>
+      <TimelineItem>
         <div class="version">20210225【3.3.2】</div>
         <ul type="circle">
           <li>新增基于Mapbox的地图选点组件</li>
