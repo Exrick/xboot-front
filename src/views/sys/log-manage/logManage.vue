@@ -1,5 +1,5 @@
 <style lang="less">
-@import "../../../styles/table-common.less";
+@import "@/styles/table-common.less";
 @import "./logManage.less";
 </style>
 <template>

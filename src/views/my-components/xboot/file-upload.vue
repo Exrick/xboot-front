@@ -235,7 +235,7 @@ export default {
           this.$Message.warning("多个上传仅支持传入数组数据类型");
           return;
         }
-        if (!v) {
+        if (!v.name && !v.url) {
           return;
         }
         this.currentValue = v;

@@ -1,6 +1,6 @@
 <style lang="less">
-@import "../../../styles/table-common.less";
-@import "../../../styles/drawer-common.less";
+@import "@/styles/table-common.less";
+@import "@/styles/drawer-common.less";
 @import "./roleManage.less";
 </style>
 <template>

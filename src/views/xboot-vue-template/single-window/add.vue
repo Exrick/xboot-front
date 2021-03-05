@@ -1,5 +1,5 @@
 <style lang="less">
-@import "../../../styles/single-common.less";
+@import "@/styles/single-common.less";
 </style>
 <template>
   <div>

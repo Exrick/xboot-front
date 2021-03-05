@@ -1,5 +1,5 @@
 <style lang="less">
-@import "../../../styles/tree-common.less";
+@import "@/styles/tree-common.less";
 </style>
 <template>
   <div class="search">

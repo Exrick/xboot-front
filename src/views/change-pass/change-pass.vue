@@ -1,5 +1,5 @@
 <style lang="less">
-@import "../../styles/drawer-common.less";
+@import "@/styles/drawer-common.less";
 </style>
 
 <template>

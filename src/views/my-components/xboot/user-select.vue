@@ -56,6 +56,9 @@
       v-model="userModalVisible"
       width="815"
       draggable
+      :transfer="drawerTransfer"
+      :mask-style="maskStyle"
+      :class-name="className"
       class="user-select-drawer"
     >
       <Form ref="searchForm" :model="searchForm" inline :label-width="70">
@@ -151,7 +154,7 @@
           show-total
           show-elevator
           show-sizer
-          transfer
+          :transfer="true"
         ></Page>
       </Row>
     </Drawer>
@@ -188,6 +191,14 @@ export default {
       type: Boolean,
       default: false,
     },
+    transfer: {
+      type: Boolean,
+      default: true,
+    },
+    drawerTransfer: {
+      type: Boolean,
+      default: true,
+    },
     placeholder: {
       type: String,
       default: "请输入用户名搜索选择用户",
@@ -201,10 +212,6 @@ export default {
       default: false,
     },
     disabled: {
-      type: Boolean,
-      default: false,
-    },
-    transfer: {
       type: Boolean,
       default: false,
     },
@@ -224,6 +231,8 @@ export default {
       type: Boolean,
       default: true,
     },
+    maskStyle: Object,
+    className: Object
   },
   data() {
     return {
@@ -411,8 +420,8 @@ export default {
           this.value = [];
           this.$emit("input", []);
         } else {
-          this.value = {};
-          this.$emit("input", {});
+          this.value = "";
+          this.$emit("input", "");
         }
       }
     },

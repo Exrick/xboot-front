@@ -55,6 +55,24 @@ export default {
       methods: methods,
       data1: [
         {
+          name: "transfer",
+          desc: "是否将抽屉放置于 body 内",
+          type: "Boolean",
+          value: "true",
+        },
+        {
+          name: "mask-style",
+          desc: "遮罩层样式，可改变遮罩层级，如 :mask-style=\"{ zIndex: 1003}\"",
+          type: "Object",
+          value: "-",
+        },
+        {
+          name: "class-name",
+          desc: "设置抽屉容器 .ivu-drawer-wrap 的类名，可自定义类改变抽屉层级，如 :mask-name=\"ivu-drawer-wrap-1\"",
+          type: "String",
+          value: "-",
+        },
+        {
           name: "text",
           desc: "选择用户按钮文字",
           type: "String",

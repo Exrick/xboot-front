@@ -118,6 +118,14 @@ body {
   z-index: 1002;
 }
 
+.ivu-drawer-wrap-1 {
+  z-index: 1003;
+}
+
+.ivu-drawer-wrap-2 {
+  z-index: 1004;
+}
+
 // 修改Message层级
 .ivu-message {
   z-index: 2000 !important;

@@ -40,6 +40,9 @@
       v-model="userModalVisible"
       width="815"
       draggable
+      :transfer="transfer"
+      :mask-style="maskStyle"
+      :class-name="className"
       class="user-choose-drawer"
     >
       <Form ref="searchForm" :model="searchForm" inline :label-width="70">
@@ -172,6 +175,12 @@ export default {
     size: String,
     type: String,
     shape: String,
+    transfer: {
+      type: Boolean,
+      default: true,
+    },
+    maskStyle: Object,
+    className: Object
   },
   data() {
     return {

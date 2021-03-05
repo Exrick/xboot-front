@@ -1,5 +1,5 @@
 <style lang="less">
-@import "../../../styles/tree&table-common.less";
+@import "@/styles/tree&table-common.less";
 @import "./dictManage.less";
 </style>
 <template>
