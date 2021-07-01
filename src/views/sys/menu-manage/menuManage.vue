@@ -253,6 +253,17 @@
                 v-model="form.icon"
               ></icon-choose>
             </FormItem>
+            <FormItem label="显示红点" prop="component" v-if="form.type == -1">
+              <i-switch
+                size="large"
+                v-model="form.component"
+                :true-value="'hot'"
+                :false-value="'normal'"
+              >
+                <span slot="open">开</span>
+                <span slot="close">关</span>
+              </i-switch>
+            </FormItem>
             <FormItem label="系统站内菜单" prop="isMenu" v-if="form.type == -1">
               <i-switch size="large" v-model="form.isMenu">
                 <span slot="open">是</span>
@@ -490,6 +501,17 @@
             showInput
             v-model="formAdd.icon"
           ></icon-choose>
+        </FormItem>
+        <FormItem label="显示红点" prop="component" v-if="formAdd.type == -1">
+          <i-switch
+            size="large"
+            v-model="formAdd.component"
+            :true-value="'hot'"
+            :false-value="'normal'"
+          >
+            <span slot="open">开</span>
+            <span slot="close">关</span>
+          </i-switch>
         </FormItem>
         <FormItem label="系统站内菜单" prop="isMenu" v-if="formAdd.type == -1">
           <i-switch size="large" v-model="formAdd.isMenu">
@@ -1173,6 +1195,7 @@ export default {
         isMenu: true,
         sortOrder: this.data.length + 1,
         status: 0,
+        component: "normal"
       };
       this.menuModalVisible = true;
     },

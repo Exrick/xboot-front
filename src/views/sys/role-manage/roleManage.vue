@@ -405,6 +405,9 @@ export default {
           },
           on: {
             click: () => {
+              if (data.status == -1) {
+                return;
+              }
               data.checked = !data.checked;
             },
           },

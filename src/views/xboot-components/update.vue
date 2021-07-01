@@ -1,10 +1,18 @@
 <template>
   <div class="update-log">
-    <div class="title">更新日志</div>
+    <div class="title">组件更新日志</div>
     <Alert type="warning" show-icon
       >说明：大部分组件为包含真实数据接口的封装，方便大家直接使用</Alert
     >
     <Timeline class="timeline">
+      <TimelineItem>
+        <div class="version">20210701【3.3.4】</div>
+        <ul type="circle">
+          <li>新增中后台适用Widget物料组件</li>
+          <li>优化地图选点组件，支持仅预览模式</li>
+          <li>wangEditor更新至v4.7.4，默认表情包更新</li>
+        </ul>
+      </TimelineItem>
       <TimelineItem>
         <div class="version">20210305【3.3.3】</div>
         <ul type="circle">

@@ -57,6 +57,7 @@ export default {
     topFix: "顶部置顶",
     navType: "导航菜单展示",
     horizontal: "横向多菜单",
+    sliceNum: "默认显示个数",
     singleDrop: "单个下拉菜单",
     iconBreadcrumb: "图标+面包屑",
     showIcon: "是否显示图标",

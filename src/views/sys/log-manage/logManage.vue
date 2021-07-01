@@ -65,7 +65,7 @@
           openTip ? "关闭提示" : "开启提示"
         }}</Button>
       </Row>
-      <Alert v-show="openTip">
+      <Alert show-icon v-show="openTip">
         已选择
         <span class="select-count">{{ selectList.length }}</span> 项
         <a class="select-clear" @click="clearSelectAll">清空</a>

@@ -211,6 +211,17 @@
               </Select>
             </div>
             <div class="theme-list-item" v-if="navType == 1">
+              <div class="item-title">{{ $t("sliceNum") }}</div>
+              <InputNumber
+                :min="1"
+                :max="10"
+                :value="sliceNum"
+                style="width: 100px"
+                size="small"
+                @on-change="changeSliceNum"
+              />
+            </div>
+            <div class="theme-list-item" v-if="navType == 1">
               <div class="item-title">{{ $t("showIcon") }}</div>
               <i-switch
                 :value="showNavMenuIcon"
@@ -337,6 +348,9 @@ export default {
     navType() {
       return this.$store.state.theme.theme.navType;
     },
+    sliceNum() {
+      return this.$store.state.theme.theme.sliceNum;
+    },
     showTags() {
       return this.$store.state.theme.theme.showTags;
     },
@@ -399,6 +413,9 @@ export default {
     },
     changeNavType(v) {
       this.$store.commit("setNavType", v);
+    },
+    changeSliceNum(v) {
+      this.$store.commit("setSliceNum", v);
     },
     changeShowNavMenuIcon(v) {
       this.$store.commit("setShowNavMenuIcon", v);

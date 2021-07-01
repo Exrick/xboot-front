@@ -47,8 +47,6 @@
             :columns="columns"
             :data="data"
             ref="table"
-            sortable="custom"
-            @on-sort-change="changeSort"
             @on-selection-change="changeSelect"
           ></Table>
           <Row type="flex" justify="end" class="page">
@@ -134,8 +132,6 @@ export default {
         // 搜索框初始化对象
         pageNumber: 1, // 当前页数
         pageSize: 10, // 页面大小
-        sort: "createTime", // 默认排序字段
-        order: "desc", // 默认排序方式
       },
       form: {
         // 添加或编辑表单对象初始化数据
@@ -181,11 +177,13 @@ export default {
           key: "value",
           minWidth: 400,
           ellipsis: true,
+          sortable: true,
         },
         {
           title: "过期时间(秒)",
           key: "expireTime",
           width: 150,
+          sortable: true,
         },
         {
           title: "操作",
@@ -240,8 +238,7 @@ export default {
         if (size > 100000) {
           this.$Notice.info({
             title: "提示",
-            desc:
-              "检测到存储的数据已超过10万条，为避免加载过多数据当前仅显示前10万条数据",
+            desc: "检测到存储的数据已超过10万条，为避免加载过多数据当前仅显示前10万条数据",
           });
         }
       });
@@ -271,14 +268,6 @@ export default {
       this.searchForm.pageNumber = 1;
       this.searchForm.pageSize = 10;
       // 重新加载数据
-      this.getDataList();
-    },
-    changeSort(e) {
-      this.searchForm.sort = e.key;
-      this.searchForm.order = e.order;
-      if (e.order == "normal") {
-        this.searchForm.order = "";
-      }
       this.getDataList();
     },
     clearSelectAll() {

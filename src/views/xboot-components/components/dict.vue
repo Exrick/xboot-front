@@ -67,7 +67,7 @@ export default {
           name: "clearable",
           desc: "是否可以清空选项，只在单选时有效",
           type: "Boolean",
-          value: "false",
+          value: "true",
         },
         {
           name: "filterable",

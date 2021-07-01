@@ -316,7 +316,8 @@ util.initMenuData = function (vm, data) {
             icon: e.icon,
             isMenu: e.isMenu,
             url: e.url,
-            description: e.description
+            description: e.description,
+            component: e.component
         }
         navList.push(nav);
     })

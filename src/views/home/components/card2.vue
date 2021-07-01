@@ -10,7 +10,7 @@
           <count-up
             :prefix="prefix"
             :suffix="suffix"
-            :id-name="idName"
+            :id="id"
             :end-val="endVal"
             :color="dataColor"
             :countSize="countSize"
@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import countUp from "./countUp.vue";
+import countUp from "@/views/my-components/widget/countUp.vue";
 
 export default {
   name: "card2",
@@ -46,7 +46,7 @@ export default {
     countUp,
   },
   props: {
-    idName: String,
+    id: String,
     backgroundColor: String,
     backgroundImage: String,
     title: String,
@@ -92,7 +92,7 @@ export default {
 <style lang="less" scoped>
 .card-content {
   height: 150px;
-  padding: 24px 28px;
+  padding: 26px 30px;
 }
 .card2 {
   background-position: right top;

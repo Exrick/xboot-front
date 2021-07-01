@@ -5,7 +5,7 @@
 <template>
   <div class="access">
     <Row :gutter="10">
-      <Col :sm="24" :lg="24" :xl="8" style="margin: 0 0 10px 0">
+      <Col :xs="24" :sm="24" :lg="24" :xl="8" style="margin: 0 0 10px 0">
         <Card>
           <p slot="title">
             <Icon type="md-contact" style="margin-right: 5px"></Icon>当前用户

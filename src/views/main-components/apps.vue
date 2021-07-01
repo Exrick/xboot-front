@@ -10,7 +10,9 @@
       :name="item.name"
       @click="selectNav(item.name)"
     >
-      <XIcon :type="item.icon" size="24"></XIcon>
+      <Badge :dot="item.component == 'hot'">
+        <XIcon :type="item.icon" size="24"></XIcon>
+      </Badge>
       <div class="nav-title-wrap">
         <div class="nav-title">{{ item.title }}</div>
       </div>

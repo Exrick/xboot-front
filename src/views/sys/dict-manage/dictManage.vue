@@ -6,7 +6,7 @@
   <div class="search">
     <Card>
       <Row type="flex" justify="space-between">
-        <Col v-if="expand" span="5">
+        <Col v-show="expand" span="5">
           <Row class="operation">
             <Button @click="addDcit" type="primary" icon="md-add"
               >添加字典</Button

@@ -53,12 +53,18 @@
       <div :id="id" :style="{ width: '100%', height: modalHeight }"></div>
       <div slot="footer">
         <Row align="middle" justify="space-between">
-          <Alert show-icon style="margin-bottom: 0"
-            >当前选点坐标：{{ currentValue }}</Alert
+          <Alert show-icon style="margin-bottom: 0" v-show="currentValue"
+            >当前坐标：{{ currentValue }}</Alert
           >
+          <div v-show="!currentValue"></div>
           <div>
-            <Button type="text" @click="showModal = false">取消</Button>
-            <Button type="primary" @click="handelSubmit">确认提交</Button>
+            <Button type="text" @click="showModal = false" v-if="!preview"
+              >取消</Button
+            >
+            <Button @click="showModal = false" v-if="preview">关闭</Button>
+            <Button type="primary" @click="handelSubmit" v-if="!preview"
+              >确认提交</Button
+            >
           </div>
         </Row>
       </div>
@@ -83,6 +89,10 @@ export default {
       type: Boolean,
       default: true,
     },
+    preview: {
+      type: Boolean,
+      default: false,
+    },
     text: {
       type: String,
       default: "地图选点",
@@ -93,7 +103,7 @@ export default {
     },
     pitch: {
       type: Number,
-      default: 0
+      default: 0,
     },
     decimal: {
       type: Number,
@@ -258,18 +268,22 @@ export default {
                 return;
               }
               this.map.setStyle(JSON.parse(srcElement.dataset.uri));
-              setTimeout(() => {
-                const labelList = this.map.getStyle().layers.filter((layer) => {
-                  return /-label/.test(layer.id);
-                });
-                for (let labelLayer of labelList) {
-                  this.map.setLayoutProperty(labelLayer.id, "text-field", [
-                    "coalesce",
-                    ["get", "name_zh-Hans"],
-                    ["get", "name"],
-                  ]);
+              this.map.on("data", (e) => {
+                if (e.isSourceLoaded) {
+                  const labelList = this.map
+                    .getStyle()
+                    .layers.filter((layer) => {
+                      return /-label/.test(layer.id);
+                    });
+                  for (let labelLayer of labelList) {
+                    this.map.setLayoutProperty(labelLayer.id, "text-field", [
+                      "coalesce",
+                      ["get", "name_zh-Hans"],
+                      ["get", "name"],
+                    ]);
+                  }
                 }
-              }, 500);
+              });
               this.mapStyleContainer.style.display = "none";
               this.styleButton.style.display = "block";
               const elms = this.mapStyleContainer.getElementsByClassName(
@@ -398,6 +412,9 @@ export default {
       });
       // 单点标记
       this.mapbox.on("click", (e) => {
+        if (this.preview) {
+          return;
+        }
         if (this.marker) {
           this.marker.remove();
         }
@@ -440,7 +457,7 @@ export default {
             essential: true,
           });
         } catch (error) {
-          console.log(error)
+          console.log(error);
           this.$Message.error("您输入的坐标不合法");
         }
       } else {
@@ -496,6 +513,10 @@ export default {
       }
     },
     handelSubmit() {
+      if (!this.currentValue) {
+        this.$Message.warning("请在地图中点击鼠标选择一个地点");
+        return;
+      }
       this.data = this.currentValue;
       this.$emit("input", this.data);
       this.$emit("on-change", this.data);

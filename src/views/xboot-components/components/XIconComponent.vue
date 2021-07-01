@@ -10,7 +10,7 @@
     <div style="font-size: 12px; margin: 10px 0">Base64：</div>
     <XIcon :type="base64" size="26" />
     <h3 class="component-article">基础用法</h3>
-    基本用法，已全局挂载直接使用皆可，兼容Ionicons、iconfont、图片链接URL、Base64。<code
+    基本用法，已全局挂载直接使用即可，兼容Ionicons、iconfont、图片链接URL、Base64。<code
       >{{ code }}</code
     >
     <h3 class="component-article">props</h3>

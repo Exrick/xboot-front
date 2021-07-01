@@ -18,7 +18,7 @@ export const props = [
     {
         title: "属性",
         key: "name",
-        width: 130,
+        width: 135,
     },
     {
         title: "说明",

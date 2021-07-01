@@ -128,7 +128,7 @@ body {
 
 // 修改Message层级
 .ivu-message {
-  z-index: 2000 !important;
+  z-index: 9999 !important;
 }
 
 // 修改Menu层级

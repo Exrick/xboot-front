@@ -2,10 +2,15 @@
   <div>
     <Card>
       <p slot="title" class="card-title">
-        <Icon type="md-locate" style="margin-right:5px"></Icon>访问用户分布
+        <Icon type="md-locate" style="margin-right: 5px"></Icon>访问用户分布
       </p>
-      <Row type="flex" justify="center" align="middle" style="height:273px;">
-        <apexchart type="donut" width="350" :options="chartOptions" :series="series" />
+      <Row type="flex" justify="center" align="middle" style="height: 273px">
+        <apexchart
+          type="donut"
+          width="350"
+          :options="chartOptions"
+          :series="series"
+        />
       </Row>
     </Card>
   </div>
@@ -22,26 +27,26 @@ export default {
         plotOptions: {
           pie: {
             donut: {
-              size: "70%"
-            }
-          }
+              size: "70%",
+            },
+          },
         },
         dataLabels: {
-          enabled: false
+          enabled: false,
         },
         legend: {
-          position: "right"
-        }
-      }
+          position: "right",
+        },
+      },
     };
   },
   methods: {
     init() {
       this.series = [45, 18, 27, 15, 13];
-    }
+    },
   },
   mounted() {
     this.init();
-  }
+  },
 };
 </script>

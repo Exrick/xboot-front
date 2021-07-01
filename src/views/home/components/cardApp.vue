@@ -136,7 +136,7 @@ export default {
 <style lang="less" scoped>
 .card-content {
   height: 150px;
-  padding: 24px 28px;
+  padding: 26px 30px;
 }
 .card-app {
   cursor: pointer;

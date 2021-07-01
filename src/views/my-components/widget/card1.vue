@@ -8,7 +8,7 @@
       class="card-content card1"
       :style="{ backgroundImage: backgroundImage }"
     >
-      <div class="card-body">
+      <div class="card-body" :style="{ height: cardHeight }">
         <Icon
           :type="icon"
           :color="iconColor"
@@ -18,23 +18,25 @@
         <img :src="image" :width="width" :height="height" v-else />
         <div>
           <count-up
-            class="card-title"
             :prefix="prefix"
             :suffix="suffix"
-            :id-name="idName"
+            :id="id"
             :end-val="endVal"
-            :color="titleColor"
+            :color="countColor"
             :countSize="countSize"
             :countWeight="countWeight"
+            :decimalPlaces="decimalPlaces"
+            :duration="duration"
+            :delay="delay"
+            :options="options"
           />
           <span
-            class="card-description"
             :style="{
-              color: descriptionColor,
-              fontSize: descriptionSize,
-              fontWeight: descriptionWeight,
+              color: titleColor,
+              fontSize: titleSize,
+              fontWeight: titleWeight,
             }"
-            >{{ description }}</span
+            >{{ title }}</span
           >
         </div>
       </div>
@@ -51,7 +53,11 @@ export default {
     countUp,
   },
   props: {
-    idName: String,
+    id: String,
+    cardHeight: {
+      type: String,
+      default: "102px",
+    },
     backgroundColor: String,
     backgroundImage: String,
     bordered: {
@@ -65,9 +71,12 @@ export default {
     },
     iconColor: {
       type: String,
-      default: "#2d8cf0",
+      default: "#478ef9",
     },
-    image: String,
+    image: {
+      type: String,
+      default: require("@/assets/dashboard/empty.png"),
+    },
     width: {
       type: String,
       default: "26px",
@@ -79,7 +88,31 @@ export default {
     prefix: String,
     suffix: String,
     endVal: Number,
-    titleColor: {
+    decimalPlaces: {
+      type: Number,
+      default: 0,
+    },
+    duration: {
+      type: Number,
+      default: 2,
+    },
+    delay: {
+      type: Number,
+      default: 0,
+    },
+    options: {
+      type: Object,
+      default: () => {
+        return {
+          startVal: 0,
+          useEasing: true,
+          useGrouping: true,
+          separator: ",",
+          decimal: ".",
+        };
+      },
+    },
+    countColor: {
       type: String,
       default: "#3f4255",
     },
@@ -91,16 +124,16 @@ export default {
       type: Number,
       default: 600,
     },
-    description: String,
-    descriptionColor: {
+    title: String,
+    titleColor: {
       type: String,
       default: "#b5b5c5",
     },
-    descriptionSize: {
+    titleSize: {
       type: String,
       default: "12px",
     },
-    descriptionWeight: {
+    titleWeight: {
       type: Number,
       default: 500,
     },
@@ -109,8 +142,7 @@ export default {
 </script>
 <style lang="less" scoped>
 .card-content {
-  height: 150px;
-  padding: 24px 28px;
+  padding: 26px 30px;
 }
 .card1 {
   background-position: right top;

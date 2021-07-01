@@ -18,14 +18,14 @@
           :name="item.name"
           :selected="currNav == item.name"
         >
-          <div>
+          <Badge :dot="item.component == 'hot'">
             <XIcon
               :type="item.icon"
               :size="14"
               style="margin: 0 10px 0 0"
             ></XIcon>
             {{ item.title }}
-          </div>
+          </Badge>
         </DropdownItem>
       </DropdownMenu>
       <div slot="list" v-else>

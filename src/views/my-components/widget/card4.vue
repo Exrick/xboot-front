@@ -8,7 +8,7 @@
       class="card-content card4"
       :style="{ backgroundImage: backgroundImage }"
     >
-      <div class="card-body">
+      <div class="card-body" :style="{ height: cardHeight }">
         <div
           class="card-title"
           :style="{
@@ -26,6 +26,7 @@
               color: timeColor,
               fontSize: timeSize,
               fontWeight: timeWeight,
+              marginBottom: timeBottom,
             }"
           >
             {{ time }}
@@ -36,6 +37,7 @@
               color: descriptionColor,
               fontSize: descriptionSize,
               fontWeight: descriptionWeight,
+              marginBottom: descriptionBottom,
             }"
           >
             {{ description }}
@@ -51,7 +53,10 @@ export default {
   name: "card4",
   components: {},
   props: {
-    idName: String,
+    cardHeight: {
+      type: String,
+      default: "102px",
+    },
     backgroundColor: String,
     backgroundImage: String,
     bordered: {
@@ -84,6 +89,10 @@ export default {
       type: Number,
       default: 500,
     },
+    timeBottom: {
+      type: String,
+      default: "10px",
+    },
     description: String,
     descriptionColor: {
       type: String,
@@ -97,13 +106,16 @@ export default {
       type: Number,
       default: 600,
     },
+    descriptionBottom: {
+      type: String,
+      default: "0px",
+    },
   },
 };
 </script>
 <style lang="less" scoped>
 .card-content {
-  height: 150px;
-  padding: 24px 28px;
+  padding: 26px 30px;
 }
 .card4 {
   background-position: right top;
@@ -112,11 +124,9 @@ export default {
   .card-body {
     display: flex;
     flex-direction: column;
-    height: 102px;
     justify-content: space-between;
     align-items: flex-start;
     .card-description {
-      margin-top: 10px;
       overflow: hidden;
       text-overflow: ellipsis;
       display: -webkit-box;

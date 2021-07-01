@@ -339,11 +339,11 @@ export default {
                       Cookies.set("userInfo", JSON.stringify(res.result));
                     }
                     this.setStore("userInfo", res.result);
-                    this.$store.commit("setAvatarPath", res.result.avatar);
+                    this.$store.commit("setUserInfo", res.result);
                     // 加载菜单
                     util.initRouter(this);
                     this.$router.push({
-                      name: "home_index"
+                      name: "home_index",
                     });
                   } else {
                     this.loading = false;

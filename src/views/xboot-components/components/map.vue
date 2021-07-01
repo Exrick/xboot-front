@@ -22,7 +22,7 @@
     </Alert>
     <Map v-model="data" style="width: 400px" />
     <h3 class="component-article">基础用法</h3>
-    基本用法，使用<code>v-model</code>实现数据的双向绑定。单页面同时使用两个及以上该组件时，需设定不同的id值加以区分。
+    基本用法，使用<code>v-model</code>实现数据的双向绑定。不同页面使用该组件时，需设定不同的id值加以区分。
     <h3 class="component-article">props</h3>
     <Table
       :columns="props"
@@ -73,6 +73,12 @@ export default {
           desc: "是否显示输入框",
           type: "Boolean",
           value: "true",
+        },
+        {
+          name: "preview",
+          desc: "是否启用预览模式，设为true后不显示提交按钮，且无法更改点击地图坐标",
+          type: "Boolean",
+          value: "false",
         },
         {
           name: "width",

@@ -8,7 +8,7 @@
       class="card-content card3"
       :style="{ backgroundImage: backgroundImage }"
     >
-      <div class="card-body">
+      <div class="card-body" :style="{ height: cardHeight }">
         <Icon
           :type="icon"
           :color="iconColor"
@@ -23,6 +23,7 @@
               color: titleColor,
               fontSize: titleSize,
               fontWeight: titleWeight,
+              marginBottom: titleBottom,
             }"
           >
             {{ title }}
@@ -33,9 +34,11 @@
               color: descriptionColor,
               fontSize: descriptionSize,
               fontWeight: descriptionWeight,
+              marginBottom: descriptionBottom,
             }"
-            >{{ description }}</div
           >
+            {{ description }}
+          </div>
         </div>
       </div>
     </div>
@@ -47,7 +50,10 @@ export default {
   name: "card3",
   components: {},
   props: {
-    idName: String,
+    cardHeight: {
+      type: String,
+      default: "102px",
+    },
     backgroundColor: String,
     backgroundImage: String,
     bordered: {
@@ -57,20 +63,20 @@ export default {
     icon: String,
     iconSize: {
       type: Number,
-      default: 26,
+      default: 36,
     },
     iconColor: {
       type: String,
-      default: "#2d8cf0",
+      default: "#478ef9",
     },
     image: String,
     width: {
       type: String,
-      default: "26px",
+      default: "30px",
     },
     height: {
       type: String,
-      default: "26px",
+      default: "30px",
     },
     title: String,
     titleColor: {
@@ -79,11 +85,15 @@ export default {
     },
     titleSize: {
       type: String,
-      default: "24px",
+      default: "18px",
     },
     titleWeight: {
       type: Number,
       default: 600,
+    },
+    titleBottom: {
+      type: String,
+      default: "0px",
     },
     description: String,
     descriptionColor: {
@@ -98,13 +108,16 @@ export default {
       type: Number,
       default: 500,
     },
+    descriptionBottom: {
+      type: String,
+      default: "0px",
+    },
   },
 };
 </script>
 <style lang="less" scoped>
 .card-content {
-  height: 150px;
-  padding: 24px 28px;
+  padding: 26px 30px;
 }
 .card3 {
   background-position: right top;
@@ -113,7 +126,6 @@ export default {
   .card-body {
     display: flex;
     flex-direction: column;
-    height: 102px;
     justify-content: space-between;
     align-items: flex-start;
     .card-title {

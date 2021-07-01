@@ -57,6 +57,7 @@ export default {
     topFix: "Top Fixed",
     navType: "Nav Show Type",
     horizontal: "Horizontal",
+    sliceNum: "Default show number",
     singleDrop: "Single Dropdown",
     iconBreadcrumb: "Icon+Breadcrumb",
     showIcon: "Show Icon",

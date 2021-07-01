@@ -32,19 +32,19 @@ https://www.kancloud.cn/exrick/xboot/content
 
 - PC
 
-![QQ截图20180826163917.png](https://ooo.0o0.ooo/2018/08/26/5b826868e2359.png)
+![QQ截图20180826163917.png](https://ooo.0o0.ooo/2021/07/01/t6RXqn8LeaY5Nu1.png)
 
-![QQ截图20180826164058.png](https://ooo.0o0.ooo/2018/08/26/5b8268d63d156.png)
+![QQ截图20180826164058.png](https://ooo.0o0.ooo/2021/07/01/TQZqrxog4ufX2SR.png)
 
-![QQ截图20180826164144.png](https://ooo.0o0.ooo/2018/08/26/5b8268e6a091f.png)
+![QQ截图20180826164144.png](https://ooo.0o0.ooo/2021/07/01/t7RdWhkbzZCawce.png)
 
 - iPad Mini 5
 
-<img src=https://ooo.0o0.ooo/2019/11/25/2tiloPbTcqfnRDQ.jpg width=600/>
+<img src=https://ooo.0o0.ooo/2021/07/01/gXl5OKkJHEIwf3N.png width=600/>
 
 - iPhone X
 
-<img src=https://ooo.0o0.ooo/2019/11/25/EaLfVxmli2Tg8PY.jpg width=300/>
+<img src=https://ooo.0o0.ooo/2021/07/01/LdNPiKMlOESvfW8.png width=300/>
 
 ### [完整版截图细节展示](https://github.com/Exrick/x-boot/wiki/%E5%AE%8C%E6%95%B4%E7%89%88%E6%88%AA%E5%9B%BE%E7%BB%86%E8%8A%82%E5%B1%95%E7%A4%BA)
 

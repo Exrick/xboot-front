@@ -11,8 +11,10 @@
         :key="i"
         :name="item.name"
       >
-        <XIcon :type="item.icon" v-if="showIcon" />
-        {{ item.title }}
+        <Badge :dot="item.component == 'hot'" :offset="[20, 0]">
+          <XIcon :type="item.icon" v-if="showIcon" />
+          {{ item.title }}
+        </Badge>
       </MenuItem>
       <Submenu name="sub" v-if="navList.length > sliceNum">
         <template slot="title">更多</template>
@@ -21,8 +23,10 @@
           :key="i"
           :name="item.name"
         >
-          <XIcon :type="item.icon" v-if="showIcon" />
-          {{ item.title }}
+          <Badge :dot="item.component == 'hot'">
+            <XIcon :type="item.icon" v-if="showIcon" />
+            {{ item.title }}
+          </Badge>
         </MenuItem>
       </Submenu>
     </Menu>

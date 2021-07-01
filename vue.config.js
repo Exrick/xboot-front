@@ -34,7 +34,6 @@ module.exports = {
         //     html2canvas: 'html2canvas',
         //     'vue-json-pretty': 'VueJsonPretty',
         //     'vue-lazyload': 'VueLazyload',
-        //     gitalk: 'Gitalk',
         //     'js-cookie': 'Cookies',
         //     vuedraggable: 'vuedraggable',
         //     viewerjs: 'Viewer'

@@ -50,7 +50,7 @@ export default {
         {
           name: "video.mp4",
           size: 51 * 1024 * 1024,
-          url: "https://i.loli.net/2021/01/16/VuODA1yUSCeXzFM.png",
+          url: "https://ooo.0o0.ooo/2021/01/16/VuODA1yUSCeXzFM.png",
         },
       ],
       props: props,

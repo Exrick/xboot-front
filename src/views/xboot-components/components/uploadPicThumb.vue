@@ -47,7 +47,7 @@ export default {
       methods: methods,
       picUrls: [
         "https://ooo.0o0.ooo/2019/04/28/5cc5a71a6e3b6.png",
-        "https://i.loli.net/2021/01/16/VuODA1yUSCeXzFM.png",
+        "https://ooo.0o0.ooo/2021/01/16/VuODA1yUSCeXzFM.png",
       ],
       data1: [
         {

@@ -11,7 +11,7 @@
               :active-name="currName"
               theme="light"
               width="auto"
-              :open-names="['1', '2', '3', '4']"
+              :open-names="[]"
               @on-select="currName = $event"
             >
               <MenuItem name="0"
@@ -25,27 +25,15 @@
                 </template>
                 <MenuItem name="1-0">全局Loading加载动画</MenuItem>
                 <MenuItem name="1-1">倒计时按钮</MenuItem>
-                <MenuItem name="1-2"
-                  ><Badge dot :offset="[5, -3]">图标选择输入框</Badge></MenuItem
-                >
-                <MenuItem name="1-14"
-                  ><Badge dot :offset="[5, -3]">扩展图标XIcon</Badge></MenuItem
-                >
+                <MenuItem name="1-2">图标选择输入框</MenuItem>
+                <MenuItem name="1-14">扩展图标XIcon</MenuItem>
                 <MenuItem name="1-11">数据字典组件</MenuItem>
-                <MenuItem name="1-12">
-                  <Badge dot :offset="[5, -3]">自定义列表选择</Badge>
-                </MenuItem>
+                <MenuItem name="1-12"> 自定义列表选择 </MenuItem>
                 <MenuItem name="1-3">部门级联选择</MenuItem>
                 <MenuItem name="1-4">部门树选择</MenuItem>
-                <MenuItem name="1-5"
-                  ><Badge dot :offset="[5, -3]">用户抽屉选择</Badge></MenuItem
-                >
-                <MenuItem name="1-13">
-                  <Badge dot :offset="[5, -3]">用户搜索+抽屉选择</Badge>
-                </MenuItem>
-                <MenuItem name="1-6"
-                  ><Badge dot :offset="[5, -3]">图片上传输入框</Badge></MenuItem
-                >
+                <MenuItem name="1-5">用户抽屉选择</MenuItem>
+                <MenuItem name="1-13"> 用户搜索+抽屉选择 </MenuItem>
+                <MenuItem name="1-6">图片上传输入框</MenuItem>
                 <MenuItem name="1-7">
                   <Badge dot :offset="[5, -3]">图片上传缩略图</Badge>
                 </MenuItem>
@@ -82,6 +70,18 @@
                 <MenuItem name="2-1">工作流程选择发起</MenuItem>
                 <MenuItem name="2-2">通过流程key直接发起</MenuItem>
                 <MenuItem name="2-3">取消撤回申请</MenuItem>
+              </Submenu>
+              <Submenu name="5">
+                <template slot="title">
+                  <Icon type="md-albums" /><Badge dot :offset="[5, -3]"
+                    >Widget组件</Badge
+                  >
+                </template>
+                <MenuItem name="5-1">卡片1</MenuItem>
+                <MenuItem name="5-2">卡片2</MenuItem>
+                <MenuItem name="5-3">卡片3</MenuItem>
+                <MenuItem name="5-4">卡片4</MenuItem>
+                <MenuItem name="5-5">计数组件</MenuItem>
               </Submenu>
             </Menu>
           </div>
@@ -166,6 +166,22 @@
             <div v-if="currName == '2-3'">
               <processCancel />
             </div>
+
+            <div v-if="currName == '5-1'">
+              <card1 />
+            </div>
+            <div v-if="currName == '5-2'">
+              <card2 />
+            </div>
+            <div v-if="currName == '5-3'">
+              <card3 />
+            </div>
+            <div v-if="currName == '5-4'">
+              <card4 />
+            </div>
+            <div v-if="currName == '5-5'">
+              <countUp />
+            </div>
           </div>
         </Content>
       </Layout>
@@ -201,6 +217,12 @@ import processChoose from "./components/processChoose";
 import processStart from "./components/processStart";
 import processCancel from "./components/processCancel";
 
+import card1 from "./components/card1";
+import card2 from "./components/card2";
+import card3 from "./components/card3";
+import card4 from "./components/card4";
+import countUp from "./components/countUp";
+
 export default {
   name: "xboot-components",
   components: {
@@ -227,6 +249,11 @@ export default {
     processChoose,
     processStart,
     processCancel,
+    card1,
+    card2,
+    card3,
+    card4,
+    countUp,
   },
   data() {
     return {

@@ -7,7 +7,7 @@
     <div v-show="currNav == 'xboot'" class="home">
       <Row :gutter="10">
         <!-- 左上侧 用户信息及github链接 -->
-        <Col :sm="24" :lg="24" :xl="8">
+        <Col :xs="24" :sm="24" :lg="24" :xl="8">
           <Row :gutter="10">
             <Col style="margin-bottom: 10px; width: 100%">
               <Card :padding="0">
@@ -125,7 +125,13 @@
         <!-- 右上侧 -->
         <Col :lg="24" :xl="16">
           <Row :gutter="10">
-            <Col :sm="24" :lg="24" :xl="12" style="margin-bottom: 10px">
+            <Col
+              :xs="24"
+              :sm="24"
+              :lg="24"
+              :xl="12"
+              style="margin-bottom: 10px"
+            >
               <Card>
                 <p slot="title" style="overflow: visible">
                   <a href="http://xpay.exrick.cn/pay?xboot" target="_blank">
@@ -151,7 +157,7 @@
                   <div class="flex">
                     完整版(仅供学习)：
                     <span class="rmb">￥</span>
-                    <span class="price">238</span>
+                    <span class="price">{{ price }}</span>
                     <span class="origin">￥</span>
                     <s class="origin">298</s>
                     <Button
@@ -193,33 +199,50 @@
                 </div>
               </Card>
             </Col>
-            <Col :sm="24" :lg="24" :xl="12" style="margin-bottom: 10px">
+            <Col :xs="24" :sm="24" :xl="12" style="margin-bottom: 10px">
               <Card>
                 <p slot="title">
                   <Icon type="md-bookmark" style="margin-right: 5px"></Icon
                   >ISSUE/评论/更新日志
                 </p>
-                <div id="comments" class="comment-container"></div>
+                <div id="comments" class="comment-container">
+                  请于线上
+                  <a href="http://xboot.exrick.cn" target="_blank"
+                    >http://xboot.exrick.cn </a
+                  >查看
+                </div>
               </Card>
             </Col>
           </Row>
         </Col>
       </Row>
       <Row :gutter="10">
-        <Col :sm="24" :md="12" :lg="6" :style="{ marginBottom: '10px' }">
+        <Col
+          :xs="24"
+          :sm="24"
+          :md="12"
+          :lg="6"
+          :style="{ marginBottom: '10px' }"
+        >
           <card1
-            id-name="card1"
+            id="card1"
             prefix="￥"
             :end-val="count.data1"
-            description="今日销售额"
+            title="今日销售额"
             :image="require('@/assets/icon/money.png')"
             width="34px"
             height="34px"
           />
         </Col>
-        <Col :sm="24" :md="12" :lg="6" :style="{ marginBottom: '10px' }">
+        <Col
+          :xs="24"
+          :sm="24"
+          :md="12"
+          :lg="6"
+          :style="{ marginBottom: '10px' }"
+        >
           <card2
-            id-name="card2"
+            id="card2"
             suffix="%"
             :end-val="count.data2"
             color="#f90"
@@ -227,16 +250,27 @@
             description="相比昨日"
           />
         </Col>
-        <Col :sm="24" :md="12" :lg="6" :style="{ marginBottom: '10px' }">
+        <Col
+          :xs="24"
+          :sm="24"
+          :md="12"
+          :lg="6"
+          :style="{ marginBottom: '10px' }"
+        >
           <card4
             title="待办事项"
             :time="time"
             description="您有一个新的待审批任务，请前往查看"
           />
         </Col>
-        <Col :sm="24" :md="12" :lg="6" :style="{ marginBottom: '10px' }">
+        <Col
+          :xs="24"
+          :sm="24"
+          :md="12"
+          :lg="6"
+          :style="{ marginBottom: '10px' }"
+        >
           <card3
-            id-name="card3"
             title="应用中心"
             description="销量统计，用户统计，日活分析"
             :image="require('@/assets/icon/app.png')"
@@ -247,83 +281,155 @@
         </Col>
       </Row>
       <Row :gutter="10">
-        <Col :sm="24" :md="12" :lg="4" :style="{ marginBottom: '10px' }">
+        <Col
+          :xs="24"
+          :sm="24"
+          :md="12"
+          :lg="4"
+          :style="{ marginBottom: '10px' }"
+        >
           <cardApp icon="logo-buffer" title="SaaS应用" />
         </Col>
-        <Col :sm="24" :md="12" :lg="4" :style="{ marginBottom: '10px' }">
+        <Col
+          :xs="24"
+          :sm="24"
+          :md="12"
+          :lg="4"
+          :style="{ marginBottom: '10px' }"
+        >
           <cardApp activeColor="#2db7f5" icon="md-bookmarks" title="日志分析" />
         </Col>
-        <Col :sm="24" :md="12" :lg="4" :style="{ marginBottom: '10px' }">
+        <Col
+          :xs="24"
+          :sm="24"
+          :md="12"
+          :lg="4"
+          :style="{ marginBottom: '10px' }"
+        >
           <cardApp activeColor="#19be6b" icon="md-cloud" title="云运维" />
         </Col>
-        <Col :sm="24" :md="12" :lg="4" :style="{ marginBottom: '10px' }">
+        <Col
+          :xs="24"
+          :sm="24"
+          :md="12"
+          :lg="4"
+          :style="{ marginBottom: '10px' }"
+        >
           <cardApp activeColor="#f90" icon="md-film" title="视频监控" />
         </Col>
-        <Col :sm="24" :md="12" :lg="4" :style="{ marginBottom: '10px' }">
+        <Col
+          :xs="24"
+          :sm="24"
+          :md="12"
+          :lg="4"
+          :style="{ marginBottom: '10px' }"
+        >
           <cardApp activeColor="#8950fc" icon="md-stats" title="数据分析"
         /></Col>
-        <Col :sm="24" :md="12" :lg="4" :style="{ marginBottom: '10px' }">
+        <Col
+          :xs="24"
+          :sm="24"
+          :md="12"
+          :lg="4"
+          :style="{ marginBottom: '10px' }"
+        >
           <cardApp activeColor="#ed4014" icon="md-people" title="用户分析"
         /></Col>
       </Row>
       <Row :gutter="10">
-        <Col :sm="24" :md="12" :lg="6" :style="{ marginBottom: '10px' }">
+        <Col
+          :xs="24"
+          :sm="24"
+          :md="12"
+          :lg="6"
+          :style="{ marginBottom: '10px' }"
+        >
           <card1
-            id-name="card5"
+            id="card5"
             :bordered="false"
             :end-val="126778"
-            description="今日新增互动数"
+            title="今日新增互动数"
             backgroundColor="#fff4df"
             :image="require('@/assets/icon/comment.png')"
             width="34px"
             height="34px"
           />
         </Col>
-        <Col :sm="24" :md="12" :lg="6" :style="{ marginBottom: '10px' }">
+        <Col
+          :xs="24"
+          :sm="24"
+          :md="12"
+          :lg="6"
+          :style="{ marginBottom: '10px' }"
+        >
           <card1
-            id-name="card6"
+            id="card6"
             :bordered="false"
             :end-val="68893"
             backgroundColor="#6993fe"
-            titleColor="#fff"
+            countColor="#fff"
             icon="md-person-add"
             iconColor="#fff"
-            descriptionColor="#fff"
-            description="今日新增用户"
+            titleColor="#fff"
+            title="今日新增用户"
           />
         </Col>
-        <Col :sm="24" :md="12" :lg="6" :style="{ marginBottom: '10px' }">
+        <Col
+          :xs="24"
+          :sm="24"
+          :md="12"
+          :lg="6"
+          :style="{ marginBottom: '10px' }"
+        >
           <card1
-            id-name="card7"
+            id="card7"
             :bordered="false"
             :end-val="count.data4"
             backgroundColor="#8950fe"
-            titleColor="#fff"
+            countColor="#fff"
             icon="md-cloud-download"
             iconColor="#fff"
-            descriptionColor="#fff"
-            description="今日下载量"
+            titleColor="#fff"
+            title="今日下载量"
           />
         </Col>
-        <Col :sm="24" :md="12" :lg="6" :style="{ marginBottom: '10px' }">
+        <Col
+          :xs="24"
+          :sm="24"
+          :md="12"
+          :lg="6"
+          :style="{ marginBottom: '10px' }"
+        >
           <card1
-            id-name="card8"
+            id="card8"
             :bordered="false"
             :end-val="13507632434"
             backgroundColor="#f64e61"
-            titleColor="#fff"
+            countColor="#fff"
             icon="md-calendar"
             iconColor="#fff"
-            descriptionColor="#fff"
-            description="月活"
+            titleColor="#fff"
+            title="月活"
           />
         </Col>
       </Row>
       <Row :gutter="10">
-        <Col :sm="24" :lg="24" :xl="16" :style="{ marginBottom: '10px' }">
+        <Col
+          :xs="24"
+          :sm="24"
+          :lg="24"
+          :xl="16"
+          :style="{ marginBottom: '10px' }"
+        >
           <visit-volume />
         </Col>
-        <Col :sm="24" :lg="24" :xl="8" :style="{ marginBottom: '10px' }">
+        <Col
+          :xs="24"
+          :sm="24"
+          :lg="24"
+          :xl="8"
+          :style="{ marginBottom: '10px' }"
+        >
           <visit-separation />
         </Col>
       </Row>
@@ -356,16 +462,13 @@
 import { ipInfo } from "@/api/index";
 import visitVolume from "./components/visitVolume.vue";
 import visitSeparation from "./components/visitSeparation.vue";
-import card1 from "./components/card1.vue";
+import card1 from "@/views/my-components/widget/card1.vue";
 import card2 from "./components/card2.vue";
-import card3 from "./components/card3.vue";
-import card4 from "./components/card4.vue";
+import card3 from "@/views/my-components/widget/card3.vue";
+import card4 from "@/views/my-components/widget/card4.vue";
 import cardApp from "./components/cardApp.vue";
 import dashboard2 from "../xboot-charts/dashboard2/dashboard2.vue";
 import Cookies from "js-cookie";
-import "gitalk/dist/gitalk.css";
-import Gitalk from "gitalk";
-
 export default {
   name: "home",
   components: {
@@ -391,6 +494,7 @@ export default {
       departmentTitle: "无",
       userType: "无",
       time: "",
+      price: "...",
     };
   },
   computed: {
@@ -420,29 +524,20 @@ export default {
       });
       this.time = this.format(new Date(), "yyyy年MM月dd日");
     },
-    showNotice() {
-
-    },
   },
   mounted() {
     this.init();
-    // 通知
-    let noticeFlag = "noticeShowed";
-    let notice = Cookies.get(noticeFlag);
-    if (notice != noticeFlag) {
-      this.showNotice();
-      Cookies.set(noticeFlag, noticeFlag);
-    }
-    // Gitalk
-    var gitalk = new Gitalk({
-      clientID: "a128de2dd7383614273a",
-      clientSecret: "a77691ecb662a8303a6c686ae651ae035868da6e",
-      repo: "xboot-comments",
-      owner: "Exrick",
-      admin: ["Exrick"],
-      distractionFreeMode: false, // 遮罩效果
+    // 价格
+    AV.init({
+      appId: "6Bstbxl4NDU69I77D3nzf61h-gzGzoHsz",
+      appKey: "gaFTnYlTul3M8qdiGlbfvoJK",
+      serverURL: "https://6bstbxl4.lc-cn-n1-shared.com",
     });
-    gitalk.render("comments");
+    const query = new AV.Query("Price");
+    query.equalTo("objectId", "6080216c2a5bb23590bcaedb");
+    query.first().then((e) => {
+      this.price = e.attributes.price;
+    });
     // 宣传视频
     let videoFlag = "videoShowed";
     let xbootVideo = Cookies.get(videoFlag);

@@ -22,6 +22,7 @@ import './assets/iconfont/iconfont.css'
 import '@babel/polyfill'
 
 Vue.config.productionTip = false
+
 Vue.use(VueLazyload, {
     error: require('./assets/img-error.png'),
     loading: require('./assets/loading2.gif')
