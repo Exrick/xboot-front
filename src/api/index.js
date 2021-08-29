@@ -1,5 +1,5 @@
 // 统一请求路径前缀在libs/axios.js中修改
-import { getRequest, postRequest, putRequest, getNoAuthRequest, postNoAuthRequest } from '@/libs/axios';
+import { getRequest, postRequest, putRequest, getNoAuthRequest, postNoAuthRequest,deleteRequest } from '@/libs/axios';
 
 
 
@@ -84,7 +84,7 @@ export const disableUser = (id, params) => {
 }
 // 删除用户
 export const deleteUser = (params) => {
-    return postRequest('/user/delByIds', params)
+    return deleteRequest('/user/delByIds', params)
 }
 // 重置用户密码
 export const resetUserPass = (params) => {

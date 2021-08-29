@@ -130,8 +130,8 @@ export const postBodyRequest = (url, params) => {
 
 /**
  * 无需token验证的GET请求 避免旧token过期导致请求失败
- * @param {*} url 
- * @param {*} params 
+ * @param {*} url
+ * @param {*} params
  */
 export const getNoAuthRequest = (url, params) => {
     return axios({
@@ -159,3 +159,25 @@ export const postNoAuthRequest = (url, params) => {
         }
     });
 };
+
+export const deleteRequest= (url,params) =>{
+    console.log(params)
+    let accessToken = getStore("accessToken");
+    return axios({
+        method: 'delete',
+        url: `${base}${url}/${params.ids}`,
+        transformRequest: [function (data) {
+            console.log(data)
+            let ret = '';
+            for (let it in data) {
+                ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&';
+            }
+            ret = ret.substring(0, ret.length - 1);
+            return ret;
+        }],
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'accessToken': accessToken
+        }
+    });
+}
